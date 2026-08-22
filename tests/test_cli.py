@@ -1,0 +1,53 @@
+import io
+import json
+
+from pii_master.cli import main
+
+
+def run_cli(args, capsys):
+    code = main(args)
+    return code, json.loads(capsys.readouterr().out)
+
+
+def test_scan_file_with_ssn(tmp_path, capsys):
+    p = tmp_path / "doc.txt"
+    p.write_text("Payroll SSN 123-45-6789 on file.", encoding="utf-8")
+    code, payload = run_cli(["scan", str(p)], capsys)
+    assert code == 0
+    (entry,) = payload["files"]
+    assert entry["path"] == str(p)
+    assert entry["label"] == "PII"
+    assert entry["counts"] == {"SSN": 1}
+
+
+def test_fail_on_detect_exits_1(tmp_path, capsys):
+    p = tmp_path / "doc.txt"
+    p.write_text("SSN 123-45-6789", encoding="utf-8")
+    code, _ = run_cli(["scan", str(p), "--fail-on-detect"], capsys)
+    assert code == 1
+
+
+def test_fail_on_detect_clean_file_exits_0(tmp_path, capsys):
+    p = tmp_path / "doc.txt"
+    p.write_text("nothing sensitive here", encoding="utf-8")
+    code, payload = run_cli(["scan", str(p), "--fail-on-detect"], capsys)
+    assert code == 0
+    assert payload["files"][0]["label"] == "NONE"
+
+
+def test_stdin_dash(monkeypatch, capsys):
+    monkeypatch.setattr("sys.stdin", io.StringIO("Patient MRN: 4829471"))
+    code, payload = run_cli(["scan", "-"], capsys)
+    assert code == 0
+    assert payload["files"][0]["label"] == "PHI"
+
+
+def test_multiple_files_and_pretty(tmp_path, capsys):
+    clean = tmp_path / "clean.txt"
+    clean.write_text("hello", encoding="utf-8")
+    dirty = tmp_path / "dirty.txt"
+    dirty.write_text("mail jane@example.com", encoding="utf-8")
+    code, payload = run_cli(["scan", str(clean), str(dirty), "--pretty"], capsys)
+    assert code == 0
+    labels = [f["label"] for f in payload["files"]]
+    assert labels == ["NONE", "PII"]

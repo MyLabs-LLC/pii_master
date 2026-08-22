@@ -1,0 +1,66 @@
+import json
+
+import pytest
+
+from pii_master.classify import scan_text
+from pii_master.entities import DocLabel
+
+
+def test_clean_prose_is_none_with_zero_risk():
+    report = scan_text("The quarterly meeting moved to the large room.")
+    assert report.label is DocLabel.NONE
+    assert report.risk_score == 0.0
+    assert report.entities == []
+
+
+def test_email_only_is_pii():
+    report = scan_text("Reach me at jane.doe@example.com about the invoice.")
+    assert report.label is DocLabel.PII
+
+
+def test_mrn_alone_is_phi_without_medical_keywords():
+    report = scan_text("Ref MRN: 4829471 for the transfer.")
+    assert report.label is DocLabel.PHI
+    assert any("MRN" in r for r in report.reasons)
+
+
+def test_ssn_in_medical_context_is_phi():
+    report = scan_text(
+        "The patient (SSN 123-45-6789) received a diagnosis on admission."
+    )
+    assert report.label is DocLabel.PHI
+
+
+def test_ssn_alone_is_pii():
+    report = scan_text("Payroll form lists SSN 123-45-6789 for withholding.")
+    assert report.label is DocLabel.PII
+
+
+def test_risk_monotonic_under_added_entities():
+    smaller = scan_text("Contact jane@example.com.")
+    larger = scan_text("Contact jane@example.com. SSN 123-45-6789.")
+    assert smaller.risk_score <= larger.risk_score
+
+
+def test_per_type_cap_limits_contribution():
+    three = scan_text("a@x.com b@x.com c@x.com")
+    four = scan_text("a@x.com b@x.com c@x.com d@x.com")
+    assert three.risk_score == pytest.approx(four.risk_score)
+    assert four.counts["EMAIL"] == 4  # counts still report the true number
+
+
+def test_risk_clamped_to_100():
+    report = scan_text(
+        "SSN 123-45-6789 and 987-65-4321 and 456-78-9012, "
+        "card 4111 1111 1111 1111, MRN: 4829471"
+    )
+    assert report.risk_score <= 100.0
+
+
+def test_report_round_trips_through_json():
+    report = scan_text("Patient DOB: 03/14/1985, MRN: 4829471.")
+    payload = json.loads(json.dumps(report.to_dict()))
+    assert payload["label"] == "PHI"
+    assert payload["counts"]["MRN"] == 1
+    types = {e["type"] for e in payload["entities"]}
+    assert types == {"DATE_DOB", "MRN"}

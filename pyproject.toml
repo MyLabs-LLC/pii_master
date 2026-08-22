@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pii-master"
+version = "0.1.0"
+description = "Fast, CPU-friendly PII/PHI detection and document classification"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+# Deliberately empty: Stage 1 is stdlib-only so the production container
+# stays within its 1 CPU / 4 GB budget. See docs/DESIGN.md section 5.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+pii-master = "pii_master.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pii_master"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
