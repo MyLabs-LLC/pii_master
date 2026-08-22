@@ -10,8 +10,9 @@ candidates are validated by checksums and format rules, and results aggregate in
 explainable document label (`NONE` / `PII` / `PHI`) and risk score. The full staged
 architecture — through quantized-ONNX NER under the same 5 ms cascade, risk policies,
 and PDF/OCR ingestion — is laid out in **[docs/DESIGN.md](docs/DESIGN.md)**; measured
-baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)**, and the Stage 2 training-data
-survey in **[docs/NEMOTRON_PII_TAGS.md](docs/NEMOTRON_PII_TAGS.md)**.
+baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)**, the Stage 2 training-data
+survey in **[docs/NEMOTRON_PII_TAGS.md](docs/NEMOTRON_PII_TAGS.md)**, and the post-M1
+review / next-steps plan in **[docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md)**.
 
 **Status:** v0.2 (milestone M1) — hardened Stage 1 rules engine, evaluation + benchmark
 harnesses, plain-text input. Currently ~1.2 ms p95 per 10 KB document on one core.
