@@ -13,8 +13,9 @@ and PDF/OCR ingestion — is laid out in **[docs/DESIGN.md](docs/DESIGN.md)**; m
 baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)** (internal) and
 **[docs/BASELINE_NEMOTRON.md](docs/BASELINE_NEMOTRON.md)** (external holdout), the Stage 2 training-data
 survey in **[docs/NEMOTRON_PII_TAGS.md](docs/NEMOTRON_PII_TAGS.md)**, the post-M1
-review / next-steps plan in **[docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md)**, and a
-survey of existing solutions in **[docs/PRIOR_ART.md](docs/PRIOR_ART.md)**.
+review / next-steps plan in **[docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md)**, a
+survey of existing solutions in **[docs/PRIOR_ART.md](docs/PRIOR_ART.md)**, and the Stage 2
+distillation plan in **[docs/DISTILLATION_PLAN.md](docs/DISTILLATION_PLAN.md)**.
 
 **Status:** v0.2 (milestone M1) — hardened Stage 1 rules engine, evaluation + benchmark
 harnesses, plain-text input. Currently ~1.2 ms p95 per 10 KB document on one core.
