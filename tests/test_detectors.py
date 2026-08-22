@@ -9,12 +9,17 @@ never remove them.
 import pytest
 
 from pii_master.detectors import (
+    AccountNumberDetector,
     CreditCardDetector,
     DateOfBirthDetector,
     EmailDetector,
+    HealthPlanIdDetector,
     IpAddressDetector,
+    Ipv6AddressDetector,
     MrnDetector,
     SsnDetector,
+    UrlDetector,
+    UsDriverLicenseDetector,
     UsPhoneDetector,
 )
 from pii_master.entities import EntityType
@@ -142,6 +147,7 @@ def test_ip_address(text, expected):
         ("DOB: 03/14/1985", [(EntityType.DATE_DOB, "03/14/1985")]),
         ("Date of birth 3-4-1985", [(EntityType.DATE_DOB, "3-4-1985")]),
         ("born on March 14, 1985", [(EntityType.DATE_DOB, "March 14, 1985")]),
+        ("born 14 March 1985 in Ohio", [(EntityType.DATE_DOB, "14 March 1985")]),
         ("Birthdate: 1985-03-14", [(EntityType.DATE_DOB, "1985-03-14")]),
         ("Meeting on 03/14/1985", []),  # no birth cue -> not DOB
         ("DOB: 02/30/1985", []),        # not a real calendar date
@@ -170,3 +176,104 @@ def test_mrn_span_covers_only_the_id():
     text = "Patient MRN: 4829471 admitted"
     entity = MrnDetector().detect(text)[0]
     assert text[entity.start : entity.end] == "4829471"
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "gateway 2001:0db8:85a3:0000:0000:8a2e:0370:7334 up",
+            [(EntityType.IP_ADDRESS, "2001:0db8:85a3:0000:0000:8a2e:0370:7334")],
+        ),
+        ("loopback ::1 works", [(EntityType.IP_ADDRESS, "::1")]),
+        # Sentence-ending period must not suppress the match.
+        (
+            "The address is 2001:db8::8a2e:370:7334.",
+            [(EntityType.IP_ADDRESS, "2001:db8::8a2e:370:7334")],
+        ),
+        ("std::vector<int> is C++ code", []),
+        ("meeting ran 12:30:45 exactly", []),
+        ("the scope :: resolution operator", []),
+    ],
+)
+def test_ipv6(text, expected):
+    check(Ipv6AddressDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Read https://example.com/profile?id=7 now",
+            [(EntityType.URL, "https://example.com/profile?id=7")],
+        ),
+        # Sentence-ending period must not be swallowed into the URL.
+        ("Docs at www.example.org/help.", [(EntityType.URL, "www.example.org/help")]),
+        ("(see https://a.io/x)", [(EntityType.URL, "https://a.io/x")]),
+        ("plain example.com is not matched in v1", []),
+        ("broken https:// scheme only", []),
+    ],
+)
+def test_url(text, expected):
+    check(UrlDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Account number: 8272-1189-90 was closed",
+            [(EntityType.ACCOUNT_NUMBER, "8272-1189-90")],
+        ),
+        ("acct #99881234 flagged", [(EntityType.ACCOUNT_NUMBER, "99881234")]),
+        ("wire to account 123456789 today", [(EntityType.ACCOUNT_NUMBER, "123456789")]),
+        ("the account balance is high", []),
+        ("account 42 is too short", []),
+    ],
+)
+def test_account_number(text, expected):
+    check(AccountNumberDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Health plan ID: XG-448812 on file",
+            [(EntityType.HEALTH_PLAN_ID, "XG-448812")],
+        ),
+        (
+            "Beneficiary number 84-J99-1220 verified",
+            [(EntityType.HEALTH_PLAN_ID, "84-J99-1220")],
+        ),
+        (
+            "subscriber id A9-3321-77 active",
+            [(EntityType.HEALTH_PLAN_ID, "A9-3321-77")],
+        ),
+        # Generic cues are deliberately excluded (gym/loyalty collisions).
+        ("member id 99881234 renewed", []),
+        ("policy number 8842113 issued", []),
+    ],
+)
+def test_health_plan_id(text, expected):
+    check(HealthPlanIdDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Driver's License No: D1234567",
+            [(EntityType.US_DRIVER_LICENSE, "D1234567")],
+        ),
+        (
+            "drivers license 8829-1123-44 suspended",
+            [(EntityType.US_DRIVER_LICENSE, "8829-1123-44")],
+        ),
+        ("DL# 99-112-83 on record", [(EntityType.US_DRIVER_LICENSE, "99-112-83")]),
+        ("DL 4432198 needs a separator after bare DL", []),
+        ("license to operate heavy machinery", []),
+    ],
+)
+def test_us_driver_license(text, expected):
+    check(UsDriverLicenseDetector(), text, expected)

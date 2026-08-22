@@ -1,11 +1,11 @@
-"""Network identifier detectors: IPv4 addresses. IPv6 is deferred to M1."""
+"""Network and web identifier detectors: IPv4/IPv6 addresses and URLs."""
 
 from __future__ import annotations
 
 import re
 
 from ..entities import EntityType
-from ..validators import ipv4_ok
+from ..validators import ipv4_ok, ipv6_ok
 from .base import RegexDetector
 
 
@@ -24,3 +24,36 @@ class IpAddressDetector(RegexDetector):
         if not ipv4_ok(match.group(0)):
             return None
         return self.base_confidence
+
+
+class Ipv6AddressDetector(RegexDetector):
+    # Candidate: hex groups joined by >= 2 colons; ipaddress does the real
+    # validation. Leading lookarounds keep code tokens like std::vector out.
+    # The IPv4-mapped textual form (::ffff:192.0.2.1) is not covered in v1.
+    name = "regex/ipv6"
+    entity_type = EntityType.IP_ADDRESS
+    pattern = re.compile(
+        r"(?<![\w:.])[0-9A-Fa-f]{0,4}(?::[0-9A-Fa-f]{0,4}){2,7}(?![\w:])"
+    )
+    base_confidence = 0.70
+
+    def validate(self, match: re.Match[str]) -> float | None:
+        candidate = match.group(0)
+        # Reject bare "::" and other hexless runs (scope-resolution prose).
+        if not any(ch in "0123456789abcdefABCDEF" for ch in candidate):
+            return None
+        if not ipv6_ok(candidate):
+            return None
+        return self.base_confidence
+
+
+class UrlDetector(RegexDetector):
+    # The final character class excludes closing punctuation so a
+    # sentence-ending period or bracket isn't swallowed into the URL.
+    name = "regex/url"
+    entity_type = EntityType.URL
+    pattern = re.compile(
+        r"\b(?:https?://|www\.)[^\s<>\"']*[^\s<>\"'.,;:!?)\]]",
+        re.IGNORECASE,
+    )
+    base_confidence = 0.85

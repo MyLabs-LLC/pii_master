@@ -24,6 +24,17 @@ def test_mrn_alone_is_phi_without_medical_keywords():
     assert any("MRN" in r for r in report.reasons)
 
 
+def test_health_plan_id_alone_is_phi():
+    report = scan_text("Beneficiary number 84-J99-1220 confirmed.")
+    assert report.label is DocLabel.PHI
+
+
+def test_taxonomy_covers_every_entity_type():
+    from pii_master.entities import TAXONOMY, EntityType
+
+    assert set(TAXONOMY) == set(EntityType)
+
+
 def test_ssn_in_medical_context_is_phi():
     report = scan_text(
         "The patient (SSN 123-45-6789) received a diagnosis on admission."

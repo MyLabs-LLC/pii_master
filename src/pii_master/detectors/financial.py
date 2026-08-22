@@ -6,7 +6,7 @@ import re
 
 from ..entities import EntityType
 from ..validators import card_iin_known, luhn_ok
-from .base import RegexDetector
+from .base import CueAnchoredIdDetector, RegexDetector
 
 
 class CreditCardDetector(RegexDetector):
@@ -29,3 +29,14 @@ class CreditCardDetector(RegexDetector):
         if not luhn_ok(digits):
             return None
         return self.iin_confidence if card_iin_known(digits) else self.base_confidence
+
+
+class AccountNumberDetector(CueAnchoredIdDetector):
+    name = "regex/account_number"
+    entity_type = EntityType.ACCOUNT_NUMBER
+    pattern = re.compile(
+        r"(?i)\bacc(?:oun)?t\.?\s*(?:no|num(?:ber)?|#)?\s*[:#]?\s*"
+        r"(\d[\d-]{4,16}\d)\b"
+    )
+    base_confidence = 0.80
+    min_digits = 5

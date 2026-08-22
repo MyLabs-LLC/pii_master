@@ -74,6 +74,14 @@ def ipv4_ok(candidate: str) -> bool:
     return True
 
 
+def ipv6_ok(candidate: str) -> bool:
+    try:
+        ipaddress.IPv6Address(candidate)
+    except ValueError:
+        return False
+    return True
+
+
 def plausible_dob(year: int, month: int, day: int) -> bool:
     """Real calendar date with a year plausible for a living person's birth."""
     try:

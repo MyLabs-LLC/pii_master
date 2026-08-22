@@ -57,3 +57,22 @@ class RegexDetector:
 
     def validate(self, match: re.Match[str]) -> float | None:
         return self.base_confidence
+
+
+class CueAnchoredIdDetector(RegexDetector):
+    """Cue phrase followed by an identifier; the span covers only the ID.
+
+    Formatless identifiers (MRNs, account numbers, plan IDs, license
+    numbers) have no universal shape, so v1 detects them by their labels.
+    The captured ID must contain at least min_digits digits; cue-free
+    detection is Stage 2's job.
+    """
+
+    capture_group = 1
+    min_digits = 3
+
+    def validate(self, match: re.Match[str]) -> float | None:
+        digits = sum(ch.isdigit() for ch in match.group(self.capture_group))
+        if digits < self.min_digits:
+            return None
+        return self.base_confidence

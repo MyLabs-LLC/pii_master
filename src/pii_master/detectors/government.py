@@ -1,4 +1,4 @@
-"""Government-issued identifier detectors: Social Security numbers."""
+"""Government-issued identifier detectors: SSNs and driver's licenses."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import re
 
 from ..entities import EntityType
 from ..validators import ssn_ok
-from .base import RegexDetector
+from .base import CueAnchoredIdDetector, RegexDetector
 
 
 class SsnDetector(RegexDetector):
@@ -25,3 +25,16 @@ class SsnDetector(RegexDetector):
         if match.group(2) == " ":
             return self.space_confidence
         return self.base_confidence
+
+
+class UsDriverLicenseDetector(CueAnchoredIdDetector):
+    # Cue-anchored only: per-state format validation is deferred. The bare
+    # "DL" cue requires a ":" or "#" separator to avoid matching prose.
+    name = "regex/us_driver_license"
+    entity_type = EntityType.US_DRIVER_LICENSE
+    pattern = re.compile(
+        r"(?i)\b(?:driver'?s?\s+licen[sc]e(?:\s+(?:no|num(?:ber)?|#))?\s*[:#]?"
+        r"|DL\s*[:#])"
+        r"\s*([A-Za-z0-9][A-Za-z0-9-]{3,12})\b"
+    )
+    base_confidence = 0.80

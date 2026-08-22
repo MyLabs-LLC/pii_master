@@ -11,12 +11,18 @@ import re
 
 from ..entities import EntityType
 from ..validators import plausible_dob
-from .base import RegexDetector
+from .base import CueAnchoredIdDetector, RegexDetector
 
 _MONTHS = {
     "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
     "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
 }
+
+_MONTH_RX = (
+    r"Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|"
+    r"Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|"
+    r"Nov(?:ember)?|Dec(?:ember)?"
+)
 
 _BIRTH_CUE = re.compile(
     r"(?i)\b(?:dob|date\s+of\s+birth|birth\s*date|born(?:\s+on)?)\b"
@@ -33,9 +39,8 @@ class DateOfBirthDetector(RegexDetector):
         r"(?<!\d)(?:"
         r"(?P<m1>\d{1,2})(?P<sep>[/-])(?P<d1>\d{1,2})(?P=sep)(?P<y1>\d{4})"
         r"|(?P<y2>\d{4})-(?P<m2>\d{2})-(?P<d2>\d{2})"
-        r"|(?P<mon>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|"
-        r"Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|"
-        r"Nov(?:ember)?|Dec(?:ember)?)\s+(?P<d3>\d{1,2}),?\s+(?P<y3>\d{4})"
+        rf"|(?P<mon>{_MONTH_RX})\s+(?P<d3>\d{{1,2}}),?\s+(?P<y3>\d{{4}})"
+        rf"|(?P<d4>\d{{1,2}})\s+(?P<mon2>{_MONTH_RX})\s+(?P<y4>\d{{4}})"
         r")(?!\d)",
         re.IGNORECASE,
     )
@@ -48,10 +53,14 @@ class DateOfBirthDetector(RegexDetector):
             year, month, day = int(g["y1"]), int(g["m1"]), int(g["d1"])
         elif g["y2"]:
             year, month, day = int(g["y2"]), int(g["m2"]), int(g["d2"])
-        else:
+        elif g["y3"]:
             year = int(g["y3"])
             month = _MONTHS[g["mon"][:3].lower()]
             day = int(g["d3"])
+        else:
+            year = int(g["y4"])
+            month = _MONTHS[g["mon2"][:3].lower()]
+            day = int(g["d4"])
         if not plausible_dob(year, month, day):
             return None
         window_start = max(0, match.start() - self.cue_window)
@@ -60,10 +69,7 @@ class DateOfBirthDetector(RegexDetector):
         return self.base_confidence
 
 
-class MrnDetector(RegexDetector):
-    # MRNs have no universal format — every hospital system mints its own —
-    # so v1 detects them by their labels. The emitted span covers only the
-    # captured ID, not the cue.
+class MrnDetector(CueAnchoredIdDetector):
     name = "regex/mrn"
     entity_type = EntityType.MRN
     pattern = re.compile(
@@ -71,9 +77,17 @@ class MrnDetector(RegexDetector):
         r"\s*[:#]?\s*([A-Za-z0-9][A-Za-z0-9-]{4,11})\b"
     )
     base_confidence = 0.85
-    capture_group = 1
 
-    def validate(self, match: re.Match[str]) -> float | None:
-        if sum(ch.isdigit() for ch in match.group(1)) < 3:
-            return None
-        return self.base_confidence
+
+class HealthPlanIdDetector(CueAnchoredIdDetector):
+    # Cues restricted to unambiguously health-flavored wording so the
+    # type's phi_specific flag stays honest: generic cues like "member id"
+    # (gym, loyalty) or "policy number" (any insurance) are excluded.
+    name = "regex/health_plan_id"
+    entity_type = EntityType.HEALTH_PLAN_ID
+    pattern = re.compile(
+        r"(?i)\b(?:health\s+plan|beneficiary|subscriber)\s+"
+        r"(?:id|no|num(?:ber)?|#)\s*[:#]?\s*"
+        r"([A-Za-z0-9][A-Za-z0-9-]{4,14})\b"
+    )
+    base_confidence = 0.80

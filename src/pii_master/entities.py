@@ -23,6 +23,10 @@ class EntityType(str, Enum):
     IP_ADDRESS = "IP_ADDRESS"
     DATE_DOB = "DATE_DOB"
     MRN = "MRN"
+    URL = "URL"
+    ACCOUNT_NUMBER = "ACCOUNT_NUMBER"
+    HEALTH_PLAN_ID = "HEALTH_PLAN_ID"
+    US_DRIVER_LICENSE = "US_DRIVER_LICENSE"
 
 
 class DocLabel(IntEnum):
@@ -80,5 +84,24 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.MRN: EntityInfo(
         is_pii=True, phi_specific=True,
         hipaa_category="#8 Medical record numbers", weight=30.0,
+    ),
+    EntityType.URL: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#14 Web URLs", weight=5.0,
+    ),
+    EntityType.ACCOUNT_NUMBER: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#10 Account numbers", weight=20.0,
+    ),
+    # phi_specific holds because the detector only fires on unambiguously
+    # health-flavored cues (health plan / beneficiary / subscriber), never
+    # generic ones like "member id" or "policy number".
+    EntityType.HEALTH_PLAN_ID: EntityInfo(
+        is_pii=True, phi_specific=True,
+        hipaa_category="#9 Health plan beneficiary numbers", weight=30.0,
+    ),
+    EntityType.US_DRIVER_LICENSE: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#11 Certificate/license numbers", weight=20.0,
     ),
 }
