@@ -195,15 +195,24 @@ alone are already a defensible product.
 | | status |
 |---|---|
 | `training/model.py` — student, profiled design, size ladder | ✅ written, forward pass verified |
-| `training/data.py` — BIO alignment, 55 labels | ✅ written, labels verified against the dataset |
-| `training/train.py` — distillation loop | ✅ written; loss + label permutation unit-checked |
-| `training/export.py` — ONNX + int8 + 1-core benchmark | ✅ written and run (numbers above) |
-| GPU training run | ⬜ yours — no GPU here |
-| `OnnxNerDetector` + fusion | ⬜ after a student clears the gates |
+| `training/data.py` — BIO alignment, 55 labels | ✅ written; word-level BIO + word-start index added during the run |
+| `training/train.py` — distillation loop | ✅ written; label permutation now pads the teacher's 4 absent columns |
+| `training/export.py` — ONNX + int8 + 1-core benchmark | ✅ written and run |
+| GPU training run | ✅ **done** — `xs` and `m`, 3 epochs each, ~5 min/epoch on a 4080 |
+| `training/eval_student.py` — holdout scoring + fusion policies | ✅ added; gate 2 |
+| `training/eval_names.py` — name-demographic slice | ✅ added; gate 5 |
+| `training/bench_e2e.py` — whole-cascade latency on one core | ✅ added; gate 1 |
+| All five acceptance gates | ✅ **pass** — see [DISTILLATION_RESULTS.md](DISTILLATION_RESULTS.md) |
+| `OnnxNerDetector` + fusion | ⬜ next change; results section 8 lists what it must carry |
 
-⚠️ **Honest limitation:** everything here was verified on CPU with random weights and
-synthetic batches. The forward/backward pass, ONNX export, quantization behaviour, label
-alignment and latency are all measured. The *training dynamics* — convergence, the right
-`--lr`, whether α = 0.7 is the best mix — are not, because there is no GPU in this
-environment and no run has touched real data yet. Expect to tune the learning rate first
-if loss plateaus.
+**Results:** [DISTILLATION_RESULTS.md](DISTILLATION_RESULTS.md). Headline: the `m`
+student plus checksum-first fusion scores **F1 0.901** on the Nemotron holdout against
+the rules-only baseline's 0.788, at **8.0 ms p95** per 10 KB document on one core
+against a 25 ms `deep` budget.
+
+⚠️ The limitation this section used to carry — "no run has touched real data" — is
+closed. What replaced it is smaller and specific: the learning rate was never swept
+(3e-3 with OneCycle converged on the first attempt), α and T were never varied, and
+three epochs was the plan's number rather than a measured optimum. The training loss was
+still falling when the schedule ended, so a longer run is the cheapest untried
+improvement.
