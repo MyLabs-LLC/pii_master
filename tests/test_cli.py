@@ -51,3 +51,36 @@ def test_multiple_files_and_pretty(tmp_path, capsys):
     assert code == 0
     labels = [f["label"] for f in payload["files"]]
     assert labels == ["NONE", "PII"]
+
+
+def test_eval_subcommand(tmp_path, capsys):
+    corpus = tmp_path / "mini.jsonl"
+    corpus.write_text(
+        '{"id": "d1", "label": "PII", "text": "SSN [[SSN:123-45-6789]] here."}\n',
+        encoding="utf-8",
+    )
+    code, payload = run_cli(["eval", str(corpus), "--json"], capsys)
+    assert code == 0
+    assert payload["documents"] == 1
+    assert payload["span_exact"]["SSN"]["tp"] == 1
+    assert payload["doc_accuracy"] == 1.0
+
+
+def test_eval_subcommand_text_output(tmp_path, capsys):
+    corpus = tmp_path / "mini.jsonl"
+    corpus.write_text(
+        '{"id": "d1", "label": "NONE", "text": "clean memo"}\n', encoding="utf-8"
+    )
+    code = main(["eval", str(corpus)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "PHI recall" in out
+
+
+def test_bench_subcommand(capsys):
+    code, payload = run_cli(
+        ["bench", "--sizes", "500", "--docs-per-size", "2", "--json"], capsys
+    )
+    assert code == 0
+    assert len(payload["buckets"]) == 1
+    assert payload["buckets"][0]["docs"] == 2
