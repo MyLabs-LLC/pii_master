@@ -329,14 +329,24 @@ model, run selectively**:
    settled by measured 1-core latency vs span-F1 on the harness — not assumed in
    advance.**
 2. **Data.**
-   - *PII:* the `ai4privacy/pii-masking` dataset family on Hugging Face — large,
-     synthetic, permissively licensed; plus synthetic generators (e.g., Gretel-style or
-     Faker-templated documents) for format coverage.
-   - *PHI:* the **n2c2/i2b2 2014 de-identification corpus** (clinical notes with
-     gold PHI spans) — the standard benchmark. **Access requires a data use agreement
-     with Harvard DBMI; it cannot be redistributed in or evaluated by this public
-     repo.** Fully synthetic clinical notes fill the gap for open CI.
+   - *Primary candidate:* **`nvidia/Nemotron-PII`** (CC BY 4.0, commercially usable) —
+     200k synthetic persona-grounded documents, span-annotated, covering **both PII and
+     PHI**, structured and unstructured, US and international locales. Its complete
+     55-label inventory and the crosswalk to our taxonomy are in
+     **docs/NEMOTRON_PII_TAGS.md**; 12 of its labels map onto our 11 entity types
+     (23.6% of spans), and the remaining 43 labels are the measured shape of what
+     Stage 2 must add.
+   - *Additional PII:* the `ai4privacy/pii-masking` dataset family on Hugging Face, plus
+     synthetic generators (Gretel-style or Faker-templated) for format coverage.
+   - *PHI benchmark:* the **n2c2/i2b2 2014 de-identification corpus** (real clinical
+     notes with gold PHI spans) — the standard benchmark. **Access requires a data use
+     agreement with Harvard DBMI; it cannot be redistributed in or evaluated by this
+     public repo.** Nemotron-PII and synthetic clinical notes fill the gap for open CI.
    - Alignment: our taxonomy → dataset label crosswalks live next to the training code.
+     The label-space policy must be explicit: the ~43 unmodelled Nemotron labels either
+     collapse to `O` or get adopted, and the special-category attributes among them
+     (`race_ethnicity`, `religious_belief`, `political_view`, `sexuality`) belong to a
+     GDPR profile (M3), not the HIPAA one.
 3. **Export & quantization.** Export to ONNX; apply dynamic int8 quantization
    (onnxruntime). Expected artifact for a tiny student: single-digit-to-tens of MB.
    Serving: `onnxruntime` CPU EP, `intra_op_num_threads=1`, candidate windows batched
@@ -454,6 +464,8 @@ multi-GB files; any network calls at inference time (permanent non-goal).
   https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
 - n2c2 (formerly i2b2) de-identification corpora, Harvard DBMI data portal (DUA
   required): https://portal.dbmi.hms.harvard.edu/projects/n2c2-nlp/
+- Nemotron-PII dataset (CC BY 4.0): https://huggingface.co/datasets/nvidia/Nemotron-PII
+  — full tag inventory and crosswalk: docs/NEMOTRON_PII_TAGS.md
 - ai4privacy PII masking datasets: https://huggingface.co/ai4privacy
 - seqeval (entity-level sequence evaluation): https://github.com/chakki-works/seqeval
 - ONNX Runtime quantization: https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html
