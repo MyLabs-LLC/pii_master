@@ -1,7 +1,9 @@
 # pii_master — Design & Roadmap
 
-**Status:** v0.1 (M0) — Stage 1 rules engine implemented; Stages 2–3 designed, not yet built.
-**Production constraint:** inference must run fast on **1 CPU core / 4 GB RAM**. Training may use a GPU.
+**Status:** v0.2 (M1) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
+baseline (docs/BASELINE_M1.md) committed. Stage 2 designed, not yet built.
+**Production constraint:** inference must run on **1 CPU core / 4 GB RAM** and finish in
+**5 ms per document (p95), end-to-end**. Training may use a GPU.
 
 This document is the answer to the question *"how would you start solving document
 classification of PII and PHI, step by step?"* — written as an executable design. Section
@@ -29,8 +31,10 @@ Goals, in priority order:
   than by narrowing recall.
 - **Explainability.** Every document label must decompose into "these spans, found by
   these detectors, contributed this much." No opaque scores.
-- **Fit the box.** The production container is 1 CPU core and 4 GB of memory. Every
-  architectural choice is made under that budget (§5).
+- **Fit the box.** The production container is 1 CPU core and 4 GB of memory, and the
+  whole pipeline must answer in 5 ms per document at p95. Every architectural choice is
+  made under that budget (§5); the latency ceiling, not memory, is the binding
+  constraint.
 - **Composability.** Detection strategies will change (rules today, learned models
   tomorrow); the contracts between stages must not.
 
@@ -137,27 +141,47 @@ Cheap-first ordering also serves the CPU budget: the regex stage can act as a pr
 (e.g., a document with zero digit runs and zero `@` cannot contain most identifier types),
 letting Stage 2 skip or subset documents when throughput demands it.
 
-## 5. Performance budget: 1 CPU core / 4 GB RAM
+## 5. Performance budget: 1 CPU core / 4 GB RAM / 5 ms per document
 
-All figures below are **targets/estimates to be validated by the M1 benchmark harness —
-not measurements.** The standing rule: *no optimization claim without a reproducible
-benchmark script in-repo.*
+The serving budget has three sides:
 
-| Component | Memory target | Throughput target (1 core) | Notes |
+- **1 CPU core** and **4 GB RAM** (the production container), and
+- **≤ 5 ms per document at p95, end-to-end** — Stage 1 + Stage 2 + Stage 3 combined —
+  measured by the in-repo benchmark harness (`pii-master bench`). The reference
+  document is a *typical* one: ≤ 10 KB of extracted text (roughly 2–5 pages). Larger
+  documents get a pro-rated allowance (5 ms per 10 KB) until a streaming design lands;
+  the harness reports per-size buckets so both numbers stay visible.
+
+Estimates are labeled as such; **measured** numbers for the current pipeline live in
+docs/BASELINE_M1.md and are regenerated with `pii-master bench`. The standing rule: *no
+optimization claim without a reproducible benchmark script in-repo.*
+
+| Component | Memory target | Latency target (1 core, 10 KB doc) | Notes |
 |---|---|---|---|
-| Stage 1 rules | < 50 MB total RSS | tens of MB/s of text | Compiled regex, one `finditer` pass per detector; stdlib only, deployable in a scratch container |
-| Stage 2 NER (M2) | model artifact ≤ ~100 MB; steady-state RSS ≤ ~1 GB | order of low-thousands of tokens/sec | int8 dynamic-quantized ONNX, `onnxruntime` with `intra_op_num_threads=1`; sliding-window chunking for long docs |
-| Stage 3 aggregation | negligible | negligible | O(n log n) in span count |
+| Stage 1 rules | < 50 MB total RSS | ≤ ~2 ms (measured: see BASELINE_M1.md) | Compiled regex, one `finditer` pass per detector; stdlib only |
+| Stage 2 NER (M2) | model artifact ≤ ~50 MB; steady-state RSS ≤ ~1 GB | ≤ ~3 ms within the shared 5 ms ceiling | Tiny model + candidate-window cascade — see §8 |
+| Stage 3 aggregation | negligible | ≤ ~0.1 ms | O(n log n) in span count |
+
+The 5 ms ceiling — not memory — is the binding constraint, and it has teeth:
+
+- Full-document inference with even a distilled BERT-class encoder on one CPU core
+  costs **tens of milliseconds** for a multi-hundred-token document (estimate to be
+  confirmed on the harness) — an order of magnitude over budget. Stage 2 therefore
+  cannot be "run a transformer over every token of every document"; it must be a tiny
+  model, run selectively (§8).
+- Stage 1 must consume well under half the ceiling so the model layer has room; the
+  benchmark gates this per commit (`pii-master bench --fail-over-budget` in CI).
+- Anything super-linear in document length must chunk with early exit.
 
 Memory ledger (Stage 2 worst case): Python interpreter + onnxruntime (~200 MB) + model
-(~100 MB int8) + tokenizer + working buffers + document text ≪ 4 GB, leaving headroom for
-the serving layer. Nothing in this design requires loading more than one document in
+(tens of MB int8) + tokenizer + working buffers + document text ≪ 4 GB, leaving headroom
+for the serving layer. Nothing in this design requires loading more than one document in
 memory at a time.
 
-What the budget **rules out**: LLM inference in the hot path, large encoder models
-(anything whose quantized artifact approaches memory limits or whose 1-core latency is
-seconds/page), and per-document network calls. GPU appears only in training/export
-pipelines (M2), never in the serving container.
+What the budget **rules out**: LLM inference in the hot path, full-document
+transformer inference of any size, large encoder models, and per-document network calls.
+GPU appears only in training/export/distillation pipelines (M2), never in the serving
+container.
 
 ## 6. Entity taxonomy
 
@@ -169,9 +193,18 @@ v1 types (implemented in `src/pii_master/entities.py`):
 | `PHONE_US` | yes | no | #4 | regex + NANP validation | 0.85 |
 | `SSN` | yes | no | #7 | regex + invalid-range rules | 0.90 hyphenated / 0.70 spaced |
 | `CREDIT_CARD` | yes | no | #10 | regex candidates + Luhn checksum | 0.80, 0.95 with known IIN |
-| `IP_ADDRESS` | yes (weak) | no | #15 | regex + `ipaddress` validation | 0.70 |
+| `IP_ADDRESS` | yes (weak) | no | #15 | regex + `ipaddress` validation (v4 and v6) | 0.70 |
 | `DATE_DOB` | yes | no | #3 | date regex + birth-cue proximity | 0.90 |
 | `MRN` | yes | **yes** | #8 | cue-anchored regex | 0.85 |
+| `URL` | yes (weak) | no | #14 | regex | 0.85 |
+| `ACCOUNT_NUMBER` | yes | no | #10 | cue-anchored regex | 0.80 |
+| `HEALTH_PLAN_ID` | yes | **yes** | #9 | cue-anchored regex (health-flavored cues only) | 0.80 |
+| `US_DRIVER_LICENSE` | yes | no | #11 | cue-anchored regex | 0.80 |
+
+`HEALTH_PLAN_ID` cues are deliberately restricted to unambiguous health wording
+("health plan id", "beneficiary number", "subscriber id"); generic cues like "member id"
+(gym, loyalty program) or "policy number" (any insurance) are excluded so the
+phi-specific flag stays honest. Cue-free plan IDs are Stage 2 work.
 
 † *PHI-specific* means the entity alone establishes health-context linkage: an MRN has no
 non-medical reading, so its presence makes a document PHI outright. All other types
@@ -184,13 +217,16 @@ Deferred types, with reasons:
 - **Bare dates / ages > 89** (#3) — quasi-identifiers with enormous false-positive
   surface; handled at M3 with co-occurrence logic. v1 only takes dates with an explicit
   birth cue.
-- **US_DRIVER_LICENSE, PASSPORT** (#11) — per-state/per-country format matrices; M1
-  hardening work, mechanical but voluminous.
-- **HEALTH_PLAN_ID, generic ACCOUNT_NUMBER** (#9, #10) — formatless without issuer
-  context; cue-anchored rules at M1, contextual NER at M2.
-- **IPv6, URL, DEVICE_ID, VEHICLE_ID, BIOMETRIC, PHOTO** (#12–#17) — IPv6/URL are easy
-  regex additions (M1); biometric/photo require non-text pipelines (out of scope until
-  the ingestion phases).
+- **PASSPORT** (#11) — per-country format matrices; mechanical but voluminous. The
+  driver's-license detector covers only the cue-anchored case; per-state format
+  validation is likewise deferred.
+- **Cue-free ACCOUNT_NUMBER / HEALTH_PLAN_ID / MRN** — formatless without issuer
+  context; contextual NER at M2. v1 ships the cue-anchored versions.
+- **DEVICE_ID, VEHICLE_ID, BIOMETRIC, PHOTO** (#12–#13, #16–#17) — device/vehicle IDs
+  need format libraries (VIN checksum is a good M2-era add); biometric/photo require
+  non-text pipelines (out of scope until the ingestion phases).
+- **IPv4-mapped IPv6 textual form** (`::ffff:192.0.2.1`) — rare in documents; the v6
+  candidate pattern excludes dotted tails for simplicity.
 
 ## 7. Stage 1 design: rules + validators (v1, this repo)
 
@@ -236,6 +272,15 @@ Per-type design:
   a 5–12 char alphanumeric ID containing ≥3 digits. The entity span covers the ID, not
   the cue. Formatless identifiers get detected *by their labels* in v1; cue-free MRN
   detection is a Stage 2 objective.
+- **ACCOUNT_NUMBER / HEALTH_PLAN_ID / US_DRIVER_LICENSE** — same cue-anchored pattern
+  family as MRN (shared `CueAnchoredIdDetector` base): cue phrase, optional separator,
+  then an ID with a minimum digit count. Health-plan cues are restricted to unambiguous
+  health wording (§6).
+- **URL** — `http(s)://` or `www.` candidates; the pattern's final character class
+  excludes closing punctuation so a sentence-ending period or bracket is not swallowed.
+- **IPv6** — hex-and-colon candidate runs (≥2 colons) validated by stdlib
+  `ipaddress.IPv6Address`; bare `::` (no hex digit) is rejected, and leading lookarounds
+  keep `std::vector`-style code tokens out.
 
 **Confidence model.** v1 confidences are **ordinal detector certainty, not calibrated
 probabilities**: hand-set base values per detector, adjusted by validators (Luhn+IIN
@@ -253,14 +298,26 @@ number inside an email's quoted display name); only this function changes.
 
 Rules cannot find names, addresses, or cue-free MRNs, and cannot disambiguate
 context-dependent types. Stage 2 adds a learned token classifier — built under the
-constraint that **the GPU is for training; the container is 1 CPU core.**
+constraint that **the GPU is for training; the container is 1 CPU core and the whole
+pipeline has 5 ms per document.**
 
-Plan:
+That ceiling changes the model class. A BERT-class encoder — even distilled — costs tens
+of milliseconds per full document on one core, so the design is a **cascade: a tiny
+model, run selectively**:
 
-1. **Model.** Fine-tune a small encoder for token classification (BIO tagging over our
-   taxonomy). Candidates: DistilBERT-base (~66M params), DeBERTa-v3-xsmall (~22M
-   backbone), or a task-distilled student of a larger teacher. **The choice is settled by
-   the M1 benchmark harness on 1-core latency vs span-F1 — not assumed in advance.**
+1. **Candidate windows, not full documents.** Stage 1 output plus cheap lexical triggers
+   (capitalized token runs, digit-dense regions, cue words like "name:", street
+   suffixes) nominate short windows (~tens of tokens). The model scores only those
+   windows; documents and regions with no triggers never touch the model. This bounds
+   model cost by trigger density, not document length.
+2. **Tiny student models.** Candidate architectures, in order of preference under the
+   budget: (a) a char/word CNN or small BiLSTM tagger (~1–5 M params — the historically
+   strong architecture class for clinical de-identification), (b) a 2–4-layer
+   distilled micro-transformer with a short window. Either is trained by
+   **distillation on GPU**: a large teacher (fine-tuned DeBERTa-class or an
+   LLM-labeled corpus) produces soft labels; the student learns them. **The choice is
+   settled by measured 1-core latency vs span-F1 on the harness — not assumed in
+   advance.**
 2. **Data.**
    - *PII:* the `ai4privacy/pii-masking` dataset family on Hugging Face — large,
      synthetic, permissively licensed; plus synthetic generators (e.g., Gretel-style or
@@ -271,16 +328,19 @@ Plan:
      repo.** Fully synthetic clinical notes fill the gap for open CI.
    - Alignment: our taxonomy → dataset label crosswalks live next to the training code.
 3. **Export & quantization.** Export to ONNX; apply dynamic int8 quantization
-   (onnxruntime). Expected artifact for a distil-class model: tens of MB, well under the
-   ~100 MB target. Serving: `onnxruntime` CPU EP, `intra_op_num_threads=1`,
-   sliding-window chunking (stride < window) for documents beyond the model's context,
-   with span de-duplication across window overlaps.
+   (onnxruntime). Expected artifact for a tiny student: single-digit-to-tens of MB.
+   Serving: `onnxruntime` CPU EP, `intra_op_num_threads=1`, candidate windows batched
+   into one session run per document where possible, span de-duplication across
+   overlapping windows.
 4. **Fusion with rules.** The ONNX detector is just another `Detector`. Fusion policy in
    Stage 3: checksum-validated rule spans (CREDIT_CARD, SSN) outrank model spans on
    overlap; model spans add the types rules can't see; checksum validators re-verify any
    model span of a checksummed type before it can carry high confidence.
-5. **Release gate.** A model ships only if the 1-core benchmark meets the §5 targets
-   *and* span-level F1 beats the rules-only baseline on the frozen test set.
+5. **Release gate.** A model ships only if the end-to-end pipeline stays within the
+   **5 ms/doc p95** budget on the 1-core benchmark harness *and* span-level F1 beats the
+   rules-only baseline on the frozen test set. If the tiny student cannot beat the rules
+   baseline, the rules ship alone — the cascade makes the model additive, never
+   load-bearing.
 
 ## 9. Stage 3 design: aggregation, document labels, risk scoring
 
@@ -324,10 +384,15 @@ CCPA) mapping the same entity evidence to regime-specific labels.
   is **PHI recall** at a stated precision floor.
 - **Error taxonomy:** every FN/FP triaged as boundary error / type confusion / context
   miss / validator over-reject — each maps to a different fix.
-- **Test assets:** the table-driven TP/FP cases in `tests/` are the seed of a **frozen
-  hard-case corpus** (M1) that grows monotonically — cases are added, never removed, so
-  scores are comparable across versions. Public-dataset evals (ai4privacy; n2c2 where the
-  DUA permits) run alongside but never replace the frozen set.
+- **Test assets:** the **frozen hard-case corpus** lives in `eval/corpus/` (gold spans
+  authored as inline `[[TYPE:...]]` markup so offsets can never drift) and grows
+  monotonically — cases are added, never removed, so scores are comparable across
+  versions. It deliberately contains gold entities the current system cannot detect
+  (PERSON_NAME, ADDRESS) so Stage 2's job shows up as measured recall 0 today, and
+  known-FP hard negatives (version strings, bare 10-digit numbers) so precision costs
+  are quantified, not anecdotal. `pii-master eval` scores it. Public-dataset evals
+  (ai4privacy; n2c2 where the DUA permits) run alongside but never replace the frozen
+  set.
 - **Targets** (goals, not achieved results): >0.95 recall at >0.90 precision on
   checksum/format types (SSN, CREDIT_CARD, EMAIL); >0.90 recall on MRN-with-cue;
   document-level PHI recall >0.95 on the frozen corpus.
@@ -337,13 +402,16 @@ CCPA) mapping the same entity evidence to regime-specific labels.
 - **M0 — Scaffold + Stage 1 (this commit).** Package, taxonomy, 7 rule detectors,
   pipeline, classifier, CLI, test suite. *Exit: `pytest` green; CLI classifies a PHI
   sample correctly end-to-end.*
-- **M1 — Measure before learning.** Benchmark harness (throughput/RSS on 1 core, in-repo
-  scripts); frozen hard-case corpus + seqeval-style scoring; Stage 1 hardening (IPv6,
-  URL, driver's licenses, more date/phone formats, cue-anchored account/plan IDs).
-  *Exit: baseline report (rules-only P/R/F1 per type + throughput) committed.*
-- **M2 — Learned NER.** GPU fine-tune pipeline; ONNX int8 export; `OnnxNerDetector`
-  implementing the `Detector` protocol; fusion policy; calibration. *Exit: model beats
-  rules-only baseline on frozen corpus AND meets §5 CPU targets, gated in CI.*
+- **M1 — Measure before learning** *(delivered in v0.2)*. Benchmark harness
+  (`pii-master bench`: per-doc latency percentiles vs the 5 ms budget, throughput, RSS,
+  on 1 core); frozen hard-case corpus (`eval/corpus/`, append-only) + span/document
+  scoring (`pii-master eval`); Stage 1 hardening (IPv6, URL, cue-anchored driver's
+  licenses and account/plan IDs, more date formats). *Exit: baseline report
+  (rules-only P/R/F1 per type + measured latency) committed — docs/BASELINE_M1.md.*
+- **M2 — Learned NER under the 5 ms cascade.** GPU distillation pipeline; ONNX int8
+  export; candidate-window `OnnxNerDetector` implementing the `Detector` protocol;
+  fusion policy; calibration. *Exit: model beats rules-only baseline on the frozen
+  corpus AND the end-to-end pipeline stays ≤ 5 ms/doc p95 on the harness, gated in CI.*
 - **M3 — Risk & policy.** Co-occurrence scoring, policy profiles (HIPAA/GDPR), config
   system, redaction-ready span output. *Exit: same document classifiable under two
   regimes with distinct, explained outcomes.*
