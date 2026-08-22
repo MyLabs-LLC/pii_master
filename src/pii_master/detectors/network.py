@@ -19,6 +19,8 @@ class IpAddressDetector(RegexDetector):
     # a sentence-ending period right after the address.
     pattern = re.compile(r"(?<!\d)(?<!\d\.)(?:\d{1,3}\.){3}\d{1,3}(?!\d)(?!\.\d)")
     base_confidence = 0.70
+    use_digit_runs = True
+    overshoot = 8
 
     def validate(self, match: re.Match[str]) -> float | None:
         if not ipv4_ok(match.group(0)):
@@ -36,6 +38,10 @@ class Ipv6AddressDetector(RegexDetector):
         r"(?<![\w:.])[0-9A-Fa-f]{0,4}(?::[0-9A-Fa-f]{0,4}){2,7}(?![\w:])"
     )
     base_confidence = 0.70
+    # A cheap colon-pair finder seeds the windows; the leading lookbehind
+    # keeps mid-address windows from producing suffix matches.
+    window_pattern = re.compile(r"[0-9A-Fa-f]{0,4}:[0-9A-Fa-f]{0,4}:")
+    overshoot = 48
 
     def validate(self, match: re.Match[str]) -> float | None:
         candidate = match.group(0)
@@ -57,3 +63,7 @@ class UrlDetector(RegexDetector):
         re.IGNORECASE,
     )
     base_confidence = 0.85
+    # URLs longer than the overshoot are clipped, not missed.
+    hints = ("http", "www.")
+    hint_window = 6
+    overshoot = 2048

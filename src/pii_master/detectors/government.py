@@ -18,6 +18,8 @@ class SsnDetector(RegexDetector):
     pattern = re.compile(r"(?<!\d)(\d{3})([- ])(\d{2})\2(\d{4})(?!\d)")
     base_confidence = 0.90
     space_confidence = 0.70
+    use_digit_runs = True
+    overshoot = 8
 
     def validate(self, match: re.Match[str]) -> float | None:
         if not ssn_ok(match.group(1), match.group(3), match.group(4)):
@@ -38,3 +40,4 @@ class UsDriverLicenseDetector(CueAnchoredIdDetector):
         r"\s*([A-Za-z0-9][A-Za-z0-9-]{3,12})\b"
     )
     base_confidence = 0.80
+    hints = ("driver", "dl")

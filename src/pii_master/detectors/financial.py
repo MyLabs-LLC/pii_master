@@ -18,6 +18,8 @@ class CreditCardDetector(RegexDetector):
     pattern = re.compile(r"(?<![\d-])(?:\d[ -]?){12,18}\d(?![\d-])")
     base_confidence = 0.80
     iin_confidence = 0.95
+    use_digit_runs = True
+    overshoot = 8
 
     def validate(self, match: re.Match[str]) -> float | None:
         raw = match.group(0)
@@ -40,3 +42,4 @@ class AccountNumberDetector(CueAnchoredIdDetector):
     )
     base_confidence = 0.80
     min_digits = 5
+    hints = ("account", "acct")

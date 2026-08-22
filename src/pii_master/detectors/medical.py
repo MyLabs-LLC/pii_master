@@ -46,6 +46,11 @@ class DateOfBirthDetector(RegexDetector):
     )
     base_confidence = 0.90
     cue_window = 40
+    # Every accepted date has a birth cue just before it, and every cue
+    # contains one of these substrings; the date regex only runs there.
+    hints = ("dob", "born", "birth")
+    hint_window = 64
+    overshoot = 24
 
     def validate(self, match: re.Match[str]) -> float | None:
         g = match.groupdict()
@@ -77,6 +82,7 @@ class MrnDetector(CueAnchoredIdDetector):
         r"\s*[:#]?\s*([A-Za-z0-9][A-Za-z0-9-]{4,11})\b"
     )
     base_confidence = 0.85
+    hints = ("mrn", "medical record", "chart")
 
 
 class HealthPlanIdDetector(CueAnchoredIdDetector):
@@ -91,3 +97,4 @@ class HealthPlanIdDetector(CueAnchoredIdDetector):
         r"([A-Za-z0-9][A-Za-z0-9-]{4,14})\b"
     )
     base_confidence = 0.80
+    hints = ("health plan", "beneficiary", "subscriber")
