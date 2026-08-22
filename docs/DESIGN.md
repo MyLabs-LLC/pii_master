@@ -494,6 +494,7 @@ multi-GB files; any network calls at inference time (permanent non-goal).
   https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
 - n2c2 (formerly i2b2) de-identification corpora, Harvard DBMI data portal (DUA
   required): https://portal.dbmi.hms.harvard.edu/projects/n2c2-nlp/
+- Prior-art survey (what to adopt/avoid, measured CPU latencies): docs/PRIOR_ART.md
 - Nemotron-PII dataset (CC BY 4.0): https://huggingface.co/datasets/nvidia/Nemotron-PII
   — full tag inventory and crosswalk: docs/NEMOTRON_PII_TAGS.md
 - ai4privacy PII masking datasets: https://huggingface.co/ai4privacy
