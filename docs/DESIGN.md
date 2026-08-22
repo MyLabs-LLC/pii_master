@@ -1,7 +1,8 @@
 # pii_master — Design & Roadmap
 
 **Status:** v0.2 (M1) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
-baseline (docs/BASELINE_M1.md) committed. Stage 2 designed, not yet built.
+baseline (docs/BASELINE_M1.md) committed. Stage 2 designed, not yet built. Post-M1
+review and sequenced next steps: docs/IMPROVEMENT_PLAN.md.
 **Production constraint:** inference must run on **1 CPU core / 4 GB RAM** and finish in
 **5 ms per document (p95), end-to-end**. Training may use a GPU.
 
@@ -428,10 +429,18 @@ CCPA) mapping the same entity evidence to regime-specific labels.
   scoring (`pii-master eval`); Stage 1 hardening (IPv6, URL, cue-anchored driver's
   licenses and account/plan IDs, more date formats). *Exit: baseline report
   (rules-only P/R/F1 per type + measured latency) committed — docs/BASELINE_M1.md.*
+- **M1.5 — Harden Stage 1 and make evaluation a gate** *(planned; see
+  docs/IMPROVEMENT_PLAN.md)*. Close known false-PHI leaks (loose MRN/plan cues,
+  substring medical-context), add CI + an eval `--fail-under` snapshot, implement
+  the error taxonomy in §10, and take the remaining format-anchored regex wins
+  (fax, ABA routing, MAC, SWIFT, VIN). *Exit: no known reproducible false PHI;
+  pytest + eval + bench run on every push; 10 KB p95 still ≤ ~2 ms.*
 - **M2 — Learned NER under the 5 ms cascade.** GPU distillation pipeline; ONNX int8
   export; candidate-window `OnnxNerDetector` implementing the `Detector` protocol;
-  fusion policy; calibration. *Exit: model beats rules-only baseline on the frozen
-  corpus AND the end-to-end pipeline stays ≤ 5 ms/doc p95 on the harness, gated in CI.*
+  fusion policy; calibration. *Entry: M1.5 exit plus a coded Nemotron label
+  crosswalk (docs/IMPROVEMENT_PLAN.md Track D). Exit: model beats rules-only
+  baseline on the frozen corpus AND the end-to-end pipeline stays ≤ 5 ms/doc p95
+  on the harness, gated in CI.*
 - **M3 — Risk & policy.** Co-occurrence scoring, policy profiles (HIPAA/GDPR), config
   system, redaction-ready span output. *Exit: same document classifiable under two
   regimes with distinct, explained outcomes.*
