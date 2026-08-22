@@ -13,7 +13,7 @@ from .entities import DocLabel, EntityType
 from .models import DocumentReport, Entity
 from .pipeline import Pipeline
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "DocLabel",

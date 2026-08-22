@@ -235,6 +235,16 @@ function then rejects or scores each candidate. This keeps recall in the pattern
 precision in the validator, and validators are unit-testable in isolation
 (`src/pii_master/validators.py`).
 
+**Pre-scan windows.** Running a dozen back-tracking patterns over every position of
+every document measured ~7 ms for a 10 KB document — over the entire 5 ms budget on its
+own (docs/BASELINE_M1.md). Each detector therefore narrows where its pattern runs using
+a cheap pre-scan: literal hints found with C-speed `str.find` (a cue word, `@`, `http`),
+a shared cached digit-run scan for the numeric types, or a cheap seed regex (IPv6's
+colon-pair finder). The full pattern then runs only inside small windows around the
+hits. This is the same candidate-window idea Stage 2 uses (§8), applied one layer down.
+Windowed and full scans are asserted equivalent over the whole frozen corpus in
+`tests/test_prescan_equivalence.py`.
+
 **Boundary strategy.** All numeric patterns use explicit lookarounds `(?<!\d)` / `(?!\d)`
 (and variants including `.` or `-` where relevant) instead of `\b`. Word-boundary `\b`
 treats `-` and `.` as boundaries, so a 16-digit account number would otherwise yield an
