@@ -10,7 +10,8 @@ candidates are validated by checksums and format rules, and results aggregate in
 explainable document label (`NONE` / `PII` / `PHI`) and risk score. The full staged
 architecture — through quantized-ONNX NER under the same 5 ms cascade, risk policies,
 and PDF/OCR ingestion — is laid out in **[docs/DESIGN.md](docs/DESIGN.md)**; measured
-baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)**, the Stage 2 training-data
+baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)** (internal) and
+**[docs/BASELINE_NEMOTRON.md](docs/BASELINE_NEMOTRON.md)** (external holdout), the Stage 2 training-data
 survey in **[docs/NEMOTRON_PII_TAGS.md](docs/NEMOTRON_PII_TAGS.md)**, and the post-M1
 review / next-steps plan in **[docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md)**.
 

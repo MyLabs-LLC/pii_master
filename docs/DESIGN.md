@@ -1,8 +1,9 @@
 # pii_master — Design & Roadmap
 
 **Status:** v0.2 (M1) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
-baseline (docs/BASELINE_M1.md) committed. Stage 2 designed, not yet built. Post-M1
-review and sequenced next steps: docs/IMPROVEMENT_PLAN.md.
+baseline (docs/BASELINE_M1.md) committed, plus an **external** baseline on a
+Nemotron-PII holdout (docs/BASELINE_NEMOTRON.md). Stage 2 designed, not yet built.
+Post-M1 review and sequenced next steps: docs/IMPROVEMENT_PLAN.md.
 **Production constraint:** inference must run on **1 CPU core / 4 GB RAM** and finish in
 **5 ms per document (p95), end-to-end**. Training may use a GPU.
 

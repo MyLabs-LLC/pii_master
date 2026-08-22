@@ -1,3 +1,5 @@
+import pytest
+
 from pii_master.evaluation import (
     CorpusDoc,
     GoldEntity,
@@ -151,3 +153,23 @@ def test_committed_scores_baseline_matches_frozen_corpus():
     baseline = json.loads(scores_path.read_text(encoding="utf-8"))
     current = evaluate(load_corpus(sorted((root / "eval" / "corpus").glob("*.jsonl")))).scores()
     assert compare_scores(current, baseline) == []
+
+
+def test_crosswalk_partitions_the_nemotron_label_space():
+    """Mapped and unmodelled must be disjoint, and cover every known label."""
+    from pii_master.crosswalk import (
+        ALL_UNMODELLED,
+        NEMOTRON_TO_ENTITY,
+        to_entity_type,
+    )
+    from pii_master.entities import EntityType
+
+    assert not (set(NEMOTRON_TO_ENTITY) & ALL_UNMODELLED)
+    # The dataset had exactly 55 labels when surveyed (docs/NEMOTRON_PII_TAGS.md).
+    assert len(NEMOTRON_TO_ENTITY) + len(ALL_UNMODELLED) == 55
+    assert all(isinstance(v, EntityType) for v in NEMOTRON_TO_ENTITY.values())
+    assert to_entity_type("email") is EntityType.EMAIL
+    assert to_entity_type("race_ethnicity") is None
+    # A new dataset label must fail loudly, not become silent background.
+    with pytest.raises(KeyError):
+        to_entity_type("some_new_label_v2")
