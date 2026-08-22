@@ -2,6 +2,7 @@ from pii_master.evaluation import (
     CorpusDoc,
     GoldEntity,
     evaluate,
+    load_corpus,
     parse_markup,
 )
 
@@ -92,3 +93,61 @@ def test_render_is_text(tmp_path):
     out = evaluate(docs).render()
     assert "Document-level" in out
     assert "PHI recall" in out
+
+
+def test_error_taxonomy_classes():
+    docs = [
+        # undetectable: no detector can emit PERSON_NAME yet
+        CorpusDoc("d1", "PII", "Applicant Jane Doe applied.",
+                  [GoldEntity("PERSON_NAME", 10, 18, "Jane Doe")]),
+        # boundary: right type, gold span one char wider
+        CorpusDoc("d2", "PII", "The form lists SSN 123-45-6789 today.",
+                  [GoldEntity("SSN", 18, 30, " 123-45-6789")]),
+        # context_miss: gold span of a detectable type we emit nothing for
+        CorpusDoc("d3", "PII", "Reference 999 on file.",
+                  [GoldEntity("SSN", 10, 13, "999")]),
+        # spurious: we emit an email the gold does not have
+        CorpusDoc("d4", "NONE", "write to a@b.com please", []),
+    ]
+    hist = evaluate(docs).error_histogram
+    assert hist["undetectable"] == 1
+    assert hist["boundary"] >= 1
+    assert hist["context_miss"] == 1
+    assert hist["spurious"] == 1
+
+
+def test_compare_scores_flags_only_drops():
+    from pii_master.evaluation import compare_scores
+
+    base = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+            "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0, "f1": 1.0}}}
+    assert compare_scores(base, base) == []
+
+    better = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+              "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0, "f1": 1.0},
+                             "EMAIL": {"precision": 1.0, "recall": 1.0, "f1": 1.0}}}
+    assert compare_scores(better, base) == []  # improvements are never failures
+
+    worse = {"doc_accuracy": 0.9, "phi_recall": 1.0,
+             "span_exact": {"SSN": {"precision": 1.0, "recall": 0.5, "f1": 0.66}}}
+    drops = compare_scores(worse, base)
+    assert any("doc_accuracy" in d for d in drops)
+    assert any("SSN.recall" in d for d in drops)
+
+    missing = {"doc_accuracy": 1.0, "phi_recall": 1.0, "span_exact": {}}
+    assert any("missing" in d for d in compare_scores(missing, base))
+
+
+def test_committed_scores_baseline_matches_frozen_corpus():
+    """The committed gate file must reflect the current pipeline."""
+    import json
+    from pathlib import Path
+
+    from pii_master.evaluation import compare_scores
+
+    root = Path(__file__).resolve().parent.parent
+    scores_path = root / "eval" / "corpus" / "frozen_v1.scores.json"
+    assert scores_path.exists(), "run: pii-master eval ... --save-scores"
+    baseline = json.loads(scores_path.read_text(encoding="utf-8"))
+    current = evaluate(load_corpus(sorted((root / "eval" / "corpus").glob("*.jsonl")))).scores()
+    assert compare_scores(current, baseline) == []

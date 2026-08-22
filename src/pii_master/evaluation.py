@@ -127,6 +127,17 @@ class TypeScore:
         }
 
 
+# Error classes, in the DESIGN.md section 10 taxonomy. Each names a
+# different fix, which is the point: a regression becomes a ticket.
+ERROR_CLASSES = (
+    "undetectable",     # gold type no detector can emit yet (Stage 2 work)
+    "boundary",         # right type, wrong span edges
+    "type_confusion",   # overlapping span, wrong type
+    "context_miss",     # nothing emitted where gold has a span
+    "spurious",         # emitted a span where gold has nothing
+)
+
+
 @dataclass
 class EvalReport:
     exact: dict[str, TypeScore] = field(default_factory=dict)
@@ -135,6 +146,7 @@ class EvalReport:
     doc_count: int = 0
     doc_correct: int = 0
     mislabeled: list[dict] = field(default_factory=list)
+    errors: list[dict] = field(default_factory=list)
 
     @property
     def doc_accuracy(self) -> float:
@@ -145,6 +157,13 @@ class EvalReport:
         gold_phi = sum(self.confusion.get("PHI", {}).values())
         return self.confusion.get("PHI", {}).get("PHI", 0) / gold_phi if gold_phi else 0.0
 
+    @property
+    def error_histogram(self) -> dict[str, int]:
+        counts = {k: 0 for k in ERROR_CLASSES}
+        for err in self.errors:
+            counts[err["class"]] = counts.get(err["class"], 0) + 1
+        return counts
+
     def to_dict(self) -> dict:
         return {
             "documents": self.doc_count,
@@ -152,8 +171,29 @@ class EvalReport:
             "phi_recall": round(self.phi_recall, 4),
             "confusion": self.confusion,
             "mislabeled": self.mislabeled,
+            "error_histogram": self.error_histogram,
+            "errors": self.errors,
             "span_exact": {t: s.to_dict() for t, s in sorted(self.exact.items())},
             "span_partial": {t: s.to_dict() for t, s in sorted(self.partial.items())},
+        }
+
+    def scores(self) -> dict:
+        """The gate-relevant subset, for --save-scores / --fail-under.
+
+        Deliberately excludes error lists and mislabel details: the gate
+        compares quality numbers, not diagnostics.
+        """
+        return {
+            "doc_accuracy": round(self.doc_accuracy, 4),
+            "phi_recall": round(self.phi_recall, 4),
+            "span_exact": {
+                t: {
+                    "precision": round(sc.precision, 4),
+                    "recall": round(sc.recall, 4),
+                    "f1": round(sc.f1, 4),
+                }
+                for t, sc in sorted(self.exact.items())
+            },
         }
 
     def render(self) -> str:
@@ -184,7 +224,64 @@ class EvalReport:
         )
         for m in self.mislabeled:
             lines.append(f"  mislabeled: {m['id']} gold={m['gold']} predicted={m['predicted']}")
+        lines.append("")
+        lines.append("Error taxonomy (each class names a different fix)")
+        histogram = self.error_histogram
+        widest = max(histogram.values()) or 1
+        for name in ERROR_CLASSES:
+            count = histogram.get(name, 0)
+            bar = "#" * round(24 * count / widest) if count else ""
+            lines.append(f"  {name:<16} {count:>4} {bar}")
         return "\n".join(lines)
+
+
+def _classify_miss(gold_span: GoldEntity, predicted: list[tuple[str, int, int]]) -> str:
+    """Why did we miss this gold span?"""
+    if gold_span.type in FUTURE_TYPES:
+        return "undetectable"
+    overlapping = [
+        p for p in predicted if gold_span.start < p[2] and p[1] < gold_span.end
+    ]
+    if any(p[0] == gold_span.type for p in overlapping):
+        return "boundary"
+    if overlapping:
+        return "type_confusion"
+    return "context_miss"
+
+
+def _classify_spurious(
+    pred: tuple[str, int, int], gold: list[GoldEntity]
+) -> str:
+    """Why did we emit this span?"""
+    overlapping = [g for g in gold if g.start < pred[2] and pred[1] < g.end]
+    if any(g.type == pred[0] for g in overlapping):
+        return "boundary"
+    if overlapping:
+        return "type_confusion"
+    return "spurious"
+
+
+def _collect_errors(
+    doc: "CorpusDoc", predicted: list[tuple[str, int, int]]
+) -> list[dict]:
+    gold_keys = {(g.type, g.start, g.end) for g in doc.entities}
+    pred_keys = set(predicted)
+    errors: list[dict] = []
+    for g in doc.entities:
+        if (g.type, g.start, g.end) in pred_keys:
+            continue
+        errors.append({
+            "doc": doc.id, "kind": "fn", "class": _classify_miss(g, predicted),
+            "type": g.type, "text": g.text,
+        })
+    for p in predicted:
+        if p in gold_keys:
+            continue
+        errors.append({
+            "doc": doc.id, "kind": "fp", "class": _classify_spurious(p, doc.entities),
+            "type": p[0], "text": doc.text[p[1]:p[2]],
+        })
+    return errors
 
 
 def _score_spans(
@@ -231,6 +328,7 @@ def evaluate(
         result = scan(doc.text)
         predicted = [(e.type.value, e.start, e.end) for e in result.entities]
         _score_spans(doc.entities, predicted, report.exact, report.partial)
+        report.errors.extend(_collect_errors(doc, predicted))
         report.doc_count += 1
         report.confusion[doc.label][result.label.name] += 1
         if result.label.name == doc.label:
@@ -240,3 +338,27 @@ def evaluate(
                 {"id": doc.id, "gold": doc.label, "predicted": result.label.name}
             )
     return report
+
+
+def compare_scores(current: dict, baseline: dict, tolerance: float = 1e-6) -> list[str]:
+    """Regressions in `current` relative to `baseline`, as readable lines.
+
+    Only drops are reported: an improvement is never a failure, but it does
+    not silently become the new floor either -- raising the bar is a
+    deliberate --save-scores edit, the same rule as the append-only corpus.
+    """
+    drops: list[str] = []
+    for key in ("doc_accuracy", "phi_recall"):
+        was, now = baseline.get(key), current.get(key)
+        if was is not None and now is not None and now < was - tolerance:
+            drops.append(f"{key}: {was:.4f} -> {now:.4f}")
+    for entity_type, base in sorted(baseline.get("span_exact", {}).items()):
+        cur = current.get("span_exact", {}).get(entity_type)
+        if cur is None:
+            drops.append(f"{entity_type}: missing from current run")
+            continue
+        for metric in ("precision", "recall", "f1"):
+            was, now = base.get(metric), cur.get(metric)
+            if was is not None and now is not None and now < was - tolerance:
+                drops.append(f"{entity_type}.{metric}: {was:.4f} -> {now:.4f}")
+    return drops

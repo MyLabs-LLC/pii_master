@@ -1,5 +1,6 @@
 import io
 import json
+from pathlib import Path
 
 from pii_master.cli import main
 
@@ -84,3 +85,38 @@ def test_bench_subcommand(capsys):
     assert code == 0
     assert len(payload["buckets"]) == 1
     assert payload["buckets"][0]["docs"] == 2
+
+
+def test_eval_fail_under_detects_regression(tmp_path, capsys):
+    corpus = tmp_path / "mini.jsonl"
+    corpus.write_text(
+        '{"id": "d1", "label": "PII", "text": "SSN [[SSN:123-45-6789]] here."}\n',
+        encoding="utf-8",
+    )
+    scores = tmp_path / "scores.json"
+    # An unreachable baseline stands in for "the pipeline got worse".
+    scores.write_text(json.dumps({
+        "doc_accuracy": 1.0, "phi_recall": 1.0,
+        "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0, "f1": 1.0},
+                       "PERSON_NAME": {"precision": 1.0, "recall": 1.0, "f1": 1.0}},
+    }), encoding="utf-8")
+    assert main(["eval", str(corpus), "--fail-under", str(scores)]) == 1
+    assert "QUALITY REGRESSION" in capsys.readouterr().err
+
+
+def test_eval_save_scores_then_gate_passes(tmp_path, capsys):
+    corpus = tmp_path / "mini.jsonl"
+    corpus.write_text(
+        '{"id": "d1", "label": "PII", "text": "SSN [[SSN:123-45-6789]] here."}\n',
+        encoding="utf-8",
+    )
+    scores = tmp_path / "scores.json"
+    assert main(["eval", str(corpus), "--save-scores", str(scores)]) == 0
+    capsys.readouterr()
+    assert main(["eval", str(corpus), "--fail-under", str(scores)]) == 0
+
+
+def test_eval_report_shows_error_taxonomy(capsys):
+    corpus = Path(__file__).resolve().parent.parent / "eval" / "corpus" / "frozen_v1.jsonl"
+    assert main(["eval", str(corpus)]) == 0
+    assert "Error taxonomy" in capsys.readouterr().out

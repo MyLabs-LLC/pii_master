@@ -31,13 +31,29 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
 
 def _cmd_eval(args: argparse.Namespace) -> int:
-    from .evaluation import evaluate, load_corpus
+    from .evaluation import compare_scores, evaluate, load_corpus
 
     report = evaluate(load_corpus(args.paths))
     if args.json:
         print(json.dumps(report.to_dict(), indent=2))
     else:
         print(report.render())
+
+    if args.save_scores:
+        Path(args.save_scores).write_text(
+            json.dumps(report.scores(), indent=2) + "\n", encoding="utf-8"
+        )
+        print(f"\nwrote scores baseline: {args.save_scores}", file=sys.stderr)
+
+    if args.fail_under:
+        baseline = json.loads(Path(args.fail_under).read_text(encoding="utf-8"))
+        drops = compare_scores(report.scores(), baseline)
+        if drops:
+            print("\nQUALITY REGRESSION vs " + args.fail_under, file=sys.stderr)
+            for line in drops:
+                print(f"  {line}", file=sys.stderr)
+            return 1
+        print(f"\nno regression vs {args.fail_under}", file=sys.stderr)
     return 0
 
 
@@ -84,6 +100,16 @@ def main(argv: list[str] | None = None) -> int:
         "paths", nargs="+", metavar="CORPUS", help="corpus .jsonl files"
     )
     ev.add_argument("--json", action="store_true", help="JSON instead of tables")
+    ev.add_argument(
+        "--fail-under",
+        metavar="SCORES.json",
+        help="exit 1 if any metric dropped below this committed baseline",
+    )
+    ev.add_argument(
+        "--save-scores",
+        metavar="SCORES.json",
+        help="write the current scores as a new baseline (a deliberate act)",
+    )
     ev.set_defaults(func=_cmd_eval)
 
     bench = subparsers.add_parser(

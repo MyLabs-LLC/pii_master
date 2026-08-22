@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # Pinned to match the environment docs/BASELINE_M1.md was measured on.
+          python-version: "3.11"
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q
+
+      - name: Quality gate (frozen corpus, no regression allowed)
+        run: |
+          pii-master eval eval/corpus/frozen_v1.jsonl \
+            --fail-under eval/corpus/frozen_v1.scores.json
+
+      - name: Performance gate (5 ms per 10 KB document, p95)
+        # Shared CI runners are noisy, so the budget here is the contract
+        # (5 ms), not the measured local figure (~0.8 ms). A regression big
+        # enough to cross 5 ms is real regardless of runner variance.
+        run: pii-master bench --fail-over-budget
+
+      - name: CLI smoke test (end-to-end, exit codes)
+        run: |
+          set -e
+          printf 'Discharge summary. MRN: 4829471, DOB: 03/14/1985.\n' > /tmp/phi.txt
+          printf 'The quarterly planning meeting moved rooms.\n' > /tmp/clean.txt
+          test "$(pii-master scan /tmp/phi.txt | python -c 'import json,sys; print(json.load(sys.stdin)["files"][0]["label"])')" = PHI
+          test "$(pii-master scan /tmp/clean.txt | python -c 'import json,sys; print(json.load(sys.stdin)["files"][0]["label"])')" = NONE
+          pii-master scan /tmp/clean.txt --fail-on-detect > /dev/null
+          if pii-master scan /tmp/phi.txt --fail-on-detect > /dev/null; then
+            echo "--fail-on-detect should have exited non-zero"; exit 1
+          fi
