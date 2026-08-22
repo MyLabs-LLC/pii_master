@@ -59,6 +59,15 @@ def test_email(text, expected):
         ("Call (415) 555-2671.", [(EntityType.PHONE_US, "(415) 555-2671")]),
         ("123-456-7890 is not valid NANP", []),  # area code starts with 1
         ("tracking 415555267190 embedded digits", []),  # inside a longer run
+        # Bare 10-digit runs behind a reference cue are not phone numbers...
+        ("Confirmation 4155552671 was generated", []),
+        ("order 4155552671 shipped", []),
+        ("invoice ref 4155552671 attached", []),
+        # ...but a formatted number keeps its shape and is never suppressed.
+        (
+            "Confirmation call to (415) 555-2671",
+            [(EntityType.PHONE_US, "(415) 555-2671")],
+        ),
         # "1." parses as a country-code prefix: dotted-with-country-code is a
         # real phone format, so this version-string collision is a documented
         # irreducible FP at the rules level (Stage 2 context disambiguates).
@@ -134,6 +143,11 @@ def test_credit_card_iin_boosts_confidence():
         # Sentence-ending period must not suppress the match.
         ("The host is 192.168.0.1.", [(EntityType.IP_ADDRESS, "192.168.0.1")]),
         ("bad octet 999.1.1.1 ignored", []),
+        # Version/build/release cues suppress the dotted-quad reading.
+        ("Build 10.2.1.4 of the agent shipped", []),
+        ("release 10.2.1.5 follows next week", []),
+        ("running version 1.2.3.4 in prod", []),
+        ("v10.2.1.4 rolled out", []),
         ("not an ip 1.2.3.4.5 (five octets)", []),
     ],
 )
@@ -165,6 +179,8 @@ def test_date_of_birth(text, expected):
         ("Medical Record Number 82-94-71A", [(EntityType.MRN, "82-94-71A")]),
         ("Chart #4829471 attached", [(EntityType.MRN, "4829471")]),
         ("chart topper of the year", []),  # cue followed by non-ID prose
+        # Bare "chart <id>" is a table-of-contents collision, not an MRN.
+        ("The chart 4829471 is in the appendix.", []),
         ("MRN: ABCDEF has too few digits", []),
     ],
 )
@@ -247,10 +263,16 @@ def test_account_number(text, expected):
             [(EntityType.HEALTH_PLAN_ID, "84-J99-1220")],
         ),
         (
-            "subscriber id A9-3321-77 active",
+            "Health plan subscriber id A9-3321-77 active",
             [(EntityType.HEALTH_PLAN_ID, "A9-3321-77")],
         ),
-        # Generic cues are deliberately excluded (gym/loyalty collisions).
+        (
+            "insurance member id 4471-2299 active",
+            [(EntityType.HEALTH_PLAN_ID, "4471-2299")],
+        ),
+        # Generic cues are deliberately excluded: this type is phi_specific,
+        # so an unqualified cue would escalate a magazine or gym record to PHI.
+        ("subscriber id A9-3321-77 for the magazine", []),
         ("member id 99881234 renewed", []),
         ("policy number 8842113 issued", []),
     ],

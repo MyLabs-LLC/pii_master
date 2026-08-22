@@ -8,6 +8,14 @@ from ..entities import EntityType
 from ..validators import nanp_ok
 from .base import RegexDetector
 
+# A bare 10-digit run preceded by one of these is a reference number, not a
+# phone. Formatted numbers -- (415) 555-2671, 415.555.2671 -- keep their
+# shape and are never suppressed.
+_REFERENCE_CUE = re.compile(
+    r"(?i)\b(?:confirmation|conf|order|tracking|invoice|reference|ref|receipt|"
+    r"ticket|case|claim|transaction|txn|po|account|acct)\b\W{0,12}$"
+)
+
 
 class EmailDetector(RegexDetector):
     # Pragmatic pattern, not RFC 5322: quoted-string local parts and
@@ -49,9 +57,17 @@ class UsPhoneDetector(RegexDetector):
     use_digit_runs = True
     overshoot = 8
 
+    reference_window = 32
+
     def validate(self, match: re.Match[str]) -> float | None:
         area = match.group(1) or match.group(2)
         exchange = match.group(3)
         if not nanp_ok(area, exchange):
             return None
+        raw = match.group(0)
+        if raw.isdigit():  # bare run: no parens, separators or +1 prefix
+            start = match.start()
+            left = match.string[max(0, start - self.reference_window):start]
+            if _REFERENCE_CUE.search(left):
+                return None
         return self.base_confidence

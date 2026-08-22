@@ -8,6 +8,14 @@ from ..entities import EntityType
 from ..validators import ipv4_ok, ipv6_ok
 from .base import RegexDetector
 
+# A build/release/version token just before a dotted quad means it is a
+# version string, not an address ("Build 10.2.1.4"). High-precision reject;
+# residual ambiguity is Stage 2's problem.
+_VERSION_CUE = re.compile(
+    r"(?i)(?:\b(?:build|release|version|ver|rev|revision|patch|upgrade|"
+    r"shipped|firmware|schema)\b\W{0,3}|\bv)$"
+)
+
 
 class IpAddressDetector(RegexDetector):
     # Version strings like "10.2.1.4" are irreducible false positives at
@@ -22,8 +30,14 @@ class IpAddressDetector(RegexDetector):
     use_digit_runs = True
     overshoot = 8
 
+    version_window = 24
+
     def validate(self, match: re.Match[str]) -> float | None:
         if not ipv4_ok(match.group(0)):
+            return None
+        start = match.start()
+        left = match.string[max(0, start - self.version_window):start]
+        if _VERSION_CUE.search(left):
             return None
         return self.base_confidence
 

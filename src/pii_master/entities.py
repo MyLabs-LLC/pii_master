@@ -3,8 +3,8 @@
 Each :class:`EntityType` maps to one of the 18 HIPAA Safe Harbor identifiers
 (45 CFR 164.514(b)(2)) via :data:`TAXONOMY`; see docs/DESIGN.md section 6 for
 the full crosswalk and the list of deferred types (PERSON_NAME, ADDRESS,
-US_DRIVER_LICENSE, PASSPORT, HEALTH_PLAN_ID, IPv6, URL, ...) with the reasons
-each is deferred.
+PASSPORT, FAX_NUMBER, BANK_ROUTING, VEHICLE_ID, ...) with the reasons each is
+deferred.
 """
 
 from __future__ import annotations

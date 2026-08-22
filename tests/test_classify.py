@@ -29,6 +29,58 @@ def test_health_plan_id_alone_is_phi():
     assert report.label is DocLabel.PHI
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        # Word-boundary regressions: "patient" inside "impatient".
+        "The impatient customer called about shipping.",
+        "Our cloud provider raised prices.",
+        "The matrix proxy configuration is fine.",
+        "The therapists office is closed",  # "therapist" is not a listed term
+    ],
+)
+def test_medical_context_is_word_bounded(text):
+    from pii_master.classify import has_medical_context
+
+    assert has_medical_context(text) is False
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Patient seen in clinic today.",
+        "healthcare provider assigned at intake",
+        "Rx refill approved.",
+        "Reviewed the medical record before discharge.",
+    ],
+)
+def test_medical_context_still_fires_on_real_cues(text):
+    from pii_master.classify import has_medical_context
+
+    assert has_medical_context(text) is True
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # Every one of these produced a false PHI before the Track A fixes.
+        "The chart 4829471 is in the appendix.",
+        "subscriber id A9-3321-77 for the magazine",
+        "SSN 123-45-6789 from the cloud provider.",
+    ],
+)
+def test_no_false_phi(text):
+    assert scan_text(text).label is not DocLabel.PHI
+
+
+def test_phi_specific_rule_is_taxonomy_driven():
+    """Rule 2 must read TAXONOMY, not a hardcoded list of types."""
+    from pii_master.entities import TAXONOMY, EntityType
+
+    phi_specific = {t for t, info in TAXONOMY.items() if info.phi_specific}
+    assert phi_specific == {EntityType.MRN, EntityType.HEALTH_PLAN_ID}
+
+
 def test_taxonomy_covers_every_entity_type():
     from pii_master.entities import TAXONOMY, EntityType
 

@@ -2,28 +2,44 @@
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 
 from .entities import TAXONOMY, DocLabel, EntityType
 from .models import DocumentReport, Entity
 from .pipeline import Pipeline
 
-# v1 stand-in for real health-context modeling (replaced at Stage 2/3):
-# a cheap lowercase substring scan over ~20 clinical terms.
+# v1 stand-in for real health-context modeling (replaced at Stage 2/3).
+#
+# Two rules govern what may appear here, because any term firing on a
+# document that already contains an identifier escalates it to PHI:
+#   1. Terms are matched on word boundaries, never as substrings. A raw
+#      substring scan made "impatient" match "patient".
+#   2. A term must be unambiguously health-flavored on its own. Bare
+#      "provider" is not: "cloud provider" and "service provider" are the
+#      common readings, so only the qualified forms are listed.
 MEDICAL_CONTEXT_TERMS: frozenset[str] = frozenset({
     "patient",
+    "inpatient",
+    "outpatient",
     "diagnosis",
+    "diagnosed",
     "physician",
     "prescription",
     "medical record",
+    "medical history",
     "hospital",
     "clinic",
     "icd-10",
+    "icd-9",
     "treatment",
     "discharge",
     "lab results",
     "hipaa",
-    "provider",
+    "healthcare provider",
+    "health care provider",
+    "medical provider",
+    "care provider",
     "dosage",
     "symptoms",
     "admission",
@@ -32,20 +48,39 @@ MEDICAL_CONTEXT_TERMS: frozenset[str] = frozenset({
     "rx",
 })
 
+# (?<!\w) / (?!\w) rather than \b so terms ending in punctuation ("icd-10")
+# behave, and so "rx" cannot match inside a longer word. Longest-first so
+# "medical record" wins over a shorter prefix term.
+_MEDICAL_CONTEXT_RX = re.compile(
+    r"(?<!\w)(?:"
+    + "|".join(re.escape(t) for t in sorted(MEDICAL_CONTEXT_TERMS, key=len, reverse=True))
+    + r")(?!\w)",
+    re.IGNORECASE,
+)
+
 
 def has_medical_context(text: str) -> bool:
-    lower = text.lower()
-    return any(term in lower for term in MEDICAL_CONTEXT_TERMS)
+    """True if any medical-context term appears as a whole word.
+
+    Known residual weakness: "patient" also occurs as an adjective
+    ("please be patient"), and "treatment"/"discharge"/"admission" have
+    non-clinical readings. These are accepted for recall; real context
+    modeling is a Stage 2/3 job, not a longer deny-list.
+    """
+    return _MEDICAL_CONTEXT_RX.search(text) is not None
 
 
 class DocumentClassifier:
     """Maps detected entities to a document label and an explainable score.
 
     Label rules (each firing rule appends a line to report.reasons):
-      1. no entities                                   -> NONE
-      2. any PHI-specific entity (v1: MRN)             -> PHI
-      3. any entity AND medical context in the text    -> PHI
-      4. otherwise                                     -> PII
+      1. no entities                                       -> NONE
+      2. any PHI-specific entity (MRN, HEALTH_PLAN_ID)     -> PHI
+      3. any entity AND medical context in the text        -> PHI
+      4. otherwise                                         -> PII
+
+    Rule 2 reads `phi_specific` from entities.TAXONOMY rather than naming
+    types here, so adding a PHI-specific type needs no change in this file.
 
     Risk score:
         score = clamp( sum over types of

@@ -77,8 +77,11 @@ class DateOfBirthDetector(RegexDetector):
 class MrnDetector(CueAnchoredIdDetector):
     name = "regex/mrn"
     entity_type = EntityType.MRN
+    # "chart" must carry a number marker: bare `chart <alnum>` collides with
+    # prose and tables of contents ("The chart 4829471 is in the appendix").
     pattern = re.compile(
-        r"(?i)\b(?:MRN|medical\s+record\s+(?:no|num(?:ber)?|#)|chart\s*#?)"
+        r"(?i)\b(?:MRN|medical\s+record\s+(?:no|num(?:ber)?|#)"
+        r"|chart\s*(?:#|no\.?|num(?:ber)?))"
         r"\s*[:#]?\s*([A-Za-z0-9][A-Za-z0-9-]{4,11})\b"
     )
     base_confidence = 0.85
@@ -86,15 +89,23 @@ class MrnDetector(CueAnchoredIdDetector):
 
 
 class HealthPlanIdDetector(CueAnchoredIdDetector):
-    # Cues restricted to unambiguously health-flavored wording so the
-    # type's phi_specific flag stays honest: generic cues like "member id"
-    # (gym, loyalty) or "policy number" (any insurance) are excluded.
+    # This type is phi_specific -- one hit escalates a document to PHI -- so
+    # every cue must be unambiguously health-flavored on its own. Bare
+    # "subscriber id" (magazine, SaaS) and "member id" (gym, loyalty) are
+    # excluded; they only count when a health qualifier precedes them.
     name = "regex/health_plan_id"
     entity_type = EntityType.HEALTH_PLAN_ID
     pattern = re.compile(
-        r"(?i)\b(?:health\s+plan|beneficiary|subscriber)\s+"
-        r"(?:id|no|num(?:ber)?|#)\s*[:#]?\s*"
+        r"(?i)\b(?:"
+        r"health\s+plan(?:\s+(?:beneficiary|subscriber|member))?"
+        r"|beneficiary"
+        r"|(?:health|medical|insurance|medicare|medicaid|dental|vision)"
+        r"\s+(?:subscriber|member)"
+        r")\s+(?:id|no|num(?:ber)?|#)\s*[:#]?\s*"
         r"([A-Za-z0-9][A-Za-z0-9-]{4,14})\b"
     )
     base_confidence = 0.80
-    hints = ("health plan", "beneficiary", "subscriber")
+    hints = ("health plan", "beneficiary", "subscriber", "member")
+    # A qualifier ("insurance ", "medicare ") can precede the hint token, so
+    # the window must start before it -- see RegexDetector's hint invariant.
+    hint_lead = 24

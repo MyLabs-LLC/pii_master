@@ -279,14 +279,26 @@ Per-type design:
   become entities **only** when a birth cue (`DOB`, `date of birth`, `birthdate`,
   `born`) appears in the ~40 characters before the match. Calendar validation via
   `datetime.date`; years bounded to [1900, current]. Bare dates: see §6 deferral.
-- **MRN** — cue-anchored only: `MRN`, `Medical Record No/Number/#`, `Chart #` followed by
-  a 5–12 char alphanumeric ID containing ≥3 digits. The entity span covers the ID, not
+- **MRN** — cue-anchored only: `MRN`, `Medical Record No/Number/#`, or `Chart` **carrying
+  a number marker** (`#`, `no.`, `number`) followed by a 5–12 char alphanumeric ID
+  containing ≥3 digits. Bare `chart <id>` is a table-of-contents collision and is
+  rejected. The entity span covers the ID, not
   the cue. Formatless identifiers get detected *by their labels* in v1; cue-free MRN
   detection is a Stage 2 objective.
 - **ACCOUNT_NUMBER / HEALTH_PLAN_ID / US_DRIVER_LICENSE** — same cue-anchored pattern
   family as MRN (shared `CueAnchoredIdDetector` base): cue phrase, optional separator,
-  then an ID with a minimum digit count. Health-plan cues are restricted to unambiguous
-  health wording (§6).
+  then an ID with a minimum digit count. Because `HEALTH_PLAN_ID` is `phi_specific` —
+  one hit escalates the whole document to PHI — its cues must be unambiguously health
+  on their own: `health plan`, `beneficiary`, or a health qualifier before
+  `subscriber`/`member`. Bare `subscriber id` (magazine, SaaS) and `member id` (gym,
+  loyalty) are rejected.
+
+**Lexical suppressors.** Two documented false-positive classes are cheaply recoverable
+without a model, so the validators reject them: a dotted quad behind a
+`build`/`release`/`version`/`v` token is a version string, not an IPv4 address; and a
+**bare** 10-digit run behind `confirmation`/`order`/`tracking`/`invoice`/`ref` is a
+reference number, not a phone. Formatted phone numbers keep their shape and are never
+suppressed. Residual ambiguity in both classes stays Stage 2's problem.
 - **URL** — `http(s)://` or `www.` candidates; the pattern's final character class
   excludes closing punctuation so a sentence-ending period or bracket is not swallowed.
 - **IPv6** — hex-and-colon candidate runs (≥2 colons) validated by stdlib
@@ -368,11 +380,19 @@ model, run selectively**:
 **Label decision** (v1, implemented in `classify.py`):
 
 1. No entities → `NONE`.
-2. Any *PHI-specific* entity (v1: `MRN`) → `PHI`.
-3. Otherwise, ≥1 entity **and** medical context present → `PHI`. v1's medical-context
-   test is a ~20-term lowercase keyword scan (`patient`, `diagnosis`, `discharge`,
-   `icd-10`, `prescription`, …) — a deliberately cheap stand-in, documented as such,
-   replaced by real context modeling at M2/M3.
+2. Any entity whose taxonomy row is `phi_specific` (currently `MRN` and
+   `HEALTH_PLAN_ID`) → `PHI`. The rule reads `entities.TAXONOMY`, so adding a
+   PHI-specific type needs no change in `classify.py`.
+3. Otherwise, ≥1 entity **and** medical context present → `PHI`. The medical-context
+   test is a ~27-term **word-bounded** scan (`patient`, `diagnosis`, `discharge`,
+   `icd-10`, `prescription`, …) — a deliberately cheap stand-in, replaced by real
+   context modeling at M2/M3. Two rules govern the term list, both learned the hard
+   way (docs/IMPROVEMENT_PLAN.md §3.1): terms match on word boundaries, never as
+   substrings (`impatient` used to match `patient`), and a term must be
+   unambiguously health-flavored alone (bare `provider` was dropped for
+   `healthcare provider`, since "cloud provider" is the common reading). Residual
+   weakness, accepted for recall: `treatment`, `discharge`, `admission` and adjectival
+   `patient` still have non-clinical readings.
 4. Otherwise → `PII`.
 
 Every rule that fires appends a human-readable line to `report.reasons` — the report

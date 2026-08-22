@@ -31,6 +31,14 @@ def sample_texts() -> list[str]:
     texts = [doc.text for doc in load_corpus(sorted(CORPUS_DIR.glob("*.jsonl")))]
     rng = random.Random(42)
     texts += [make_doc(rng, size) for size in (1_000, 5_000, 20_000)]
+    # Shapes whose match starts before their pre-scan hint token; these break
+    # if a detector's hint_lead stops covering its cue prefix.
+    texts += [
+        "insurance member id 4471-2299 active",
+        "medicare subscriber id 8891-2210 on file",
+        "Health plan beneficiary number PA-0004382965 renews",
+        "Please see medical record number 82-94-71A for details",
+    ]
     return texts
 
 
