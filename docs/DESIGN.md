@@ -1,0 +1,382 @@
+# pii_master — Design & Roadmap
+
+**Status:** v0.1 (M0) — Stage 1 rules engine implemented; Stages 2–3 designed, not yet built.
+**Production constraint:** inference must run fast on **1 CPU core / 4 GB RAM**. Training may use a GPU.
+
+This document is the answer to the question *"how would you start solving document
+classification of PII and PHI, step by step?"* — written as an executable design. Section
+order mirrors the build order.
+
+---
+
+## 1. Problem statement & goals
+
+Given a document, decide:
+
+1. **Document label** — does it contain personally identifiable information (PII),
+   protected health information (PHI), or neither?
+2. **Evidence** — which spans of text triggered that decision (entity type, offsets,
+   confidence, which detector found it)?
+3. **Risk score** — an explainable 0–100 number so downstream policy can triage
+   (block, quarantine, redact, allow).
+
+Goals, in priority order:
+
+- **Recall-first for PHI.** A missed medical record number leaking into a data lake is a
+  reportable incident; a false alarm costs a reviewer minutes. When precision and recall
+  conflict, we choose operating points that favor recall for PHI-relevant types, and we
+  keep precision high by *validating* candidates (checksums, known-invalid ranges) rather
+  than by narrowing recall.
+- **Explainability.** Every document label must decompose into "these spans, found by
+  these detectors, contributed this much." No opaque scores.
+- **Fit the box.** The production container is 1 CPU core and 4 GB of memory. Every
+  architectural choice is made under that budget (§5).
+- **Composability.** Detection strategies will change (rules today, learned models
+  tomorrow); the contracts between stages must not.
+
+Non-goals for v1 are listed in §12.
+
+## 2. Definitions: PII vs PHI
+
+**PII** is any information that can identify an individual, alone or in combination:
+direct identifiers (SSN, passport number) and quasi-identifiers (DOB, ZIP code, gender —
+individually weak, jointly identifying).
+
+**PHI** (per HIPAA) is individually identifiable health information created, received, or
+maintained by a covered entity or business associate. The critical property: **PHI is
+PII plus health-context linkage.** An SSN in a bank statement is PII; the same SSN in a
+discharge summary is PHI. Consequently our labels are ordered — `NONE < PII < PHI` — and
+PHI implies PII is present.
+
+The PHI taxonomy anchor is the **18 HIPAA Safe Harbor identifiers**
+(45 CFR §164.514(b)(2)), which enumerate what must be removed for a dataset to be
+considered de-identified:
+
+| #  | Identifier |
+|----|------------|
+| 1  | Names |
+| 2  | Geographic subdivisions smaller than a state (street, city, county, ZIP*) |
+| 3  | All elements of dates (except year) directly related to an individual — birth date, admission date, discharge date, death date; all ages over 89 |
+| 4  | Telephone numbers |
+| 5  | Fax numbers |
+| 6  | Email addresses |
+| 7  | Social Security numbers |
+| 8  | Medical record numbers |
+| 9  | Health plan beneficiary numbers |
+| 10 | Account numbers |
+| 11 | Certificate/license numbers |
+| 12 | Vehicle identifiers and serial numbers, including license plates |
+| 13 | Device identifiers and serial numbers |
+| 14 | Web URLs |
+| 15 | IP addresses |
+| 16 | Biometric identifiers (finger/voice prints) |
+| 17 | Full-face photographs and comparable images |
+| 18 | Any other unique identifying number, characteristic, or code |
+
+\* first 3 digits of ZIP retainable under population-size conditions.
+
+Every entity type we ever add maps to one of these rows (or is PII-only, like a
+non-medical account credential). That mapping lives in code (`entities.TAXONOMY`) so the
+classifier and reports can cite it.
+
+## 3. Why this is hard
+
+- **Context-dependence.** `03/14/1985` is nothing; `DOB: 03/14/1985` is HIPAA identifier
+  #3. `10.2.1.4` is a software version in a changelog and an IP address in an access log.
+  `Chart #4829471` is an MRN; `chart topper` is prose. Rules can encode local context
+  cues; genuinely resolving ambiguity needs learned models (Stage 2).
+- **Precision/recall asymmetry.** The cost matrix is lopsided (missed PHI ≫ false alarm),
+  but a scanner that cries wolf gets turned off — which is the worst recall of all. So
+  precision is not optional; it just isn't the tie-breaker.
+- **Format explosion.** SSNs appear hyphenated, spaced, or bare; phone numbers in a dozen
+  notations; dates in endless formats. Some identifiers (MRNs, health plan IDs) have **no
+  universal format at all** — every hospital system mints its own.
+- **Quasi-identifier combinations.** No single field identifies anyone, but
+  {ZIP, birth date, sex} famously identifies most of the US population. Document-level
+  classification must eventually reason about co-occurrence, not just individual spans.
+- **Document formats.** Real documents are PDFs, Word files, spreadsheets, and scans. OCR
+  noise (`O`↔`0`, `l`↔`1`) breaks both regexes and checksums.
+- **Multilinguality & locale.** Names, addresses, and national ID formats differ per
+  country; v1 is deliberately US/English-scoped and says so.
+
+## 4. System architecture: a staged pipeline
+
+```
+                     ┌────────────────────────────────────────────────┐
+                     │                 pii_master                     │
+ document text ──►   │                                                │
+ (v1: plain text;    │  Stage 1: Rules & validators        [v1, now]  │
+  M4+: PDF/DOCX/OCR) │    regex candidates → checksum/range           │
+                     │    validation → typed spans                    │
+                     │                    │                           │
+                     │  Stage 2: Learned NER               [M2]       │
+                     │    small transformer, GPU-trained,             │
+                     │    int8 ONNX on CPU → typed spans              │
+                     │                    │                           │
+                     │  Stage 3: Aggregation               [v1 basic] │
+                     │    merge spans → doc label (NONE/PII/PHI)      │
+                     │    → explainable risk score                    │
+                     └────────────────────┬───────────────────────────┘
+                                          ▼
+                       JSON report: label, risk, entities, reasons
+```
+
+The load-bearing decision is the **shared contract**: every detection strategy — regex
+today, ONNX NER at M2, anything later — implements one structural interface
+(`Detector.detect(text) -> list[Entity]`) and emits the same frozen `Entity` record
+(type, char offsets, text, confidence, detector provenance). Stages compose because they
+only exchange `Entity` lists:
+
+- Stage 1 and Stage 2 both *produce* entities; neither knows the other exists.
+- Stage 3 *consumes* entities regardless of origin, resolves overlaps, and classifies.
+- Rules stay in the pipeline forever: post-M2 they act as high-precision overrides
+  (a Luhn-valid card number found by regex outranks a model's vague "NUMBER" span), and
+  checksum validators re-verify model-proposed spans.
+
+Cheap-first ordering also serves the CPU budget: the regex stage can act as a pre-filter
+(e.g., a document with zero digit runs and zero `@` cannot contain most identifier types),
+letting Stage 2 skip or subset documents when throughput demands it.
+
+## 5. Performance budget: 1 CPU core / 4 GB RAM
+
+All figures below are **targets/estimates to be validated by the M1 benchmark harness —
+not measurements.** The standing rule: *no optimization claim without a reproducible
+benchmark script in-repo.*
+
+| Component | Memory target | Throughput target (1 core) | Notes |
+|---|---|---|---|
+| Stage 1 rules | < 50 MB total RSS | tens of MB/s of text | Compiled regex, one `finditer` pass per detector; stdlib only, deployable in a scratch container |
+| Stage 2 NER (M2) | model artifact ≤ ~100 MB; steady-state RSS ≤ ~1 GB | order of low-thousands of tokens/sec | int8 dynamic-quantized ONNX, `onnxruntime` with `intra_op_num_threads=1`; sliding-window chunking for long docs |
+| Stage 3 aggregation | negligible | negligible | O(n log n) in span count |
+
+Memory ledger (Stage 2 worst case): Python interpreter + onnxruntime (~200 MB) + model
+(~100 MB int8) + tokenizer + working buffers + document text ≪ 4 GB, leaving headroom for
+the serving layer. Nothing in this design requires loading more than one document in
+memory at a time.
+
+What the budget **rules out**: LLM inference in the hot path, large encoder models
+(anything whose quantized artifact approaches memory limits or whose 1-core latency is
+seconds/page), and per-document network calls. GPU appears only in training/export
+pipelines (M2), never in the serving container.
+
+## 6. Entity taxonomy
+
+v1 types (implemented in `src/pii_master/entities.py`):
+
+| EntityType | PII | PHI-specific† | HIPAA row (§2) | Detection (v1) | Base confidence |
+|---|---|---|---|---|---|
+| `EMAIL` | yes | no | #6 | regex | 0.95 |
+| `PHONE_US` | yes | no | #4 | regex + NANP validation | 0.85 |
+| `SSN` | yes | no | #7 | regex + invalid-range rules | 0.90 hyphenated / 0.70 spaced |
+| `CREDIT_CARD` | yes | no | #10 | regex candidates + Luhn checksum | 0.80, 0.95 with known IIN |
+| `IP_ADDRESS` | yes (weak) | no | #15 | regex + `ipaddress` validation | 0.70 |
+| `DATE_DOB` | yes | no | #3 | date regex + birth-cue proximity | 0.90 |
+| `MRN` | yes | **yes** | #8 | cue-anchored regex | 0.85 |
+
+† *PHI-specific* means the entity alone establishes health-context linkage: an MRN has no
+non-medical reading, so its presence makes a document PHI outright. All other types
+become PHI only when medical context co-occurs (§9).
+
+Deferred types, with reasons:
+
+- **PERSON_NAME, ADDRESS** (#1, #2) — not regex-shaped; this is exactly what Stage 2 NER
+  is for. Attempting them with rules yields precision too low to ship.
+- **Bare dates / ages > 89** (#3) — quasi-identifiers with enormous false-positive
+  surface; handled at M3 with co-occurrence logic. v1 only takes dates with an explicit
+  birth cue.
+- **US_DRIVER_LICENSE, PASSPORT** (#11) — per-state/per-country format matrices; M1
+  hardening work, mechanical but voluminous.
+- **HEALTH_PLAN_ID, generic ACCOUNT_NUMBER** (#9, #10) — formatless without issuer
+  context; cue-anchored rules at M1, contextual NER at M2.
+- **IPv6, URL, DEVICE_ID, VEHICLE_ID, BIOMETRIC, PHOTO** (#12–#17) — IPv6/URL are easy
+  regex additions (M1); biometric/photo require non-text pipelines (out of scope until
+  the ingestion phases).
+
+## 7. Stage 1 design: rules + validators (v1, this repo)
+
+**Principle: broad candidate regex, strict validator.** The regex over-generates; a pure
+function then rejects or scores each candidate. This keeps recall in the pattern and
+precision in the validator, and validators are unit-testable in isolation
+(`src/pii_master/validators.py`).
+
+**Boundary strategy.** All numeric patterns use explicit lookarounds `(?<!\d)` / `(?!\d)`
+(and variants including `.` or `-` where relevant) instead of `\b`. Word-boundary `\b`
+treats `-` and `.` as boundaries, so a 16-digit account number would otherwise yield an
+embedded "SSN" match on digits 4–12. Lookarounds reject candidates embedded in longer
+digit runs.
+
+Per-type design:
+
+- **EMAIL** — pragmatic pattern `[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}`, not
+  RFC 5322 (which admits quoted-string monstrosities nobody writes). Validator rejects
+  local parts starting/ending with `.`.
+- **PHONE_US** — NANP shapes with optional `+1`, `(area)`, and `-. ` separators.
+  Validator: area code and exchange must start with 2–9 (NANP rule); kills most
+  order-number/timestamp collisions. 10 bare digits remain the known FP class → 0.85.
+- **SSN** — `(\d{3})([- ])(\d{2})\2(\d{4})` with a backreferenced separator (consistent
+  `-` or ` `, never mixed). Validator rejects known-never-issued ranges: area `000`,
+  `666`, `900–999`; group `00`; serial `0000`. Post-2011 randomization means the area no
+  longer encodes geography, so we do *not* reject on geography; the famous test SSN
+  `078-05-1120` is structurally valid and is deliberately detected. Bare 9-digit runs are
+  **not** matched in v1 — the FP flood outweighs recall; revisit with Stage 2 context.
+- **CREDIT_CARD** — candidate: 13–19 digits with optional uniform ` ` or `-` grouping.
+  Validator: consistent separator, length 13–19 after stripping, and the **Luhn mod-10
+  checksum as a hard reject** (a 1-in-10 random-number survivor rate, multiplied by the
+  other constraints, makes this the highest-precision detector). Known IIN prefixes
+  (Visa 4, Mastercard 51–55/2221–2720, Amex 34/37, Discover 6011/65) boost confidence
+  0.80 → 0.95 but never reject — IIN ranges churn.
+- **IP_ADDRESS** — dotted-quad candidates validated by stdlib `ipaddress.IPv4Address`.
+  Version strings like `10.2.1.4` are irreducible FPs at the rules level → 0.70; Stage 2
+  context (surrounding tokens like `version`, `v`, `release`) is the real fix.
+- **DATE_DOB** — date shapes (`MM/DD/YYYY`, `M-D-YYYY`, `YYYY-MM-DD`, `March 14, 1985`)
+  become entities **only** when a birth cue (`DOB`, `date of birth`, `birthdate`,
+  `born`) appears in the ~40 characters before the match. Calendar validation via
+  `datetime.date`; years bounded to [1900, current]. Bare dates: see §6 deferral.
+- **MRN** — cue-anchored only: `MRN`, `Medical Record No/Number/#`, `Chart #` followed by
+  a 5–12 char alphanumeric ID containing ≥3 digits. The entity span covers the ID, not
+  the cue. Formatless identifiers get detected *by their labels* in v1; cue-free MRN
+  detection is a Stage 2 objective.
+
+**Confidence model.** v1 confidences are **ordinal detector certainty, not calibrated
+probabilities**: hand-set base values per detector, adjusted by validators (Luhn+IIN
+boost, spaced-SSN penalty). They exist so overlap resolution and risk scoring have a
+consistent preference order. Real calibration (isotonic/Platt on a labeled dev set)
+arrives with Stage 2, where scores come from a model that can be calibrated.
+
+**Overlap resolution** (`pipeline.py`): collect candidates from all detectors, sort by
+`(-confidence, -length, start, detector_name)`, greedily accept spans that don't overlap
+an accepted span, return sorted by position. Deterministic, O(n log n), explainable.
+Documented replacement point: M2 may want nested spans of *different* types (a phone
+number inside an email's quoted display name); only this function changes.
+
+## 8. Stage 2 design: learned NER under the CPU budget (M2)
+
+Rules cannot find names, addresses, or cue-free MRNs, and cannot disambiguate
+context-dependent types. Stage 2 adds a learned token classifier — built under the
+constraint that **the GPU is for training; the container is 1 CPU core.**
+
+Plan:
+
+1. **Model.** Fine-tune a small encoder for token classification (BIO tagging over our
+   taxonomy). Candidates: DistilBERT-base (~66M params), DeBERTa-v3-xsmall (~22M
+   backbone), or a task-distilled student of a larger teacher. **The choice is settled by
+   the M1 benchmark harness on 1-core latency vs span-F1 — not assumed in advance.**
+2. **Data.**
+   - *PII:* the `ai4privacy/pii-masking` dataset family on Hugging Face — large,
+     synthetic, permissively licensed; plus synthetic generators (e.g., Gretel-style or
+     Faker-templated documents) for format coverage.
+   - *PHI:* the **n2c2/i2b2 2014 de-identification corpus** (clinical notes with
+     gold PHI spans) — the standard benchmark. **Access requires a data use agreement
+     with Harvard DBMI; it cannot be redistributed in or evaluated by this public
+     repo.** Fully synthetic clinical notes fill the gap for open CI.
+   - Alignment: our taxonomy → dataset label crosswalks live next to the training code.
+3. **Export & quantization.** Export to ONNX; apply dynamic int8 quantization
+   (onnxruntime). Expected artifact for a distil-class model: tens of MB, well under the
+   ~100 MB target. Serving: `onnxruntime` CPU EP, `intra_op_num_threads=1`,
+   sliding-window chunking (stride < window) for documents beyond the model's context,
+   with span de-duplication across window overlaps.
+4. **Fusion with rules.** The ONNX detector is just another `Detector`. Fusion policy in
+   Stage 3: checksum-validated rule spans (CREDIT_CARD, SSN) outrank model spans on
+   overlap; model spans add the types rules can't see; checksum validators re-verify any
+   model span of a checksummed type before it can carry high confidence.
+5. **Release gate.** A model ships only if the 1-core benchmark meets the §5 targets
+   *and* span-level F1 beats the rules-only baseline on the frozen test set.
+
+## 9. Stage 3 design: aggregation, document labels, risk scoring
+
+**Label decision** (v1, implemented in `classify.py`):
+
+1. No entities → `NONE`.
+2. Any *PHI-specific* entity (v1: `MRN`) → `PHI`.
+3. Otherwise, ≥1 entity **and** medical context present → `PHI`. v1's medical-context
+   test is a ~20-term lowercase keyword scan (`patient`, `diagnosis`, `discharge`,
+   `icd-10`, `prescription`, …) — a deliberately cheap stand-in, documented as such,
+   replaced by real context modeling at M2/M3.
+4. Otherwise → `PII`.
+
+Every rule that fires appends a human-readable line to `report.reasons` — the report
+explains itself.
+
+**Risk score** (0–100, explainable, defined in one docstring):
+
+```
+score = clamp( Σ_over_types  min(count_t, 3) × weight_t × mean_confidence_t
+               + 15 if label == PHI else 0,
+               0, 100 )
+```
+
+Per-type counts cap at 3 so a CSV with 500 emails doesn't outscore a document with one
+SSN; weights (5–30) live in `entities.TAXONOMY`; the PHI bonus reflects regulatory
+exposure. All hand-set v1 heuristics — the structure (additive, capped, per-type
+attributable) is the durable part.
+
+**Planned evolution (M3):** quasi-identifier co-occurrence scoring (name + DOB +
+diagnosis ≫ each alone), per-section/page attribution for long documents, and
+configurable **policy profiles** (HIPAA Safe Harbor vs GDPR personal-data categories vs
+CCPA) mapping the same entity evidence to regime-specific labels.
+
+## 10. Evaluation methodology
+
+- **Span level:** precision/recall/F1 **per entity type**, entity-level matching in the
+  seqeval style — exact-boundary and partial-credit (overlap) variants reported
+  separately, because boundary sloppiness and type confusion are different bugs.
+- **Document level:** confusion matrix over NONE/PII/PHI; the headline operating metric
+  is **PHI recall** at a stated precision floor.
+- **Error taxonomy:** every FN/FP triaged as boundary error / type confusion / context
+  miss / validator over-reject — each maps to a different fix.
+- **Test assets:** the table-driven TP/FP cases in `tests/` are the seed of a **frozen
+  hard-case corpus** (M1) that grows monotonically — cases are added, never removed, so
+  scores are comparable across versions. Public-dataset evals (ai4privacy; n2c2 where the
+  DUA permits) run alongside but never replace the frozen set.
+- **Targets** (goals, not achieved results): >0.95 recall at >0.90 precision on
+  checksum/format types (SSN, CREDIT_CARD, EMAIL); >0.90 recall on MRN-with-cue;
+  document-level PHI recall >0.95 on the frozen corpus.
+
+## 11. Roadmap & milestones
+
+- **M0 — Scaffold + Stage 1 (this commit).** Package, taxonomy, 7 rule detectors,
+  pipeline, classifier, CLI, test suite. *Exit: `pytest` green; CLI classifies a PHI
+  sample correctly end-to-end.*
+- **M1 — Measure before learning.** Benchmark harness (throughput/RSS on 1 core, in-repo
+  scripts); frozen hard-case corpus + seqeval-style scoring; Stage 1 hardening (IPv6,
+  URL, driver's licenses, more date/phone formats, cue-anchored account/plan IDs).
+  *Exit: baseline report (rules-only P/R/F1 per type + throughput) committed.*
+- **M2 — Learned NER.** GPU fine-tune pipeline; ONNX int8 export; `OnnxNerDetector`
+  implementing the `Detector` protocol; fusion policy; calibration. *Exit: model beats
+  rules-only baseline on frozen corpus AND meets §5 CPU targets, gated in CI.*
+- **M3 — Risk & policy.** Co-occurrence scoring, policy profiles (HIPAA/GDPR), config
+  system, redaction-ready span output. *Exit: same document classifiable under two
+  regimes with distinct, explained outcomes.*
+- **M4 — PDF/DOCX ingestion.** Text-layer extraction with offset mapping back to source
+  (page/bbox) so evidence remains locatable. *Exit: PDF in, span-attributed report out.*
+- **M5 — OCR path.** Scanned-document support; OCR-noise-tolerant validators (confusable
+  characters). *Exit: scanned PHI sample correctly labeled.*
+- **M6 — Feedback loop.** Reviewer corrections captured as labeled data; active-learning
+  selection; periodic retrain. *Exit: correction→retrain path exercised once end-to-end.*
+- **M7 — Beyond US/English.** Locale packs (national ID formats + per-locale NER),
+  starting with the EU. *Exit: one non-US locale at parity on its frozen corpus.*
+
+## 12. Non-goals (v1) & open questions
+
+**v1 non-goals:** redaction/masking output (report only); PDF/DOCX/OCR (M4/M5); non-US
+identifier formats (M7); calibrated probabilities (M2); streaming/chunked processing of
+multi-GB files; any network calls at inference time (permanent non-goal).
+
+**Open questions:**
+- Nested spans of different types — allow at M2, or keep flat spans and let the report
+  carry alternates?
+- Should a fast "doc-label-only" mode exist that skips span extraction when the first
+  PHI-specific hit short-circuits? (Speed vs evidence completeness.)
+- Where does the confidence threshold live — in the library (opinionated default) or
+  only in policy config (M3)?
+
+## 13. References
+
+- HIPAA Safe Harbor de-identification: 45 CFR §164.514(b); HHS guidance:
+  https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html
+- n2c2 (formerly i2b2) de-identification corpora, Harvard DBMI data portal (DUA
+  required): https://portal.dbmi.hms.harvard.edu/projects/n2c2-nlp/
+- ai4privacy PII masking datasets: https://huggingface.co/ai4privacy
+- seqeval (entity-level sequence evaluation): https://github.com/chakki-works/seqeval
+- ONNX Runtime quantization: https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html
+- Luhn algorithm: ISO/IEC 7812-1 (check digit for identification card numbers)
