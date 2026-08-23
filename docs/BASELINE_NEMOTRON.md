@@ -7,6 +7,19 @@ nobody in this repo authored. **This is the honest number**; the frozen corpus i
 
 Split: `test` · documents scored: **100,000** · source: test-00000-of-00001.parquet
 
+> **This is the RULES-ONLY baseline, and its scope did not change at v0.3.**
+> That release adopted 22 more Nemotron labels for the Stage 2 model, which
+> would have widened the denominator here and dropped every number for a reason
+> that has nothing to do with the rules changing — no regex emits a
+> `PERSON_NAME`. `eval/scripts/nemotron_eval.py` is therefore pinned to
+> `crosswalk.RULE_MAPPED`, the same 12 labels scored below, so this document
+> stays comparable across releases.
+>
+> The deep cascade's number on the same data is in
+> [STAGE2_INTEGRATION.md](STAGE2_INTEGRATION.md) §7.1: **F1 0.933 on these
+> types against 0.788 here**, plus 0.893 on fourteen types this baseline
+> cannot score at all.
+
 ## Scope
 
 Only the **12 mapped labels** (`pii_master/crosswalk.py`) are scored: 203,283 gold spans.

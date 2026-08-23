@@ -12,9 +12,23 @@ import sys
 from pathlib import Path
 
 from .classify import scan_text
+from .ner import MODEL_DIR_ENV, ModelUnavailable
 
 
 def _cmd_scan(args: argparse.Namespace) -> int:
+    from .classify import default_pipeline
+    from .pipeline import deep_pipeline
+
+    if args.deep:
+        # Built once for the whole invocation: an ONNX session costs tens of
+        # milliseconds to create, so per-file construction would dominate a
+        # multi-file scan. ModelUnavailable is deliberately not caught -- see
+        # pipeline.deep_pipeline for why deep mode must not fall back to rules.
+        pipeline = deep_pipeline(args.model_dir,
+                                 min_confidence=args.min_confidence)
+    else:
+        pipeline = default_pipeline()
+
     results: list[dict] = []
     detected = False
     for path in args.paths:
@@ -22,7 +36,7 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             text = sys.stdin.read()
         else:
             text = Path(path).read_text(encoding="utf-8", errors="replace")
-        report = scan_text(text)
+        report = scan_text(text, pipeline)
         detected = detected or bool(report.entities)
         results.append({"path": path, **report.to_dict()})
 
@@ -31,9 +45,21 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
 
 def _cmd_eval(args: argparse.Namespace) -> int:
-    from .evaluation import compare_scores, evaluate, load_corpus
+    from .evaluation import FUTURE_TYPES, compare_scores, evaluate, load_corpus
 
-    report = evaluate(load_corpus(args.paths))
+    if args.deep:
+        from .pipeline import deep_pipeline
+
+        pipeline = deep_pipeline(args.model_dir,
+                                 min_confidence=args.min_confidence)
+        # In deep mode nothing is "undetectable": the corpus's PERSON_NAME and
+        # ADDRESS gold is exactly what the student is for, so a miss must be
+        # triaged as a real recall failure and not excused.
+        report = evaluate(load_corpus(args.paths),
+                          scan=lambda text: scan_text(text, pipeline),
+                          undetectable=frozenset())
+    else:
+        report = evaluate(load_corpus(args.paths), undetectable=FUTURE_TYPES)
     if args.json:
         print(json.dumps(report.to_dict(), indent=2))
     else:
@@ -66,6 +92,7 @@ def _cmd_bench(args: argparse.Namespace) -> int:
         sizes=sizes,
         docs_per_size=args.docs_per_size,
         budget_ms=args.budget_ms,
+        mode="deep" if args.deep else "fast",
     )
     if args.json:
         print(json.dumps(report.to_dict(), indent=2))
@@ -91,6 +118,28 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="exit with status 1 if any entity is detected",
     )
+    scan.add_argument(
+        "--deep",
+        action="store_true",
+        help="also run the Stage 2 NER student: finds names, addresses and "
+             "cue-free identifiers that no rule can. Needs pii-master[ml] and "
+             "a model artifact; slower than the default rules-only mode.",
+    )
+    scan.add_argument(
+        "--model-dir",
+        metavar="DIR",
+        help=f"Stage 2 model directory (default: ${MODEL_DIR_ENV}, then the "
+             "user cache, then training/artifacts)",
+    )
+    scan.add_argument(
+        "--min-confidence",
+        type=float,
+        default=0.70,
+        metavar="P",
+        help="drop Stage 2 spans below this mean per-token probability "
+             "(default: 0.70 — calibrated, so this is roughly the minimum "
+             "probability that a span is exactly right); 0 disables the filter",
+    )
     scan.set_defaults(func=_cmd_scan)
 
     ev = subparsers.add_parser(
@@ -110,6 +159,14 @@ def main(argv: list[str] | None = None) -> int:
         metavar="SCORES.json",
         help="write the current scores as a new baseline (a deliberate act)",
     )
+    ev.add_argument(
+        "--deep",
+        action="store_true",
+        help="score the rules + Stage 2 cascade instead of rules only",
+    )
+    ev.add_argument("--model-dir", metavar="DIR", help="Stage 2 model directory")
+    ev.add_argument("--min-confidence", type=float, default=0.70, metavar="P",
+                    help="drop Stage 2 spans below this probability")
     ev.set_defaults(func=_cmd_eval)
 
     bench = subparsers.add_parser(
@@ -123,10 +180,16 @@ def main(argv: list[str] | None = None) -> int:
         help="comma-separated document sizes in bytes",
     )
     bench.add_argument(
+        "--deep",
+        action="store_true",
+        help="benchmark rules + the Stage 2 student against the 25 ms deep "
+             "budget instead of rules-only against 5 ms",
+    )
+    bench.add_argument(
         "--budget-ms",
         type=float,
-        default=5.0,
-        help="p95 budget in ms per 10 KB document",
+        default=None,
+        help="p95 budget in ms per 10 KB document (default: 5 fast, 25 deep)",
     )
     bench.add_argument("--json", action="store_true", help="JSON instead of tables")
     bench.add_argument(
@@ -137,4 +200,12 @@ def main(argv: list[str] | None = None) -> int:
     bench.set_defaults(func=_cmd_bench)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except ModelUnavailable as exc:
+        # A traceback here would be noise: the cause is always a missing extra
+        # or a missing artifact, and both have a one-line fix. Exit 2 rather
+        # than 1 so a CI job can tell "deep mode is not set up" apart from
+        # "PII was detected", which is what exit 1 means for scan.
+        print(f"pii-master: {exc}", file=sys.stderr)
+        return 2

@@ -307,6 +307,17 @@ one frozen FP, taxonomy + HIPAA row, 10 KB p95 still ≤ ~2 ms.
 
 ### Track D — Stage 2, with an entry ticket
 
+> **Closed at v0.3.** The entry ticket was met, the student was trained
+> (docs/DISTILLATION_RESULTS.md) and integrated (docs/STAGE2_INTEGRATION.md).
+> Items 1–4 below shipped. Item 5, **calibration, did not** — confidences are
+> still ordinal, and `min_confidence` is a threshold on an uncalibrated score
+> chosen by sweeping it on the holdout rather than by fitting isotonic
+> regression. That is the honest state, and it is the first thing to fix.
+> Track C (format-anchored Stage 1 types) is *not* closed by this: several of
+> its types now have model coverage, which lowers their urgency but does not
+> give them a checksum. A `BANK_ROUTING` the model proposes cannot be verified
+> the way a Luhn-valid card can, so it never earns the top fusion tier.
+
 Do not start GPU distillation until Tracks A and B have landed and
 the label-space policy is a module, not a markdown table.
 

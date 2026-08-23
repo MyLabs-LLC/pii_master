@@ -1,8 +1,10 @@
 # pii_master — Design & Roadmap
 
-**Status:** v0.2 (M1) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
+**Status:** v0.3 (M2) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
 baseline (docs/BASELINE_M1.md) committed, plus an **external** baseline on a
-Nemotron-PII holdout (docs/BASELINE_NEMOTRON.md). Stage 2 designed, not yet built.
+Nemotron-PII holdout (docs/BASELINE_NEMOTRON.md). **Stage 2 is built and shipped
+behind `--deep`**: distilled, exported, fused, and measured — docs/DISTILLATION_PLAN.md,
+docs/DISTILLATION_RESULTS.md, docs/STAGE2_INTEGRATION.md.
 Post-M1 review and sequenced next steps: docs/IMPROVEMENT_PLAN.md.
 **Production constraint:** inference must run on **1 CPU core / 4 GB RAM** and finish in
 **5 ms per document (p95), end-to-end**. Training may use a GPU.
@@ -203,6 +205,41 @@ v1 types (implemented in `src/pii_master/entities.py`):
 | `HEALTH_PLAN_ID` | yes | **yes** | #9 | cue-anchored regex (health-flavored cues only) | 0.80 |
 | `US_DRIVER_LICENSE` | yes | no | #11 | cue-anchored regex | 0.80 |
 
+v0.3 model-tier types (`--deep` only; `entities.MODEL_ONLY_TYPES`). None is
+`phi_specific` — a name or an address is an identifier in any context, so
+adopting them widens PII coverage without widening what may be called PHI:
+
+| EntityType | HIPAA row | Nemotron labels it absorbs | Risk weight |
+|---|---|---|--:|
+| `PERSON_NAME` | #1 | `first_name`, `last_name` | 15 |
+| `ADDRESS` | #2 | `street_address`, `city`, `county`, `postcode` | 20 |
+| `GEO_COORDINATE` | #2 | `coordinate` | 20 |
+| `DATE_TIME` | #3 | `date_time` | 5 |
+| `FAX_NUMBER` | #5 | `fax_number` | 10 |
+| `BANK_ROUTING` | #10 | `bank_routing_number` | 10 |
+| `SWIFT_BIC` | #10 | `swift_bic` | 5 |
+| `VEHICLE_ID` | #12 | `vehicle_identifier`, `license_plate` | 15 |
+| `DEVICE_ID` | #13 | `device_identifier` | 10 |
+| `BIOMETRIC_ID` | #16 | `biometric_identifier` | 25 |
+| `MAC_ADDRESS` | #18 | `mac_address` | 10 |
+| `NATIONAL_ID` | #18 | `national_id` | 30 |
+| `TAX_ID` | #18 | `tax_id` | 20 |
+| `USER_ID` | #18 | `user_name`, `customer_id`, `employee_id`, `unique_id` | 10 |
+
+Multi-label collapses are deliberate. Nemotron tags "Jane Doe" as two spans and
+"44 Elm Street, Springfield" as two more; `ner.merge_adjacent` rejoins same-type
+spans separated only by whitespace or a comma, so one real-world identifier is
+one entity in the report. The gap test is tight enough that "Jane Doe and John
+Smith" stays two names.
+
+Three Nemotron groups are still **not** adopted, and the reasons differ:
+`state` (HIPAA #2 is subdivisions *smaller* than a state, so a state is
+retainable — tagging it would be wrong, not conservative); the five credential
+labels and the four GDPR special-category attributes (not HIPAA identifiers —
+M3 policy profiles, §9); and the quasi-identifier attributes `date` / `time` /
+`age` (identifiers only when tied to an individual or above 89, a distinction
+the model cannot draw yet, so emitting them would flood every document).
+
 `HEALTH_PLAN_ID` cues are deliberately restricted to unambiguous health wording
 ("health plan id", "beneficiary number", "subscriber id"); generic cues like "member id"
 (gym, loyalty program) or "policy number" (any insurance) are excluded so the
@@ -212,10 +249,8 @@ phi-specific flag stays honest. Cue-free plan IDs are Stage 2 work.
 non-medical reading, so its presence makes a document PHI outright. All other types
 become PHI only when medical context co-occurs (§9).
 
-Deferred types, with reasons:
+Still deferred, with reasons:
 
-- **PERSON_NAME, ADDRESS** (#1, #2) — not regex-shaped; this is exactly what Stage 2 NER
-  is for. Attempting them with rules yields precision too low to ship.
 - **Bare dates / ages > 89** (#3) — quasi-identifiers with enormous false-positive
   surface; handled at M3 with co-occurrence logic. v1 only takes dates with an explicit
   birth cue.
@@ -224,9 +259,10 @@ Deferred types, with reasons:
   validation is likewise deferred.
 - **Cue-free ACCOUNT_NUMBER / HEALTH_PLAN_ID / MRN** — formatless without issuer
   context; contextual NER at M2. v1 ships the cue-anchored versions.
-- **DEVICE_ID, VEHICLE_ID, BIOMETRIC, PHOTO** (#12–#13, #16–#17) — device/vehicle IDs
-  need format libraries (VIN checksum is a good M2-era add); biometric/photo require
-  non-text pipelines (out of scope until the ingestion phases).
+- **PHOTO** (#17) — requires a non-text pipeline (out of scope until the ingestion
+  phases). `DEVICE_ID`, `VEHICLE_ID` and `BIOMETRIC_ID` shipped at v0.3 as model
+  types; a VIN check-digit validator remains a worthwhile Stage 1 add that would
+  let the rules tier confirm what the model proposes.
 - **IPv4-mapped IPv6 textual form** (`::ffff:192.0.2.1`) — rare in documents; the v6
   candidate pattern excludes dotted tails for simplicity.
 
@@ -319,6 +355,20 @@ Documented replacement point: M2 may want nested spans of *different* types (a p
 number inside an email's quoted display name); only this function changes.
 
 ## 8. Stage 2 design: learned NER under the CPU budget (M2)
+
+> **Built at v0.3.** This section is the design as written; what was actually
+> trained, measured and shipped is in docs/DISTILLATION_PLAN.md (the arithmetic
+> that chose the architecture), docs/DISTILLATION_RESULTS.md (the training run
+> and its five acceptance gates) and docs/STAGE2_INTEGRATION.md (the serving
+> change: `ner.OnnxNerDetector`, the fusion policy, and the latency the shipped
+> cascade actually has). Three predictions in this section did not survive
+> contact with measurement and are worth flagging where you read them:
+> **int8 quantization made the model an order of magnitude slower**, not faster,
+> because it is normalisation-bound rather than matmul-bound; the winning
+> student was a **dilated CNN, not a micro-transformer**, and the margin was not
+> close; and **candidate windows turned out not to be necessary** — the student
+> reads whole documents inside the budget, so the cascade in the box below is
+> simpler than the one designed here.
 
 Rules cannot find names, addresses, or cue-free MRNs, and cannot disambiguate
 context-dependent types. Stage 2 adds a learned token classifier — built under the
@@ -456,12 +506,16 @@ CCPA) mapping the same entity evidence to regime-specific labels.
   the error taxonomy in §10, and take the remaining format-anchored regex wins
   (fax, ABA routing, MAC, SWIFT, VIN). *Exit: no known reproducible false PHI;
   pytest + eval + bench run on every push; 10 KB p95 still ≤ ~2 ms.*
-- **M2 — Learned NER under the 5 ms cascade.** GPU distillation pipeline; ONNX int8
-  export; candidate-window `OnnxNerDetector` implementing the `Detector` protocol;
-  fusion policy; calibration. *Entry: M1.5 exit plus a coded Nemotron label
-  crosswalk (docs/IMPROVEMENT_PLAN.md Track D). Exit: model beats rules-only
-  baseline on the frozen corpus AND the end-to-end pipeline stays ≤ 5 ms/doc p95
-  on the harness, gated in CI.*
+- **M2 — Learned NER under the 5 ms cascade** *(delivered in v0.3)*. GPU
+  distillation pipeline; fp32 ONNX export (int8 measured *slower*, see §8);
+  `ner.OnnxNerDetector` implementing the `Detector` protocol; a named fusion
+  policy in `pipeline.py`; three guards on model output (confidence floor,
+  checksum re-validation, tier precedence); 14 new HIPAA-mapped entity types;
+  `--deep` on `scan`, `eval` and `bench`. *Exit met: the fused cascade beats the
+  rules-only baseline on the external Nemotron holdout and the frozen corpus
+  holds, within budget on one core — docs/STAGE2_INTEGRATION.md.* Calibration
+  is the one piece deferred: confidences remain ordinal (§7), and the
+  confidence floor is a threshold on an uncalibrated score.
 - **M3 — Risk & policy.** Co-occurrence scoring, policy profiles (HIPAA/GDPR), config
   system, redaction-ready span output. *Exit: same document classifiable under two
   regimes with distinct, explained outcomes.*
@@ -481,12 +535,18 @@ identifier formats (M7); calibrated probabilities (M2); streaming/chunked proces
 multi-GB files; any network calls at inference time (permanent non-goal).
 
 **Open questions:**
-- Nested spans of different types — allow at M2, or keep flat spans and let the report
-  carry alternates?
+- Nested spans of different types — allow, or keep flat spans and let the report
+  carry alternates? Still open after M2: fusion resolves overlaps by tier and
+  drops the loser, so a model `NATIONAL_ID` proposal over a rule-detected `SSN`
+  is discarded rather than recorded as an alternate reading.
 - Should a fast "doc-label-only" mode exist that skips span extraction when the first
   PHI-specific hit short-circuits? (Speed vs evidence completeness.)
-- Where does the confidence threshold live — in the library (opinionated default) or
-  only in policy config (M3)?
+- ~~Where does the confidence threshold live?~~ **Answered at v0.3:** in the
+  library, as an opinionated default (`min_confidence=0.5`) that policy config
+  can override. It had to ship somewhere — an unthresholded student emits a
+  false PHI on the frozen corpus — and a default a caller can move is a better
+  answer than a constant nobody can reach. It is a threshold on an *ordinal*
+  score until calibration lands, which is the honest caveat.
 
 ## 13. References
 

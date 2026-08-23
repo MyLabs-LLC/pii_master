@@ -7,6 +7,30 @@ section 6 passes**, and the student is not integrated into the package yet — t
 separate change section 7 describes, and section 8 of this document says what it must
 carry.
 
+> **Superseded in part by [STAGE2_INTEGRATION.md](STAGE2_INTEGRATION.md).** The
+> integration happened, and doing it changed three of the conclusions below.
+> The numbers in this document are still the numbers this run produced and are
+> left as they were; where they no longer describe what ships, the pointer is:
+>
+> * **Section 4's latency table.** `decode_spans` was the 1.08 ms line item.
+>   Vectorised, it is **0.04 ms**, and the `xs` cascade drops from 5.21 ms to
+>   4.77 ms — under the strict 5 ms contract this section said it missed. The
+>   promotion rule it says "does not fire" now does.
+> * **Section 5's fusion table.** Checksum-first is still right, and it still
+>   needed one addition: a strictly-shorter model span of the same type must
+>   not displace the rule span it truncates. That case does not appear on
+>   Nemotron's 1,000-character documents; it appears immediately on the frozen
+>   corpus's one-sentence ones.
+> * **Section 6's gate 3.** The three documents listed there as breaking the
+>   raw student are all clean in the shipped configuration, and the frozen
+>   corpus scores document accuracy 1.00 / PHI recall 1.00 / zero spurious
+>   spans in deep mode. The guards named in section 8 are what does it, and
+>   there is a test asserting they are load-bearing rather than decorative.
+>
+> The student itself was also re-trained for the integration, on **6 epochs
+> rather than 3**, following this document's own closing note that the loss was
+> still falling. Loss by epoch: 0.80, 0.52, 0.45, 0.41, 0.40, 0.39.
+
 Hardware: RTX 4080 Laptop (12 GB) for training, one core of an i9-13900HX for every
 latency number. The plan's own figures came from a deliberately slow reference box, so
 the latencies below are faster; the *ratios* it predicted all held.

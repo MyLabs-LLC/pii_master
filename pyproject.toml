@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pii-master"
-version = "0.2.0"
+version = "0.3.0"
 description = "Fast, CPU-friendly PII/PHI detection and document classification"
 readme = "README.md"
 license = "MIT"
@@ -15,6 +15,15 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
+# Stage 2 serving (`scan --deep`). Two wheels, not a framework: onnxruntime
+# runs the graph and tokenizers is the same Rust tokenizer transformers wraps.
+# The DEFAULT install stays dependency-free and rules-only, which is what keeps
+# the `fast` mode's 1-core/4 GB claim honest -- see docs/DESIGN.md section 5.
+ml = [
+    "onnxruntime>=1.18",
+    "tokenizers>=0.19",
+    "numpy>=1.24",
+]
 # Stage 2 distillation (docs/DISTILLATION_PLAN.md). Not a runtime dependency:
 # the shipped scanner stays stdlib-only. Install torch from the CUDA index
 # first if you are training on a GPU.

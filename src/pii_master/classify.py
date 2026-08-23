@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from .entities import TAXONOMY, DocLabel, EntityType
 from .models import DocumentReport, Entity
-from .pipeline import Pipeline
+from .pipeline import Pipeline, deep_pipeline
 
 # v1 stand-in for real health-context modeling (replaced at Stage 2/3).
 #
@@ -149,7 +149,47 @@ class DocumentClassifier:
         )
 
 
-def scan_text(text: str) -> DocumentReport:
-    """One-call public API: default pipeline + default classifier."""
-    pipeline = Pipeline()
-    return DocumentClassifier().classify(text, pipeline.run(text))
+# Rules-only, built once. Detectors are stateless (compiled patterns and pure
+# validators), so one instance serves every call and every thread. v0.2 built a
+# fresh Pipeline -- twelve detectors, twelve compiled patterns -- on every
+# scan_text call, which eval, bench and the CLI all go through
+# (docs/IMPROVEMENT_PLAN.md section 3.5). Deep mode makes that setup cost
+# matter: an ONNX session takes tens of milliseconds to create, thousands of
+# documents' worth of budget.
+_DEFAULT_PIPELINE = Pipeline()
+_DEEP_PIPELINE: Pipeline | None = None
+
+
+def default_pipeline(deep: bool = False) -> Pipeline:
+    """The shared pipeline for a serving mode.
+
+    ``fast`` (default) is rules only and stdlib only. ``deep`` adds the Stage 2
+    student and needs the optional ML extra; it is built lazily and cached, and
+    raises :class:`pii_master.ner.ModelUnavailable` rather than degrading to
+    rules if the model is missing.
+    """
+    global _DEEP_PIPELINE
+    if not deep:
+        return _DEFAULT_PIPELINE
+    if _DEEP_PIPELINE is None:
+        _DEEP_PIPELINE = deep_pipeline()
+    return _DEEP_PIPELINE
+
+
+def scan_text(
+    text: str,
+    pipeline: Pipeline | None = None,
+    *,
+    deep: bool = False,
+) -> DocumentReport:
+    """One-call public API: a pipeline + the default classifier.
+
+    Args:
+        pipeline: an explicit pipeline; overrides ``deep``. Pass one to use a
+            custom detector set or non-default Stage 2 thresholds.
+        deep: run the Stage 2 student alongside the rules (docs/DESIGN.md
+            section 8). Costs the ML extra and more latency; finds names,
+            addresses and cue-free identifiers that no rule can.
+    """
+    chosen = pipeline if pipeline is not None else default_pipeline(deep)
+    return DocumentClassifier().classify(text, chosen.run(text))

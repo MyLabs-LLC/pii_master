@@ -48,11 +48,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 from pii_master.classify import scan_text  # noqa: E402
-from pii_master.crosswalk import (  # noqa: E402
-    ALL_UNMODELLED,
-    NEMOTRON_TO_ENTITY,
-    to_entity_type,
-)
+from pii_master.crosswalk import RULE_MAPPED, to_entity_type  # noqa: E402
+
+# This script measures the RULES tier. v0.3 adopted 22 more Nemotron labels
+# (names, addresses, fax, routing numbers, ...) for the Stage 2 model, and
+# scoring the rules against those would measure the crosswalk rather than the
+# detectors -- no regex emits a PERSON_NAME, so every one of them would be a
+# guaranteed miss and the committed baseline would drop for a reason that has
+# nothing to do with the rules changing. So the scope here stays the 12 labels
+# a rule can actually fire on. The model's score on the adopted labels is
+# training/eval_student.py's "adopted" table.
+NEMOTRON_TO_ENTITY = RULE_MAPPED
 from pii_master.evaluation import TypeScore  # noqa: E402
 from pii_master.validators import luhn_ok  # noqa: E402
 
@@ -95,7 +101,8 @@ def score(rows, limit=None):
         for span in parse_spans(raw):
             label = span["label"]
             gold_all.append((label, span["start"], span["end"]))
-            mapped = to_entity_type(label)
+            mapped = NEMOTRON_TO_ENTITY.get(label)
+            to_entity_type(label)          # still fails loudly on a new label
             if label == "credit_debit_card":
                 card_gold += 1
                 digits = "".join(c for c in str(span.get("text", "")) if c.isdigit())
@@ -205,9 +212,12 @@ def render(result, split, files) -> str:
         "",
         "## Scope",
         "",
-        f"Only the **{len(NEMOTRON_TO_ENTITY)} mapped labels** "
-        f"(`pii_master/crosswalk.py`) are scored: {scored_total:,} gold spans.",
-        f"Gold spans of the **{len(ALL_UNMODELLED)} unmodelled labels** "
+        f"Only the **{len(NEMOTRON_TO_ENTITY)} rule-mapped labels** "
+        f"(`crosswalk.RULE_MAPPED`) are scored: {scored_total:,} gold spans. "
+        "The 22 labels v0.3 adopted for the Stage 2 model are out of scope "
+        "here — no regex emits a name — and are scored by "
+        "`training/eval_student.py`.",
+        f"Gold spans of every other label "
         f"({dropped_total:,} spans) are dropped, not counted as misses —"
         " scoring against categories",
         "we deliberately do not detect would measure the crosswalk, not the detectors.",

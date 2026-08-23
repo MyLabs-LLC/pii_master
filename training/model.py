@@ -106,10 +106,28 @@ class StudentTagger(nn.Module):
 
 
 # The size ladder. Pick by measurement on the target CPU, not by preference.
+#
+# `l` was added at v0.3 on evidence, not ambition. Two measurements pointed at
+# it: the model-tier span F1 gap between `xs` and `m` is large (0.818 vs 0.893)
+# while three extra training epochs moved nothing, which says the students are
+# capacity-limited rather than under-optimised; and the shipped `deep` cascade
+# uses 8.1 ms of its 25 ms budget, so the headroom to spend was already
+# measured. At ~43 GMAC/s on one core -- the rate `m` actually achieves -- its
+# 248k MACs/token is ~9.6 ms for a 10 KB document, landing the cascade near
+# 13 ms. Anything wider than d=256 would not fit and is not worth training.
+#
+# The dilation cycle is deliberately NOT extended past 32. Doubling it for two
+# more layers would give a 1,020-token receptive field, and the cue-to-value
+# distances PII actually needs are tens of characters (docs/DISTILLATION_PLAN.md
+# section 1). Repeating (1, 2) instead buys depth and nonlinearity while keeping
+# the field at 132 tokens either side, close to `m`'s 126 -- so `l` differs from
+# `m` in capacity, which is the thing being tested, and not in what it can see.
 LADDER: dict[str, StudentConfig] = {
     "xs": StudentConfig(d_model=64, n_layers=4),
     "s":  StudentConfig(d_model=96, n_layers=4),
     "m":  StudentConfig(d_model=128, n_layers=6, dilations=(1, 2, 4, 8, 16, 32)),
+    "l":  StudentConfig(d_model=192, n_layers=8,
+                        dilations=(1, 2, 4, 8, 16, 32, 1, 2)),
 }
 
 

@@ -16,10 +16,39 @@ jobs:
           python-version: "3.11"
 
       - name: Install
-        run: pip install -e ".[dev]"
+        # The ml extra (onnxruntime + tokenizers) is installed so the Stage 2
+        # unit tests actually RUN rather than skipping. They need no trained
+        # artifact -- the decoder, the guards and the fusion tiers are pure
+        # functions of model output and are tested against synthetic logits --
+        # so this stays a fast, GPU-free job.
+        run: pip install -e ".[dev,ml]"
 
       - name: Unit tests
         run: python -m pytest -q
+
+      - name: The default install must stay dependency-free
+        # The `fast` mode's whole claim is that it needs nothing but the
+        # stdlib. A stray `import numpy` at module scope in pii_master would
+        # break that silently for every user who did not ask for the extra,
+        # and no other test in this job would notice.
+        run: |
+          python -m venv /tmp/bare
+          /tmp/bare/bin/pip install -q -e .
+          /tmp/bare/bin/python -c "
+          import pii_master
+          report = pii_master.scan_text('SSN 123-45-6789 for the patient')
+          assert report.label.name == 'PHI', report.label
+          print('rules-only install OK:', report.label.name)
+          "
+
+      # NOT gated here: `pii-master eval --deep` and `pii-master bench --deep`.
+      # Both need a 30 MB model bundle, which is gitignored and not published,
+      # so this job cannot run them. They are a release-time check on a machine
+      # that has the artifact, and their results are committed as prose in
+      # docs/STAGE2_INTEGRATION.md rather than as a scores file nothing can
+      # regenerate. The Stage 2 code that CI *can* gate -- the decoder, the
+      # guards, the fusion tiers -- is unit-tested above against synthetic
+      # logits, which is why those tests were written not to need the artifact.
 
       - name: Quality gate (frozen corpus, no regression allowed)
         run: |

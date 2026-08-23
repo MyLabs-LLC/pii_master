@@ -175,6 +175,14 @@ alone are already a defensible product.
 
 ## 7. Integration (after training, separate change)
 
+> **Done at v0.3.** Everything in this section shipped; what it cost and what it
+> measures is [STAGE2_INTEGRATION.md](STAGE2_INTEGRATION.md). Two items came out
+> differently from the plan below and are worth reading in place:
+> the taxonomy question was answered by **adopting 14 new HIPAA-mapped types**
+> (not a profile-gated channel), and the fusion clause needed its **narrow**
+> reading — "only checksum-validated rules are authoritative" — which is worth
+> 0.028 F1 over the broad one.
+
 - `OnnxNerDetector` implementing the existing `Detector` protocol — it plugs into
   `Pipeline` with no changes to Stage 3.
 - **Fusion policy**, named in `pipeline.py` rather than left as a comment: checksum-validated
@@ -198,17 +206,27 @@ alone are already a defensible product.
 | `training/data.py` — BIO alignment, 55 labels | ✅ written; word-level BIO + word-start index added during the run |
 | `training/train.py` — distillation loop | ✅ written; label permutation now pads the teacher's 4 absent columns |
 | `training/export.py` — ONNX + int8 + 1-core benchmark | ✅ written and run |
-| GPU training run | ✅ **done** — `xs` and `m`, 3 epochs each, ~5 min/epoch on a 4080 |
+| GPU training run | ✅ **done** — `xs` and `m`, 3 epochs each, ~5 min/epoch on a 4080; re-run at 6 epochs for v0.3, which changed nothing (STAGE2_INTEGRATION.md section 7.0) |
 | `training/eval_student.py` — holdout scoring + fusion policies | ✅ added; gate 2 |
 | `training/eval_names.py` — name-demographic slice | ✅ added; gate 5 |
 | `training/bench_e2e.py` — whole-cascade latency on one core | ✅ added; gate 1 |
 | All five acceptance gates | ✅ **pass** — see [DISTILLATION_RESULTS.md](DISTILLATION_RESULTS.md) |
-| `OnnxNerDetector` + fusion | ⬜ next change; results section 8 lists what it must carry |
+| `OnnxNerDetector` + fusion | ✅ **shipped at v0.3** — see [STAGE2_INTEGRATION.md](STAGE2_INTEGRATION.md) |
+| `eval/scripts/nemotron_deep_eval.py` — the *shipped* cascade on the holdout | ✅ added |
 
-**Results:** [DISTILLATION_RESULTS.md](DISTILLATION_RESULTS.md). Headline: the `m`
-student plus checksum-first fusion scores **F1 0.901** on the Nemotron holdout against
-the rules-only baseline's 0.788, at **8.0 ms p95** per 10 KB document on one core
+**Results:** [DISTILLATION_RESULTS.md](DISTILLATION_RESULTS.md) for the training
+run, [STAGE2_INTEGRATION.md](STAGE2_INTEGRATION.md) for what shipped. Headline:
+the `m` student fused with the rules scores **F1 0.933** on the Nemotron holdout
+against the rules-only baseline's 0.796, plus **0.893** on fourteen types the
+rules cannot emit at all, at **8.10 ms p95** per 10 KB document on one core
 against a 25 ms `deep` budget.
+
+The size ladder resolved differently from this plan's guess that "the fast/deep
+split may end up being `xs` vs `m`". `xs` does fit the strict 5 ms contract —
+4.79 ms end to end — and it fails acceptance gate 3, scoring frozen-corpus PHI
+recall 0.92 against the required 1.00. Gate 2's own instruction applies: do not
+ship it. `fast` stays rules-only, which keeps the default install
+dependency-free as well. Details: STAGE2_INTEGRATION.md section 7.5.
 
 ⚠️ The limitation this section used to carry — "no run has touched real data" — is
 closed. What replaced it is smaller and specific: the learning rate was never swept

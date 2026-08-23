@@ -4,21 +4,46 @@ Fast, CPU-friendly detection and document classification of **PII** (personally
 identifiable information) and **PHI** (protected health information).
 
 Design point: models may be trained on GPUs, but production inference must run on
-**1 CPU core / 4 GB RAM within 5 ms per document (p95)**. Stage 1 (this version) is a
-zero-dependency, stdlib-only rules engine: pre-scan windows narrow the text, regex
-candidates are validated by checksums and format rules, and results aggregate into an
-explainable document label (`NONE` / `PII` / `PHI`) and risk score. The full staged
-architecture — through quantized-ONNX NER under the same 5 ms cascade, risk policies,
-and PDF/OCR ingestion — is laid out in **[docs/DESIGN.md](docs/DESIGN.md)**; measured
-baselines live in **[docs/BASELINE_M1.md](docs/BASELINE_M1.md)** (internal) and
-**[docs/BASELINE_NEMOTRON.md](docs/BASELINE_NEMOTRON.md)** (external holdout), the Stage 2 training-data
-survey in **[docs/NEMOTRON_PII_TAGS.md](docs/NEMOTRON_PII_TAGS.md)**, the post-M1
-review / next-steps plan in **[docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md)**, a
-survey of existing solutions in **[docs/PRIOR_ART.md](docs/PRIOR_ART.md)**, and the Stage 2
-distillation plan in **[docs/DISTILLATION_PLAN.md](docs/DISTILLATION_PLAN.md)**.
+**1 CPU core / 4 GB RAM within 5 ms per document (p95)**. Two serving modes fit
+inside that:
 
-**Status:** v0.2 (milestone M1) — hardened Stage 1 rules engine, evaluation + benchmark
-harnesses, plain-text input. Currently ~1.2 ms p95 per 10 KB document on one core.
+| mode | tiers | dependencies | 10 KB p95 | finds |
+|---|---|---|--:|---|
+| `fast` (default) | Stage 1 rules | **none** (stdlib only) | 0.70 ms | format- and cue-anchored identifiers |
+| `deep` (`--deep`) | rules + Stage 2 NER | `pii-master[ml]` | 7.99 / 14.80 ms | + names, addresses, cue-free identifiers |
+
+Measured on one core with `pii-master bench [--deep]`; deep mode's budget is
+25 ms and ships two students, `m` and `l`. What it buys, on 3,000 held-out
+Nemotron-PII documents nobody in this repo authored:
+
+| | rules only | deep (`m`) | **deep (`l`)** |
+|---|--:|--:|--:|
+| span F1, the 12 types rules cover | 0.796 | 0.933 | **0.935** |
+| span F1, 14 types rules cannot emit at all | 0.000 | 0.904 | **0.926** |
+| 10 KB p95, one core | 0.70 ms | 7.99 ms | 14.80 ms |
+| peak RSS | 20 MB | 112 MB | 128 MB |
+
+with document accuracy and PHI recall both 1.00 on the frozen corpus in every
+mode. Per-type numbers, the fusion policy, and the students that did *not* ship:
+[docs/STAGE2_INTEGRATION.md](docs/STAGE2_INTEGRATION.md).
+
+Stage 1 is a zero-dependency rules engine: pre-scan windows narrow the text, regex
+candidates are validated by checksums and format rules. Stage 2 is a distilled
+dilated-CNN token tagger exported to ONNX, fused with the rules under an explicit
+precedence policy. Both feed one aggregation stage that emits an explainable
+document label (`NONE` / `PII` / `PHI`) and risk score.
+
+Architecture and roadmap: **[docs/DESIGN.md](docs/DESIGN.md)**. Measured baselines:
+**[docs/BASELINE_M1.md](docs/BASELINE_M1.md)** (internal, rules) and
+**[docs/BASELINE_NEMOTRON.md](docs/BASELINE_NEMOTRON.md)** (external holdout, rules).
+Stage 2: the **[distillation plan](docs/DISTILLATION_PLAN.md)**, its
+**[measured results](docs/DISTILLATION_RESULTS.md)**, and the
+**[integration results](docs/STAGE2_INTEGRATION.md)**. Also: the
+**[Nemotron tag survey](docs/NEMOTRON_PII_TAGS.md)**, the
+**[post-M1 review](docs/IMPROVEMENT_PLAN.md)**, and a
+**[survey of prior art](docs/PRIOR_ART.md)**.
+
+**Status:** v0.3 (milestone M2) — Stage 2 shipped behind `--deep`.
 
 ## Quickstart
 
@@ -63,13 +88,97 @@ report.risk_score   # explainable 0-100 score
 report.to_dict()    # JSON-ready report with span evidence
 ```
 
-## What it detects (v1)
+## Deep mode
 
-`EMAIL`, `PHONE_US`, `SSN`, `CREDIT_CARD` (Luhn-validated), `IP_ADDRESS` (v4 + v6),
-`URL`, `DATE_DOB` (birth-cue anchored), `MRN`, `ACCOUNT_NUMBER`, `HEALTH_PLAN_ID`,
-`US_DRIVER_LICENSE` (cue anchored) — each mapped to its HIPAA Safe Harbor identifier
-category. See docs/DESIGN.md section 6 for the taxonomy and the deferred types (names,
-addresses, and other model-dependent entities arrive with Stage 2).
+The rules cannot find a person's name or a street address — no regex can, at
+shippable precision. Stage 2 is a 6.6 M-parameter dilated CNN, distilled from
+`kalyan-ks/ettin-68m-nemotron-pii` on the CC BY 4.0
+[Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII) corpus and
+exported to fp32 ONNX. It runs on one core, over the whole document.
+
+```console
+$ pip install -e ".[ml]"          # onnxruntime + tokenizers, nothing heavier
+$ export PII_MASTER_MODEL_DIR=/path/to/bundle
+$ pii-master scan discharge.txt --deep --pretty
+$ pii-master bench --deep --fail-over-budget
+```
+
+```python
+from pii_master import scan_text
+report = scan_text(open("discharge.txt").read(), deep=True)
+```
+
+Deep mode never silently degrades: if the extra or the model artifact is
+missing it raises `ModelUnavailable`, because a caller who asked for names and
+got rules-only would read the absence of names as "this document has no names".
+
+A **bundle** is three files that must travel together — `model.onnx` (plus its
+external weights), `tokenizer.json`, and `model.json` (the label table and the
+calibration curve). A model paired with the wrong tokenizer produces confident
+garbage silently, so they are exported as a unit and verified against the
+checkpoint at export time. To build one:
+
+```console
+$ cd training
+$ python train.py --data-dir ~/nemotron --size l --epochs 3   # see the plan
+$ python export.py --size l --checkpoint artifacts/student_l.pt \
+      --bundle artifacts/bundle --no-int8
+```
+
+`artifacts/bundle` is on the default search path, so no configuration is needed
+after that. The search order is `$PII_MASTER_MODEL_DIR`, then
+`~/.cache/pii_master/model`, then `training/artifacts/bundle`. Full runbook:
+[docs/DISTILLATION_PLAN.md](docs/DISTILLATION_PLAN.md) section 5.
+
+Then fit the calibration curve, so `--min-confidence` has units:
+
+```console
+$ python calibrate.py --data-dir ~/nemotron --model-dir artifacts/bundle
+```
+
+Without it the model's confidences are raw max-softmax — a ranking signal that
+is systematically overconfident (a raw 0.55 span is right about 22% of the
+time). With it, a confidence of 0.70 means roughly "70% chance this exact span
+is right". The curve is isotonic, so it never re-orders spans; it only changes
+what the number means.
+
+Ship **fp32**, not int8: dynamic int8 quantization makes this model an order of
+magnitude *slower*, because it is normalisation- and activation-bound rather
+than matmul-bound — MatMul is 4.7% of its ONNX op profile. `--no-int8` skips
+producing a file you should not use.
+
+### Fusion: which tier wins an overlap
+
+**checksum-validated rule > model > cue-anchored rule.** A Luhn-valid card
+number or a parsed IP address is a verified fact and outranks the model; a
+cue-anchored MRN guess is not, and does not. Cue-anchored rules still supply
+recall wherever the model is silent. Reading the policy the other way — *all*
+rules outrank the model — is the obvious implementation and it measures 0.028 F1
+worse. The policy is `pipeline.fusion_rank`; the measurements are in
+[docs/STAGE2_INTEGRATION.md](docs/STAGE2_INTEGRATION.md).
+
+Model spans carry two more guards: a confidence floor (`--min-confidence`,
+default 0.5) and re-validation of checksummed types — 88% of Nemotron's gold
+card numbers fail Luhn, so an unguarded student learns to emit card numbers no
+payment network would issue.
+
+## What it detects
+
+**Rules tier** (both modes) — `EMAIL`, `PHONE_US`, `SSN`,
+`CREDIT_CARD` (Luhn-validated), `IP_ADDRESS` (v4 + v6), `URL`,
+`DATE_DOB` (birth-cue anchored), `MRN`, `ACCOUNT_NUMBER`, `HEALTH_PLAN_ID`,
+`US_DRIVER_LICENSE` (cue anchored).
+
+**Model tier** (`--deep` only) — `PERSON_NAME`, `ADDRESS`, `GEO_COORDINATE`,
+`DATE_TIME`, `FAX_NUMBER`, `BANK_ROUTING`, `SWIFT_BIC`, `VEHICLE_ID`,
+`DEVICE_ID`, `MAC_ADDRESS`, `NATIONAL_ID`, `TAX_ID`, `USER_ID`, `BIOMETRIC_ID`.
+
+Every type maps to one of the 18 HIPAA Safe Harbor identifier categories
+(`entities.TAXONOMY`), and reports cite the row. Two Nemotron label groups are
+deliberately *not* adopted: credentials (password, api_key, cvv, pin, cookie)
+and GDPR special-category attributes (race/ethnicity, religious belief,
+political view, sexuality). Neither is a HIPAA identifier; both belong to the M3
+policy profiles, not to the default HIPAA output.
 
 ## License
 

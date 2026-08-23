@@ -100,6 +100,19 @@ equivalent is tagged `ssn`), and `county` is effectively US-only (14,581 us / 34
 covering 394,834 of 1,675,796 spans (23.6%).**
 The remaining 43 labels (76.4% of spans) have no detector today.
 
+> **Updated at v0.3.** The paragraph above describes the *rules-only* world and
+> is kept because it is what sized the Stage 2 work. Since the student shipped,
+> **34 of the 55 labels map onto 25 entity types** — the original 12 plus 22
+> adopted for the model tier (`crosswalk.MODEL_MAPPED`). The 21 that remain
+> unmapped are no longer a backlog so much as three deliberate exclusions:
+> `state` (retainable under Safe Harbor, so tagging it would be *wrong*), the
+> five credential labels and four GDPR special-category attributes (real, but
+> not HIPAA identifiers — M3 policy profiles), and eleven quasi-identifier
+> attributes including `date`, `time` and `age` (identifiers only when tied to
+> an individual, or above 89 — a distinction the model cannot draw yet).
+> Reasons per group are in `crosswalk.UNMODELLED`, and the scores per adopted
+> type are in docs/STAGE2_INTEGRATION.md §7.1.
+
 ### Covered
 
 | pii_master type | Nemotron label(s) | spans |

@@ -8,12 +8,12 @@ See docs/DESIGN.md for the architecture and roadmap. Quick start:
     report.to_dict()      # JSON-ready report
 """
 
-from .classify import DocumentClassifier, scan_text
+from .classify import DocumentClassifier, default_pipeline, scan_text
 from .entities import DocLabel, EntityType
 from .models import DocumentReport, Entity
-from .pipeline import Pipeline
+from .pipeline import Pipeline, deep_pipeline, fusion_rank
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "DocLabel",
@@ -22,6 +22,9 @@ __all__ = [
     "Entity",
     "EntityType",
     "Pipeline",
+    "deep_pipeline",
+    "default_pipeline",
+    "fusion_rank",
     "scan_text",
     "__version__",
 ]

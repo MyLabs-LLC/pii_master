@@ -27,16 +27,24 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .classify import scan_text
-from .entities import EntityType
+from .entities import MODEL_ONLY_TYPES, EntityType
 from .models import DocumentReport
 
 MARKUP = re.compile(r"\[\[([A-Z0-9_]+):(.*?)\]\]", re.DOTALL)
 
 DOC_LABELS = ("NONE", "PII", "PHI")
 
-# Gold-only types the current system cannot emit; kept in the corpus so
-# Stage 2's job is a measured number, not a footnote.
-FUTURE_TYPES = frozenset({"PERSON_NAME", "ADDRESS"})
+# Types a rules-only configuration cannot emit, kept in the corpus so Stage 2's
+# job is a measured number rather than a footnote. Derived from
+# entities.MODEL_ONLY_TYPES rather than listed here: when v0.3 adopted twelve
+# more model types this set had to grow with them, and a hand-written literal
+# would have quietly gone stale and started reporting real misses as
+# "undetectable".
+#
+# It is a property of the CONFIGURATION under test, not of the corpus, so
+# `evaluate(..., scan=deep_scan)` passes `undetectable=frozenset()`: in deep
+# mode a missed name is a genuine recall failure and must be triaged as one.
+FUTURE_TYPES = frozenset(t.value for t in MODEL_ONLY_TYPES)
 
 KNOWN_TYPES = frozenset(t.value for t in EntityType) | FUTURE_TYPES
 
@@ -235,9 +243,10 @@ class EvalReport:
         return "\n".join(lines)
 
 
-def _classify_miss(gold_span: GoldEntity, predicted: list[tuple[str, int, int]]) -> str:
+def _classify_miss(gold_span: GoldEntity, predicted: list[tuple[str, int, int]],
+                   undetectable: frozenset[str] = FUTURE_TYPES) -> str:
     """Why did we miss this gold span?"""
-    if gold_span.type in FUTURE_TYPES:
+    if gold_span.type in undetectable:
         return "undetectable"
     overlapping = [
         p for p in predicted if gold_span.start < p[2] and p[1] < gold_span.end
@@ -262,7 +271,8 @@ def _classify_spurious(
 
 
 def _collect_errors(
-    doc: "CorpusDoc", predicted: list[tuple[str, int, int]]
+    doc: "CorpusDoc", predicted: list[tuple[str, int, int]],
+    undetectable: frozenset[str] = FUTURE_TYPES,
 ) -> list[dict]:
     gold_keys = {(g.type, g.start, g.end) for g in doc.entities}
     pred_keys = set(predicted)
@@ -271,7 +281,8 @@ def _collect_errors(
         if (g.type, g.start, g.end) in pred_keys:
             continue
         errors.append({
-            "doc": doc.id, "kind": "fn", "class": _classify_miss(g, predicted),
+            "doc": doc.id, "kind": "fn",
+            "class": _classify_miss(g, predicted, undetectable),
             "type": g.type, "text": g.text,
         })
     for p in predicted:
@@ -321,14 +332,23 @@ def _score_spans(
 def evaluate(
     docs: list[CorpusDoc],
     scan: Callable[[str], DocumentReport] = scan_text,
+    undetectable: frozenset[str] = FUTURE_TYPES,
 ) -> EvalReport:
+    """Score `scan` over `docs`.
+
+    `undetectable` names the types this configuration cannot emit, so their
+    misses are triaged as "undetectable" rather than as context misses. It
+    defaults to the model-only types, which is right for the rules-only
+    default; pass `frozenset()` when scoring a deep-mode scan, where a missed
+    name is a real failure.
+    """
     report = EvalReport()
     report.confusion = {g: {p: 0 for p in DOC_LABELS} for g in DOC_LABELS}
     for doc in docs:
         result = scan(doc.text)
         predicted = [(e.type.value, e.start, e.end) for e in result.entities]
         _score_spans(doc.entities, predicted, report.exact, report.partial)
-        report.errors.extend(_collect_errors(doc, predicted))
+        report.errors.extend(_collect_errors(doc, predicted, undetectable))
         report.doc_count += 1
         report.confusion[doc.label][result.label.name] += 1
         if result.label.name == doc.label:

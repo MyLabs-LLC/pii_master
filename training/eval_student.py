@@ -46,40 +46,30 @@ from decode import decode_spans  # noqa: E402
 from model import LADDER, StudentConfig, StudentTagger  # noqa: E402
 
 from pii_master.classify import scan_text  # noqa: E402
-from pii_master.crosswalk import to_entity_type  # noqa: E402
+from pii_master.crosswalk import RULE_MAPPED_LABELS, to_entity_type  # noqa: E402
+from pii_master.entities import CHECKSUMMED_TYPES, MODEL_ONLY_TYPES  # noqa: E402
 from pii_master.evaluation import TypeScore  # noqa: E402
-from pii_master.validators import ipv4_ok, ipv6_ok, luhn_ok, ssn_ok  # noqa: E402
+from pii_master.ner import revalidate as revalidate_span  # noqa: E402
 
 TEACHER_ID = "kalyan-ks/ettin-68m-nemotron-pii"
-# Rule types whose validator is a checksum or a hard format parse: Luhn, the
-# SSN range rules, ipaddress.ip_address, RFC-ish email and URL structure. These
-# are the spans docs/DISTILLATION_PLAN.md gate 4 protects. The remaining rule
-# types (ACCOUNT_NUMBER, MRN, HEALTH_PLAN_ID, DATE_DOB, PHONE_US,
-# US_DRIVER_LICENSE) are cue-anchored guesses, not validated facts.
-CHECKSUMMED = {"SSN", "CREDIT_CARD", "EMAIL", "IP_ADDRESS", "URL"}
+# Imported, not restated: the fusion tiers in pii_master/pipeline.py and the
+# re-validation in pii_master/ner.py read the same two constants, so a policy
+# measured here is the policy that ships.
+CHECKSUMMED = {t.value for t in CHECKSUMMED_TYPES}
+MODEL_TIER = {t.value for t in MODEL_ONLY_TYPES}
 FUSIONS = ("fusion_rules_first", "fusion_checksum_first", "fusion_longest_wins")
 
 
 def revalidate(entity_type: str, text: str) -> bool:
-    """Gate 4's second clause: a model span of a checksummed type must pass it.
+    """Gate 4's second clause, delegated to the shipped implementation.
 
-    The student learns whatever the corpus labels, and 88% of Nemotron's gold
-    cards fail Luhn -- so without this it happily emits card numbers no payment
-    network would issue. Types with no validator pass through.
+    This used to be a copy of pii_master.ner.revalidate. It is now a thin
+    adapter over it, because a measurement of a guard that has drifted from the
+    guard in production measures nothing.
     """
-    digits = "".join(c for c in text if c.isdigit())
-    if entity_type == "CREDIT_CARD":
-        return 13 <= len(digits) <= 19 and luhn_ok(digits)
-    if entity_type == "SSN":
-        return len(digits) == 9 and ssn_ok(digits[:3], digits[3:5], digits[5:])
-    if entity_type == "IP_ADDRESS":
-        stripped = text.strip()
-        return ipv4_ok(stripped) or ipv6_ok(stripped)
-    if entity_type == "EMAIL":
-        return "@" in text and "." in text.split("@")[-1]
-    if entity_type == "URL":
-        return "." in text or ":" in text
-    return True
+    from pii_master.entities import EntityType
+
+    return revalidate_span(EntityType(entity_type), text)
 
 
 def load_student(checkpoint: Path, size: str | None) -> StudentTagger:
@@ -260,6 +250,7 @@ def main(argv=None) -> int:
                           args.batch_size, min_confidence=args.min_confidence)
 
     native: dict[str, TypeScore] = defaultdict(TypeScore)      # all 55 labels
+    adopted: dict[str, TypeScore] = defaultdict(TypeScore)     # v0.3 model types
     systems = ("rules", "student", *FUSIONS)
     mapped = {name: defaultdict(TypeScore) for name in systems}
     loose = {name: defaultdict(TypeScore) for name in systems}
@@ -282,6 +273,17 @@ def main(argv=None) -> int:
             if args.revalidate and not revalidate(entity.value, text[start:end]):
                 continue
             student_mapped.append((entity.value, start, end))
+        # v0.3 adopted 22 more Nemotron labels (names, addresses, fax, routing,
+        # ...). Gate 2 compares against a rules baseline that predates them, so
+        # the headline table stays on the rule-mapped types only -- widening the
+        # denominator would make the student look worse against a baseline that
+        # was never scored on those types at all. The adopted types get their
+        # own table, where the rules genuinely score zero.
+        gold_rule = [g for g in gold_mapped if g[0] not in MODEL_TIER]
+        student_rule = [s for s in student_mapped if s[0] not in MODEL_TIER]
+        tally(adopted, [g for g in gold_mapped if g[0] in MODEL_TIER],
+              [s for s in student_mapped if s[0] in MODEL_TIER])
+        gold_mapped, student_mapped = gold_rule, student_rule
         tally(mapped["student"], gold_mapped, student_mapped, loose["student"])
         triage(gold_native, gold_mapped, student_mapped, buckets["student"])
 
@@ -296,7 +298,8 @@ def main(argv=None) -> int:
 
     print(f"\nStudent, native 55-label taxonomy: "
           f"P {micro(native)[0]:.3f} R {micro(native)[1]:.3f} F1 {micro(native)[2]:.3f}")
-    print("\nGate 2 — the 12 mapped types, exact span match.")
+    print(f"\nGate 2 — the {len(RULE_MAPPED_LABELS)} rule-mapped types, "
+          "exact span match.")
     print("adj P excludes predictions landing on gold of an unmodelled label,")
     print("the same adjustment docs/BASELINE_NEMOTRON.md reports for the rules.")
     print(f"{'system':>8} {'P':>7} {'R':>7} {'F1':>7} {'adj P':>7} {'adj F1':>7} "
@@ -313,6 +316,19 @@ def main(argv=None) -> int:
         print(f"{name:>8} {p:>7.3f} {r:>7.3f} {f:>7.3f} {adj_p:>7.3f} {adj_f:>7.3f} "
               f"{micro(loose[name])[1]:>10.3f} {b['spurious']:>9,}")
 
+    if adopted:
+        print("\nTypes adopted with the model tier. No rule can emit any of "
+              "these, so the rules column is 0.000 by construction and the "
+              "student's score is the whole of the gain.")
+        print(f"{'type':>20} {'gold':>10} {'P':>7} {'R':>7} {'F1':>7}")
+        for t in sorted(adopted):
+            sc = adopted[t]
+            print(f"{t:>20} {sc.gold:>10,} {sc.precision:>7.3f} "
+                  f"{sc.recall:>7.3f} {sc.f1:>7.3f}")
+        p, r, f = micro(adopted)
+        print(f"{'MICRO':>20} {sum(s.gold for s in adopted.values()):>10,} "
+              f"{p:>7.3f} {r:>7.3f} {f:>7.3f}")
+
     print("\nPer-type (gold / P / R / F1):")
     print(f"{'type':>20} {'gold':>8} {'rules F1':>9} {'stud F1':>9} "
           f"{'rules-1st':>10} {'cksum-1st':>10} {'longest':>8}")
@@ -328,6 +344,8 @@ def main(argv=None) -> int:
             "partial_micro": {n: dict(zip("prf", micro(loose[n])))
                               for n in systems if mapped[n]},
             "native_micro": dict(zip("prf", micro(native))),
+            "adopted_micro": dict(zip("prf", micro(adopted))),
+            "adopted": {k: v.to_dict() for k, v in adopted.items()},
             "native": {k: v.to_dict() for k, v in native.items()},
             "mapped_micro": {n: dict(zip("prf", micro(mapped[n])))
                              for n in mapped if mapped[n]},

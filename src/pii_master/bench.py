@@ -9,6 +9,15 @@ docs/DESIGN.md section 5. Stdlib only, like everything else in Stage 1.
 The budget rule: a typical document (<= TYPICAL_BYTES of text) must scan in
 <= budget_ms at p95; larger buckets get a pro-rated allowance
 (budget_ms per TYPICAL_BYTES).
+
+Two serving modes have two budgets, and both are gateable here:
+
+    fast (default)   rules only, stdlib only        <= 5 ms / 10 KB
+    deep (--deep)    rules + the Stage 2 student    <= 25 ms / 10 KB
+
+`--deep` is what turns docs/DISTILLATION_PLAN.md's gate 1 into something the
+shipped CLI can check on the shipped pipeline, rather than a number produced by
+a script in training/ that measures a cascade assembled by hand.
 """
 
 from __future__ import annotations
@@ -23,6 +32,11 @@ from .validators import luhn_ok
 
 TYPICAL_BYTES = 10_000
 DEFAULT_SIZES = (1_000, 10_000, 100_000)
+
+#: Per-mode p95 budget in ms per TYPICAL_BYTES. The deep figure is the one
+#: docs/DISTILLATION_PLAN.md section 6 set for the opt-in tier; the fast figure
+#: is the standing production contract from docs/DESIGN.md section 5.
+MODE_BUDGET_MS = {"fast": 5.0, "deep": 25.0}
 
 _WORDS = (
     "the quarterly report covers revenue growth and operating margins across "
@@ -124,6 +138,7 @@ class BenchReport:
     budget_ms: float
     buckets: list[BucketResult] = field(default_factory=list)
     peak_rss_mb: float | None = None
+    mode: str = "fast"
 
     @property
     def ok(self) -> bool:
@@ -132,6 +147,7 @@ class BenchReport:
     def to_dict(self) -> dict:
         return {
             "seed": self.seed,
+            "mode": self.mode,
             "budget_ms_per_10kb": self.budget_ms,
             "buckets": [b.to_dict() for b in self.buckets],
             "peak_rss_mb": self.peak_rss_mb,
@@ -139,7 +155,7 @@ class BenchReport:
         }
 
     def render(self) -> str:
-        lines = [f"Single-core benchmark (seed {self.seed})"]
+        lines = [f"Single-core benchmark, {self.mode} mode (seed {self.seed})"]
         lines.append(
             f"  {'bucket':>8} {'docs':>5} {'mean':>8} {'p50':>8} {'p95':>8}"
             f" {'max':>8} {'MB/s':>7} {'allowed':>8}  verdict"
@@ -178,14 +194,37 @@ def run(
     seed: int = 7,
     sizes: tuple[int, ...] = DEFAULT_SIZES,
     docs_per_size: int = 30,
-    budget_ms: float = 5.0,
+    budget_ms: float | None = None,
+    mode: str = "fast",
+    scan=None,
 ) -> BenchReport:
-    corpus = generate_docs(seed, sizes, docs_per_size)
-    report = BenchReport(seed=seed, budget_ms=budget_ms)
+    """Time one document at a time on this core.
 
-    # Warm up regex caches and allocator before timing.
+    `mode` selects the pipeline and, unless `budget_ms` overrides it, the
+    budget: see MODE_BUDGET_MS. `scan` overrides the callable outright, which
+    is how a caller benchmarks a non-default Stage 2 configuration.
+    """
+    if budget_ms is None:
+        budget_ms = MODE_BUDGET_MS[mode]
+    if scan is None:
+        if mode == "deep":
+            from .pipeline import deep_pipeline
+
+            pipeline = deep_pipeline()
+            def scan(text):
+                return scan_text(text, pipeline)
+        else:
+            scan = scan_text
+
+    corpus = generate_docs(seed, sizes, docs_per_size)
+    report = BenchReport(seed=seed, budget_ms=budget_ms, mode=mode)
+
+    # Warm up regex caches, the ONNX session and the allocator before timing.
+    # In deep mode this is not a nicety: session creation and the first run's
+    # arena allocation cost tens of milliseconds, which would land entirely in
+    # the first document's latency.
     for docs in corpus.values():
-        scan_text(docs[0])
+        scan(docs[0])
         break
 
     for size, docs in corpus.items():
@@ -193,7 +232,7 @@ def run(
         total_bytes = 0
         for doc in docs:
             start = time.perf_counter()
-            scan_text(doc)
+            scan(doc)
             latencies.append((time.perf_counter() - start) * 1000.0)
             total_bytes += len(doc)
         total_s = sum(latencies) / 1000.0
