@@ -8,7 +8,7 @@ Runs on **one CPU core**.
 - 111 BIO classes over 55 Nemotron entity types, crosswalked to 25 HIPAA-mapped types
 - onnx-fp32, 30.0 MB
 - Confidence calibration: **isotonic, per entity type**
-- Source commit: `177dd78fd24a8de589ce7ae16aad975d47083ac3`
+- Source commit: `c87e6b60768af18798ac9861264d7679946c9693`
 
 ## Intended use
 
@@ -79,9 +79,17 @@ system's cost matrix than F1; both are shown.
 
 ## Limitations that matter
 
-- **Synthetic training data.** Nemotron-PII is generated, not real. These scores
-  do not transfer unexamined to real clinical text. The standard benchmark
-  (n2c2/i2b2 2014) requires a data use agreement and was not used.
+- **These scores are for Nemotron-PII, and they do NOT generalise.** Measured on
+  ai4privacy/pii-masking-300k -- a different corpus, label space, document style
+  and locale -- in-scope strict span recall is **0.385** against 0.914 here, and
+  document-level recall **0.870** against 0.998. Format-anchored types transfer
+  intact (EMAIL 0.943, IP 0.988); learned semantic types collapse (names and
+  addresses ~0.30, mostly boundary errors on structured JSON text). Deep mode
+  still roughly doubles the rules on that corpus, so the cascade earns its place --
+  but budget for the lower number on text unlike the training set.
+- **Synthetic training data.** Nemotron-PII is generated, not real, and the
+  standard clinical benchmark (n2c2/i2b2 2014) requires a data use agreement and
+  was not used. No number here describes real clinical text.
 - **The demographic slice is synthetic too.** Name recall varies by only 0.020
   across race/ethnicity groups, which sounds excellent and mostly reflects names
   drawn from a generator rather than from the world. It is a real gate that would

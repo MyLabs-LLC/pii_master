@@ -293,11 +293,26 @@ def model_card(manifest: dict, meta: dict) -> str:
     lines += [
         "## Limitations that matter",
         "",
-        "- **Synthetic training data.** Nemotron-PII is generated, not real. "
-        "These scores",
-        "  do not transfer unexamined to real clinical text. The standard "
-        "benchmark",
-        "  (n2c2/i2b2 2014) requires a data use agreement and was not used.",
+        "- **These scores are for Nemotron-PII, and they do NOT generalise.** "
+        "Measured on",
+        "  ai4privacy/pii-masking-300k -- a different corpus, label space, "
+        "document style",
+        "  and locale -- in-scope strict span recall is **0.385** against "
+        "0.914 here, and",
+        "  document-level recall **0.870** against 0.998. Format-anchored "
+        "types transfer",
+        "  intact (EMAIL 0.943, IP 0.988); learned semantic types collapse "
+        "(names and",
+        "  addresses ~0.30, mostly boundary errors on structured JSON text). "
+        "Deep mode",
+        "  still roughly doubles the rules on that corpus, so the cascade "
+        "earns its place --",
+        "  but budget for the lower number on text unlike the training set.",
+        "- **Synthetic training data.** Nemotron-PII is generated, not real, "
+        "and the",
+        "  standard clinical benchmark (n2c2/i2b2 2014) requires a data use "
+        "agreement and",
+        "  was not used. No number here describes real clinical text.",
         "- **The demographic slice is synthetic too.** Name recall varies by "
         "only 0.020",
         "  across race/ethnicity groups, which sounds excellent and mostly "

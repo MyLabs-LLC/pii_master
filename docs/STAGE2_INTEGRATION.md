@@ -813,3 +813,82 @@ where it is 1.00 recall on 12 documents. **That is the weakest link in the
 evaluation story and it is a data problem, not a modelling one:** it needs real
 clinical text with document-level labels, which means n2c2 under a DUA.
 
+### 7.10 Cross-corpus: it does not generalise as well as the headline suggests
+
+Every number above comes from Nemotron-PII. `eval/scripts/ai4privacy_eval.py`
+scores the same shipped cascade on **ai4privacy/pii-masking-300k**, a corpus
+with a different author, label space, document style and locale: 7,946 English
+validation documents, 34,123 crosswalked gold spans.
+
+It is a deliberately hard shift. Nemotron is US narrative prose; ai4privacy is
+structured templated data — JSON, XML, markdown key/value forms — and
+predominantly UK/EU:
+
+```
+"building": "617", "street": "Holme Wood Lane", "city": "Doncaster"
+- Social Number: 669 398 5477      (ten digits; a US SSN has nine)
+- Phone: +16 079 662 2565          (not NANP)
+```
+
+| in-scope recall | rules only | **deep (`l`)** |
+|---|--:|--:|
+| strict (exact span + accepted type) | 0.187 | **0.385** |
+| typed (exact span, any type we model) | 0.214 | **0.425** |
+| located (overlapping span) | 0.229 | **0.575** |
+| **document-level recall** | 0.560 | **0.870** |
+
+Against Nemotron's micro F1 0.934 and document recall 0.998, that is a **large
+generalisation gap, and it is the most important thing on this page.** Deep
+mode roughly doubles the rules everywhere, so the cascade still earns its
+place — but anyone reading 0.934 as "how well this works" would be wrong by a
+wide margin on text that does not look like its training set.
+
+**What survives the shift and what does not** is the useful part:
+
+| ai4privacy label | gold | strict R | located R | reading |
+|---|--:|--:|--:|---|
+| `EMAIL` | 2,612 | **0.943** | 1.000 | format-anchored, locale-free |
+| `IP` | 2,166 | **0.988** | 0.992 | same |
+| `USERNAME` | 2,786 | 0.545 | 0.677 | |
+| `SOCIALNUMBER` | 2,554 | 0.334 | 0.626 | typed R 0.608 — we find it, mislabel it |
+| `POSTCODE` | 1,905 | 0.433 | 0.554 | |
+| `CITY` / `STREET` | 3,922 | ~0.33 | ~0.72 | region found, boundaries wrong |
+| `GIVENNAME1`/`LASTNAME1` | 4,409 | ~0.30 | ~0.54 | same |
+| `BOD` | 2,317 | 0.161 | 0.253 | `January/88`, `17th February 1946` |
+| `BUILDING` | 1,935 | **0.028** | 0.270 | a bare `617` in a JSON field |
+| `GEOCOORD` | 216 | **0.000** | 0.208 | boundaries, every time |
+
+**The format-anchored rule types transfer perfectly and the learned semantic
+types do not.** `EMAIL` and `IP` are as good here as on Nemotron because an
+email is an email in any corpus. Names and addresses collapse — and the
+`strict` vs `located` gap says the model usually *finds* the right region and
+gets the *boundaries* wrong, which is a distribution effect: it learned span
+edges from prose and this corpus is JSON.
+
+`BUILDING` at 0.028 is the clearest case of a genuine capability gap rather
+than a boundary one: `"building": "617"` is a bare number that is only an
+identifier because of the key next to it, and nothing in the current design
+reads structural context. That is what M4's PDF/DOCX work is really about
+(IMPROVEMENT_PLAN Track F), arriving earlier than expected.
+
+Of 19,260 predicted spans, 70.7% matched crosswalked gold, 4.0% landed on gold
+of a label we deliberately do not score (`TITLE`, `DATE`, `COUNTRY` — real
+identifiers, unscored by choice), and **25.3% were genuinely spurious**, mostly
+`ADDRESS` and `PERSON_NAME` with wrong edges.
+
+**The crosswalk itself was the first thing this evaluation caught, and it was
+mine.** The first draft mapped `SOCIALNUMBER` to `NATIONAL_ID` alone, which
+scored 854 correct US-format SSN detections as false positives and reported
+`NATIONAL_ID` recall as 0.002 — a number about the crosswalk, not the model.
+Labels now map to *sets* of our types, and the `typed` column exists precisely
+so a reader can see how much of the score depends on reconciling label spaces
+at all.
+
+**Two things this does not measure.** Non-English rows were excluded (the
+corpus has 39,782 of them across five languages; the model is US/English by
+design and would score near zero, which is a scope statement not a finding).
+And ai4privacy has no `MRN`, `HEALTH_PLAN_ID`, `CREDIT_CARD`, `ACCOUNT_NUMBER`
+or `BANK_ROUTING` labels at all, so the PHI-specific half of the taxonomy is
+still unmeasured outside Nemotron. `ai4privacy/pii-masking-health-phi-preview`
+would be the corpus for that; it is 50 rows with the values redacted.
+
