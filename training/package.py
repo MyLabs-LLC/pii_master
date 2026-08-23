@@ -90,7 +90,8 @@ def parameter_count(config: dict) -> int | None:
 
 
 def build(bundle: Path, out: Path, name: str, version: str,
-          scores: dict | None, created: str) -> Path:
+          scores: dict | None, created: str,
+          document_scores: list | None = None) -> Path:
     for required in REQUIRED:
         if not (bundle / required).exists():
             raise SystemExit(f"{bundle / required} missing; not a bundle")
@@ -130,6 +131,7 @@ def build(bundle: Path, out: Path, name: str, version: str,
                      ("soft_scope", "alpha", "temperature", "lr", "epochs",
                       "max_length")},
         "scores": scores,
+        "document_scores": document_scores,
     }
     (dest / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
     (dest / "MODEL_CARD.md").write_text(model_card(manifest, meta))
@@ -175,82 +177,180 @@ def verify(package: Path) -> int:
 
 
 def model_card(manifest: dict, meta: dict) -> str:
+    """The card, generated from the manifest so it cannot drift from the model.
+
+    Ordering is deliberate. **Recall and F2 lead; F1 follows.** For a PII/PHI
+    scanner the two errors do not cost the same -- a missed medical record
+    number is a reportable incident, a false alarm is a reviewer-minute -- and
+    a card whose headline is F1 quietly tells the reader those are equivalent.
+    F1 is still shown, because precision is what keeps a scanner switched on.
+    """
     model = manifest["model"]
     scores = manifest.get("scores") or {}
+    doc = manifest.get("document_scores") or []
 
-    def row(section, key, default="not measured in this package"):
+    def cell(section, key):
         value = scores.get(section, {}).get(key)
-        return f"{value:.3f}" if isinstance(value, (int, float)) else default
+        return f"{value:.3f}" if isinstance(value, (int, float)) else "n/a"
 
-    return f"""# {manifest['name']} {manifest['version']}
+    lines = [
+        f"# {manifest['name']} {manifest['version']}",
+        "",
+        "Token tagger for **PII / PHI detection**, distilled from",
+        f"`{model['teacher']}` on "
+        "[nvidia/Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII).",
+        "Runs on **one CPU core**.",
+        "",
+        f"- {model['architecture']}, d={model['d_model']} x {model['n_layers']} "
+        f"layers, {(model['parameters'] or 0) / 1e6:.2f}M parameters",
+        f"- {model['labels']} BIO classes over 55 Nemotron entity types, "
+        "crosswalked to 25 HIPAA-mapped types",
+        f"- {manifest['format']}, {manifest['total_bytes'] / 1e6:.1f} MB",
+        "- Confidence calibration: " + ("**isotonic, per entity type**"
+                                        if model["calibrated"] else
+                                        "**NONE** -- raw softmax, do not "
+                                        "threshold these scores"),
+        f"- Source commit: `{manifest.get('git_commit') or 'unknown'}`",
+        "",
+        "## Intended use",
+        "",
+        "Input is plain text; output is character spans typed against the 18",
+        "HIPAA Safe Harbor identifier categories. It is designed to run "
+        "**behind the",
+        "Stage 1 rules tier**, which supplies checksum-validated spans it "
+        "cannot beat,",
+        "and which suppresses failure classes it re-introduces on its own "
+        "(see Limitations).",
+        "",
+        "**Not a de-identification guarantee.** It is a detector that helps a "
+        "reviewer.",
+        "Safe Harbor de-identification is a legal determination this model "
+        "cannot make.",
+        "",
+        "## How good is it?",
+        "",
+        "### At the level you act on: does this document contain PII?",
+        "",
+    ]
+    if doc:
+        lines += [
+            "| configuration | **recall** | documents missed | false alarms |",
+            "|---|--:|--:|--:|",
+        ]
+        for row in doc:
+            alarm = ("n/a" if row.get("false_alarm_rate") is None else
+                     f"{row['false_alarm_rate']:.3f}")
+            star = "**" if row.get("shipped") else ""
+            lines.append(
+                f"| {star}{row['mode']}{star} | {star}{row['recall']:.4f}{star} "
+                f"| {row['missed']:,} of {row['sensitive']:,} | {alarm} |")
+        lines += [
+            "",
+            f"Measured on {doc[0]['documents']:,} held-out Nemotron documents; "
+            "a document counts as",
+            "sensitive if it carries a gold span of a type we model. False "
+            "alarms are measured",
+            f"on {doc[0].get('negatives', 0)} **adversarial** negatives -- order "
+            "numbers, chart numbers,",
+            "subscriber ids -- not on easy ones.",
+            "",
+        ]
+    else:
+        lines += ["Not measured in this package.", ""]
 
-Stage 2 token tagger for **PII / PHI detection**, distilled from
-`{model['teacher']}` on [nvidia/Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII).
-Built to run on **one CPU core**.
+    lines += [
+        "### At the span level: is the tag right?",
+        "",
+        "Exact `(type, start, end)` match, fused with the rules tier.",
+        "**F2 weights recall four times as heavily as precision**, which is "
+        "closer to this",
+        "system's cost matrix than F1; both are shown.",
+        "",
+        "| | recall | **F2** | F1 | precision |",
+        "|---|--:|--:|--:|--:|",
+        f"| the 12 types the rules also cover | {cell('rule_tier', 'r')} "
+        f"| **{cell('rule_tier', 'f2')}** | {cell('rule_tier', 'f1')} "
+        f"| {cell('rule_tier', 'p')} |",
+        f"| the 14 types only this model emits | {cell('model_tier', 'r')} "
+        f"| **{cell('model_tier', 'f2')}** | {cell('model_tier', 'f1')} "
+        f"| {cell('model_tier', 'p')} |",
+        "",
+    ]
 
-- Architecture: {model['architecture']}, d={model['d_model']} x {model['n_layers']} layers
-- Label space: {model['labels']} BIO classes over 55 Nemotron entity types
-- Format: {manifest['format']} ({manifest['total_bytes'] / 1e6:.1f} MB)
-- Confidence calibration: {"isotonic, fitted on a held-out slice" if model['calibrated'] else "NONE -- raw softmax"}
-- Source commit: `{manifest.get('git_commit') or 'unknown'}`
+    per_type = scores.get("per_type") or {}
+    if per_type:
+        lines += ["<details><summary>Per type</summary>", "",
+                  "| type | gold | recall | F2 | F1 | precision |",
+                  "|---|--:|--:|--:|--:|--:|"]
+        for name in sorted(per_type, key=lambda k: per_type[k].get("f2", 0)):
+            row = per_type[name]
+            lines.append(
+                f"| `{name}` | {row.get('gold', 0):,} | {row.get('recall', 0):.3f} "
+                f"| {row.get('f2', 0):.3f} | {row.get('f1', 0):.3f} "
+                f"| {row.get('precision', 0):.3f} |")
+        lines += ["", "</details>", ""]
 
-## Intended use
-
-Input is plain text; output is character spans typed against the 18 HIPAA Safe
-Harbor identifier categories. It is designed to run **behind the Stage 1 rules
-tier**, not alone -- see Limitations.
-
-**Not** intended as a de-identification guarantee. It is a detector that helps
-a reviewer, and Safe Harbor de-identification is a legal determination this
-model cannot make.
-
-## Measured performance
-
-Exact `(type, start, end)` match on held-out Nemotron-PII documents, fused with
-the rules tier:
-
-| | F1 | F2 |
-|---|--:|--:|
-| the 12 types the rules also cover | {row('rule_tier', 'f1')} | {row('rule_tier', 'f2')} |
-| the 14 types only this model emits | {row('model_tier', 'f1')} | {row('model_tier', 'f2')} |
-
-F2 is reported because the cost matrix is asymmetric: a missed identifier is a
-reportable incident, a false alarm costs a reviewer minutes.
-
-## Limitations that matter
-
-- **Synthetic training data.** Nemotron-PII is generated, not real. Scores here
-  do not transfer unexamined to real clinical text; the standard benchmark
-  (n2c2/i2b2 2014) needs a data use agreement and was not used.
-- **The demographic slice is synthetic too.** Name recall varies by only 0.020
-  across race/ethnicity groups, which sounds excellent and mostly reflects
-  names drawn from a generator rather than from the world. It is a real gate
-  that would catch a large disparity, and it certifies synthetic names only.
-- **Credit card numbers are deliberately suppressed.** 88% of the training
-  corpus's card numbers fail the Luhn checksum, so the serving path re-validates
-  and drops them. Measured F1 on that type against this corpus is ~0.18, and
-  that is the correct behaviour, not a defect.
-- **US / English scope.** Non-US identifier formats are out of scope.
-- **Confidences are calibrated for THIS model on THIS corpus.** A threshold
-  tuned here is not automatically right for another text distribution.
-- **The model can be confidently wrong.** Adversarial near-misses -- order
-  numbers, chart numbers, subscriber ids -- are its documented failure class,
-  which is why the serving path ships a confidence floor and rule fusion.
-
-## Licensing
-
-Code MIT (see LICENSE). Trained on Nemotron-PII, **CC BY 4.0**: attribution to
-NVIDIA is required when redistributing this model or its outputs. The teacher
-`{model['teacher']}` is MIT.
-
-## Verify before you trust it
-
-    python training/package.py verify <this directory>
-
-The weights ship in `model.onnx.data` alongside `model.onnx`. A package missing
-or truncating that file still loads and returns confident garbage, so the
-checksums are load-bearing rather than decorative.
-"""
+    lines += [
+        "## Limitations that matter",
+        "",
+        "- **Synthetic training data.** Nemotron-PII is generated, not real. "
+        "These scores",
+        "  do not transfer unexamined to real clinical text. The standard "
+        "benchmark",
+        "  (n2c2/i2b2 2014) requires a data use agreement and was not used.",
+        "- **The demographic slice is synthetic too.** Name recall varies by "
+        "only 0.020",
+        "  across race/ethnicity groups, which sounds excellent and mostly "
+        "reflects names",
+        "  drawn from a generator rather than from the world. It is a real gate "
+        "that would",
+        "  catch a large disparity; it certifies synthetic names only.",
+        "- **The PII-vs-PHI split has no external gold.** Nemotron has no "
+        "document labels",
+        "  and no medical-context annotation, so that boundary is only scored "
+        "on a",
+        "  39-document authored corpus. It is the weakest link in the "
+        "evaluation.",
+        "- **Credit card numbers are deliberately suppressed.** 88% of the "
+        "training",
+        "  corpus's cards fail the Luhn checksum, so the serving path "
+        "re-validates and",
+        "  drops them. Measured F1 on that type is ~0.18 against this corpus, "
+        "and that is",
+        "  correct behaviour rather than a defect.",
+        "- **US / English scope.** Non-US identifier formats are out of scope.",
+        "- **Calibrated for THIS model on THIS corpus.** A threshold tuned here "
+        "is not",
+        "  automatically right for another text distribution.",
+        "- **It can be confidently wrong.** Adversarial near-misses are its "
+        "documented",
+        "  failure class, which is why the serving path ships a confidence "
+        "floor, checksum",
+        "  re-validation and rule fusion. Do not run it bare.",
+        "",
+        "## Licensing",
+        "",
+        "Code MIT (see LICENSE). Trained on Nemotron-PII, **CC BY 4.0**: "
+        "attribution to",
+        "NVIDIA is required when redistributing this model or its outputs. The "
+        "teacher",
+        f"`{model['teacher']}` is MIT.",
+        "",
+        "## Verify before you trust it",
+        "",
+        "    python training/package.py verify <this directory>",
+        "",
+        "The weights ship in `model.onnx.data` beside `model.onnx`. A package "
+        "whose weights",
+        "are corrupted **without changing their size** still loads and still "
+        "answers: on the",
+        "real artifact a flipped kilobyte turned an `MRN` into a `USER_ID` at "
+        "0.87",
+        "confidence, which is a silent PHI miss. Only the checksum catches "
+        "that.",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def main(argv=None) -> int:
@@ -263,6 +363,9 @@ def main(argv=None) -> int:
     b.add_argument("--version", required=True)
     b.add_argument("--out", default="dist")
     b.add_argument("--scores", help="JSON from eval/scripts/nemotron_deep_eval.py")
+    b.add_argument("--doc-scores", help="JSON from eval/scripts/document_eval.py")
+    b.add_argument("--shipped-threshold", type=float,
+                   help="mark this row of --doc-scores as the shipped default")
     b.add_argument("--created", required=True,
                    help="ISO date; passed in rather than read from the clock "
                         "so a rebuild of the same inputs is reproducible")
@@ -284,10 +387,21 @@ def main(argv=None) -> int:
             "configuration": run["label"],
             "rule_tier": dict(zip(keys, run["rule_tier"])),
             "model_tier": dict(zip(keys, run["model_tier"])),
+            "per_type": run.get("per_type"),
             "p95_ms_per_doc": round(run["p95_ms"], 3),
         }
+    document_scores = None
+    if args.doc_scores:
+        document_scores = json.loads(Path(args.doc_scores).read_text())
+        for row in document_scores:
+            row.pop("missed_examples", None)
+            row.pop("labels", None)
+            if (args.shipped_threshold is not None
+                    and row.get("threshold") == args.shipped_threshold):
+                row["shipped"] = True
+
     dest = build(Path(args.bundle), Path(args.out), args.name, args.version,
-                 scores, args.created)
+                 scores, args.created, document_scores)
     print(f"built {dest}")
     return verify(dest)
 

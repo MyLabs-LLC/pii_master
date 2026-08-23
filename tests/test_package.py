@@ -125,11 +125,38 @@ def test_the_model_card_carries_the_limitations_that_matter(tmp_path):
     pkg = load_packager()
     dest = pkg.build(fake_bundle(tmp_path), tmp_path / "dist",
                      "test-model", "1.2.3", None, "2026-01-01")
-    card = (dest / "MODEL_CARD.md").read_text()
-    for claim in ("Synthetic training data", "demographic slice",
-                  "Credit card numbers are deliberately suppressed",
-                  "CC BY 4.0", "intended as a de-identification guarantee"):
-        assert claim.lower() in card.lower(), claim
+    card = (dest / "MODEL_CARD.md").read_text().lower()
+    for claim in ("synthetic training data", "demographic slice",
+                  "credit card numbers are deliberately suppressed",
+                  "cc by 4.0", "de-identification guarantee",
+                  # The PII/PHI split has no external gold; a card that omits
+                  # that is hiding the weakest link in the evaluation.
+                  "no external gold"):
+        assert claim in card, claim
+
+
+def test_the_model_card_leads_with_recall_not_f1():
+    """Ordering is a claim about what matters.
+
+    For a PII/PHI scanner a missed identifier is a reportable incident and a
+    false alarm is a reviewer-minute. A card whose headline metric is F1 tells
+    the reader those are equivalent, which is wrong -- so recall and F2 come
+    first and F1 follows.
+    """
+    pkg = load_packager()
+    import tempfile, pathlib as pl
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = pl.Path(tmp)
+        dest = pkg.build(fake_bundle(tmp), tmp / "dist", "test-model", "1.2.3",
+                         {"rule_tier": {"p": 0.9, "r": 0.9, "f1": 0.9,
+                                        "f2": 0.9},
+                          "model_tier": {"p": 0.9, "r": 0.9, "f1": 0.9,
+                                         "f2": 0.9}},
+                         "2026-01-01")
+        card = (dest / "MODEL_CARD.md").read_text()
+    header = next(line for line in card.splitlines()
+                  if line.startswith("| |") and "recall" in line)
+    assert header.index("recall") < header.index("F2") < header.index("F1")
 
 
 @pytest.mark.parametrize("size,expected", [

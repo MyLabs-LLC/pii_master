@@ -2,7 +2,7 @@
   "name": "pii-master-ner-m",
   "version": "0.3.1",
   "created": "2026-08-23",
-  "git_commit": "d0a457f4ca9f4199a1cf4888cf6d30b90ccce3bc",
+  "git_commit": "ef7cc1f126956a6d73bf3785180a8891c191ae52",
   "format": "onnx-fp32",
   "files": {
     "model.onnx": {
@@ -63,6 +63,287 @@
       "f1": 0.9138357990983554,
       "f2": 0.9023876404494383
     },
+    "per_type": {
+      "CREDIT_CARD": {
+        "gold": 380,
+        "tp": 41,
+        "fp": 26,
+        "fn": 339,
+        "precision": 0.6119,
+        "recall": 0.1079,
+        "f1": 0.1834,
+        "f2": 0.1292
+      },
+      "DATE_DOB": {
+        "gold": 403,
+        "tp": 402,
+        "fp": 4,
+        "fn": 1,
+        "precision": 0.9901,
+        "recall": 0.9975,
+        "f1": 0.9938,
+        "f2": 0.996
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 510,
+        "tp": 472,
+        "fp": 15,
+        "fn": 38,
+        "precision": 0.9692,
+        "recall": 0.9255,
+        "f1": 0.9468,
+        "f2": 0.9339
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 311,
+        "tp": 294,
+        "fp": 4,
+        "fn": 17,
+        "precision": 0.9866,
+        "recall": 0.9453,
+        "f1": 0.9655,
+        "f2": 0.9533
+      },
+      "EMAIL": {
+        "gold": 1221,
+        "tp": 1218,
+        "fp": 4,
+        "fn": 3,
+        "precision": 0.9967,
+        "recall": 0.9975,
+        "f1": 0.9971,
+        "f2": 0.9974
+      },
+      "SSN": {
+        "gold": 249,
+        "tp": 249,
+        "fp": 31,
+        "fn": 0,
+        "precision": 0.8893,
+        "recall": 1.0,
+        "f1": 0.9414,
+        "f2": 0.9757
+      },
+      "URL": {
+        "gold": 1198,
+        "tp": 1147,
+        "fp": 56,
+        "fn": 51,
+        "precision": 0.9534,
+        "recall": 0.9574,
+        "f1": 0.9554,
+        "f2": 0.9566
+      },
+      "MRN": {
+        "gold": 389,
+        "tp": 376,
+        "fp": 3,
+        "fn": 13,
+        "precision": 0.9921,
+        "recall": 0.9666,
+        "f1": 0.9792,
+        "f2": 0.9716
+      },
+      "PHONE_US": {
+        "gold": 638,
+        "tp": 622,
+        "fp": 79,
+        "fn": 16,
+        "precision": 0.8873,
+        "recall": 0.9749,
+        "f1": 0.9291,
+        "f2": 0.956
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 170,
+        "tp": 152,
+        "fp": 9,
+        "fn": 18,
+        "precision": 0.9441,
+        "recall": 0.8941,
+        "f1": 0.9184,
+        "f2": 0.9037
+      },
+      "IP_ADDRESS": {
+        "gold": 291,
+        "tp": 285,
+        "fp": 3,
+        "fn": 6,
+        "precision": 0.9896,
+        "recall": 0.9794,
+        "f1": 0.9845,
+        "f2": 0.9814
+      },
+      "BANK_ROUTING": {
+        "gold": 277,
+        "tp": 267,
+        "fp": 2,
+        "fn": 10,
+        "precision": 0.9926,
+        "recall": 0.9639,
+        "f1": 0.978,
+        "f2": 0.9695
+      },
+      "ADDRESS": {
+        "gold": 1568,
+        "tp": 1390,
+        "fp": 104,
+        "fn": 178,
+        "precision": 0.9304,
+        "recall": 0.8865,
+        "f1": 0.9079,
+        "f2": 0.8949
+      },
+      "PERSON_NAME": {
+        "gold": 3019,
+        "tp": 2698,
+        "fp": 298,
+        "fn": 321,
+        "precision": 0.9005,
+        "recall": 0.8937,
+        "f1": 0.8971,
+        "f2": 0.895
+      },
+      "USER_ID": {
+        "gold": 1339,
+        "tp": 1194,
+        "fp": 35,
+        "fn": 145,
+        "precision": 0.9715,
+        "recall": 0.8917,
+        "f1": 0.9299,
+        "f2": 0.9066
+      },
+      "MAC_ADDRESS": {
+        "gold": 137,
+        "tp": 133,
+        "fp": 1,
+        "fn": 4,
+        "precision": 0.9925,
+        "recall": 0.9708,
+        "f1": 0.9815,
+        "f2": 0.9751
+      },
+      "BIOMETRIC_ID": {
+        "gold": 358,
+        "tp": 341,
+        "fp": 1,
+        "fn": 17,
+        "precision": 0.9971,
+        "recall": 0.9525,
+        "f1": 0.9743,
+        "f2": 0.9611
+      },
+      "FAX_NUMBER": {
+        "gold": 211,
+        "tp": 166,
+        "fp": 14,
+        "fn": 45,
+        "precision": 0.9222,
+        "recall": 0.7867,
+        "f1": 0.8491,
+        "f2": 0.8105
+      },
+      "SWIFT_BIC": {
+        "gold": 157,
+        "tp": 154,
+        "fp": 6,
+        "fn": 3,
+        "precision": 0.9625,
+        "recall": 0.9809,
+        "f1": 0.9716,
+        "f2": 0.9772
+      },
+      "DATE_TIME": {
+        "gold": 325,
+        "tp": 290,
+        "fp": 8,
+        "fn": 35,
+        "precision": 0.9732,
+        "recall": 0.8923,
+        "f1": 0.931,
+        "f2": 0.9074
+      },
+      "VEHICLE_ID": {
+        "gold": 294,
+        "tp": 283,
+        "fp": 10,
+        "fn": 11,
+        "precision": 0.9659,
+        "recall": 0.9626,
+        "f1": 0.9642,
+        "f2": 0.9632
+      },
+      "GEO_COORDINATE": {
+        "gold": 233,
+        "tp": 206,
+        "fp": 29,
+        "fn": 27,
+        "precision": 0.8766,
+        "recall": 0.8841,
+        "f1": 0.8803,
+        "f2": 0.8826
+      },
+      "TAX_ID": {
+        "gold": 43,
+        "tp": 14,
+        "fp": 2,
+        "fn": 29,
+        "precision": 0.875,
+        "recall": 0.3256,
+        "f1": 0.4746,
+        "f2": 0.3723
+      },
+      "DEVICE_ID": {
+        "gold": 80,
+        "tp": 60,
+        "fp": 2,
+        "fn": 20,
+        "precision": 0.9677,
+        "recall": 0.75,
+        "f1": 0.8451,
+        "f2": 0.7853
+      }
+    },
     "p95_ms_per_doc": 2.779
-  }
+  },
+  "document_scores": [
+    {
+      "mode": "deep @0.30",
+      "threshold": 0.3,
+      "documents": 3000,
+      "sensitive": 2983,
+      "recall": 0.9983238350653705,
+      "flagged": 2978,
+      "missed": 5,
+      "false_alarm_rate": 0.14285714285714285,
+      "false_alarms": 2,
+      "negatives": 14
+    },
+    {
+      "mode": "deep @0.50",
+      "threshold": 0.5,
+      "documents": 3000,
+      "sensitive": 2983,
+      "recall": 0.9979886020784445,
+      "flagged": 2977,
+      "missed": 6,
+      "false_alarm_rate": 0.0,
+      "false_alarms": 0,
+      "negatives": 14,
+      "shipped": true
+    },
+    {
+      "mode": "deep @0.70",
+      "threshold": 0.7,
+      "documents": 3000,
+      "sensitive": 2983,
+      "recall": 0.9949715051961113,
+      "flagged": 2968,
+      "missed": 15,
+      "false_alarm_rate": 0.0,
+      "false_alarms": 0,
+      "negatives": 14
+    }
+  ]
 }
