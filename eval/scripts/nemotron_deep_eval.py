@@ -116,13 +116,35 @@ def tally(scores, gold_spans, pred_spans, partial=None):
         sp.fn += len(g) - hits
 
 
+def fbeta(precision, recall, beta):
+    if not (precision + recall):
+        return 0.0
+    b2 = beta * beta
+    return (1 + b2) * precision * recall / (b2 * precision + recall)
+
+
 def micro(scores):
+    """Pooled counts -> (P, R, F1, F2).
+
+    Micro, not macro: pooling weights each type by the gold it actually has,
+    so TAX_ID's 43 spans cannot swing the headline the way averaging per-type
+    F-scores would.
+
+    F2 is reported next to F1 because this project's cost matrix is not
+    symmetric. docs/DESIGN.md section 1: "a missed medical record number
+    leaking into a data lake is a reportable incident; a false alarm costs a
+    reviewer minutes." F1 prices those identically; F2 weights recall four
+    times as heavily, which is closer to the truth. Both are shown because the
+    same section is equally clear that precision is not optional -- "a scanner
+    that cries wolf gets turned off, which is the worst recall of all" -- and
+    the gap between the two columns IS the tradeoff a threshold is choosing.
+    """
     tp = sum(s.tp for s in scores.values())
     fp = sum(s.fp for s in scores.values())
     fn = sum(s.fn for s in scores.values())
     p = tp / (tp + fp) if tp + fp else 0.0
     r = tp / (tp + fn) if tp + fn else 0.0
-    return p, r, (2 * p * r / (p + r) if p + r else 0.0)
+    return p, r, fbeta(p, r, 1.0), fbeta(p, r, 2.0)
 
 
 def split_tiers(spans):
@@ -148,7 +170,7 @@ def score(texts, gold_by_doc, pipeline, label, merge):
     latency.sort()
     return {
         "label": label,
-        "rule_tier": micro(rule_exact),
+        "rule_tier": micro(rule_exact),          # (P, R, F1, F2)
         "rule_tier_partial": micro(rule_loose),
         "model_tier": micro(model_exact),
         "model_tier_partial": micro(model_loose),
@@ -198,25 +220,40 @@ def main(argv=None) -> int:
                           merge))
         print(f"  scored {runs[-1]['label']}", flush=True)
 
-    print(f"\n{'configuration':>16} | {'rule-tier types':^25} | "
-          f"{'model-tier types':^25} | latency")
-    print(f"{'':>16} | {'P':>7} {'R':>7} {'F1':>7}  | "
-          f"{'P':>7} {'R':>7} {'F1':>7}  | {'p95':>8}")
+    print(f"\n{'configuration':>16} | {'rule-tier types':^33} | "
+          f"{'model-tier types':^33} | latency")
+    print(f"{'':>16} | {'P':>7} {'R':>7} {'F1':>7} {'F2':>7} | "
+          f"{'P':>7} {'R':>7} {'F1':>7} {'F2':>7} | {'p95':>8}")
     for run in runs:
-        rp, rr, rf = run["rule_tier"]
-        mp, mr, mf = run["model_tier"]
-        print(f"{run['label']:>16} | {rp:>7.3f} {rr:>7.3f} {rf:>7.3f}  | "
-              f"{mp:>7.3f} {mr:>7.3f} {mf:>7.3f}  | {run['p95_ms']:>6.2f}ms")
+        rp, rr, rf1, rf2 = run["rule_tier"]
+        mp, mr, mf1, mf2 = run["model_tier"]
+        print(f"{run['label']:>16} | {rp:>7.3f} {rr:>7.3f} {rf1:>7.3f} {rf2:>7.3f} | "
+              f"{mp:>7.3f} {mr:>7.3f} {mf1:>7.3f} {mf2:>7.3f} | "
+              f"{run['p95_ms']:>6.2f}ms")
 
-    best = max(runs[1:], key=lambda r: r["model_tier"][2] + r["rule_tier"][2])
-    print(f"\nbest combined F1: {best['label']}")
-    print(f"\nPer-type for {best['label']} (gold / P / R / F1):")
-    print(f"{'type':>20} {'gold':>9} {'P':>7} {'R':>7} {'F1':>7}  tier")
+    # The F1 and F2 optima are reported separately and deliberately not
+    # reconciled. They disagree -- F2 always prefers a lower threshold,
+    # because dropping it only ever adds spans -- and which one a deployment
+    # should follow is a policy question, not something this script settles.
+    best_f1 = max(runs[1:], key=lambda r: r["model_tier"][2] + r["rule_tier"][2])
+    best_f2 = max(runs[1:], key=lambda r: r["model_tier"][3] + r["rule_tier"][3])
+    print(f"\nbest by F1: {best_f1['label']}   "
+          f"(rule {best_f1['rule_tier'][2]:.3f} / model {best_f1['model_tier'][2]:.3f})")
+    print(f"best by F2: {best_f2['label']}   "
+          f"(rule {best_f2['rule_tier'][3]:.3f} / model {best_f2['model_tier'][3]:.3f})")
+    if best_f1["label"] != best_f2["label"]:
+        print("  they disagree: F2 weights recall 4x, so it prefers a lower")
+        print("  threshold. Check the frozen corpus before following it --")
+        print("  the recall it buys is paid for in false positives on the")
+        print("  near-miss identifiers that corpus is made of.")
+    best = best_f1
+    print(f"\nPer-type for {best['label']} (gold / P / R / F1 / F2):")
+    print(f"{'type':>20} {'gold':>9} {'P':>7} {'R':>7} {'F1':>7} {'F2':>7}  tier")
     for name in sorted(best["per_type"]):
         row = best["per_type"][name]
         tier = "model" if name in MODEL_TIER else "rule"
         print(f"{name:>20} {row['gold']:>9,} {row['precision']:>7.3f} "
-              f"{row['recall']:>7.3f} {row['f1']:>7.3f}  {tier}")
+              f"{row['recall']:>7.3f} {row['f1']:>7.3f} {row['f2']:>7.3f}  {tier}")
 
     if args.json_out:
         Path(args.json_out).write_text(json.dumps(

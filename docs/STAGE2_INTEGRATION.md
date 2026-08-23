@@ -308,14 +308,18 @@ scoped.
 runs `deep_pipeline()` itself — the ONNX bundle, the shipped decoder, the
 shipped guards, the shipped fusion — not a cascade assembled in a script.
 
-| configuration | rule-tier P | R | **F1** | model-tier P | R | **F1** |
-|---|--:|--:|--:|--:|--:|--:|
-| rules only | 0.846 | 0.752 | **0.796** | 0.000 | 0.000 | **0.000** |
-| deep, `m` student | 0.962 | 0.905 | **0.933** | 0.927 | 0.881 | **0.904** |
-| **deep, `l` student** (recommended) | 0.964 | 0.908 | **0.935** | 0.948 | 0.905 | **0.926** |
+| configuration | rule-tier P | R | **F1** | **F2** | model-tier P | R | **F1** | **F2** |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|
+| rules only | 0.846 | 0.752 | **0.796** | **0.769** | 0.000 | 0.000 | **0.000** | **0.000** |
+| deep, `m` student | 0.962 | 0.905 | **0.933** | **0.916** | 0.927 | 0.881 | **0.904** | **0.890** |
+| **deep, `l` student** (recommended) | 0.963 | 0.909 | **0.935** | **0.919** | 0.949 | 0.907 | **0.927** | **0.915** |
 
-Both at the shipped `min_confidence=0.70`. The two students are a real ladder,
-not a leftover — see §7.7.
+Both at the shipped `min_confidence=0.70`. **F2 is reported next to F1
+throughout** because this system's cost matrix is not symmetric — a missed
+identifier is a reportable incident, a false alarm is a reviewer-minute
+([DESIGN.md](DESIGN.md) §1 and §10). Neither is *the* number; the gap between
+them is what a threshold is choosing, and §7.1b makes that choice explicit.
+The two students are a real ladder, not a leftover — see §7.7.
 
 **+0.139 F1 on the types the rules already covered, and 0.926 on fourteen types
 they could not touch at all.** The rules-only row (0.846 / 0.752 / 0.796)
@@ -342,40 +346,49 @@ one entity — and because reporting the more flattering of two views of the sam
 model is how baselines stop meaning anything. The rule tier is untouched either
 way; only `PERSON_NAME` and `ADDRESS` merge.
 
-Per type with the `l` student — the model tier is everything the rules could
-never emit:
+Per type with the `l` student at the shipped threshold — the model tier is
+everything the rules could never emit:
 
-| type | gold | P | R | F1 | tier |
-|---|--:|--:|--:|--:|---|
-| `EMAIL` | 1,221 | 0.997 | 0.998 | 0.997 | rule |
-| `DATE_DOB` | 403 | 0.985 | 0.995 | 0.990 | rule |
-| `MRN` | 389 | 0.997 | 0.974 | **0.986** | rule |
-| `IP_ADDRESS` | 291 | 0.990 | 0.979 | 0.985 | rule |
-| `MAC_ADDRESS` | 137 | 0.985 | 0.985 | 0.985 | model |
-| `BANK_ROUTING` | 277 | 0.993 | 0.968 | 0.980 | model |
-| `HEALTH_PLAN_ID` | 311 | 0.990 | 0.968 | **0.979** | rule |
-| `BIOMETRIC_ID` | 358 | 0.989 | 0.961 | 0.975 | model |
-| `SWIFT_BIC` | 157 | 0.944 | 0.975 | 0.959 | model |
-| `USER_ID` | 1,339 | 0.977 | 0.922 | 0.949 | model |
-| `URL` | 1,198 | 0.975 | 0.925 | 0.949 | rule |
-| `ACCOUNT_NUMBER` | 510 | 0.945 | 0.941 | **0.943** | rule |
-| `SSN` | 249 | 0.889 | 1.000 | 0.941 | rule |
-| `PHONE_US` | 638 | 0.903 | 0.980 | **0.940** | rule |
-| `VEHICLE_ID` | 294 | 0.921 | 0.956 | 0.938 | model |
-| `ADDRESS` | 1,568 | 0.965 | 0.889 | 0.926 | model |
-| `US_DRIVER_LICENSE` | 170 | 0.923 | 0.923 | **0.923** | rule |
-| `PERSON_NAME` | 3,019 | 0.924 | 0.901 | 0.912 | model |
-| `GEO_COORDINATE` | 233 | 0.894 | 0.901 | 0.897 | model |
-| `DATE_TIME` | 325 | 0.888 | 0.883 | 0.886 | model |
-| `FAX_NUMBER` | 211 | 0.933 | 0.791 | 0.856 | model |
-| `DEVICE_ID` | 80 | 0.912 | 0.775 | 0.838 | model |
-| `TAX_ID` | 43 | 0.938 | 0.349 | 0.508 | model |
-| `CREDIT_CARD` | 380 | 0.612 | 0.108 | **0.183** | rule |
+| type | gold | P | R | F1 | F2 | tier |
+|---|--:|--:|--:|--:|--:|---|
+| `EMAIL` | 1,221 | 0.997 | 0.998 | 0.997 | 0.997 | rule |
+| `DATE_DOB` | 403 | 0.988 | 0.995 | 0.991 | 0.994 | rule |
+| `MRN` | 389 | 1.000 | 0.974 | **0.987** | 0.979 | rule |
+| `IP_ADDRESS` | 291 | 0.990 | 0.979 | 0.985 | 0.981 | rule |
+| `MAC_ADDRESS` | 137 | 0.985 | 0.985 | 0.985 | 0.985 | model |
+| `SWIFT_BIC` | 157 | 0.963 | 0.994 | 0.978 | 0.987 | model |
+| `HEALTH_PLAN_ID` | 311 | 0.993 | 0.961 | **0.977** | 0.968 | rule |
+| `BANK_ROUTING` | 277 | 0.993 | 0.960 | 0.976 | 0.967 | model |
+| `BIOMETRIC_ID` | 358 | 0.991 | 0.961 | 0.976 | 0.967 | model |
+| `ACCOUNT_NUMBER` | 510 | 0.958 | 0.941 | **0.950** | 0.945 | rule |
+| `USER_ID` | 1,339 | 0.976 | 0.922 | 0.948 | 0.932 | model |
+| `VEHICLE_ID` | 294 | 0.934 | 0.963 | 0.948 | 0.957 | model |
+| `URL` | 1,198 | 0.979 | 0.917 | 0.947 | 0.929 | rule |
+| `SSN` | 249 | 0.889 | 1.000 | 0.941 | 0.976 | rule |
+| `PHONE_US` | 638 | 0.897 | 0.981 | **0.937** | 0.963 | rule |
+| `ADDRESS` | 1,568 | 0.964 | 0.892 | 0.926 | 0.905 | model |
+| `US_DRIVER_LICENSE` | 170 | 0.934 | 0.918 | **0.926** | 0.921 | rule |
+| `DATE_TIME` | 325 | 0.930 | 0.901 | 0.916 | 0.907 | model |
+| `PERSON_NAME` | 3,019 | 0.926 | 0.905 | 0.915 | 0.909 | model |
+| `GEO_COORDINATE` | 233 | 0.902 | 0.910 | 0.906 | 0.908 | model |
+| `DEVICE_ID` | 80 | 0.940 | 0.787 | 0.857 | 0.814 | model |
+| `FAX_NUMBER` | 211 | 0.938 | 0.782 | 0.853 | 0.809 | model |
+| `TAX_ID` | 43 | 0.938 | 0.349 | 0.508 | 0.399 | model |
+| `CREDIT_CARD` | 380 | 0.612 | 0.108 | **0.183** | 0.129 | rule |
 
-The bolded rule-tier rows are the ones the results doc singled out as weak:
-`US_DRIVER_LICENSE` was **0.001** rules-only and is 0.923 fused;
-`ACCOUNT_NUMBER` 0.407 → 0.943; `HEALTH_PLAN_ID` 0.448 → 0.979;
-`MRN` 0.615 → 0.986; `PHONE_US` 0.471 → 0.940.
+Where F2 exceeds F1 the detector is recall-heavy and this project's cost
+matrix likes it: `SSN` 0.941 -> **0.976** (recall 1.000, so every gold SSN
+is found and the cost is a few false ones), `PHONE_US` 0.937 -> 0.963,
+`VEHICLE_ID` 0.948 -> 0.957. Where F2 falls below F1 the detector is
+leaving identifiers on the table, which is the expensive direction:
+`TAX_ID` 0.508 -> **0.399** on 43 spans, `FAX_NUMBER` 0.853 -> 0.809,
+`DEVICE_ID` 0.857 -> 0.814. Those three are the recall backlog, and F1
+alone would have made them look better than they are.
+
+The bolded rows are the ones the results doc singled out as weak:
+`US_DRIVER_LICENSE` was **0.001** rules-only and is 0.926 fused;
+`ACCOUNT_NUMBER` 0.407 → 0.950; `HEALTH_PLAN_ID` 0.448 → 0.977;
+`MRN` 0.615 → 0.987; `PHONE_US` 0.471 → 0.937.
 
 Two rows need their explanation attached rather than buried:
 
@@ -386,6 +399,46 @@ Two rows need their explanation attached rather than buried:
   right; the alternative measured F1 0.938 by agreeing with invalid cards.
 - **`TAX_ID` 0.326 recall on 43 spans** is too thin to conclude anything from.
   It is reported rather than dropped so the thinness is visible.
+
+### 7.1b The F1 and F2 optima disagree, and the frozen corpus breaks the tie
+
+Sweeping `min_confidence` on the `l` student, 3,000 holdout documents:
+
+| threshold | rule F1 | **rule F2** | model F1 | **model F2** | frozen doc accuracy |
+|---|--:|--:|--:|--:|--:|
+| 0.00 | 0.937 | **0.927** | 0.929 | **0.927** | 0.90 |
+| 0.20 | 0.938 | **0.927** | 0.930 | **0.927** | 0.90 |
+| 0.35 | 0.938 | **0.927** | 0.930 | 0.925 | 0.92 |
+| 0.50 | 0.938 | 0.925 | 0.931 | 0.923 | 0.95 |
+| **0.70** (shipped) | 0.935 | 0.919 | 0.927 | 0.915 | **1.00** |
+| 0.80 | 0.935 | 0.918 | 0.918 | 0.903 | 1.00 |
+
+**Top F2 is 0.927**, flat across 0.00–0.20. F2 always prefers a lower threshold
+than F1 — lowering it only ever adds spans, so recall rises and F2 weights
+recall four times as heavily. The shipped 0.70 gives up **0.008 rule-tier and
+0.012 model-tier F2** against that ceiling.
+
+That is a real cost and it is paid deliberately, for a reason the F2 column
+cannot see. The last column is why: at the F2 optimum the frozen corpus falls
+to document accuracy **0.90**, because the extra recall is order numbers, chart
+numbers and subscriber ids being tagged as identifiers — the exact
+false-positive class Track A of the improvement plan hardened the rules
+against. F2 counts a recovered gold span and does not count a document that a
+reviewer now has to dismiss.
+
+Two further reasons the F2 ceiling is not the target:
+
+- **Document-level PHI recall is 1.00 at every threshold in the table**,
+  including 0.80. The recall metric this project actually ranks first is
+  already saturated; lowering the threshold buys span-level recall on types
+  like `USER_ID`, not one additional PHI document caught.
+- The two tiers are scored over disjoint type sets, so there is no single
+  combined F2 here. Averaging the two columns would not be a micro-average and
+  is not reported as one.
+
+`pii-master eval` and both external scripts now print F1 and F2 side by side,
+and `nemotron_deep_eval.py` reports the F1-optimal and F2-optimal thresholds
+separately with a warning when they disagree — which they always will.
 
 ### 7.2 Frozen corpus — no regression, and the gap it was built to expose
 
@@ -583,8 +636,8 @@ which is the thing being tested, and not in what it can see.
 | peak RSS | 112 MB | 128 MB |
 | span exact-match rate, 20k docs | 0.902 | **0.931** |
 | holdout rule-tier F1 | 0.933 | **0.935** |
-| holdout model-tier F1 | 0.904 | **0.926** |
-| `PERSON_NAME` F1 | 0.878 | **0.912** |
+| holdout model-tier F1 | 0.904 | **0.927** |
+| `PERSON_NAME` F1 | 0.878 | **0.915** |
 | `ADDRESS` F1 | 0.891 | **0.926** |
 | frozen accuracy / PHI recall | 1.00 / 1.00 | 1.00 / 1.00 |
 

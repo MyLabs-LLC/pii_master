@@ -156,13 +156,21 @@ def fuse(rule_spans, student_spans, policy: str):
     return kept
 
 
-def micro(scores: dict[str, TypeScore]) -> tuple[float, float, float]:
+def micro(scores: dict[str, TypeScore]) -> tuple[float, float, float, float]:
+    """Pooled counts -> (P, R, F1, F2).
+
+    F2 rides along because this project's cost matrix is asymmetric: a missed
+    identifier is a reportable incident, a false alarm is a reviewer-minute
+    (docs/DESIGN.md section 1). See evaluation.TypeScore.f2.
+    """
     tp = sum(s.tp for s in scores.values())
     fp = sum(s.fp for s in scores.values())
     fn = sum(s.fn for s in scores.values())
     p = tp / (tp + fp) if tp + fp else 0.0
     r = tp / (tp + fn) if tp + fn else 0.0
-    return p, r, (2 * p * r / (p + r) if p + r else 0.0)
+    f1 = 2 * p * r / (p + r) if p + r else 0.0
+    f2 = 5 * p * r / (4 * p + r) if p + r else 0.0
+    return p, r, f1, f2
 
 
 def triage(gold_native, gold_mapped, pred_spans, buckets) -> None:
@@ -296,38 +304,40 @@ def main(argv=None) -> int:
                 tally(mapped[policy], gold_mapped, fused, loose[policy])
                 triage(gold_native, gold_mapped, fused, buckets[policy])
 
+    native_micro = micro(native)
     print(f"\nStudent, native 55-label taxonomy: "
-          f"P {micro(native)[0]:.3f} R {micro(native)[1]:.3f} F1 {micro(native)[2]:.3f}")
+          f"P {native_micro[0]:.3f} R {native_micro[1]:.3f} "
+          f"F1 {native_micro[2]:.3f} F2 {native_micro[3]:.3f}")
     print(f"\nGate 2 — the {len(RULE_MAPPED_LABELS)} rule-mapped types, "
           "exact span match.")
     print("adj P excludes predictions landing on gold of an unmodelled label,")
     print("the same adjustment docs/BASELINE_NEMOTRON.md reports for the rules.")
-    print(f"{'system':>8} {'P':>7} {'R':>7} {'F1':>7} {'adj P':>7} {'adj F1':>7} "
-          f"{'partial R':>10} {'spurious':>9}")
+    print(f"{'system':>8} {'P':>7} {'R':>7} {'F1':>7} {'F2':>7} {'adj P':>7} "
+          f"{'adj F1':>7} {'partial R':>10} {'spurious':>9}")
     for name in systems:
         if not mapped[name]:
             continue
-        p, r, f = micro(mapped[name])
+        p, r, f, f2 = micro(mapped[name])
         tp = sum(s.tp for s in mapped[name].values())
         b = buckets[name]
         honest = tp + b["mapped_mismatch"] + b["spurious"]
         adj_p = tp / honest if honest else 0.0
         adj_f = 2 * adj_p * r / (adj_p + r) if adj_p + r else 0.0
-        print(f"{name:>8} {p:>7.3f} {r:>7.3f} {f:>7.3f} {adj_p:>7.3f} {adj_f:>7.3f} "
-              f"{micro(loose[name])[1]:>10.3f} {b['spurious']:>9,}")
+        print(f"{name:>8} {p:>7.3f} {r:>7.3f} {f:>7.3f} {f2:>7.3f} {adj_p:>7.3f} "
+              f"{adj_f:>7.3f} {micro(loose[name])[1]:>10.3f} {b['spurious']:>9,}")
 
     if adopted:
         print("\nTypes adopted with the model tier. No rule can emit any of "
               "these, so the rules column is 0.000 by construction and the "
               "student's score is the whole of the gain.")
-        print(f"{'type':>20} {'gold':>10} {'P':>7} {'R':>7} {'F1':>7}")
+        print(f"{'type':>20} {'gold':>10} {'P':>7} {'R':>7} {'F1':>7} {'F2':>7}")
         for t in sorted(adopted):
             sc = adopted[t]
             print(f"{t:>20} {sc.gold:>10,} {sc.precision:>7.3f} "
-                  f"{sc.recall:>7.3f} {sc.f1:>7.3f}")
-        p, r, f = micro(adopted)
+                  f"{sc.recall:>7.3f} {sc.f1:>7.3f} {sc.f2:>7.3f}")
+        p, r, f, f2 = micro(adopted)
         print(f"{'MICRO':>20} {sum(s.gold for s in adopted.values()):>10,} "
-              f"{p:>7.3f} {r:>7.3f} {f:>7.3f}")
+              f"{p:>7.3f} {r:>7.3f} {f:>7.3f} {f2:>7.3f}")
 
     print("\nPer-type (gold / P / R / F1):")
     print(f"{'type':>20} {'gold':>8} {'rules F1':>9} {'stud F1':>9} "
@@ -341,13 +351,13 @@ def main(argv=None) -> int:
         payload = {
             "documents": len(texts),
             "buckets": {n: dict(buckets[n]) for n in systems if mapped[n]},
-            "partial_micro": {n: dict(zip("prf", micro(loose[n])))
+            "partial_micro": {n: dict(zip(("p", "r", "f1", "f2"), micro(loose[n])))
                               for n in systems if mapped[n]},
-            "native_micro": dict(zip("prf", micro(native))),
-            "adopted_micro": dict(zip("prf", micro(adopted))),
+            "native_micro": dict(zip(("p", "r", "f1", "f2"), micro(native))),
+            "adopted_micro": dict(zip(("p", "r", "f1", "f2"), micro(adopted))),
             "adopted": {k: v.to_dict() for k, v in adopted.items()},
             "native": {k: v.to_dict() for k, v in native.items()},
-            "mapped_micro": {n: dict(zip("prf", micro(mapped[n])))
+            "mapped_micro": {n: dict(zip(("p", "r", "f1", "f2"), micro(mapped[n])))
                              for n in mapped if mapped[n]},
             "mapped": {n: {k: v.to_dict() for k, v in mapped[n].items()}
                        for n in mapped if mapped[n]},

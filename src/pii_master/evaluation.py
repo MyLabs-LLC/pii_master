@@ -118,10 +118,35 @@ class TypeScore:
     def recall(self) -> float:
         return self.tp / (self.tp + self.fn) if self.tp + self.fn else 0.0
 
+    def fbeta(self, beta: float) -> float:
+        p, r = self.precision, self.recall
+        if not (p + r):
+            return 0.0
+        b2 = beta * beta
+        return (1 + b2) * p * r / (b2 * p + r)
+
     @property
     def f1(self) -> float:
-        p, r = self.precision, self.recall
-        return 2 * p * r / (p + r) if p + r else 0.0
+        return self.fbeta(1.0)
+
+    @property
+    def f2(self) -> float:
+        """Recall weighted four times as heavily as precision.
+
+        F1 is the wrong headline for this project and always was.
+        docs/DESIGN.md section 1 ranks recall first for PHI -- "a missed
+        medical record number leaking into a data lake is a reportable
+        incident; a false alarm costs a reviewer minutes" -- and F1 prices
+        those two errors identically. F2 prices them the way the cost matrix
+        actually does.
+
+        It is reported *alongside* F1 rather than instead of it, because the
+        same section is equally clear that precision is not optional: "a
+        scanner that cries wolf gets turned off, which is the worst recall of
+        all". Two numbers that disagree are the honest way to show a tradeoff;
+        one number that hides it is not.
+        """
+        return self.fbeta(2.0)
 
     def to_dict(self) -> dict:
         return {
@@ -132,6 +157,7 @@ class TypeScore:
             "precision": round(self.precision, 4),
             "recall": round(self.recall, 4),
             "f1": round(self.f1, 4),
+            "f2": round(self.f2, 4),
         }
 
 
@@ -199,6 +225,7 @@ class EvalReport:
                     "precision": round(sc.precision, 4),
                     "recall": round(sc.recall, 4),
                     "f1": round(sc.f1, 4),
+                    "f2": round(sc.f2, 4),
                 }
                 for t, sc in sorted(self.exact.items())
             },
@@ -210,13 +237,27 @@ class EvalReport:
             lines.append(f"Span-level ({title})")
             lines.append(
                 f"  {'TYPE':<18} {'gold':>4} {'TP':>4} {'FP':>4} {'FN':>4}"
-                f" {'P':>6} {'R':>6} {'F1':>6}"
+                f" {'P':>6} {'R':>6} {'F1':>6} {'F2':>6}"
             )
+            micro = TypeScore()
             for t, s in sorted(scores.items()):
+                micro.gold += s.gold
+                micro.tp += s.tp
+                micro.fp += s.fp
+                micro.fn += s.fn
                 lines.append(
                     f"  {t:<18} {s.gold:>4} {s.tp:>4} {s.fp:>4} {s.fn:>4}"
                     f" {s.precision:>6.2f} {s.recall:>6.2f} {s.f1:>6.2f}"
+                    f" {s.f2:>6.2f}"
                 )
+            # Micro, not macro: pooling the counts weights each type by how
+            # much gold it actually has, so a 1-span type cannot swing the
+            # headline the way averaging per-type F-scores would.
+            lines.append(
+                f"  {'MICRO':<18} {micro.gold:>4} {micro.tp:>4} {micro.fp:>4}"
+                f" {micro.fn:>4} {micro.precision:>6.2f} {micro.recall:>6.2f}"
+                f" {micro.f1:>6.2f} {micro.f2:>6.2f}"
+            )
             lines.append("")
         lines.append("Document-level (rows = gold, columns = predicted)")
         lines.append(f"  {'':<6}" + "".join(f"{p:>6}" for p in DOC_LABELS))
@@ -377,7 +418,10 @@ def compare_scores(current: dict, baseline: dict, tolerance: float = 1e-6) -> li
         if cur is None:
             drops.append(f"{entity_type}: missing from current run")
             continue
-        for metric in ("precision", "recall", "f1"):
+        # f2 is gated like the rest. A baseline written before it existed
+        # simply has no "f2" key, and base.get returns None, so an old scores
+        # file keeps working and gates the metrics it does carry.
+        for metric in ("precision", "recall", "f1", "f2"):
             was, now = base.get(metric), cur.get(metric)
             if was is not None and now is not None and now < was - tolerance:
                 drops.append(f"{entity_type}.{metric}: {was:.4f} -> {now:.4f}")

@@ -469,11 +469,25 @@ CCPA) mapping the same entity evidence to regime-specific labels.
 
 ## 10. Evaluation methodology
 
-- **Span level:** precision/recall/F1 **per entity type**, entity-level matching in the
-  seqeval style — exact-boundary and partial-credit (overlap) variants reported
-  separately, because boundary sloppiness and type confusion are different bugs.
+- **Span level:** precision/recall/**F1 and F2** **per entity type** plus a pooled
+  micro row, entity-level matching in the seqeval style — exact-boundary and
+  partial-credit (overlap) variants reported separately, because boundary
+  sloppiness and type confusion are different bugs.
+- **Why both F-scores.** §1 ranks recall first for PHI: a missed medical record
+  number is a reportable incident, a false alarm costs a reviewer minutes. F1
+  prices those two errors identically, so it is the wrong single headline for
+  this system. **F2 weights recall four times as heavily**, which is closer to
+  the real cost matrix. Both are reported and neither is *the* number, because
+  §1 is equally clear that precision is not optional — a scanner that cries
+  wolf gets turned off, which is the worst recall of all. The gap between the
+  two columns is exactly the tradeoff a confidence threshold is choosing, and
+  showing one column hides the choice. Micro rather than macro throughout, so a
+  43-span type cannot swing the headline.
 - **Document level:** confusion matrix over NONE/PII/PHI; the headline operating metric
-  is **PHI recall** at a stated precision floor.
+  is **PHI recall** at a stated precision floor. Note this is *already* a
+  recall-first metric, and it saturates at 1.00 in every shipped configuration —
+  so span-level F2 is where the recall tradeoff is actually visible, and where
+  it should be argued.
 - **Error taxonomy:** every FN/FP triaged as boundary error / type confusion / context
   miss / validator over-reject — each maps to a different fix.
 - **Test assets:** the **frozen hard-case corpus** lives in `eval/corpus/` (gold spans

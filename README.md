@@ -18,13 +18,18 @@ Nemotron-PII documents nobody in this repo authored:
 
 | | rules only | deep (`m`) | **deep (`l`)** |
 |---|--:|--:|--:|
-| span F1, the 12 types rules cover | 0.796 | 0.933 | **0.935** |
-| span F1, 14 types rules cannot emit at all | 0.000 | 0.904 | **0.926** |
+| span **F1** / **F2**, the 12 types rules cover | 0.796 / 0.769 | 0.933 / 0.916 | **0.935 / 0.919** |
+| span **F1** / **F2**, 14 types rules cannot emit | 0.000 / 0.000 | 0.904 / 0.890 | **0.927 / 0.915** |
 | 10 KB p95, one core | 0.70 ms | 7.99 ms | 14.80 ms |
 | peak RSS | 20 MB | 112 MB | 128 MB |
 
 with document accuracy and PHI recall both 1.00 on the frozen corpus in every
-mode. Per-type numbers, the fusion policy, and the students that did *not* ship:
+mode. **F2 is reported alongside F1** because this scanner's errors are not
+symmetric — a missed identifier is a reportable incident, a false alarm costs a
+reviewer minutes — so weighting recall four times as heavily is closer to the
+real cost. Neither is *the* number: precision is what keeps the scanner switched
+on. Per-type numbers, the threshold sweep where the two metrics disagree, the
+fusion policy, and the students that did *not* ship:
 [docs/STAGE2_INTEGRATION.md](docs/STAGE2_INTEGRATION.md).
 
 Stage 1 is a zero-dependency rules engine: pre-scan windows narrow the text, regex

@@ -173,3 +173,83 @@ def test_crosswalk_partitions_the_nemotron_label_space():
     # A new dataset label must fail loudly, not become silent background.
     with pytest.raises(KeyError):
         to_entity_type("some_new_label_v2")
+
+
+def test_f2_weights_recall_four_times_as_heavily_as_precision():
+    """F1 is the wrong headline for a scanner whose cost matrix is lopsided.
+
+    docs/DESIGN.md section 1: a missed identifier is a reportable incident, a
+    false alarm costs a reviewer minutes. F1 prices those the same; F2 does
+    not. Both are reported, because the gap between them is the tradeoff a
+    confidence threshold is choosing.
+    """
+    from pii_master.evaluation import TypeScore
+
+    # 10 gold, 8 found, 2 of those wrong -> P 0.80, R 0.80. Balanced, so the
+    # two agree exactly; this pins the shared formula.
+    balanced = TypeScore(gold=10, tp=8, fp=2, fn=2)
+    assert balanced.f1 == pytest.approx(0.8)
+    assert balanced.f2 == pytest.approx(0.8)
+
+    # High recall, low precision: F2 must be the kinder of the two.
+    recall_heavy = TypeScore(gold=10, tp=10, fp=10, fn=0)
+    assert recall_heavy.precision == pytest.approx(0.5)
+    assert recall_heavy.recall == pytest.approx(1.0)
+    assert recall_heavy.f1 == pytest.approx(2 / 3)
+    assert recall_heavy.f2 == pytest.approx(5 / 6)
+    assert recall_heavy.f2 > recall_heavy.f1
+
+    # High precision, low recall: F2 must be the harsher of the two, because
+    # missing five of ten identifiers is the expensive error here.
+    precision_heavy = TypeScore(gold=10, tp=5, fp=0, fn=5)
+    assert precision_heavy.f1 == pytest.approx(2 / 3)
+    assert precision_heavy.f2 == pytest.approx(5 / 9)
+    assert precision_heavy.f2 < precision_heavy.f1
+
+
+def test_fbeta_is_the_one_formula_behind_both():
+    from pii_master.evaluation import TypeScore
+
+    score = TypeScore(gold=10, tp=7, fp=3, fn=3)
+    assert score.fbeta(1.0) == pytest.approx(score.f1)
+    assert score.fbeta(2.0) == pytest.approx(score.f2)
+
+    # beta only bites when precision and recall differ -- at P == R every
+    # beta returns the same number, which is why the case above cannot test
+    # the weighting and this one has to.
+    assert score.precision == score.recall
+    assert score.fbeta(0.5) == pytest.approx(score.fbeta(2.0))
+
+    lopsided = TypeScore(gold=10, tp=5, fp=0, fn=5)   # P 1.0, R 0.5
+    assert lopsided.fbeta(0.5) == pytest.approx(5 / 6)   # favours precision
+    assert lopsided.fbeta(2.0) == pytest.approx(5 / 9)   # favours recall
+    assert lopsided.fbeta(0.5) > lopsided.fbeta(2.0)
+
+    assert TypeScore().fbeta(2.0) == 0.0          # no gold, no predictions
+
+
+def test_f2_is_gated_by_fail_under_like_every_other_metric():
+    from pii_master.evaluation import compare_scores
+
+    baseline = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+                "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0,
+                                       "f1": 1.0, "f2": 1.0}}}
+    worse = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+             "span_exact": {"SSN": {"precision": 1.0, "recall": 0.8,
+                                    "f1": 0.89, "f2": 0.83}}}
+    drops = compare_scores(worse, baseline)
+    assert any("SSN.f2" in line for line in drops), drops
+
+
+def test_a_baseline_written_before_f2_existed_still_works():
+    # The committed scores file is regenerated deliberately, not implicitly.
+    # Until someone does, --fail-under must keep gating what the old file has.
+    from pii_master.evaluation import compare_scores
+
+    old_style = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+                 "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0,
+                                        "f1": 1.0}}}
+    current = {"doc_accuracy": 1.0, "phi_recall": 1.0,
+               "span_exact": {"SSN": {"precision": 1.0, "recall": 1.0,
+                                      "f1": 1.0, "f2": 1.0}}}
+    assert compare_scores(current, old_style) == []
