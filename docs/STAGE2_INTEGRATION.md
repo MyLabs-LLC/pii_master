@@ -967,3 +967,38 @@ template familiarity rather than robustness. Nemotron holding flat and the
 frozen corpus moving by one document are the controls available; a third
 independent corpus would be the real test, and there isn't one yet.
 
+---
+
+## Acknowledgements and data licensing
+
+**AI4Privacy.** Sections 7.10 and 7.11 use
+[ai4privacy/pii-masking-300k](https://huggingface.co/datasets/ai4privacy/pii-masking-300k),
+© Ai4Privacy 2024. Its licence grants access for academic research and
+non-commercial purposes on the stipulation that **AI4Privacy is acknowledged in
+any scholarly output that leverages the dataset**, which this document is. We
+acknowledge Ai4Privacy for the corpus, and note that the cross-corpus
+evaluation in 7.10 — the most useful measurement in this project, because it
+was the one that showed the headline number did not generalise — was only
+possible because they published it.
+
+That same licence requires an explicit written licence from AI4Privacy for
+"redistribution, uploading to databases, sharing through any medium, or the
+creation and dissemination of derivative works". **Training on it and reporting
+results is the permitted use; publishing the resulting weights is not.** So:
+
+| artifact | trained on | may be distributed? |
+|---|---|---|
+| `pii-master-ner-l` 0.3.1 | Nemotron-PII only | **yes** — CC BY 4.0, attribution to NVIDIA |
+| `pii-master-ner-m` 0.3.1 | Nemotron-PII only | **yes** — same |
+| `pii-master-ner-l-mixed` 0.4.0 | + ai4privacy | **no** — pending written permission |
+
+The mixed model is the better one (§7.11) and it stays internal. Requesting a
+licence is `licensing@ai4privacy.com`; a draft request is in
+`docs/AI4PRIVACY_LICENCE_REQUEST.md`.
+
+**NVIDIA.** The student is distilled on
+[nvidia/Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII)
+(CC BY 4.0), and the teacher is
+[`kalyan-ks/ettin-68m-nemotron-pii`](https://huggingface.co/kalyan-ks/ettin-68m-nemotron-pii)
+(MIT).
+
