@@ -8,7 +8,7 @@ Runs on **one CPU core**.
 - 111 BIO classes over 55 Nemotron entity types, crosswalked to 25 HIPAA-mapped types
 - onnx-fp32, 43.7 MB
 - Confidence calibration: **isotonic, per entity type**
-- Source commit: `7ded3f91a241dfbf9c669b8c25182f84877db2b2`
+- Source commit: `a02891b99f59e83e76b7e65c4485b121e5e6d720`
 - Trained on: `nvidia/Nemotron-PII`
 
 ## Intended use

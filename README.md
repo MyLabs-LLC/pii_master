@@ -170,6 +170,22 @@ which stays 1.00. `pii-master-ner-l` is the Nemotron-only model for anyone who
 weights that differently. Details:
 [docs/STAGE2_INTEGRATION.md](docs/STAGE2_INTEGRATION.md) §7.10–7.11.
 
+**Published:** the Nemotron-only models are on the Hub —
+[`MyLabs-LLC/pii-master-ner-l`](https://huggingface.co/MyLabs-LLC/pii-master-ner-l)
+and [`MyLabs-LLC/pii-master-ner-m`](https://huggingface.co/MyLabs-LLC/pii-master-ner-m).
+
+```console
+$ hf download MyLabs-LLC/pii-master-ner-l --local-dir ./ner-model
+$ python training/package.py verify ./ner-model     # do this before trusting it
+$ PII_MASTER_MODEL_DIR=./ner-model pii-master scan report.txt --deep --pretty
+```
+
+The **mixed** model is deliberately *not* published. It is a derivative work of
+`ai4privacy/pii-masking-300k`, whose licence grants access "exclusively for
+academic research and non-commercial purposes" and requires written permission
+from AI4Privacy for "the creation and dissemination of derivative works". It
+stays an internal research result until such a licence exists.
+
 Committed packages: [`models/`](models/) carries each release's manifest and
 model card. The weights themselves are build output and are distributed
 separately rather than stored in git.

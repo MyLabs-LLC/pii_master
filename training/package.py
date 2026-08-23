@@ -139,7 +139,13 @@ def build(bundle: Path, out: Path, name: str, version: str,
         "document_scores": document_scores,
     }
     (dest / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    (dest / "MODEL_CARD.md").write_text(model_card(manifest, meta))
+    card = model_card(manifest, meta)
+    (dest / "MODEL_CARD.md").write_text(card)
+    # README.md is the same card with Hub frontmatter. Generated rather than
+    # hand-written so a published card cannot drift from the packaged one --
+    # which is the failure mode that matters, since the Hub copy is the one
+    # strangers read.
+    (dest / "README.md").write_text(hub_readme(manifest, card))
     shutil.copy2(Path(__file__).resolve().parents[1] / "LICENSE", dest / "LICENSE")
     return dest
 
@@ -164,8 +170,13 @@ def verify(package: Path) -> int:
         if actual != expected["sha256"]:
             problems.append(f"{filename}: sha256 {actual[:16]}... != "
                             f"{expected['sha256'][:16]}...")
+    # Files the Hub adds to every repo clone. A user who downloads a package
+    # and runs verify should get a verdict about the MODEL, not a complaint
+    # about git plumbing -- a spurious FAIL here trains people to ignore the
+    # one command that catches real corruption.
+    HUB_ARTIFACTS = {".gitattributes", ".cache", ".huggingface", ".git"}
     extra = {p.name for p in package.iterdir()} - set(manifest["files"]) - {
-        "MANIFEST.json", "MODEL_CARD.md", "LICENSE"}
+        "MANIFEST.json", "MODEL_CARD.md", "README.md", "LICENSE"} - HUB_ARTIFACTS
     for name in sorted(extra):
         problems.append(f"{name}: present but not in the manifest")
 
@@ -205,6 +216,56 @@ RESTRICTED_CORPORA = {
         "  research is what the licence contemplates; shipping it is not."
     ),
 }
+
+
+def hub_readme(manifest: dict, card: str) -> str:
+    """The model card plus Hugging Face YAML frontmatter.
+
+    `license` is set from the corpora: a model trained on a restricted dataset
+    is marked `other` rather than inheriting the permissive licence of the
+    corpus that happens to be listed first. Getting that wrong on a public Hub
+    page is how a non-commercial dataset ends up looking redistributable.
+    """
+    corpora = manifest.get("corpora") or ["nvidia/Nemotron-PII"]
+    names = [c.split(" (")[0] for c in corpora]
+    restricted = [n for n in names if n in RESTRICTED_CORPORA]
+    front = [
+        "---",
+        "license: " + ("other" if restricted else "cc-by-4.0"),
+    ]
+    if restricted:
+        front += ["license_name: restricted-see-model-card",
+                  "extra_gated_prompt: >-",
+                  "  This model is a derivative work of a dataset licensed for "
+                  "academic and",
+                  "  non-commercial use only. Redistribution and commercial "
+                  "use require written",
+                  "  permission from licensing@ai4privacy.com."]
+    front += [
+        "language:",
+        "- en",
+        "library_name: onnx",
+        "pipeline_tag: token-classification",
+        "base_model: " + manifest["model"]["teacher"],
+        "datasets:",
+    ]
+    front += [f"- {n}" for n in names]
+    front += [
+        "tags:",
+        "- pii",
+        "- phi",
+        "- hipaa",
+        "- privacy",
+        "- named-entity-recognition",
+        "- onnx",
+        "- cpu-inference",
+        "metrics:",
+        "- f1",
+        "- recall",
+        "---",
+        "",
+    ]
+    return "\n".join(front) + card
 
 
 def licensing(manifest: dict) -> list[str]:
