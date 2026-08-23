@@ -149,7 +149,40 @@ class DocumentClassifier:
         )
 
 
-def scan_text(text: str) -> DocumentReport:
-    """One-call public API: default pipeline + default classifier."""
-    pipeline = Pipeline()
-    return DocumentClassifier().classify(text, pipeline.run(text))
+_FAST_PIPELINE: Pipeline | None = None
+_DEEP_PIPELINE: Pipeline | None = None
+_CLASSIFIER: DocumentClassifier | None = None
+
+
+def _fast_pipeline() -> Pipeline:
+    global _FAST_PIPELINE
+    if _FAST_PIPELINE is None:
+        _FAST_PIPELINE = Pipeline()
+    return _FAST_PIPELINE
+
+
+def _deep_pipeline() -> Pipeline:
+    global _DEEP_PIPELINE
+    if _DEEP_PIPELINE is None:
+        from .onnx_ner import OnnxNerDetector
+
+        _DEEP_PIPELINE = Pipeline(ner=OnnxNerDetector())
+    return _DEEP_PIPELINE
+
+
+def _classifier() -> DocumentClassifier:
+    global _CLASSIFIER
+    if _CLASSIFIER is None:
+        _CLASSIFIER = DocumentClassifier()
+    return _CLASSIFIER
+
+
+def scan_text(text: str, *, deep: bool = False, pipeline: Pipeline | None = None) -> DocumentReport:
+    """One-call public API. ``deep=True`` adds the Stage 2 ONNX student.
+
+    Fast mode (default) stays stdlib-only. Deep mode needs
+    ``pip install 'pii-master[ml]'`` and the exported student artifact.
+    """
+    if pipeline is None:
+        pipeline = _deep_pipeline() if deep else _fast_pipeline()
+    return _classifier().classify(text, pipeline.run(text))

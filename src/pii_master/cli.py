@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from .classify import scan_text
+from .evaluation import evaluate, load_corpus
 
 
 def _cmd_scan(args: argparse.Namespace) -> int:
@@ -22,7 +23,7 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             text = sys.stdin.read()
         else:
             text = Path(path).read_text(encoding="utf-8", errors="replace")
-        report = scan_text(text)
+        report = scan_text(text, deep=args.deep)
         detected = detected or bool(report.entities)
         results.append({"path": path, **report.to_dict()})
 
@@ -31,9 +32,10 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
 
 def _cmd_eval(args: argparse.Namespace) -> int:
-    from .evaluation import compare_scores, evaluate, load_corpus
+    from .evaluation import compare_scores
 
-    report = evaluate(load_corpus(args.paths))
+    scan = (lambda text: scan_text(text, deep=True)) if args.deep else scan_text
+    report = evaluate(load_corpus(args.paths), scan=scan)
     if args.json:
         print(json.dumps(report.to_dict(), indent=2))
     else:
@@ -87,6 +89,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     scan.add_argument("--pretty", action="store_true", help="indented JSON output")
     scan.add_argument(
+        "--deep",
+        action="store_true",
+        help="run the Stage 2 ONNX student (needs pii-master[ml] + artifact)",
+    )
+    scan.add_argument(
         "--fail-on-detect",
         action="store_true",
         help="exit with status 1 if any entity is detected",
@@ -100,6 +107,11 @@ def main(argv: list[str] | None = None) -> int:
         "paths", nargs="+", metavar="CORPUS", help="corpus .jsonl files"
     )
     ev.add_argument("--json", action="store_true", help="JSON instead of tables")
+    ev.add_argument(
+        "--deep",
+        action="store_true",
+        help="score the Stage 2 cascade instead of rules-only",
+    )
     ev.add_argument(
         "--fail-under",
         metavar="SCORES.json",

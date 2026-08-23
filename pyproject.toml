@@ -26,6 +26,12 @@ train = [
     "onnxruntime>=1.18",
     "onnxscript>=0.1",
 ]
+# Serving the student: tokenizer + ONNX Runtime. Still not a default install.
+ml = [
+    "numpy>=1.26",
+    "transformers>=4.44",
+    "onnxruntime>=1.18",
+]
 
 [project.scripts]
 pii-master = "pii_master.cli:main"
