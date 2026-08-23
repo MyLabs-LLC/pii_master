@@ -449,49 +449,76 @@ def load_bundle(model_dir: str, threads: int = 1) -> ModelBundle:
 
 
 def _load_calibration(spec):
-    """Isotonic knots from the artifact, or () for an uncalibrated bundle.
+    """Calibration from the artifact, or () for an uncalibrated bundle.
 
-    A bundle trained before calibration existed simply has no ``calibration``
-    key and keeps raw softmax scores, so old artifacts stay loadable.
+    Returns ``(global_knots, {type_name: knots})``. Three artifact generations
+    all load: no ``calibration`` key at all (raw scores), a global-only curve
+    with ``x``/``y``, and one that also carries ``per_type``.
     """
     if not spec:
         return ()
     import numpy as np
 
-    x = np.asarray(spec["x"], dtype=np.float64)
-    y = np.asarray(spec["y"], dtype=np.float64)
-    if x.shape != y.shape or x.size == 0:
-        raise ModelUnavailable(f"malformed calibration in the bundle: {spec!r}")
-    return (x, y)
+    def knots(entry, label):
+        x = np.asarray(entry["x"], dtype=np.float64)
+        y = np.asarray(entry["y"], dtype=np.float64)
+        if x.shape != y.shape or x.size == 0:
+            raise ModelUnavailable(f"malformed calibration ({label}): {entry!r}")
+        return (x, y)
+
+    per_type = {name: knots(entry, name)
+                for name, entry in (spec.get("per_type") or {}).items()}
+    return (knots(spec, "global"), per_type)
 
 
-def calibrate(scores, knots):
+def calibrate(scores, calibration, types=None):
     """Map raw max-softmax scores to calibrated precision estimates.
 
     A token classifier's max softmax is a *ranking* signal, not a probability:
     it is systematically overconfident, because the model is trained to put all
-    the mass on one class. So ``min_confidence=0.75`` on a raw score means
-    "in the top band of the model's self-assessment", which is a knob without
-    units -- it cannot be compared across students, and it says nothing about
-    how often a span at that score is actually right.
+    the mass on one class. So ``min_confidence=0.70`` on a raw score means "in
+    the top band of the model's self-assessment", which is a knob without units
+    -- it cannot be compared across students, and it says nothing about how
+    often a span at that score is actually right.
 
     The knots come from isotonic regression fitted on a held-out slice
     (``training/calibrate.py``): monotone, non-parametric, and fitted against
     the strict target -- exact ``(type, start, end)`` agreement with gold. After
-    it, a confidence of 0.75 means **this span has about a 75% chance of being
-    exactly right**, and the same threshold means the same thing for any
-    student. Monotonicity matters: it guarantees calibration can never re-order
-    two spans, so it changes what the number means without changing which spans
-    outrank which.
+    it, a confidence of 0.70 means **this span has about a 70% chance of being
+    exactly right**. Monotonicity matters: it guarantees calibration can never
+    re-order two spans of one type, so it changes what the number means without
+    changing which spans outrank which.
+
+    **Per type where the data supports it.** One global curve is nearly perfect
+    in aggregate and wrong in detail, because the per-type errors cancel.
+    Measured on a 10,000-document holdout with a single curve, the pooled gap
+    between claimed and actual was 0.014 while ``URL`` ran **0.107
+    under**-confident and ``DEVICE_ID``, ``VEHICLE_ID`` and ``USER_ID`` each
+    ran 0.05-0.07 over. A global threshold then cuts every type in a different
+    place, which is how ``URL`` lost 20 points of recall to a threshold that
+    was correct on average. Per-type curves take the pooled error to 0.004 and
+    the worst per-type gap from 0.107 to 0.026.
+
+    Types with too few spans to fit keep the global curve -- a curve fitted on
+    forty spans is noise wearing a probability's clothes, and it would be
+    applied with the same authority as one fitted on thirty thousand.
 
     Linear interpolation between knots, clamped at the ends.
     """
     import numpy as np
 
-    if not knots:
+    if not calibration:
         return scores
-    x, y = knots
-    return np.interp(scores, x, y)
+    global_knots, per_type = calibration
+    scores = np.asarray(scores, dtype=np.float64)
+    adjusted = np.interp(scores, *global_knots)
+    if types is None or not per_type:
+        return adjusted
+    for index, name in enumerate(types):
+        knots = per_type.get(name)
+        if knots is not None:
+            adjusted[index] = np.interp(scores[index], *knots)
+    return adjusted
 
 
 def _half_receptive_field(config: dict) -> int:
@@ -556,34 +583,31 @@ class OnnxNerDetector:
         min_confidence: drop spans whose mean per-token probability is below
             this. Guard 1 in the module docstring. 0.0 disables it.
 
-            The 0.70 default is **swept, not guessed**, and after calibration
-            it has units: a span at 0.70 has roughly a 70% chance of being
-            exactly right. Measured on 3,000 holdout documents:
+            The 0.50 default is **swept, not guessed**, and after per-type
+            calibration it has units: a span at 0.50 has roughly a 50% chance
+            of being exactly right, and that means the same thing for every
+            type. Measured on 3,000 holdout documents (`l` student):
 
-                threshold   rule-tier F1   model-tier F1   frozen-corpus acc
-                     0.40          0.932           0.903                0.95
-                     0.50          0.932           0.900                0.97
-                     0.60          0.932           0.897                0.97
-                     **0.70**      **0.932**       **0.891**            **1.00**
-                     0.80          0.930           0.867                1.00
+                threshold  rule F1  rule F2  model F1  model F2  frozen acc
+                     0.30    0.939    0.927     0.933     0.926        0.92
+                     0.40    0.940    0.927     0.932     0.922        0.95
+                     **0.50** 0.940   0.927     0.930     0.918        **1.00**
+                     0.70    0.938    0.923     0.913     0.893        1.00
 
-            0.50 is the F1 optimum and 0.70 is the shipped default, because
-            the holdout is not the only evidence. The frozen corpus is
-            adversarial by construction, and the four false positives the
-            student produces on it -- an order number, a chart number, a
-            magazine subscriber id, a confirmation number, all the
-            reference-number class Track A of the improvement plan hardened
-            the rules against -- calibrate to 0.111, 0.233, 0.497 and 0.626.
-            Only a threshold above 0.626 clears all four. Buying that costs
-            0.009 model-tier F1, and re-opening a false-positive class the
-            rules were built to close is not worth 0.009.
+            0.30 is the F1 and F2 optimum -- they agree, which they did not
+            before per-type calibration -- and 0.50 ships, because the frozen
+            corpus is the other half of the evidence. Its four adversarial
+            false positives (an order number, a chart number, a magazine
+            subscriber id, a confirmation number: the reference-number class
+            Track A of the improvement plan hardened the rules against) now
+            calibrate to 0.36, 0.41 and 0.49, with the fourth gone entirely.
+            0.50 clears all of them for 0.003 model-tier F1.
 
-            Note what calibration did NOT do: it did not raise F1. The map is
-            monotone, so it cannot re-order spans and cannot change the
-            precision/recall curve -- 0.891 here against 0.893 at the old raw
-            0.75 is the same point on the same curve. What it changed is that
-            the number is now interpretable, portable between students, and a
-            defensible thing to expose as policy.
+            This default moved down from 0.70, and per-type calibration is why.
+            `USER_ID` was 0.05 over-confident under one global curve, so its
+            false positives scored high enough to need a 0.70 bar; scored
+            honestly they sit below 0.50, and every other type gets to keep the
+            recall that bar was costing it.
         revalidate: re-run our validators on model spans of checksummed types.
             Guard 2. Leave this on unless you are measuring its cost.
         merge_adjacent_spans: report "Jane Doe" as one PERSON_NAME rather than
@@ -601,7 +625,7 @@ class OnnxNerDetector:
         self,
         model_dir: str | Path | None = None,
         *,
-        min_confidence: float = 0.70,
+        min_confidence: float = 0.50,
         revalidate_checksums: bool = True,
         merge_adjacent_spans: bool = True,
         snap_word_edges: bool = True,
@@ -689,10 +713,11 @@ class OnnxNerDetector:
         # the mean raw token probability over the span as finally emitted,
         # merges included. Calibrating per token and then averaging would
         # target something else, because np.interp is not linear.
-        if bundle.calibration:
+        if bundle.calibration and spans:
             raw = np.fromiter((c for _, _, _, c in spans), dtype=np.float64,
                               count=len(spans))
-            adjusted = calibrate(raw, bundle.calibration)
+            names = [bundle.kinds[k].value for k, _, _, _ in spans]
+            adjusted = calibrate(raw, bundle.calibration, names)
             spans = [(k, s, e, float(p))
                      for (k, s, e, _), p in zip(spans, adjusted)]
 

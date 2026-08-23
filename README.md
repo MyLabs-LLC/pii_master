@@ -18,8 +18,8 @@ Nemotron-PII documents nobody in this repo authored:
 
 | | rules only | deep (`m`) | **deep (`l`)** |
 |---|--:|--:|--:|
-| span **F1** / **F2**, the 12 types rules cover | 0.796 / 0.769 | 0.933 / 0.916 | **0.935 / 0.919** |
-| span **F1** / **F2**, 14 types rules cannot emit | 0.000 / 0.000 | 0.904 / 0.890 | **0.927 / 0.915** |
+| span **F1** / **F2**, the 12 types rules cover | 0.796 / 0.769 | 0.935 / 0.921 | **0.940 / 0.927** |
+| span **F1** / **F2**, 14 types rules cannot emit | 0.000 / 0.000 | 0.914 / 0.902 | **0.930 / 0.918** |
 | 10 KB p95, one core | 0.70 ms | 7.99 ms | 14.80 ms |
 | peak RSS | 20 MB | 112 MB | 128 MB |
 
@@ -162,6 +162,12 @@ Then fit the calibration curve, so `--min-confidence` has units:
 ```console
 $ python calibrate.py --data-dir ~/nemotron --model-dir artifacts/bundle
 ```
+
+It fits one isotonic curve **per entity type**, falling back to a global curve
+for types with too few spans. One curve for everything is nearly perfect in
+aggregate and wrong in detail — the per-type errors cancel — which is how `URL`
+came out 0.107 under-confident and lost twenty points of recall to a threshold
+that was correct on average.
 
 Without it the model's confidences are raw max-softmax — a ranking signal that
 is systematically overconfident (a raw 0.55 span is right about 22% of the

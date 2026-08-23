@@ -849,25 +849,59 @@ def test_calibration_is_identity_when_a_bundle_has_none():
     assert ner.calibrate(scores, ()) is scores
 
 
-def test_calibration_never_reorders_spans():
+GLOBAL_CURVE = (np.array([0.0, 0.5, 0.8, 1.0]), np.array([0.0, 0.1, 0.7, 1.0]))
+
+
+def test_calibration_never_reorders_spans_of_one_type():
     """The property that makes calibration safe to add after measuring.
 
     A monotone map cannot change which span outranks which, so every
     precision/recall number measured before calibration still describes the
     same model afterwards. Only the meaning of the threshold changes.
     """
-    knots = (np.array([0.0, 0.5, 0.8, 1.0]), np.array([0.0, 0.1, 0.7, 1.0]))
     rng = np.random.default_rng(1)
     raw = rng.random(500)
-    adjusted = ner.calibrate(raw, knots)
+    adjusted = ner.calibrate(raw, (GLOBAL_CURVE, {}))
     assert list(np.argsort(raw)) == list(np.argsort(adjusted))
 
 
 def test_calibration_maps_a_raw_score_onto_the_curve():
-    knots = (np.array([0.2, 0.6, 1.0]), np.array([0.0, 0.5, 1.0]))
-    got = ner.calibrate(np.array([0.1, 0.4, 0.6, 0.8, 1.5]), knots)
+    curve = (np.array([0.2, 0.6, 1.0]), np.array([0.0, 0.5, 1.0]))
+    got = ner.calibrate(np.array([0.1, 0.4, 0.6, 0.8, 1.5]), (curve, {}))
     # Clamped below 0.2 and above 1.0; linear in between.
     assert got == pytest.approx([0.0, 0.25, 0.5, 0.75, 1.0])
+
+
+def test_a_per_type_curve_overrides_the_global_one():
+    """Why per-type curves exist, in miniature.
+
+    Measured on the real holdout, one global curve left `URL` 0.107
+    UNDER-confident while `DEVICE_ID` and `VEHICLE_ID` ran ~0.06 over -- errors
+    that cancel in the pooled number and do not cancel at a threshold. Here the
+    global curve halves every score and the URL curve leaves them alone.
+    """
+    halve = (np.array([0.0, 1.0]), np.array([0.0, 0.5]))
+    identity = (np.array([0.0, 1.0]), np.array([0.0, 1.0]))
+    calibration = (halve, {"URL": identity})
+    got = ner.calibrate(np.array([0.8, 0.8, 0.8]), calibration,
+                        ["URL", "PERSON_NAME", "URL"])
+    assert got == pytest.approx([0.8, 0.4, 0.8])
+
+
+def test_a_type_without_its_own_curve_falls_back_to_the_global_one():
+    # Types below the fit floor keep the global curve on purpose: a curve
+    # fitted on forty spans would be applied with the same authority as one
+    # fitted on thirty thousand.
+    halve = (np.array([0.0, 1.0]), np.array([0.0, 0.5]))
+    got = ner.calibrate(np.array([0.6]), (halve, {"URL": halve}), ["TAX_ID"])
+    assert got == pytest.approx([0.3])
+
+
+def test_per_type_curves_are_ignored_when_no_types_are_supplied():
+    halve = (np.array([0.0, 1.0]), np.array([0.0, 0.5]))
+    identity = (np.array([0.0, 1.0]), np.array([0.0, 1.0]))
+    got = ner.calibrate(np.array([0.6]), (halve, {"URL": identity}))
+    assert got == pytest.approx([0.3])
 
 
 def test_a_malformed_calibration_fails_loudly():
@@ -875,8 +909,23 @@ def test_a_malformed_calibration_fails_loudly():
         ner._load_calibration({"x": [0.1, 0.2], "y": [0.5]})
 
 
+def test_a_malformed_per_type_curve_names_the_type_that_is_broken():
+    with pytest.raises(ner.ModelUnavailable, match="URL"):
+        ner._load_calibration({"x": [0.0, 1.0], "y": [0.0, 1.0],
+                               "per_type": {"URL": {"x": [0.1], "y": []}}})
+
+
 def test_an_uncalibrated_bundle_still_loads():
     # Bundles exported before calibration existed have no such key, and must
     # keep working with raw scores rather than failing to load.
     assert ner._load_calibration(None) == ()
     assert ner._load_calibration({}) == ()
+
+
+def test_a_global_only_bundle_still_loads():
+    # The generation between "no calibration" and "per-type": x/y and no
+    # per_type key. It must keep working, not fail to load.
+    loaded = ner._load_calibration({"x": [0.0, 1.0], "y": [0.0, 1.0]})
+    (curve, per_type) = loaded
+    assert per_type == {}
+    assert ner.calibrate(np.array([0.5]), loaded, ["URL"]) == pytest.approx([0.5])

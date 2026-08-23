@@ -84,16 +84,18 @@ def gold_for(text, raw, kinds):
 
 
 def collect(detector, texts, raw_spans, kinds):
-    """-> (raw confidences, hit/miss) for every span the detector emits."""
-    scores, correct = [], []
+    """-> (raw confidences, hit/miss, type names) for every span emitted."""
+    scores, correct, names = [], [], []
     for index, (text, raw) in enumerate(zip(texts, raw_spans)):
         gold = gold_for(text, raw, kinds)
         for entity in detector.detect(text):
             scores.append(entity.confidence)
             correct.append((entity.type, entity.start, entity.end) in gold)
+            names.append(entity.type.value)
         if index and index % 2000 == 0:
             print(f"  {index:,} documents, {len(scores):,} spans", flush=True)
-    return np.asarray(scores), np.asarray(correct, dtype=np.float64)
+    return (np.asarray(scores), np.asarray(correct, dtype=np.float64),
+            np.asarray(names))
 
 
 def isotonic(x, y, weights=None):
@@ -165,6 +167,54 @@ def thin(x, y, max_knots=64):
     return x[picks], y[picks]
 
 
+def per_type_curves(scores, correct, names, min_spans, max_knots):
+    """One isotonic curve per type that has enough spans to fit one.
+
+    A single global curve is nearly perfect in aggregate and wrong in detail,
+    because the per-type errors cancel. Measured with one curve: overall gap
+    +0.005, while URL ran 0.123 UNDER-confident and DEVICE_ID,
+    GEO_COORDINATE and DATE_TIME each ~0.09 over. A global threshold then cuts
+    every type in a different place.
+
+    `min_spans` is the floor below which a type keeps the global curve. A
+    curve fitted on forty spans is noise wearing a probability's clothes, and
+    it would be applied with the same authority as one fitted on thirty
+    thousand -- so the fallback is the conservative choice, not a limitation.
+    """
+    curves, skipped = {}, {}
+    for name in sorted(set(names)):
+        mask = names == name
+        count = int(mask.sum())
+        if count < min_spans:
+            skipped[name] = count
+            continue
+        knot_x, knot_y = thin(*isotonic(scores[mask], correct[mask]), max_knots)
+        curves[name] = {"x": [round(float(v), 6) for v in knot_x],
+                        "y": [round(float(v), 6) for v in knot_y],
+                        "spans": count}
+    return curves, skipped
+
+
+def apply_curves(scores, names, global_knots, curves):
+    out = np.interp(scores, *global_knots)
+    for name, curve in curves.items():
+        mask = names == name
+        if mask.any():
+            out[mask] = np.interp(scores[mask], curve["x"], curve["y"])
+    return out
+
+
+def per_type_gap(scores, correct, names):
+    """-> [(type, spans, mean claimed, actual, gap)] worst gap first."""
+    rows = []
+    for name in sorted(set(names)):
+        mask = names == name
+        rows.append((name, int(mask.sum()), float(scores[mask].mean()),
+                     float(correct[mask].mean()),
+                     float(scores[mask].mean() - correct[mask].mean())))
+    return sorted(rows, key=lambda r: -abs(r[4]))
+
+
 def reliability(scores, correct, edges=(0.0, .5, .6, .7, .8, .9, .95, 1.01)):
     rows = []
     for low, high in zip(edges, edges[1:]):
@@ -198,6 +248,11 @@ def main(argv=None) -> int:
     ap.add_argument("--check-slice", default="40000:50000",
                     help="start:stop rows to CHECK on; must not overlap the fit")
     ap.add_argument("--max-knots", type=int, default=64)
+    ap.add_argument("--min-spans", type=int, default=200,
+                    help="a type with fewer spans than this in the fit slice "
+                         "keeps the global curve (default: 200)")
+    ap.add_argument("--global-only", action="store_true",
+                    help="fit one curve for everything, the pre-v0.3.1 behaviour")
     ap.add_argument("--dry-run", action="store_true",
                     help="report the curve without writing it to the bundle")
     args = ap.parse_args(argv)
@@ -222,25 +277,58 @@ def main(argv=None) -> int:
 
     print(f"fitting on {args.split}[{fit_lo}:{fit_hi}]", flush=True)
     texts, raws = read_slice(args.data_dir, args.split, fit_lo, fit_hi)
-    scores, correct = collect(detector, texts, raws, kinds)
+    scores, correct, names = collect(detector, texts, raws, kinds)
     print(f"  {len(scores):,} spans, {correct.mean():.3f} exact-match rate")
 
     knot_x, knot_y = thin(*isotonic(scores, correct), args.max_knots)
-    print(f"  isotonic fit -> {knot_x.size} knots, "
+    print(f"  global fit -> {knot_x.size} knots, "
           f"range {knot_y[0]:.3f}..{knot_y[-1]:.3f}")
+
+    curves, skipped = ({}, {}) if args.global_only else per_type_curves(
+        scores, correct, names, args.min_spans, args.max_knots)
+    if curves:
+        print(f"  per-type fits -> {len(curves)} types "
+              f"({sum(c['spans'] for c in curves.values()):,} spans)")
+    if skipped:
+        print("  too few spans, keeping the global curve: "
+              + ", ".join(f"{k} ({v})" for k, v in sorted(skipped.items())))
 
     print(f"\nchecking on {args.split}[{chk_lo}:{chk_hi}] (disjoint)", flush=True)
     texts, raws = read_slice(args.data_dir, args.split, chk_lo, chk_hi)
-    scores, correct = collect(detector, texts, raws, kinds)
-    adjusted = np.interp(scores, knot_x, knot_y)
+    scores, correct, names = collect(detector, texts, raws, kinds)
+    global_only = np.interp(scores, knot_x, knot_y)
+    adjusted = apply_curves(scores, names, (knot_x, knot_y), curves)
 
     before = reliability(scores, correct)
     after = reliability(adjusted, correct)
     show("BEFORE — raw max-softmax vs actual exact-match rate", before)
     show("AFTER — calibrated vs actual", after)
-    print(f"\nexpected calibration error: "
-          f"{expected_error(before, len(scores)):.4f} -> "
-          f"{expected_error(after, len(scores)):.4f}")
+    print("\nexpected calibration error, pooled over all types:")
+    print(f"  raw                {expected_error(before, len(scores)):.4f}")
+    print(f"  global curve only  "
+          f"{expected_error(reliability(global_only, correct), len(scores)):.4f}")
+    print(f"  per-type curves    {expected_error(after, len(scores)):.4f}")
+
+    # Pooled ECE hides exactly the problem per-type curves exist to fix, so
+    # report the per-type gaps too -- that is where a global curve looks fine
+    # and is not.
+    print("\nWorst per-type gap between claimed confidence and actual "
+          "exact-match rate:")
+    print(f"  {'type':>20} {'spans':>7} {'global':>8} {'per-type':>9}")
+    global_rows = {r[0]: r for r in per_type_gap(global_only, correct, names)}
+    for name, count, _, _, gap in per_type_gap(adjusted, correct, names)[:8]:
+        print(f"  {name:>20} {count:>7,} {global_rows[name][4]:>+8.3f} "
+              f"{gap:>+9.3f}")
+    # Restricted to types with enough spans in the CHECK slice to mean
+    # anything. A type below the fit floor keeps the global curve by design,
+    # and letting a fourteen-span type set the headline would report the floor
+    # working as if it were the calibration failing.
+    judgeable = 50
+    rows = [r for r in per_type_gap(adjusted, correct, names) if r[1] >= judgeable]
+    worst_global = max(abs(global_rows[r[0]][4]) for r in rows)
+    worst_typed = max(abs(r[4]) for r in rows)
+    print(f"  {'WORST |gap|':>20} {'':>7} {worst_global:>8.3f} "
+          f"{worst_typed:>9.3f}   (types with >= {judgeable} spans)")
 
     if args.dry_run:
         print("\n--dry-run: bundle not modified")
@@ -253,8 +341,10 @@ def main(argv=None) -> int:
         "target": "exact (type, start, end) match against crosswalked gold",
         "fit_split": f"{args.split}[{fit_lo}:{fit_hi}]",
         "check_split": f"{args.split}[{chk_lo}:{chk_hi}]",
+        "min_spans_per_type": args.min_spans,
         "x": [round(float(v), 6) for v in knot_x],
         "y": [round(float(v), 6) for v in knot_y],
+        "per_type": curves,
     }
     meta_path.write_text(json.dumps(meta, indent=2))
     print(f"\nwrote calibration into {meta_path}")

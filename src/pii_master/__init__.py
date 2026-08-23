@@ -13,7 +13,7 @@ from .entities import DocLabel, EntityType
 from .models import DocumentReport, Entity
 from .pipeline import Pipeline, deep_pipeline, fusion_rank
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 __all__ = [
     "DocLabel",

@@ -248,6 +248,58 @@ config — and that the risk score in `classify.py`, which multiplies each type'
 weight by its mean confidence, is now multiplying by a probability on the model
 side.
 
+### 6.1 One curve was not enough
+
+The global curve above is nearly perfect *in aggregate* and wrong in detail,
+and the aggregate number is what hid it. Pooled gap between claimed confidence
+and actual exact-match rate: **+0.005**. Per type, on the same documents:
+
+| type | spans | claims | actually right | gap |
+|---|--:|--:|--:|--:|
+| `URL` | 4,235 | 0.765 | 0.888 | **−0.107** under |
+| `DEVICE_ID` | 323 | — | — | +0.069 over |
+| `FAX_NUMBER` | 616 | — | — | +0.067 over |
+| `PHONE_US` | 2,496 | — | — | +0.059 over |
+| `VEHICLE_ID` | 970 | — | — | +0.058 over |
+| `USER_ID` | 4,617 | — | — | +0.050 over |
+
+The errors cancel. A single threshold then cuts every type in a different
+place, which is how `URL` lost twenty points of recall to a threshold that was
+correct on average.
+
+`training/calibrate.py` now fits **one isotonic curve per type**, with a
+`--min-spans` floor (default 200) below which a type keeps the global curve —
+a curve fitted on forty spans is noise wearing a probability's clothes, and it
+would be applied with the same authority as one fitted on thirty thousand.
+
+| | pooled ECE | worst per-type gap |
+|---|--:|--:|
+| raw max-softmax | 0.0228 | — |
+| one global curve | 0.0138 | 0.107 |
+| **per type** | **0.0035** | **0.026** |
+
+**And it moved the operating point, which is the part worth understanding.**
+Calibration is monotone, so it cannot improve F1 *within* a type. But per-type
+curves change each type's score *relative to the others*, so a fixed global
+threshold lands somewhere different — and better, because the thing it is
+thresholding now means the same for everyone:
+
+| | before (one curve @0.70) | after (per type @0.50) |
+|---|--:|--:|
+| `l` rule-tier F1 / F2 | 0.935 / 0.919 | **0.940 / 0.927** |
+| `l` model-tier F1 / F2 | 0.927 / 0.915 | **0.930 / 0.918** |
+| `m` model-tier F1 / F2 | 0.904 / 0.890 | **0.914 / 0.902** |
+| `PERSON_NAME` F1 | 0.915 | **0.929** |
+| `URL` F1 | 0.947 | **0.964** |
+| frozen accuracy / PHI recall | 1.00 / 1.00 | 1.00 / 1.00 |
+
+Two consequences beyond the numbers. **The threshold could come down from 0.70
+to 0.50**: `USER_ID` was the over-confident type whose adversarial false
+positives forced the high bar, and scored honestly they fall to 0.36–0.49, so
+every other type gets back the recall that bar was costing it. And **the F1 and
+F2 optima now agree** on one threshold (0.30), where before they disagreed —
+which is what a consistent probability scale should do.
+
 **The residual wart, stated plainly.** The *rules* are still uncalibrated. Their
 confidences are hand-set ordinal constants in the 0.70–0.95 band, so a
 `PERSON_NAME` at 0.81 (an 81% chance of being exactly right) and a
@@ -311,17 +363,17 @@ shipped guards, the shipped fusion — not a cascade assembled in a script.
 | configuration | rule-tier P | R | **F1** | **F2** | model-tier P | R | **F1** | **F2** |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
 | rules only | 0.846 | 0.752 | **0.796** | **0.769** | 0.000 | 0.000 | **0.000** | **0.000** |
-| deep, `m` student | 0.962 | 0.905 | **0.933** | **0.916** | 0.927 | 0.881 | **0.904** | **0.890** |
-| **deep, `l` student** (recommended) | 0.963 | 0.909 | **0.935** | **0.919** | 0.949 | 0.907 | **0.927** | **0.915** |
+| deep, `m` student | 0.957 | 0.913 | **0.935** | **0.921** | 0.934 | 0.895 | **0.914** | **0.902** |
+| **deep, `l` student** (recommended) | 0.962 | 0.918 | **0.940** | **0.927** | 0.951 | 0.911 | **0.930** | **0.918** |
 
-Both at the shipped `min_confidence=0.70`. **F2 is reported next to F1
+Both at the shipped `min_confidence=0.50` with per-type calibration (§6.1). **F2 is reported next to F1
 throughout** because this system's cost matrix is not symmetric — a missed
 identifier is a reportable incident, a false alarm is a reviewer-minute
 ([DESIGN.md](DESIGN.md) §1 and §10). Neither is *the* number; the gap between
 them is what a threshold is choosing, and §7.1b makes that choice explicit.
 The two students are a real ladder, not a leftover — see §7.7.
 
-**+0.139 F1 on the types the rules already covered, and 0.926 on fourteen types
+**+0.144 F1 on the types the rules already covered, and 0.930 on fourteen types
 they could not touch at all.** The rules-only row (0.846 / 0.752 / 0.796)
 reproduces [BASELINE_NEMOTRON.md](BASELINE_NEMOTRON.md) (0.854 / 0.732 / 0.788)
 to within the difference a 3,000-document slice makes, so the comparison is

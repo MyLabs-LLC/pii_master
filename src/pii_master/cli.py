@@ -134,11 +134,11 @@ def main(argv: list[str] | None = None) -> int:
     scan.add_argument(
         "--min-confidence",
         type=float,
-        default=0.70,
+        default=0.50,
         metavar="P",
         help="drop Stage 2 spans below this mean per-token probability "
-             "(default: 0.70 — calibrated, so this is roughly the minimum "
-             "probability that a span is exactly right); 0 disables the filter",
+             "(default: 0.50 — calibrated per type, so this is roughly the "
+             "minimum probability that a span is exactly right); 0 disables it",
     )
     scan.set_defaults(func=_cmd_scan)
 
@@ -165,7 +165,7 @@ def main(argv: list[str] | None = None) -> int:
         help="score the rules + Stage 2 cascade instead of rules only",
     )
     ev.add_argument("--model-dir", metavar="DIR", help="Stage 2 model directory")
-    ev.add_argument("--min-confidence", type=float, default=0.70, metavar="P",
+    ev.add_argument("--min-confidence", type=float, default=0.50, metavar="P",
                     help="drop Stage 2 spans below this probability")
     ev.set_defaults(func=_cmd_eval)
 
