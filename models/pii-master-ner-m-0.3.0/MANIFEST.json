@@ -1,0 +1,68 @@
+{
+  "name": "pii-master-ner-m",
+  "version": "0.3.0",
+  "created": "2026-08-23",
+  "git_commit": "ad83bdc8550aae61cbaed3af3d16b3080ebf7a90",
+  "format": "onnx-fp32",
+  "files": {
+    "model.onnx": {
+      "sha256": "62e2d951607cd00a7662becbb2e7ba9d3ca897bab0d0b6017a79bdc7db878f4c",
+      "bytes": 9714
+    },
+    "model.onnx.data": {
+      "sha256": "ee397dd3ff86e6e1e9fd144fc5550ce79f5ef5626f586c2de3aa0594f34397da",
+      "bytes": 26312704
+    },
+    "tokenizer.json": {
+      "sha256": "c7a995f78d60cc3c253902f4b5becfe2f9d0b44f78e6e2f81a343a0cb71789e6",
+      "bytes": 3583327
+    },
+    "model.json": {
+      "sha256": "3bd3e7b7c0ab4164253fc78001ee37b749140c66d0f7a717b9a94c48df6a106c",
+      "bytes": 4707
+    }
+  },
+  "total_bytes": 29910452,
+  "model": {
+    "architecture": "dilated depthwise-separable CNN tagger",
+    "d_model": 128,
+    "n_layers": 6,
+    "dilations": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "parameters": 6566895,
+    "labels": 111,
+    "teacher": "kalyan-ks/ettin-68m-nemotron-pii",
+    "calibrated": true
+  },
+  "training": {
+    "soft_scope": "word_homogeneous",
+    "alpha": 0.7,
+    "temperature": 3.0,
+    "lr": 0.003,
+    "epochs": 6,
+    "max_length": 512
+  },
+  "scores": {
+    "documents": 3000,
+    "configuration": "deep @0.70",
+    "rule_tier": {
+      "p": 0.9613828613460831,
+      "r": 0.9076388888888889,
+      "f1": 0.9337381675299161,
+      "f2": 0.9179015380293558
+    },
+    "model_tier": {
+      "p": 0.9281282316442606,
+      "r": 0.8929237657007835,
+      "f1": 0.9101857133802371,
+      "f2": 0.899749373433584
+    },
+    "p95_ms_per_doc": 2.574
+  }
+}

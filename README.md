@@ -130,6 +130,28 @@ $ python export.py --size l --checkpoint artifacts/student_l.pt \
       --bundle artifacts/bundle --no-int8
 ```
 
+Then package it, so it can be shipped and verified:
+
+```console
+$ python package.py build --bundle artifacts/bundle \
+      --name pii-master-ner-l --version 0.3.0 --out ../dist --created 2026-08-23
+$ python package.py verify ../dist/pii-master-ner-l-0.3.0
+OK    pii-master-ner-l 0.3.0  (4 files, 43.7 MB, commit ad83bdc8550a)
+```
+
+A package adds a `MANIFEST.json` (sha256 and size per file, source commit,
+measured scores), a `MODEL_CARD.md`, and the licence — because a PII/PHI model
+with unknown provenance is worse than useless. **Run `verify` on any package
+you did not build.** The weights ship in `model.onnx.data` beside `model.onnx`,
+and a package whose weights are corrupted *without changing their size* still
+loads and still answers: on the real artifact a flipped kilobyte turned an
+`MRN` into a `USER_ID` at 0.87 confidence, which is a silent PHI miss. Only the
+checksum catches that.
+
+Committed packages: [`models/`](models/) carries each release's manifest and
+model card. The weights themselves are build output and are distributed
+separately rather than stored in git.
+
 `artifacts/bundle` is on the default search path, so no configuration is needed
 after that. The search order is `$PII_MASTER_MODEL_DIR`, then
 `~/.cache/pii_master/model`, then `training/artifacts/bundle`. Full runbook:

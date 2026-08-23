@@ -220,3 +220,10 @@ __marimo__/
 # Stage 2 training artifacts (models, ONNX exports, downloaded datasets)
 training/artifacts/
 *.parquet
+
+# Built model packages. The BINARIES are build output and do not belong in git
+# (44 MB each, and git stores every version forever). Their MANIFEST.json and
+# MODEL_CARD.md are copied into models/ and committed, so the provenance --
+# checksums, source commit, measured scores, limitations -- is in version
+# control even though the weights are distributed separately.
+dist/
