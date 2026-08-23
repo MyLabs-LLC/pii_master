@@ -181,6 +181,68 @@ def verify(package: Path) -> int:
     return 0
 
 
+#: Datasets whose licence restricts what may be done with a model trained on
+#: them. A model is a derivative work; a card that reports the permissive half
+#: of its provenance and omits the restrictive half is worse than no card.
+RESTRICTED_CORPORA = {
+    "ai4privacy/pii-masking-300k": (
+        "**ai4privacy/pii-masking-300k is NOT an open dataset.** Its licence "
+        "grants access\n"
+        "  \"exclusively for academic research and non-commercial purposes\" "
+        "and requires an\n"
+        "  explicit written licence from AI4Privacy for \"the creation and "
+        "dissemination of\n"
+        "  derivative works\" -- which a model trained on it is. It further "
+        "states that\n"
+        "  \"strictly no licensing is available directly for companies "
+        "without prior\n"
+        "  discussion\".\n"
+        "\n"
+        "  **Do not redistribute this model, publish it, or use it "
+        "commercially without\n"
+        "  written permission from licensing@ai4privacy.com.** Training it "
+        "for internal\n"
+        "  research is what the licence contemplates; shipping it is not."
+    ),
+}
+
+
+def licensing(manifest: dict) -> list[str]:
+    """The licence section, derived from the corpora rather than asserted.
+
+    The first version of this hard-coded "CC BY 4.0", which was true while the
+    only training corpus was Nemotron-PII and became false the moment a second
+    one was mixed in. Deriving it means a restricted corpus cannot be added
+    without the card saying so.
+    """
+    corpora = manifest.get("corpora") or ["nvidia/Nemotron-PII"]
+    lines = [
+        "The code is MIT (see LICENSE). **The model is a derivative work of "
+        "its training",
+        "data, and inherits obligations from every corpus below.**",
+        "",
+    ]
+    restricted = []
+    for corpus in corpora:
+        name = corpus.split(" (")[0]
+        if name in RESTRICTED_CORPORA:
+            restricted.append(name)
+            lines.append(f"- ⚠️ `{name}` — RESTRICTED, see below")
+        elif name == "nvidia/Nemotron-PII":
+            lines.append(f"- `{name}` — CC BY 4.0; attribution to NVIDIA is "
+                         "required when")
+            lines.append("  redistributing this model or its outputs.")
+        else:
+            lines.append(f"- `{name}` — check the corpus licence before "
+                         "redistributing.")
+    lines.append(f"- teacher `{manifest['model']['teacher']}` — MIT.")
+    if restricted:
+        lines += ["", "### ⚠️ Redistribution is restricted", ""]
+        for name in restricted:
+            lines.append("- " + RESTRICTED_CORPORA[name])
+    return lines
+
+
 def model_card(manifest: dict, meta: dict) -> str:
     """The card, generated from the manifest so it cannot drift from the model.
 
@@ -352,11 +414,7 @@ def model_card(manifest: dict, meta: dict) -> str:
         "",
         "## Licensing",
         "",
-        "Code MIT (see LICENSE). Trained on Nemotron-PII, **CC BY 4.0**: "
-        "attribution to",
-        "NVIDIA is required when redistributing this model or its outputs. The "
-        "teacher",
-        f"`{model['teacher']}` is MIT.",
+    ] + licensing(manifest) + [
         "",
         "## Verify before you trust it",
         "",

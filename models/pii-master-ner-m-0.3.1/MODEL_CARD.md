@@ -8,7 +8,7 @@ Runs on **one CPU core**.
 - 111 BIO classes over 55 Nemotron entity types, crosswalked to 25 HIPAA-mapped types
 - onnx-fp32, 30.0 MB
 - Confidence calibration: **isotonic, per entity type**
-- Source commit: `6ae90be8b776739c19e9bd955a2a40724c043fe5`
+- Source commit: `7ded3f91a241dfbf9c669b8c25182f84877db2b2`
 - Trained on: `nvidia/Nemotron-PII`
 
 ## Intended use
@@ -111,9 +111,12 @@ system's cost matrix than F1; both are shown.
 
 ## Licensing
 
-Code MIT (see LICENSE). Trained on Nemotron-PII, **CC BY 4.0**: attribution to
-NVIDIA is required when redistributing this model or its outputs. The teacher
-`kalyan-ks/ettin-68m-nemotron-pii` is MIT.
+The code is MIT (see LICENSE). **The model is a derivative work of its training
+data, and inherits obligations from every corpus below.**
+
+- `nvidia/Nemotron-PII` — CC BY 4.0; attribution to NVIDIA is required when
+  redistributing this model or its outputs.
+- teacher `kalyan-ks/ettin-68m-nemotron-pii` — MIT.
 
 ## Verify before you trust it
 
