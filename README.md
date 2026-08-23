@@ -23,8 +23,18 @@ Nemotron-PII documents nobody in this repo authored:
 | 10 KB p95, one core | 0.70 ms | 7.99 ms | 14.80 ms |
 | peak RSS | 20 MB | 112 MB | 128 MB |
 
-with document accuracy and PHI recall both 1.00 on the frozen corpus in every
-mode. **F2 is reported alongside F1** because this scanner's errors are not
+and at the level users actually act on — *does this document contain PII?* —
+measured on the same 3,000 documents:
+
+| | rules only | **deep (`l`)** |
+|---|--:|--:|
+| recall on documents containing an identifier | 0.809 | **0.998** |
+| documents missed entirely | 571 | **7** |
+| false alarms on adversarial near-misses | 0.000 | **0.000** |
+
+One in five documents containing PII was invisible to the rules; it is now one
+in 425. Document accuracy and PHI recall are both 1.00 on the frozen corpus in
+every mode. **F2 is reported alongside F1** because this scanner's errors are not
 symmetric — a missed identifier is a reportable incident, a false alarm costs a
 reviewer minutes — so weighting recall four times as heavily is closer to the
 real cost. Neither is *the* number: precision is what keeps the scanner switched

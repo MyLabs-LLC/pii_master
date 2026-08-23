@@ -733,3 +733,48 @@ a boundary heuristic *can* be worth shipping — when the property it encodes is
 measurable in the gold data rather than fitted to the errors it is trying to
 fix.
 
+### 7.9 The number that was missing: document-level detection
+
+Everything above measures spans. The decision a user actually makes with this
+tool is coarser and more consequential — **quarantine this document or not** —
+and until now it had only ever been measured on the 39-document frozen corpus,
+which its own documentation calls a regression test rather than a quality
+claim. `eval/scripts/document_eval.py` measures it on the holdout.
+
+Gold is derived from Nemotron's own span annotations, not from our classifier:
+a document is sensitive if it carries at least one gold span crosswalking to a
+type we model. 2,983 of 3,000 test documents qualify.
+
+| | rules only | **deep (`l`)** |
+|---|--:|--:|
+| recall on documents containing an identifier | 0.8086 | **0.9977** |
+| documents missed entirely | **571** | **7** |
+| false-alarm rate on adversarial negatives | 0.0000 | **0.0000** |
+
+**One in five documents containing PII was invisible to the rules. It is now
+one in 425** — an 81× reduction in missed documents, with the false-alarm rate
+on the frozen corpus's fourteen near-miss negatives still exactly zero.
+
+That is a much larger effect than the span-level numbers suggest, and the
+reason is structural: a document is caught if *any* identifier in it is caught.
+The rules missed whole documents because the only identifiers present were
+names and addresses, which no regex can reach. Span F1 improved 0.796 → 0.940;
+document recall improved 0.809 → 0.998, because the model does not have to be
+right about everything in a file, only about something.
+
+The seven remaining misses are worth naming rather than rounding away. They are
+documents whose only modelled identifier is one the cascade suppresses or
+cannot see: a card number the Luhn re-validation correctly drops (§7.1), a
+bare `123456` invoice number, an unpunctuated `20240615` date. The first is
+working as designed; the other two are the recall backlog.
+
+**What this does not measure.** Nemotron has no document labels and no
+medical-context annotation, so the PII-vs-PHI *split* has no external gold —
+any would have to be derived with the same `has_medical_context` heuristic the
+classifier uses, and scoring a rule against itself measures nothing. The split
+is reported as a distribution (2,402 PII / 574 PHI / 24 NONE) and the frozen
+corpus remains the only place PHI escalation is scored against authored gold,
+where it is 1.00 recall on 12 documents. **That is the weakest link in the
+evaluation story and it is a data problem, not a modelling one:** it needs real
+clinical text with document-level labels, which means n2c2 under a DUA.
+
