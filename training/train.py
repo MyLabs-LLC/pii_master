@@ -159,6 +159,12 @@ def distillation_loss(student_logits, teacher_logits, labels, alpha, temperature
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--data-dir", required=True, help="dir holding Nemotron parquet")
+    ap.add_argument("--mix-dir",
+                    help="dir holding ai4privacy parquet; its English rows are "
+                         "mapped into Nemotron's label space and mixed in. See "
+                         "ai4privacy.py and docs/STAGE2_INTEGRATION.md 7.10")
+    ap.add_argument("--mix-limit", type=int, default=None,
+                    help="cap the mixed-in rows (default: all English rows)")
     ap.add_argument("--size", default="xs", choices=list(LADDER))
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--batch-size", type=int, default=16)
@@ -192,6 +198,16 @@ def main(argv=None) -> int:
 
     print("loading + encoding train split ...")
     texts, spans = read_split(args.data_dir, "train", limit=args.limit)
+    print(f"  Nemotron: {len(texts):,} documents")
+    if args.mix_dir:
+        import ai4privacy
+
+        mix_texts, mix_spans = ai4privacy.read_split(
+            args.mix_dir, "train", limit=args.mix_limit)
+        print(f"  ai4privacy (English, mapped): {len(mix_texts):,} documents "
+              f"-> {len(mix_texts) / (len(texts) + len(mix_texts)):.0%} of the "
+              f"mixture")
+        texts, spans = texts + mix_texts, spans + mix_spans
     ids, mask, labels, word_src = encode(texts, spans, tokenizer, args.max_length)
     train = DataLoader(TaggingDataset(ids, mask, labels, word_src),
                        batch_size=args.batch_size,
@@ -255,6 +271,9 @@ def main(argv=None) -> int:
             "label_names": [ID2LABEL[i] for i in range(NUM_LABELS)],
             "teacher": TEACHER_ID, "epoch": epoch,
             "soft_scope": args.soft_scope, "alpha": args.alpha,
+            "mixed_corpora": ["nvidia/Nemotron-PII"] + (
+                ["ai4privacy/pii-masking-300k (English, label-mapped)"]
+                if args.mix_dir else []),
             "temperature": args.temperature, "lr": args.lr,
             "epochs": args.epochs, "max_length": args.max_length,
         }, indent=2))
