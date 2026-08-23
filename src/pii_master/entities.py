@@ -2,9 +2,10 @@
 
 Each :class:`EntityType` maps to one of the 18 HIPAA Safe Harbor identifiers
 (45 CFR 164.514(b)(2)) via :data:`TAXONOMY`; see docs/DESIGN.md section 6 for
-the full crosswalk and the list of deferred types (PERSON_NAME, ADDRESS,
-PASSPORT, FAX_NUMBER, BANK_ROUTING, VEHICLE_ID, ...) with the reasons each is
-deferred.
+the full crosswalk and the list of deferred types (PASSPORT, FAX_NUMBER,
+BANK_ROUTING, VEHICLE_ID, ...) with the reasons each is deferred.
+PERSON_NAME, ADDRESS, and USERNAME are Stage 2 native types: the student
+emits them; rules do not.
 """
 
 from __future__ import annotations
@@ -27,6 +28,9 @@ class EntityType(str, Enum):
     ACCOUNT_NUMBER = "ACCOUNT_NUMBER"
     HEALTH_PLAN_ID = "HEALTH_PLAN_ID"
     US_DRIVER_LICENSE = "US_DRIVER_LICENSE"
+    PERSON_NAME = "PERSON_NAME"
+    ADDRESS = "ADDRESS"
+    USERNAME = "USERNAME"
 
 
 class DocLabel(IntEnum):
@@ -103,5 +107,19 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.US_DRIVER_LICENSE: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#11 Certificate/license numbers", weight=20.0,
+    ),
+    EntityType.PERSON_NAME: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#1 Names", weight=20.0,
+    ),
+    EntityType.ADDRESS: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#2 Geographic subdivisions smaller than a State",
+        weight=15.0,
+    ),
+    EntityType.USERNAME: EntityInfo(
+        is_pii=True, phi_specific=False,
+        hipaa_category="#18 Any unique identifying number or characteristic",
+        weight=10.0,
     ),
 }

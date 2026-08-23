@@ -1,5 +1,10 @@
 from pii_master.entities import EntityType
-from pii_master.fusion import CHECKSUMMED, fuse_checksum_first, resolve_greedy
+from pii_master.fusion import (
+    CHECKSUMMED,
+    fuse_checksum_first,
+    merge_adjacent_same_type,
+    resolve_greedy,
+)
 from pii_master.models import Entity
 from pii_master.onnx_ner import revalidate
 from pii_master.pipeline import Pipeline
@@ -72,3 +77,43 @@ def test_revalidate_rejects_invalid_card():
     assert not revalidate(EntityType.CREDIT_CARD, "4111 1111 1111 1112")
     assert revalidate(EntityType.CREDIT_CARD, "4111 1111 1111 1111")
     assert revalidate(EntityType.MRN, "4829471")
+
+
+def test_merge_adjacent_rebuilds_full_name():
+    text = "Applicant Jane Doe applied."
+    first = Entity(EntityType.PERSON_NAME, 10, 14, "Jane", 0.9, "onnx/student-m")
+    last = Entity(EntityType.PERSON_NAME, 15, 18, "Doe", 0.8, "onnx/student-m")
+    merged = merge_adjacent_same_type([first, last], text)
+    assert len(merged) == 1
+    assert merged[0].text == "Jane Doe"
+    assert (merged[0].start, merged[0].end) == (10, 18)
+
+
+def test_merge_adjacent_joins_street_and_city():
+    text = "mail to 44 Elm Street, Springfield today"
+    street = Entity(EntityType.ADDRESS, 8, 21, "44 Elm Street", 0.9, "onnx/student-m")
+    city = Entity(EntityType.ADDRESS, 23, 34, "Springfield", 0.7, "onnx/student-m")
+    merged = merge_adjacent_same_type([street, city], text)
+    assert text[8:21] == "44 Elm Street"
+    assert text[23:34] == "Springfield"
+    assert len(merged) == 1
+    assert merged[0].text == "44 Elm Street, Springfield"
+
+
+def test_merge_adjacent_does_not_join_different_types():
+    text = "Jane 123-45-6789"
+    name = Entity(EntityType.PERSON_NAME, 0, 4, "Jane", 0.9, "onnx/student-m")
+    ssn = Entity(EntityType.SSN, 5, 16, "123-45-6789", 0.9, "regex/ssn")
+    merged = merge_adjacent_same_type([name, ssn], text)
+    assert len(merged) == 2
+
+
+def test_merge_snaps_leading_subword_fragment():
+    text = "Applicant Jane Doe applied."
+    # Student tagged the last subword of "Applicant" as part of the name.
+    blob = Entity(EntityType.PERSON_NAME, 6, 18, "ant Jane Doe", 0.9, "onnx/student-m")
+    assert text[6:18] == "ant Jane Doe"
+    merged = merge_adjacent_same_type([blob], text)
+    assert len(merged) == 1
+    assert merged[0].text == "Jane Doe"
+    assert (merged[0].start, merged[0].end) == (10, 18)

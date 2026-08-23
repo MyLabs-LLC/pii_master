@@ -7,8 +7,9 @@ Corpus format (JSONL, one document per line):
 Gold spans are authored as inline ``[[TYPE:content]]`` markup; the loader
 strips the markup and computes character offsets in the stripped text, so
 gold offsets can never drift out of sync with the document. Gold types may
-include entity types the system cannot detect yet (e.g. PERSON_NAME) —
-those show up as measured recall 0, which is the point.
+include entity types no *rules* detector can emit (PERSON_NAME, ADDRESS,
+USERNAME) — those show up as measured recall 0 in fast mode. Deep mode
+is expected to emit them.
 
 Matching modes:
   exact   — a predicted span is a true positive iff type, start, and end all
@@ -34,9 +35,11 @@ MARKUP = re.compile(r"\[\[([A-Z0-9_]+):(.*?)\]\]", re.DOTALL)
 
 DOC_LABELS = ("NONE", "PII", "PHI")
 
-# Gold-only types the current system cannot emit; kept in the corpus so
-# Stage 2's job is a measured number, not a footnote.
-FUTURE_TYPES = frozenset({"PERSON_NAME", "ADDRESS"})
+# Types with no detector in *this* install. Empty now that the Stage 2
+# student emits PERSON_NAME / ADDRESS / USERNAME. Kept so a future
+# Track C type can be gold-annotated before a detector exists, and so
+# the error taxonomy still has an `undetectable` bucket.
+FUTURE_TYPES = frozenset()
 
 KNOWN_TYPES = frozenset(t.value for t in EntityType) | FUTURE_TYPES
 

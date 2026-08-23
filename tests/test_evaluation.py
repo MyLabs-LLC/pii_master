@@ -40,7 +40,8 @@ def test_evaluate_exact_hit():
     assert report.doc_accuracy == 1.0
 
 
-def test_evaluate_undetectable_type_counts_as_fn():
+def test_evaluate_person_name_is_fn_under_rules():
+    """Fast mode has no name detector; PERSON_NAME gold is still a miss."""
     docs = [
         CorpusDoc(
             "d1", "PII", "Applicant Jane Doe, SSN 123-45-6789.",
@@ -99,7 +100,7 @@ def test_render_is_text(tmp_path):
 
 def test_error_taxonomy_classes():
     docs = [
-        # undetectable: no detector can emit PERSON_NAME yet
+        # context_miss: PERSON_NAME is first-class but rules emit nothing
         CorpusDoc("d1", "PII", "Applicant Jane Doe applied.",
                   [GoldEntity("PERSON_NAME", 10, 18, "Jane Doe")]),
         # boundary: right type, gold span one char wider
@@ -112,9 +113,9 @@ def test_error_taxonomy_classes():
         CorpusDoc("d4", "NONE", "write to a@b.com please", []),
     ]
     hist = evaluate(docs).error_histogram
-    assert hist["undetectable"] == 1
+    assert hist["undetectable"] == 0
     assert hist["boundary"] >= 1
-    assert hist["context_miss"] == 1
+    assert hist["context_miss"] == 2
     assert hist["spurious"] == 1
 
 
@@ -169,6 +170,10 @@ def test_crosswalk_partitions_the_nemotron_label_space():
     assert len(NEMOTRON_TO_ENTITY) + len(ALL_UNMODELLED) == 55
     assert all(isinstance(v, EntityType) for v in NEMOTRON_TO_ENTITY.values())
     assert to_entity_type("email") is EntityType.EMAIL
+    assert to_entity_type("first_name") is EntityType.PERSON_NAME
+    assert to_entity_type("last_name") is EntityType.PERSON_NAME
+    assert to_entity_type("street_address") is EntityType.ADDRESS
+    assert to_entity_type("user_name") is EntityType.USERNAME
     assert to_entity_type("race_ethnicity") is None
     # A new dataset label must fail loudly, not become silent background.
     with pytest.raises(KeyError):

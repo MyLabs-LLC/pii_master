@@ -13,6 +13,7 @@ from pathlib import Path
 from .bio import decode_spans
 from .crosswalk import to_entity_type
 from .entities import EntityType
+from .fusion import merge_adjacent_same_type
 from .models import Entity
 from .validators import ipv4_ok, ipv6_ok, luhn_ok, ssn_ok
 
@@ -161,4 +162,4 @@ class OnnxNerDetector:
                     detector=self.name,
                 )
             )
-        return entities
+        return merge_adjacent_same_type(entities, text)

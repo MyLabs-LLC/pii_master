@@ -15,12 +15,15 @@ from __future__ import annotations
 
 from .entities import EntityType
 
-# Labels we detect today. Two caveats, both deliberate and measured:
+# Labels we detect today. Caveats, all deliberate and measured:
 #   - ipv4 and ipv6 both fold into IP_ADDRESS (we do not split by version).
 #   - certificate_license_number -> US_DRIVER_LICENSE is a NARROWING: the
 #     Nemotron label covers any HIPAA #11 certificate or licence, so recall
 #     against it understates nothing but precision may look better than the
 #     category deserves. A LICENSE_NUMBER umbrella type is the fix (Track C).
+#   - first_name + last_name collapse to PERSON_NAME; street/city/county/
+#     postcode collapse to ADDRESS. Serving merges adjacent same-type spans
+#     so a full name or street+city phrase is one entity.
 NEMOTRON_TO_ENTITY: dict[str, EntityType | None] = {
     "email": EntityType.EMAIL,
     "phone_number": EntityType.PHONE_US,
@@ -34,6 +37,13 @@ NEMOTRON_TO_ENTITY: dict[str, EntityType | None] = {
     "account_number": EntityType.ACCOUNT_NUMBER,
     "health_plan_beneficiary_number": EntityType.HEALTH_PLAN_ID,
     "certificate_license_number": EntityType.US_DRIVER_LICENSE,
+    "first_name": EntityType.PERSON_NAME,
+    "last_name": EntityType.PERSON_NAME,
+    "street_address": EntityType.ADDRESS,
+    "city": EntityType.ADDRESS,
+    "county": EntityType.ADDRESS,
+    "postcode": EntityType.ADDRESS,
+    "user_name": EntityType.USERNAME,
 }
 
 # Everything else in the dataset, grouped by why we do not model it.
@@ -41,9 +51,8 @@ NEMOTRON_TO_ENTITY: dict[str, EntityType | None] = {
 # taxonomy row attached.
 UNMODELLED: dict[str, tuple[str, ...]] = {
     # Rules cannot do these; Stage 2's reason to exist.
-    "stage2": ("first_name", "last_name", "street_address", "city", "state",
-               "county", "postcode", "coordinate", "user_name", "customer_id",
-               "employee_id", "unique_id", "biometric_identifier"),
+    "stage2": ("state", "coordinate", "customer_id", "employee_id",
+               "unique_id", "biometric_identifier"),
     # Format-anchored: candidates for Stage 1 (Track C), not the model.
     "track_c": ("fax_number", "bank_routing_number", "mac_address", "swift_bic",
                 "vehicle_identifier", "license_plate", "date_time",

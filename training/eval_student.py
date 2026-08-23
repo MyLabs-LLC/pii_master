@@ -41,7 +41,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from data import ID2LABEL, NUM_LABELS, parse_spans, read_split  # noqa: E402
+from data import ID2LABEL, LABEL2ID, NUM_LABELS, parse_spans, read_split  # noqa: E402
 from decode import decode_spans  # noqa: E402
 from model import LADDER, StudentConfig, StudentTagger  # noqa: E402
 
@@ -94,15 +94,18 @@ def load_student(checkpoint: Path, size: str | None) -> StudentTagger:
 
 
 def predict(model, tokenizer, texts, device, batch_size=32, max_length=4096,
-            min_confidence=0.0):
+            min_confidence=0.0, o_scale: float = 1.0):
     """-> [[(nemotron_label, start, end)]] for each document.
 
     `min_confidence` drops spans whose mean per-token probability is below the
     threshold, which is the knob DESIGN.md section 12 leaves as policy.
+    `o_scale` multiplies the O-class softmax mass before argmax (Kaggle F5
+    recall bias; 1.0 is unmodified). 1st-place writeups used ~0.03.
     """
     order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
     out: list[list[tuple[str, int, int]]] = [[] for _ in texts]
     model = model.to(device)
+    o_index = LABEL2ID["O"]
     for chunk in range(0, len(order), batch_size):
         rows = order[chunk:chunk + batch_size]
         enc = tokenizer([texts[i] for i in rows], truncation=True, padding=True,
@@ -112,9 +115,16 @@ def predict(model, tokenizer, texts, device, batch_size=32, max_length=4096,
         mask = torch.as_tensor(enc["attention_mask"], dtype=torch.long).to(device)
         with torch.no_grad():
             logits = model(ids, mask)
-            if min_confidence > 0.0:
-                probability = logits.softmax(-1).max(-1).values.cpu().numpy()
-            pred = logits.argmax(-1).cpu().numpy()
+            if o_scale != 1.0:
+                probability = logits.softmax(-1)
+                probability[..., o_index] *= o_scale
+                pred = probability.argmax(-1).cpu().numpy()
+                if min_confidence > 0.0:
+                    probability = probability.max(-1).values.cpu().numpy()
+            else:
+                if min_confidence > 0.0:
+                    probability = logits.softmax(-1).max(-1).values.cpu().numpy()
+                pred = logits.argmax(-1).cpu().numpy()
         for position, row in enumerate(rows):
             offsets = enc["offset_mapping"][position]
             spans = decode_spans(texts[row], offsets, pred[position], ID2LABEL)
