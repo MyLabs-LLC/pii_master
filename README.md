@@ -180,11 +180,16 @@ $ python training/package.py verify ./ner-model     # do this before trusting it
 $ PII_MASTER_MODEL_DIR=./ner-model pii-master scan report.txt --deep --pretty
 ```
 
-The **mixed** model is deliberately *not* published. It is a derivative work of
-`ai4privacy/pii-masking-300k`, whose licence grants access "exclusively for
-academic research and non-commercial purposes" and requires written permission
-from AI4Privacy for "the creation and dissemination of derivative works". It
-stays an internal research result until such a licence exists.
+The **mixed** model —
+[`MyLabs-LLC/pii-master-ner-l-mixed`](https://huggingface.co/MyLabs-LLC/pii-master-ner-l-mixed)
+— is published **gated**, as academic research output. It is a derivative work
+of `ai4privacy/pii-masking-300k`, whose licence covers academic and
+non-commercial use and requires written permission from AI4Privacy for
+redistribution or commercial use. The Hub repo enforces an acknowledgement
+before serving the weights, and the card leads with the restriction and the
+`licensing@ai4privacy.com` contact. Anyone needing redistribution or commercial
+rights must obtain them from AI4Privacy directly; a draft request is in
+[docs/AI4PRIVACY_LICENCE_REQUEST.md](docs/AI4PRIVACY_LICENCE_REQUEST.md).
 
 Committed packages: [`models/`](models/) carries each release's manifest and
 model card. The weights themselves are build output and are distributed

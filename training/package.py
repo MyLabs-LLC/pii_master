@@ -234,13 +234,29 @@ def hub_readme(manifest: dict, card: str) -> str:
         "license: " + ("other" if restricted else "cc-by-4.0"),
     ]
     if restricted:
+        # A real gate, not a notice. extra_gated_prompt alone renders text a
+        # downloader can scroll past; extra_gated_fields makes the Hub require
+        # an explicit acknowledgement before it serves the weights, which is
+        # the only mechanism available here that actually propagates the
+        # upstream restriction to whoever takes the model next.
         front += ["license_name: restricted-see-model-card",
                   "extra_gated_prompt: >-",
-                  "  This model is a derivative work of a dataset licensed for "
-                  "academic and",
-                  "  non-commercial use only. Redistribution and commercial "
-                  "use require written",
-                  "  permission from licensing@ai4privacy.com."]
+                  "  This model is a DERIVATIVE WORK of "
+                  "ai4privacy/pii-masking-300k, which is",
+                  "  licensed for academic research and non-commercial use "
+                  "only. Its licence",
+                  "  requires explicit written permission from AI4Privacy for "
+                  "redistribution or",
+                  "  for the dissemination of derivative works. If you need "
+                  "either, contact",
+                  "  licensing@ai4privacy.com before using these weights.",
+                  "extra_gated_fields:",
+                  "  I will use this model for academic research or "
+                  "non-commercial purposes only: checkbox",
+                  "  I understand redistribution or commercial use requires "
+                  "written permission from AI4Privacy: checkbox",
+                  "  Name: text",
+                  "  Affiliation: text"]
     front += [
         "language:",
         "- en",
@@ -299,6 +315,11 @@ def licensing(manifest: dict) -> list[str]:
     lines.append(f"- teacher `{manifest['model']['teacher']}` — MIT.")
     if restricted:
         lines += ["", "### ⚠️ Redistribution is restricted", ""]
+        lines += ["Ai4Privacy is acknowledged for the corpus, as their licence "
+                  "stipulates for any",
+                  "scholarly output that leverages it. Their dataset is the "
+                  "reason this model's",
+                  "cross-corpus weakness was measurable at all.", ""]
         for name in restricted:
             lines.append("- " + RESTRICTED_CORPORA[name])
     return lines

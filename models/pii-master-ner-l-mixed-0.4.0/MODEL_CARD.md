@@ -8,7 +8,7 @@ Runs on **one CPU core**.
 - 111 BIO classes over 55 Nemotron entity types, crosswalked to 25 HIPAA-mapped types
 - onnx-fp32, 43.7 MB
 - Confidence calibration: **isotonic, per entity type**
-- Source commit: `a02891b99f59e83e76b7e65c4485b121e5e6d720`
+- Source commit: `1ce073fc223673d1d870394c6a823137dc8fec87`
 - Trained on: `nvidia/Nemotron-PII`, `ai4privacy/pii-masking-300k (English, label-mapped)`
 
 ## Intended use
@@ -121,6 +121,10 @@ data, and inherits obligations from every corpus below.**
 - teacher `kalyan-ks/ettin-68m-nemotron-pii` — MIT.
 
 ### ⚠️ Redistribution is restricted
+
+Ai4Privacy is acknowledged for the corpus, as their licence stipulates for any
+scholarly output that leverages it. Their dataset is the reason this model's
+cross-corpus weakness was measurable at all.
 
 - **ai4privacy/pii-masking-300k is NOT an open dataset.** Its licence grants access
   "exclusively for academic research and non-commercial purposes" and requires an
