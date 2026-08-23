@@ -130,6 +130,11 @@ def build(bundle: Path, out: Path, name: str, version: str,
         "training": {k: meta.get(k) for k in
                      ("soft_scope", "alpha", "temperature", "lr", "epochs",
                       "max_length")},
+        # Which corpora trained it. A model card that does not say what a model
+        # was trained on cannot support any claim about where it will work,
+        # and the generalisation gap in docs/STAGE2_INTEGRATION.md 7.10 is
+        # precisely a statement about training data.
+        "corpora": meta.get("mixed_corpora") or ["nvidia/Nemotron-PII"],
         "scores": scores,
         "document_scores": document_scores,
     }
@@ -211,6 +216,8 @@ def model_card(manifest: dict, meta: dict) -> str:
                                         "**NONE** -- raw softmax, do not "
                                         "threshold these scores"),
         f"- Source commit: `{manifest.get('git_commit') or 'unknown'}`",
+        "- Trained on: " + ", ".join(f"`{c}`" for c in manifest.get(
+            "corpora", ["nvidia/Nemotron-PII"])),
         "",
         "## Intended use",
         "",

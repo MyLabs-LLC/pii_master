@@ -1,15 +1,15 @@
-# pii-master-ner-m 0.3.1
+# pii-master-ner-l-mixed 0.4.0
 
 Token tagger for **PII / PHI detection**, distilled from
 `kalyan-ks/ettin-68m-nemotron-pii` on [nvidia/Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII).
 Runs on **one CPU core**.
 
-- dilated depthwise-separable CNN tagger, d=128 x 6 layers, 6.57M parameters
+- dilated depthwise-separable CNN tagger, d=192 x 8 layers, 10.00M parameters
 - 111 BIO classes over 55 Nemotron entity types, crosswalked to 25 HIPAA-mapped types
-- onnx-fp32, 30.0 MB
+- onnx-fp32, 43.7 MB
 - Confidence calibration: **isotonic, per entity type**
 - Source commit: `6ae90be8b776739c19e9bd955a2a40724c043fe5`
-- Trained on: `nvidia/Nemotron-PII`
+- Trained on: `nvidia/Nemotron-PII`, `ai4privacy/pii-masking-300k (English, label-mapped)`
 
 ## Intended use
 
@@ -27,9 +27,9 @@ Safe Harbor de-identification is a legal determination this model cannot make.
 
 | configuration | **recall** | documents missed | false alarms |
 |---|--:|--:|--:|
-| deep @0.30 | 0.9983 | 5 of 2,983 | 0.143 |
-| **deep @0.50** | **0.9980** | 6 of 2,983 | 0.000 |
-| deep @0.70 | 0.9950 | 15 of 2,983 | 0.000 |
+| deep @0.30 | 0.9977 | 7 of 2,983 | 0.143 |
+| **deep @0.50** | **0.9970** | 9 of 2,983 | 0.071 |
+| deep @0.70 | 0.9963 | 11 of 2,983 | 0.071 |
 
 Measured on 3,000 held-out Nemotron documents; a document counts as
 sensitive if it carries a gold span of a type we model. False alarms are measured
@@ -44,36 +44,37 @@ system's cost matrix than F1; both are shown.
 
 | | recall | **F2** | F1 | precision |
 |---|--:|--:|--:|--:|
-| the 12 types the rules also cover | 0.913 | **0.921** | 0.935 | 0.957 |
-| the 14 types only this model emits | 0.895 | **0.902** | 0.914 | 0.934 |
+| the 12 types the rules also cover | 0.918 | **0.927** | 0.940 | 0.963 |
+| the 14 types only this model emits | 0.912 | **0.919** | 0.931 | 0.951 |
 
 <details><summary>Per type</summary>
 
 | type | gold | recall | F2 | F1 | precision |
 |---|--:|--:|--:|--:|--:|
+| `NATIONAL_ID` | 0 | 0.000 | 0.000 | 0.000 | 0.000 |
 | `CREDIT_CARD` | 380 | 0.108 | 0.129 | 0.183 | 0.612 |
-| `TAX_ID` | 43 | 0.326 | 0.372 | 0.475 | 0.875 |
-| `DEVICE_ID` | 80 | 0.750 | 0.785 | 0.845 | 0.968 |
-| `FAX_NUMBER` | 211 | 0.787 | 0.810 | 0.849 | 0.922 |
-| `GEO_COORDINATE` | 233 | 0.884 | 0.883 | 0.880 | 0.877 |
-| `ADDRESS` | 1,568 | 0.886 | 0.895 | 0.908 | 0.930 |
-| `PERSON_NAME` | 3,019 | 0.894 | 0.895 | 0.897 | 0.900 |
-| `US_DRIVER_LICENSE` | 170 | 0.894 | 0.904 | 0.918 | 0.944 |
-| `USER_ID` | 1,339 | 0.892 | 0.907 | 0.930 | 0.972 |
-| `DATE_TIME` | 325 | 0.892 | 0.907 | 0.931 | 0.973 |
-| `ACCOUNT_NUMBER` | 510 | 0.925 | 0.934 | 0.947 | 0.969 |
-| `HEALTH_PLAN_ID` | 311 | 0.945 | 0.953 | 0.966 | 0.987 |
-| `PHONE_US` | 638 | 0.975 | 0.956 | 0.929 | 0.887 |
-| `URL` | 1,198 | 0.957 | 0.957 | 0.955 | 0.953 |
-| `BIOMETRIC_ID` | 358 | 0.953 | 0.961 | 0.974 | 0.997 |
-| `VEHICLE_ID` | 294 | 0.963 | 0.963 | 0.964 | 0.966 |
-| `BANK_ROUTING` | 277 | 0.964 | 0.970 | 0.978 | 0.993 |
-| `MRN` | 389 | 0.967 | 0.972 | 0.979 | 0.992 |
-| `MAC_ADDRESS` | 137 | 0.971 | 0.975 | 0.982 | 0.993 |
+| `TAX_ID` | 43 | 0.349 | 0.399 | 0.508 | 0.938 |
+| `DEVICE_ID` | 80 | 0.775 | 0.807 | 0.861 | 0.969 |
+| `FAX_NUMBER` | 211 | 0.806 | 0.827 | 0.861 | 0.924 |
+| `GEO_COORDINATE` | 233 | 0.875 | 0.881 | 0.889 | 0.903 |
+| `DATE_TIME` | 325 | 0.886 | 0.903 | 0.929 | 0.976 |
+| `ADDRESS` | 1,568 | 0.901 | 0.913 | 0.931 | 0.963 |
+| `PERSON_NAME` | 3,019 | 0.916 | 0.918 | 0.922 | 0.929 |
+| `USER_ID` | 1,339 | 0.919 | 0.930 | 0.947 | 0.975 |
+| `ACCOUNT_NUMBER` | 510 | 0.927 | 0.935 | 0.948 | 0.969 |
+| `US_DRIVER_LICENSE` | 170 | 0.935 | 0.940 | 0.946 | 0.958 |
+| `VEHICLE_ID` | 294 | 0.959 | 0.957 | 0.953 | 0.946 |
+| `PHONE_US` | 638 | 0.980 | 0.961 | 0.935 | 0.894 |
+| `BIOMETRIC_ID` | 358 | 0.955 | 0.962 | 0.972 | 0.988 |
+| `URL` | 1,198 | 0.967 | 0.968 | 0.968 | 0.969 |
+| `HEALTH_PLAN_ID` | 311 | 0.968 | 0.972 | 0.979 | 0.990 |
+| `BANK_ROUTING` | 277 | 0.968 | 0.972 | 0.980 | 0.993 |
 | `SSN` | 249 | 1.000 | 0.976 | 0.941 | 0.889 |
-| `SWIFT_BIC` | 157 | 0.981 | 0.977 | 0.972 | 0.963 |
-| `IP_ADDRESS` | 291 | 0.979 | 0.981 | 0.985 | 0.990 |
-| `DATE_DOB` | 403 | 0.998 | 0.996 | 0.994 | 0.990 |
+| `MRN` | 389 | 0.972 | 0.977 | 0.986 | 1.000 |
+| `IP_ADDRESS` | 291 | 0.979 | 0.982 | 0.986 | 0.993 |
+| `MAC_ADDRESS` | 137 | 0.985 | 0.985 | 0.985 | 0.985 |
+| `DATE_DOB` | 403 | 0.990 | 0.990 | 0.990 | 0.990 |
+| `SWIFT_BIC` | 157 | 1.000 | 0.994 | 0.984 | 0.969 |
 | `EMAIL` | 1,221 | 0.998 | 0.997 | 0.997 | 0.997 |
 
 </details>

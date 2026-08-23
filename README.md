@@ -160,6 +160,16 @@ loads and still answers: on the real artifact a flipped kilobyte turned an
 `MRN` into a `USER_ID` at 0.87 confidence, which is a silent PHI miss. Only the
 checksum catches that.
 
+**Two training mixtures ship.** `pii-master-ner-l-mixed` (recommended) is
+trained on Nemotron **plus** ai4privacy's English rows, which raises strict
+span recall on the ai4privacy holdout from 0.385 to **0.580** and document
+recall from 0.870 to **0.924**, with Nemotron unchanged (micro F1 0.934 →
+0.935). It costs one of fourteen adversarial frozen-corpus negatives — a
+magazine subscriber id now read as `USER_ID` — without touching PHI recall,
+which stays 1.00. `pii-master-ner-l` is the Nemotron-only model for anyone who
+weights that differently. Details:
+[docs/STAGE2_INTEGRATION.md](docs/STAGE2_INTEGRATION.md) §7.10–7.11.
+
 Committed packages: [`models/`](models/) carries each release's manifest and
 model card. The weights themselves are build output and are distributed
 separately rather than stored in git.

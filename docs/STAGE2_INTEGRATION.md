@@ -892,3 +892,78 @@ or `BANK_ROUTING` labels at all, so the PHI-specific half of the taxonomy is
 still unmeasured outside Nemotron. `ai4privacy/pii-masking-health-phi-preview`
 would be the corpus for that; it is 50 rows with the values redacted.
 
+### 7.11 Training on the mixture closes most of the gap
+
+§7.10 diagnosed the generalisation failure as a distribution problem rather
+than a capability one: strict recall 0.385 but *located* recall 0.575, so the
+model found the right regions and missed the boundaries, having learned span
+edges from prose and been handed JSON. The direct fix is to train on both.
+
+`training/ai4privacy.py` maps that corpus's 28 labels into **Nemotron's** label
+space — not into a larger merged one, because extending the head would leave
+the new classes unsupervised by the teacher and silence the soft-target half of
+the loss exactly where the new data is meant to teach. 29,908 English documents
+and 185,526 mapped spans, 23% of a 130k-document mixture. Same `l` geometry,
+same 4-epoch schedule, same calibration protocol.
+
+**ai4privacy validation (7,946 documents), in-scope recall:**
+
+| | Nemotron-only | **mixture** | |
+|---|--:|--:|--:|
+| strict (span + type) | 0.385 | **0.580** | +0.195 |
+| typed (span, any type) | 0.425 | **0.602** | +0.177 |
+| located (overlap) | 0.575 | **0.747** | +0.172 |
+| **document-level recall** | 0.870 | **0.924** | 836 → 490 missed |
+| genuinely spurious predictions | 25.3% | **13.4%** | precision improved too |
+
+Per label, the wins are concentrated exactly where §7.10 predicted:
+
+| label | before | after | |
+|---|--:|--:|---|
+| `BUILDING` | 0.028 | **0.293** | the bare `617` in a JSON field — 10× |
+| `IDCARD` | 0.079 | **0.448** | |
+| `POSTCODE` | 0.433 | **0.792** | |
+| `SECADDRESS` | 0.213 | **0.673** | |
+| `CITY` | 0.376 | **0.589** | located 0.715 → **0.917** |
+| `STREET` | 0.279 | **0.547** | located 0.716 → **0.936** |
+| `GIVENNAME1` | 0.296 | **0.531** | |
+| `LASTNAME1` | 0.295 | **0.484** | |
+| `DRIVERLICENSE` | 0.131 | **0.367** | out-of-scope detector, still helped |
+| `EMAIL` / `IP` | 0.943 / 0.988 | 0.944 / 0.986 | already saturated, unmoved |
+
+**And Nemotron did not regress: micro F1 0.934 → 0.935.** That is the control
+that matters — improving one corpus by trading away the other would be a wash,
+not a win — and it held exactly.
+
+**The cost, stated plainly.** Frozen-corpus document accuracy fell **1.00 →
+0.97**: one of the fourteen adversarial negatives, `none-011` *"Your subscriber
+id A9-3321-77 for the magazine"*, is now flagged `USER_ID` at **0.855**
+confidence. The mixture trained heavily on ai4privacy's `USERNAME` and `IDCARD`
+patterns, so the model is not merely wrong there, it is *confident*. No
+threshold clears 0.855 without giving back the gains.
+
+Three things make this the right trade rather than a rationalised one:
+
+* **It is `NONE → PII`, not `→ PHI`. PHI recall stays 1.00 and there is still
+  no false PHI.** The failure this project ranks worst is untouched.
+* The other three hard negatives got *better*, not worse — 0.414, 0.178 and
+  0.062 against 0.36–0.63 before. This is one document, not a trend.
+* `none-011` exists to assert that a magazine subscriber id is not **PHI**
+  (IMPROVEMENT_PLAN Track A.3), and it still is not. Whether it is *PII* is
+  genuinely arguable — it is a number assigned to identify a person, which is
+  what HIPAA #18 describes.
+
+That last point is an argument for relabelling the gold, and **the gold has not
+been relabelled.** IMPROVEMENT_PLAN §5 says do not collapse the frozen corpus
+to raise scores, and quietly re-authoring an adversarial case because the model
+started failing it is exactly that. The regression is reported as a regression.
+
+The Nemotron-only `l` bundle is kept and packaged alongside, for anyone who
+weights that frozen row differently.
+
+**One caveat on the headline.** ai4privacy is synthetic and template-generated,
+and train and validation may share templates, so part of the +0.195 could be
+template familiarity rather than robustness. Nemotron holding flat and the
+frozen corpus moving by one document are the controls available; a third
+independent corpus would be the real test, and there isn't one yet.
+

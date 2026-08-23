@@ -2,7 +2,7 @@
   "name": "pii-master-ner-m",
   "version": "0.3.1",
   "created": "2026-08-23",
-  "git_commit": "c87e6b60768af18798ac9861264d7679946c9693",
+  "git_commit": "6ae90be8b776739c19e9bd955a2a40724c043fe5",
   "format": "onnx-fp32",
   "files": {
     "model.onnx": {
@@ -48,6 +48,9 @@
     "epochs": 6,
     "max_length": 512
   },
+  "corpora": [
+    "nvidia/Nemotron-PII"
+  ],
   "scores": {
     "documents": 3000,
     "configuration": "deep @0.50",

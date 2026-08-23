@@ -1,6 +1,6 @@
 {
-  "name": "pii-master-ner-l",
-  "version": "0.3.1",
+  "name": "pii-master-ner-l-mixed",
+  "version": "0.4.0",
   "created": "2026-08-23",
   "git_commit": "6ae90be8b776739c19e9bd955a2a40724c043fe5",
   "format": "onnx-fp32",
@@ -10,7 +10,7 @@
       "bytes": 12245
     },
     "model.onnx.data": {
-      "sha256": "eb11550134af096e51fe0ff76f6e8d845d8612876dc23ebe63c95f59079b6dab",
+      "sha256": "b872ec67c6ca1b36272dfce9b256f631e4c600fa01adf54e8be910c8bdc3bbaa",
       "bytes": 40058880
     },
     "tokenizer.json": {
@@ -18,11 +18,11 @@
       "bytes": 3583327
     },
     "model.json": {
-      "sha256": "d45ef42493ab008b3df5e41581d122fb237064fb692173cbc972b2ec0c11df4b",
-      "bytes": 60891
+      "sha256": "103cb0294ee68120975eb8478ba21b3fdef5080771d8c6ca731d5e335d20086f",
+      "bytes": 60961
     }
   },
-  "total_bytes": 43715343,
+  "total_bytes": 43715413,
   "model": {
     "architecture": "dilated depthwise-separable CNN tagger",
     "d_model": 192,
@@ -51,33 +51,34 @@
     "max_length": 512
   },
   "corpora": [
-    "nvidia/Nemotron-PII"
+    "nvidia/Nemotron-PII",
+    "ai4privacy/pii-masking-300k (English, label-mapped)"
   ],
   "scores": {
     "documents": 3000,
     "configuration": "deep @0.50",
     "rule_tier": {
-      "p": 0.9618181818181818,
-      "r": 0.9184027777777778,
-      "f1": 0.9396092362344584,
-      "f2": 0.9267694463910301
+      "p": 0.9630236794171221,
+      "r": 0.9178819444444445,
+      "f1": 0.9399111111111111,
+      "f2": 0.9265685243603226
     },
     "model_tier": {
-      "p": 0.9506621656712542,
-      "r": 0.9105832607884592,
-      "f1": 0.9301911960871498,
-      "f2": 0.9183263934179502
+      "p": 0.9508494358708339,
+      "r": 0.9118268872030842,
+      "f1": 0.930929405789741,
+      "f2": 0.9193730407523513
     },
     "per_type": {
       "DATE_DOB": {
         "gold": 403,
-        "tp": 401,
-        "fp": 3,
-        "fn": 2,
-        "precision": 0.9926,
-        "recall": 0.995,
-        "f1": 0.9938,
-        "f2": 0.9945
+        "tp": 399,
+        "fp": 4,
+        "fn": 4,
+        "precision": 0.9901,
+        "recall": 0.9901,
+        "f1": 0.9901,
+        "f2": 0.9901
       },
       "CREDIT_CARD": {
         "gold": 380,
@@ -91,13 +92,13 @@
       },
       "ACCOUNT_NUMBER": {
         "gold": 510,
-        "tp": 475,
-        "fp": 9,
-        "fn": 35,
-        "precision": 0.9814,
-        "recall": 0.9314,
-        "f1": 0.9557,
-        "f2": 0.941
+        "tp": 473,
+        "fp": 15,
+        "fn": 37,
+        "precision": 0.9693,
+        "recall": 0.9275,
+        "f1": 0.9479,
+        "f2": 0.9355
       },
       "HEALTH_PLAN_ID": {
         "gold": 311,
@@ -131,73 +132,73 @@
       },
       "URL": {
         "gold": 1198,
-        "tp": 1160,
-        "fp": 49,
-        "fn": 38,
-        "precision": 0.9595,
-        "recall": 0.9683,
-        "f1": 0.9639,
-        "f2": 0.9665
+        "tp": 1159,
+        "fp": 37,
+        "fn": 39,
+        "precision": 0.9691,
+        "recall": 0.9674,
+        "f1": 0.9683,
+        "f2": 0.9678
       },
       "MRN": {
         "gold": 389,
-        "tp": 379,
-        "fp": 1,
-        "fn": 10,
-        "precision": 0.9974,
-        "recall": 0.9743,
+        "tp": 378,
+        "fp": 0,
+        "fn": 11,
+        "precision": 1.0,
+        "recall": 0.9717,
         "f1": 0.9857,
-        "f2": 0.9788
+        "f2": 0.9772
       },
       "PHONE_US": {
         "gold": 638,
-        "tp": 626,
-        "fp": 70,
-        "fn": 12,
-        "precision": 0.8994,
-        "recall": 0.9812,
-        "f1": 0.9385,
-        "f2": 0.9637
+        "tp": 625,
+        "fp": 74,
+        "fn": 13,
+        "precision": 0.8941,
+        "recall": 0.9796,
+        "f1": 0.9349,
+        "f2": 0.9612
       },
       "US_DRIVER_LICENSE": {
         "gold": 170,
-        "tp": 155,
-        "fp": 11,
-        "fn": 15,
-        "precision": 0.9337,
-        "recall": 0.9118,
-        "f1": 0.9226,
-        "f2": 0.9161
+        "tp": 159,
+        "fp": 7,
+        "fn": 11,
+        "precision": 0.9578,
+        "recall": 0.9353,
+        "f1": 0.9464,
+        "f2": 0.9397
       },
       "IP_ADDRESS": {
         "gold": 291,
         "tp": 285,
-        "fp": 3,
+        "fp": 2,
         "fn": 6,
-        "precision": 0.9896,
+        "precision": 0.993,
         "recall": 0.9794,
-        "f1": 0.9845,
-        "f2": 0.9814
+        "f1": 0.9862,
+        "f2": 0.9821
       },
       "ADDRESS": {
         "gold": 1568,
-        "tp": 1414,
-        "fp": 57,
-        "fn": 154,
-        "precision": 0.9613,
-        "recall": 0.9018,
-        "f1": 0.9306,
-        "f2": 0.9131
+        "tp": 1413,
+        "fp": 55,
+        "fn": 155,
+        "precision": 0.9625,
+        "recall": 0.9011,
+        "f1": 0.9308,
+        "f2": 0.9128
       },
       "PERSON_NAME": {
         "gold": 3019,
-        "tp": 2745,
-        "fp": 213,
-        "fn": 274,
-        "precision": 0.928,
-        "recall": 0.9092,
-        "f1": 0.9185,
-        "f2": 0.9129
+        "tp": 2765,
+        "fp": 212,
+        "fn": 254,
+        "precision": 0.9288,
+        "recall": 0.9159,
+        "f1": 0.9223,
+        "f2": 0.9184
       },
       "BANK_ROUTING": {
         "gold": 277,
@@ -211,13 +212,13 @@
       },
       "USER_ID": {
         "gold": 1339,
-        "tp": 1236,
-        "fp": 36,
-        "fn": 103,
-        "precision": 0.9717,
-        "recall": 0.9231,
-        "f1": 0.9468,
-        "f2": 0.9324
+        "tp": 1231,
+        "fp": 31,
+        "fn": 108,
+        "precision": 0.9754,
+        "recall": 0.9193,
+        "f1": 0.9466,
+        "f2": 0.93
       },
       "MAC_ADDRESS": {
         "gold": 137,
@@ -231,73 +232,83 @@
       },
       "BIOMETRIC_ID": {
         "gold": 358,
-        "tp": 344,
-        "fp": 3,
-        "fn": 14,
-        "precision": 0.9914,
-        "recall": 0.9609,
-        "f1": 0.9759,
-        "f2": 0.9668
+        "tp": 342,
+        "fp": 4,
+        "fn": 16,
+        "precision": 0.9884,
+        "recall": 0.9553,
+        "f1": 0.9716,
+        "f2": 0.9618
       },
       "DEVICE_ID": {
         "gold": 80,
-        "tp": 63,
+        "tp": 62,
         "fp": 2,
-        "fn": 17,
-        "precision": 0.9692,
-        "recall": 0.7875,
-        "f1": 0.869,
-        "f2": 0.8182
+        "fn": 18,
+        "precision": 0.9688,
+        "recall": 0.775,
+        "f1": 0.8611,
+        "f2": 0.8073
       },
       "FAX_NUMBER": {
         "gold": 211,
-        "tp": 165,
-        "fp": 12,
-        "fn": 46,
-        "precision": 0.9322,
-        "recall": 0.782,
-        "f1": 0.8505,
-        "f2": 0.808
+        "tp": 170,
+        "fp": 14,
+        "fn": 41,
+        "precision": 0.9239,
+        "recall": 0.8057,
+        "f1": 0.8608,
+        "f2": 0.8268
       },
       "SWIFT_BIC": {
         "gold": 157,
-        "tp": 156,
-        "fp": 6,
-        "fn": 1,
-        "precision": 0.963,
-        "recall": 0.9936,
-        "f1": 0.9781,
-        "f2": 0.9873
+        "tp": 157,
+        "fp": 5,
+        "fn": 0,
+        "precision": 0.9691,
+        "recall": 1.0,
+        "f1": 0.9843,
+        "f2": 0.9937
       },
       "DATE_TIME": {
         "gold": 325,
-        "tp": 290,
-        "fp": 8,
-        "fn": 35,
-        "precision": 0.9732,
-        "recall": 0.8923,
-        "f1": 0.931,
-        "f2": 0.9074
+        "tp": 288,
+        "fp": 7,
+        "fn": 37,
+        "precision": 0.9763,
+        "recall": 0.8862,
+        "f1": 0.929,
+        "f2": 0.9028
       },
       "VEHICLE_ID": {
         "gold": 294,
         "tp": 282,
-        "fp": 20,
+        "fp": 16,
         "fn": 12,
-        "precision": 0.9338,
+        "precision": 0.9463,
         "recall": 0.9592,
-        "f1": 0.9463,
-        "f2": 0.954
+        "f1": 0.9527,
+        "f2": 0.9566
+      },
+      "NATIONAL_ID": {
+        "gold": 0,
+        "tp": 0,
+        "fp": 6,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "f2": 0.0
       },
       "GEO_COORDINATE": {
         "gold": 233,
-        "tp": 209,
-        "fp": 18,
-        "fn": 24,
-        "precision": 0.9207,
-        "recall": 0.897,
-        "f1": 0.9087,
-        "f2": 0.9016
+        "tp": 204,
+        "fp": 22,
+        "fn": 29,
+        "precision": 0.9027,
+        "recall": 0.8755,
+        "f1": 0.8889,
+        "f2": 0.8808
       },
       "TAX_ID": {
         "gold": 43,
@@ -310,7 +321,7 @@
         "f2": 0.3989
       }
     },
-    "p95_ms_per_doc": 5.051
+    "p95_ms_per_doc": 5.044
   },
   "document_scores": [
     {
@@ -318,11 +329,11 @@
       "threshold": 0.3,
       "documents": 3000,
       "sensitive": 2983,
-      "recall": 0.9979886020784445,
-      "flagged": 2977,
-      "missed": 6,
-      "false_alarm_rate": 0.21428571428571427,
-      "false_alarms": 3,
+      "recall": 0.9976533690915186,
+      "flagged": 2976,
+      "missed": 7,
+      "false_alarm_rate": 0.14285714285714285,
+      "false_alarms": 2,
       "negatives": 14
     },
     {
@@ -330,11 +341,11 @@
       "threshold": 0.5,
       "documents": 3000,
       "sensitive": 2983,
-      "recall": 0.9976533690915186,
-      "flagged": 2976,
-      "missed": 7,
-      "false_alarm_rate": 0.0,
-      "false_alarms": 0,
+      "recall": 0.9969829031176668,
+      "flagged": 2974,
+      "missed": 9,
+      "false_alarm_rate": 0.07142857142857142,
+      "false_alarms": 1,
       "negatives": 14,
       "shipped": true
     },
@@ -346,8 +357,8 @@
       "recall": 0.9963124371438149,
       "flagged": 2972,
       "missed": 11,
-      "false_alarm_rate": 0.0,
-      "false_alarms": 0,
+      "false_alarm_rate": 0.07142857142857142,
+      "false_alarms": 1,
       "negatives": 14
     }
   ]
