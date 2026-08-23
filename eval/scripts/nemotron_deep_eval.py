@@ -167,9 +167,15 @@ def score(texts, gold_by_doc, pipeline, label, merge):
         p_rule, p_model = split_tiers(pred)
         tally(rule_exact, g_rule, p_rule, rule_loose)
         tally(model_exact, g_model, p_model, model_loose)
+    pooled = {**rule_exact, **{f"~{k}": v for k, v in model_exact.items()}}
     latency.sort()
     return {
         "label": label,
+        # Pooled over ALL types. The two tier rows below are scored over
+        # disjoint type sets and cannot be averaged into one number, so this
+        # is computed from the pooled counts instead -- micro, so each type is
+        # weighted by the gold it actually has.
+        "overall": micro(pooled),
         "rule_tier": micro(rule_exact),          # (P, R, F1, F2)
         "rule_tier_partial": micro(rule_loose),
         "model_tier": micro(model_exact),
@@ -220,14 +226,16 @@ def main(argv=None) -> int:
                           merge))
         print(f"  scored {runs[-1]['label']}", flush=True)
 
-    print(f"\n{'configuration':>16} | {'rule-tier types':^33} | "
-          f"{'model-tier types':^33} | latency")
-    print(f"{'':>16} | {'P':>7} {'R':>7} {'F1':>7} {'F2':>7} | "
-          f"{'P':>7} {'R':>7} {'F1':>7} {'F2':>7} | {'p95':>8}")
+    print(f"\n{'configuration':>16} | {'ALL types (micro)':^33} | "
+          f"{'rule-tier types':^33} | {'model-tier types':^33} | latency")
+    head = f"{'P':>7} {'R':>7} {'F1':>7} {'F2':>7}"
+    print(f"{'':>16} | {head} | {head} | {head} | {'p95':>8}")
     for run in runs:
+        op, orr, of1, of2 = run["overall"]
         rp, rr, rf1, rf2 = run["rule_tier"]
         mp, mr, mf1, mf2 = run["model_tier"]
-        print(f"{run['label']:>16} | {rp:>7.3f} {rr:>7.3f} {rf1:>7.3f} {rf2:>7.3f} | "
+        print(f"{run['label']:>16} | {op:>7.3f} {orr:>7.3f} {of1:>7.3f} {of2:>7.3f} | "
+              f"{rp:>7.3f} {rr:>7.3f} {rf1:>7.3f} {rf2:>7.3f} | "
               f"{mp:>7.3f} {mr:>7.3f} {mf1:>7.3f} {mf2:>7.3f} | "
               f"{run['p95_ms']:>6.2f}ms")
 
@@ -235,12 +243,12 @@ def main(argv=None) -> int:
     # reconciled. They disagree -- F2 always prefers a lower threshold,
     # because dropping it only ever adds spans -- and which one a deployment
     # should follow is a policy question, not something this script settles.
-    best_f1 = max(runs[1:], key=lambda r: r["model_tier"][2] + r["rule_tier"][2])
-    best_f2 = max(runs[1:], key=lambda r: r["model_tier"][3] + r["rule_tier"][3])
-    print(f"\nbest by F1: {best_f1['label']}   "
-          f"(rule {best_f1['rule_tier'][2]:.3f} / model {best_f1['model_tier'][2]:.3f})")
-    print(f"best by F2: {best_f2['label']}   "
-          f"(rule {best_f2['rule_tier'][3]:.3f} / model {best_f2['model_tier'][3]:.3f})")
+    best_f1 = max(runs[1:], key=lambda r: r["overall"][2])
+    best_f2 = max(runs[1:], key=lambda r: r["overall"][3])
+    print(f"\nbest by micro F1: {best_f1['label']}   "
+          f"({best_f1['overall'][2]:.4f})")
+    print(f"best by micro F2: {best_f2['label']}   "
+          f"({best_f2['overall'][3]:.4f})")
     if best_f1["label"] != best_f2["label"]:
         print("  they disagree: F2 weights recall 4x, so it prefers a lower")
         print("  threshold. Check the frozen corpus before following it --")

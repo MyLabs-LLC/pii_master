@@ -452,6 +452,41 @@ Two rows need their explanation attached rather than buried:
 - **`TAX_ID` 0.326 recall on 43 spans** is too thin to conclude anything from.
   It is reported rather than dropped so the thinness is visible.
 
+### 7.1a Pooled micro scores, and cost per document
+
+The tier split above is useful for attribution and useless as a headline, since
+the two tiers cover disjoint type sets and cannot be averaged. Pooled over all
+24 types, micro (each type weighted by the gold it has):
+
+| | P | R | **F1** | **F2** |
+|---|--:|--:|--:|--:|
+| rules only | 0.846 | 0.314 | **0.458** | **0.359** |
+| **deep (`l`) @0.50** | 0.955 | 0.914 | **0.934** | **0.922** |
+
+The rules' pooled recall of 0.314 is not a bug in the measurement: fourteen of
+the twenty-four types have no regex that can emit them, so every one of their
+gold spans is a miss by construction. That gap is what Stage 2 exists to close,
+and the pooled row is the only place it shows up as one number.
+
+**Cost per document, one core, `taskset -c 0`:**
+
+| document | fast (rules) | deep `m` | deep `l` |
+|---|--:|--:|--:|
+| 1 KB | 0.13 ms | 1.18 ms | 2.06 ms |
+| **10 KB** (the reference) | **0.69 ms** | **8.54 ms** | **15.51 ms** |
+| 100 KB | 7.64 ms | 124.71 ms | 207.46 ms |
+| peak RSS | 20 MB | 120 MB | 137 MB |
+
+p95, against a 5 ms budget for `fast` and 25 ms for `deep`. On the real
+Nemotron documents (854 characters mean) `l` costs **2.18 ms mean / 4.59 ms
+p95** end to end, rules included — the 10 KB row is a deliberately pessimistic
+reference size, not a typical one.
+
+Throughput on one core: roughly **65 documents/second** at Nemotron's document
+size, or **460 KB/s** of text at the 10 KB reference. Latency scales linearly
+with length, and the model reads every token — §7.8 and the windowing study
+explain why it has to.
+
 ### 7.1b The F1 and F2 optima disagree, and the frozen corpus breaks the tie
 
 Sweeping `min_confidence` on the `l` student, 3,000 holdout documents:

@@ -18,10 +18,12 @@ Nemotron-PII documents nobody in this repo authored:
 
 | | rules only | deep (`m`) | **deep (`l`)** |
 |---|--:|--:|--:|
-| span **F1** / **F2**, the 12 types rules cover | 0.796 / 0.769 | 0.935 / 0.921 | **0.940 / 0.927** |
-| span **F1** / **F2**, 14 types rules cannot emit | 0.000 / 0.000 | 0.914 / 0.902 | **0.930 / 0.918** |
-| 10 KB p95, one core | 0.70 ms | 7.99 ms | 14.80 ms |
-| peak RSS | 20 MB | 112 MB | 128 MB |
+| **micro F1**, all 24 types | 0.458 | 0.922 | **0.934** |
+| **micro F2**, all 24 types | 0.359 | 0.910 | **0.922** |
+| span F1, the 12 types rules cover | 0.796 | 0.935 | **0.940** |
+| span F1, 14 types rules cannot emit | 0.000 | 0.914 | **0.930** |
+| 10 KB p95, one core | 0.69 ms | 8.54 ms | 15.51 ms |
+| peak RSS | 20 MB | 120 MB | 137 MB |
 
 and at the level users actually act on — *does this document contain PII?* —
 measured on the same 3,000 documents:

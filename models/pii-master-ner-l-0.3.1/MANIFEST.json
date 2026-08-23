@@ -2,7 +2,7 @@
   "name": "pii-master-ner-l",
   "version": "0.3.1",
   "created": "2026-08-23",
-  "git_commit": "ef7cc1f126956a6d73bf3785180a8891c191ae52",
+  "git_commit": "177dd78fd24a8de589ce7ae16aad975d47083ac3",
   "format": "onnx-fp32",
   "files": {
     "model.onnx": {
@@ -66,16 +66,6 @@
       "f2": 0.9183263934179502
     },
     "per_type": {
-      "CREDIT_CARD": {
-        "gold": 380,
-        "tp": 41,
-        "fp": 26,
-        "fn": 339,
-        "precision": 0.6119,
-        "recall": 0.1079,
-        "f1": 0.1834,
-        "f2": 0.1292
-      },
       "DATE_DOB": {
         "gold": 403,
         "tp": 401,
@@ -85,6 +75,16 @@
         "recall": 0.995,
         "f1": 0.9938,
         "f2": 0.9945
+      },
+      "CREDIT_CARD": {
+        "gold": 380,
+        "tp": 41,
+        "fp": 26,
+        "fn": 339,
+        "precision": 0.6119,
+        "recall": 0.1079,
+        "f1": 0.1834,
+        "f2": 0.1292
       },
       "ACCOUNT_NUMBER": {
         "gold": 510,
@@ -176,16 +176,6 @@
         "f1": 0.9845,
         "f2": 0.9814
       },
-      "PERSON_NAME": {
-        "gold": 3019,
-        "tp": 2745,
-        "fp": 213,
-        "fn": 274,
-        "precision": 0.928,
-        "recall": 0.9092,
-        "f1": 0.9185,
-        "f2": 0.9129
-      },
       "ADDRESS": {
         "gold": 1568,
         "tp": 1414,
@@ -195,6 +185,16 @@
         "recall": 0.9018,
         "f1": 0.9306,
         "f2": 0.9131
+      },
+      "PERSON_NAME": {
+        "gold": 3019,
+        "tp": 2745,
+        "fp": 213,
+        "fn": 274,
+        "precision": 0.928,
+        "recall": 0.9092,
+        "f1": 0.9185,
+        "f2": 0.9129
       },
       "BANK_ROUTING": {
         "gold": 277,
@@ -246,16 +246,6 @@
         "f1": 0.869,
         "f2": 0.8182
       },
-      "SWIFT_BIC": {
-        "gold": 157,
-        "tp": 156,
-        "fp": 6,
-        "fn": 1,
-        "precision": 0.963,
-        "recall": 0.9936,
-        "f1": 0.9781,
-        "f2": 0.9873
-      },
       "FAX_NUMBER": {
         "gold": 211,
         "tp": 165,
@@ -265,6 +255,16 @@
         "recall": 0.782,
         "f1": 0.8505,
         "f2": 0.808
+      },
+      "SWIFT_BIC": {
+        "gold": 157,
+        "tp": 156,
+        "fp": 6,
+        "fn": 1,
+        "precision": 0.963,
+        "recall": 0.9936,
+        "f1": 0.9781,
+        "f2": 0.9873
       },
       "DATE_TIME": {
         "gold": 325,
@@ -307,7 +307,7 @@
         "f2": 0.3989
       }
     },
-    "p95_ms_per_doc": 5.029
+    "p95_ms_per_doc": 5.051
   },
   "document_scores": [
     {
