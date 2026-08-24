@@ -57,7 +57,17 @@ from pathlib import Path
 from .crosswalk import to_entity_type
 from .entities import CHECKSUMMED_TYPES, EntityType
 from .models import Entity
-from .validators import ipv4_ok, ipv6_ok, luhn_ok, ssn_ok
+from .validators import (
+    aba_ok,
+    ein_ok,
+    ipv4_ok,
+    ipv6_ok,
+    luhn_ok,
+    mac_ok,
+    ssn_ok,
+    swift_ok,
+    vin_ok,
+)
 
 MODEL_DIR_ENV = "PII_MASTER_MODEL_DIR"
 
@@ -96,6 +106,18 @@ def revalidate(entity_type: EntityType, text: str) -> bool:
         return "@" in text and "." in text.rsplit("@", 1)[-1]
     if entity_type is EntityType.URL:
         return "." in text or ":" in text
+    if entity_type is EntityType.BANK_ROUTING:
+        digits = "".join(c for c in text if c.isdigit())
+        return aba_ok(digits)
+    if entity_type is EntityType.VEHICLE_ID:
+        return vin_ok(text)
+    if entity_type is EntityType.SWIFT_BIC:
+        return swift_ok(text)
+    if entity_type is EntityType.MAC_ADDRESS:
+        return mac_ok(text)
+    if entity_type is EntityType.TAX_ID:
+        digits = "".join(c for c in text if c.isdigit())
+        return ein_ok(digits)
     return True
 
 

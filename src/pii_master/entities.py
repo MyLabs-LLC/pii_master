@@ -10,12 +10,13 @@ rather than a taxonomy accident:
   * **Rule types** (EMAIL ... US_DRIVER_LICENSE) are found by Stage 1 regex +
     validators. They are format-anchored or cue-anchored, and they ship in the
     zero-dependency default install.
-  * **Model types** (PERSON_NAME ... BIOMETRIC_ID) have no reliable regex --
-    that is exactly why docs/DESIGN.md section 8 specifies a learned tagger.
-    They are only ever populated by the Stage 2 detector, so a rules-only
-    install simply never emits them. :data:`MODEL_ONLY_TYPES` names them so
-    evaluation can report "not detectable in this configuration" rather than
-    silently scoring recall 0.
+  * **Model types** (PERSON_NAME ... BIOMETRIC_ID) were adopted for the
+    Stage 2 tagger. Take two added a gazetteer and checksum rules for a
+    subset of them (names, addresses, fax, routing, SWIFT, VIN, MAC, EIN);
+    :data:`MODEL_ONLY_TYPES` is what no rule can emit, so evaluation can
+    report "not detectable in this configuration" rather than scoring
+    recall 0. :data:`STAGE2_TYPES` is the historical Stage 2 set, used by
+    Nemotron eval scripts so holdout tables stay comparable.
 
 Adding a model type is a deliberate act: it needs a HIPAA row here, a risk
 weight, and a crosswalk entry in crosswalk.py. The four GDPR special-category
@@ -76,6 +77,19 @@ class DocLabel(IntEnum):
     PHI = 2
 
 
+class IdentifierKind(str, Enum):
+    """TAB / Papadopoulou et al. 2023 split: direct vs quasi identifiers.
+
+    Direct identifiers name or number a person on their own. Quasi
+    identifiers do not, but combinations of them do — Golle (2006) showed
+    gender + date of birth + ZIP uniquely identifies 63–78% of the US.
+    The classifier uses this to score *combinations*, not just sums.
+    """
+
+    DIRECT = "direct"
+    QUASI = "quasi"
+
+
 @dataclass(frozen=True)
 class EntityInfo:
     """Static classification metadata for one entity type.
@@ -83,12 +97,14 @@ class EntityInfo:
     phi_specific: the entity alone establishes health-context linkage (an MRN
     has no non-medical reading), so its presence makes a document PHI outright.
     weight: risk-score contribution per occurrence (see classify.py).
+    identifier_kind: direct vs quasi, for privacy-risk indicators.
     """
 
     is_pii: bool
     phi_specific: bool
     hipaa_category: str | None
     weight: float
+    identifier_kind: IdentifierKind = IdentifierKind.DIRECT
 
 
 TAXONOMY: dict[EntityType, EntityInfo] = {
@@ -111,10 +127,12 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.IP_ADDRESS: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#15 IP addresses", weight=5.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.DATE_DOB: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#3 Dates related to an individual", weight=15.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.MRN: EntityInfo(
         is_pii=True, phi_specific=True,
@@ -123,6 +141,7 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.URL: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#14 Web URLs", weight=5.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.ACCOUNT_NUMBER: EntityInfo(
         is_pii=True, phi_specific=False,
@@ -163,6 +182,7 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
         is_pii=True, phi_specific=False,
         hipaa_category="#2 Geographic subdivisions smaller than a state",
         weight=20.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     # A timestamp is only a HIPAA #3 identifier when it is tied to an
     # individual (admission, discharge, death). Weighted low precisely because
@@ -170,6 +190,7 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.DATE_TIME: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#3 Dates related to an individual", weight=5.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.FAX_NUMBER: EntityInfo(
         is_pii=True, phi_specific=False,
@@ -184,6 +205,7 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.SWIFT_BIC: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#10 Account numbers", weight=5.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.VEHICLE_ID: EntityInfo(
         is_pii=True, phi_specific=False,
@@ -192,10 +214,12 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     EntityType.DEVICE_ID: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#13 Device identifiers and serial numbers", weight=10.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     EntityType.MAC_ADDRESS: EntityInfo(
         is_pii=True, phi_specific=False,
         hipaa_category="#18 Other unique identifying number or code", weight=10.0,
+        identifier_kind=IdentifierKind.QUASI,
     ),
     # A national id is another country's SSN, so it carries SSN's weight.
     EntityType.NATIONAL_ID: EntityInfo(
@@ -216,10 +240,25 @@ TAXONOMY: dict[EntityType, EntityInfo] = {
     ),
 }
 
-# Types no rule can produce. A rules-only install never emits them, so
-# evaluation reports them as "undetectable in this configuration" instead of
-# scoring them as recall 0 (see evaluation.FUTURE_TYPES, which reads this).
+# Types no *rule* can produce. Take two added a gazetteer for names and
+# addresses and checksum detectors for fax / routing / SWIFT / VIN / MAC /
+# EIN, so those left this set. Evaluation reports remaining members as
+# "undetectable in this configuration" rather than scoring recall 0.
 MODEL_ONLY_TYPES: frozenset[EntityType] = frozenset({
+    EntityType.GEO_COORDINATE,
+    EntityType.DATE_TIME,
+    EntityType.DEVICE_ID,
+    EntityType.NATIONAL_ID,
+    EntityType.USER_ID,
+    EntityType.BIOMETRIC_ID,
+})
+
+assert MODEL_ONLY_TYPES <= set(TAXONOMY), "every model type needs a HIPAA row"
+
+# Types introduced with the Stage 2 student. Some now also have a rules
+# path; Nemotron eval scripts still group them as "model-tier" so the
+# committed holdout tables stay comparable across versions.
+STAGE2_TYPES: frozenset[EntityType] = frozenset({
     EntityType.PERSON_NAME,
     EntityType.ADDRESS,
     EntityType.GEO_COORDINATE,
@@ -235,8 +274,6 @@ MODEL_ONLY_TYPES: frozenset[EntityType] = frozenset({
     EntityType.USER_ID,
     EntityType.BIOMETRIC_ID,
 })
-
-assert MODEL_ONLY_TYPES <= set(TAXONOMY), "every model type needs a HIPAA row"
 
 #: Types whose Stage 1 validator is a checksum or a hard format parse: the Luhn
 #: mod-10 check, the never-issued SSN ranges, stdlib ``ipaddress``, and the
@@ -259,4 +296,9 @@ CHECKSUMMED_TYPES: frozenset[EntityType] = frozenset({
     EntityType.EMAIL,
     EntityType.IP_ADDRESS,
     EntityType.URL,
+    EntityType.BANK_ROUTING,
+    EntityType.VEHICLE_ID,
+    EntityType.SWIFT_BIC,
+    EntityType.MAC_ADDRESS,
+    EntityType.TAX_ID,
 })

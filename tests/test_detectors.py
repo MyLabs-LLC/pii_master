@@ -10,17 +10,24 @@ import pytest
 
 from pii_master.detectors import (
     AccountNumberDetector,
+    BankRoutingDetector,
     CreditCardDetector,
     DateOfBirthDetector,
     EmailDetector,
+    FaxNumberDetector,
+    GazetteerDetector,
     HealthPlanIdDetector,
     IpAddressDetector,
     Ipv6AddressDetector,
+    MacAddressDetector,
     MrnDetector,
     SsnDetector,
+    SwiftBicDetector,
+    TaxIdDetector,
     UrlDetector,
     UsDriverLicenseDetector,
     UsPhoneDetector,
+    VehicleIdDetector,
 )
 from pii_master.entities import EntityType
 
@@ -299,3 +306,123 @@ def test_health_plan_id(text, expected):
 )
 def test_us_driver_license(text, expected):
     check(UsDriverLicenseDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Wire via routing number 021000021 today",
+            [(EntityType.BANK_ROUTING, "021000021")],
+        ),
+        ("ABA 111000025 on the form", [(EntityType.BANK_ROUTING, "111000025")]),
+        ("routing number 021000022 fails checksum", []),
+        ("bare 021000021 without a cue", []),
+    ],
+)
+def test_bank_routing(text, expected):
+    check(BankRoutingDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "VIN 1HGCM82633A004352 on the title",
+            [(EntityType.VEHICLE_ID, "1HGCM82633A004352")],
+        ),
+        ("1HGCM82633A004353 is off by one", []),
+    ],
+)
+def test_vehicle_id(text, expected):
+    check(VehicleIdDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("SWIFT CHASUS33 for the wire", [(EntityType.SWIFT_BIC, "CHASUS33")]),
+        ("SWIFT DEUTDEFF on file", [(EntityType.SWIFT_BIC, "DEUTDEFF")]),
+        ("CHASUS33 without a cue still fires because it has a digit",
+         [(EntityType.SWIFT_BIC, "CHASUS33")]),
+        ("DEUTDEFF without a cue is an English-shaped token", []),
+        ("SOFTWARE release notes are not a BIC", []),
+        ("for tax withholding the SSN is listed", []),
+    ],
+)
+def test_swift_bic(text, expected):
+    check(SwiftBicDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "NIC 00:1A:2B:3C:4D:5E on the VLAN",
+            [(EntityType.MAC_ADDRESS, "00:1A:2B:3C:4D:5E")],
+        ),
+        (
+            "NIC 00-1A-2B-3C-4D-5E hyphenated",
+            [(EntityType.MAC_ADDRESS, "00-1A-2B-3C-4D-5E")],
+        ),
+        ("mixed 00:1A-2B:3C:4D:5E rejected", []),
+    ],
+)
+def test_mac_address(text, expected):
+    check(MacAddressDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Office fax (415) 555-2671 is on the letterhead",
+            [(EntityType.FAX_NUMBER, "(415) 555-2671")],
+        ),
+        ("facsimile 415.555.2671 listed", [(EntityType.FAX_NUMBER, "415.555.2671")]),
+        ("Call (415) 555-2671 now", []),  # phone, not fax
+    ],
+)
+def test_fax_number(text, expected):
+    check(FaxNumberDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Employer EIN 12-3456789 on the W-9", [(EntityType.TAX_ID, "12-3456789")]),
+        ("EIN 123456789 compact", [(EntityType.TAX_ID, "123456789")]),
+        ("EIN 00-3456789 never-issued prefix", []),
+        ("bare 12-3456789 looks like a date-ish id", []),
+    ],
+)
+def test_tax_id(text, expected):
+    check(TaxIdDetector(), text, expected)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "Applicant Jane Doe entered the lottery",
+            [(EntityType.PERSON_NAME, "Jane Doe")],
+        ),
+        (
+            "for John Q. Patient the dosage is unchanged",
+            [(EntityType.PERSON_NAME, "John Q. Patient")],
+        ),
+        (
+            "Dr. Jane Doe signed the note",
+            [(EntityType.PERSON_NAME, "Jane Doe")],
+        ),
+        (
+            "statements mail to 44 Elm Street, Springfield",
+            [(EntityType.ADDRESS, "44 Elm Street, Springfield")],
+        ),
+        # Single capitalised gazetteer tokens are not names.
+        ("The Young team meets in Park Hall after the May review.", []),
+        ("Jane went to the store", []),
+    ],
+)
+def test_gazetteer(text, expected):
+    check(GazetteerDetector(), text, expected)

@@ -50,12 +50,22 @@ class DocumentReport:
     entities: list[Entity] = field(default_factory=list)
     counts: dict[str, int] = field(default_factory=dict)
     reasons: list[str] = field(default_factory=list)
+    # Papadopoulou et al. 2023 privacy-risk indicators. Combinations of
+    # identifiers, not just the sum of their weights — Golle (2006) /
+    # HIPAA Safe Harbor's reason for treating {DOB, geo, name} as jointly
+    # identifying even when no single field is.
+    direct_count: int = 0
+    quasi_count: int = 0
+    reidentification_combos: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
             "label": self.label.name,
             "risk_score": round(self.risk_score, 2),
             "counts": self.counts,
+            "direct_count": self.direct_count,
+            "quasi_count": self.quasi_count,
+            "reidentification_combos": self.reidentification_combos,
             "reasons": self.reasons,
             "entities": [e.to_dict() for e in self.entities],
         }

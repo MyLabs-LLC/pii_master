@@ -37,13 +37,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 from pii_master.crosswalk import to_entity_type  # noqa: E402
-from pii_master.entities import MODEL_ONLY_TYPES, EntityType  # noqa: E402
+from pii_master.entities import STAGE2_TYPES, EntityType  # noqa: E402
 from pii_master.evaluation import TypeScore  # noqa: E402
 from pii_master.ner import OnnxNerDetector, merge_adjacent  # noqa: E402
 from pii_master.pipeline import Pipeline  # noqa: E402
 from pii_master.detectors import default_detectors  # noqa: E402
 
-MODEL_TIER = {t.value for t in MODEL_ONLY_TYPES}
+MODEL_TIER = {t.value for t in STAGE2_TYPES}
 
 
 def parse_spans(raw):

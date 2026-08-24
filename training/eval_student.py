@@ -47,7 +47,7 @@ from model import LADDER, StudentConfig, StudentTagger  # noqa: E402
 
 from pii_master.classify import scan_text  # noqa: E402
 from pii_master.crosswalk import RULE_MAPPED_LABELS, to_entity_type  # noqa: E402
-from pii_master.entities import CHECKSUMMED_TYPES, MODEL_ONLY_TYPES  # noqa: E402
+from pii_master.entities import CHECKSUMMED_TYPES, STAGE2_TYPES  # noqa: E402
 from pii_master.evaluation import TypeScore  # noqa: E402
 from pii_master.ner import revalidate as revalidate_span  # noqa: E402
 
@@ -56,7 +56,7 @@ TEACHER_ID = "kalyan-ks/ettin-68m-nemotron-pii"
 # re-validation in pii_master/ner.py read the same two constants, so a policy
 # measured here is the policy that ships.
 CHECKSUMMED = {t.value for t in CHECKSUMMED_TYPES}
-MODEL_TIER = {t.value for t in MODEL_ONLY_TYPES}
+MODEL_TIER = {t.value for t in STAGE2_TYPES}
 FUSIONS = ("fusion_rules_first", "fusion_checksum_first", "fusion_longest_wins")
 
 

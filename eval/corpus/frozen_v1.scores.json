@@ -1,6 +1,7 @@
 {
   "doc_accuracy": 1.0,
   "phi_recall": 1.0,
+  "doc_leakage_rate": 0.0,
   "span_exact": {
     "ACCOUNT_NUMBER": {
       "precision": 1.0,
@@ -9,10 +10,16 @@
       "f2": 1.0
     },
     "ADDRESS": {
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
-      "f2": 0.0
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "BANK_ROUTING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
     },
     "CREDIT_CARD": {
       "precision": 1.0,
@@ -32,6 +39,12 @@
       "f1": 1.0,
       "f2": 1.0
     },
+    "FAX_NUMBER": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
     "HEALTH_PLAN_ID": {
       "precision": 1.0,
       "recall": 1.0,
@@ -44,6 +57,12 @@
       "f1": 1.0,
       "f2": 1.0
     },
+    "MAC_ADDRESS": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
     "MRN": {
       "precision": 1.0,
       "recall": 1.0,
@@ -51,10 +70,10 @@
       "f2": 1.0
     },
     "PERSON_NAME": {
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
-      "f2": 0.0
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
     },
     "PHONE_US": {
       "precision": 1.0,
@@ -68,6 +87,18 @@
       "f1": 1.0,
       "f2": 1.0
     },
+    "SWIFT_BIC": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "TAX_ID": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
     "URL": {
       "precision": 1.0,
       "recall": 1.0,
@@ -75,6 +106,12 @@
       "f2": 1.0
     },
     "US_DRIVER_LICENSE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "VEHICLE_ID": {
       "precision": 1.0,
       "recall": 1.0,
       "f1": 1.0,

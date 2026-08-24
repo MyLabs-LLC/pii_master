@@ -1,12 +1,17 @@
 import pytest
 
 from pii_master.validators import (
+    aba_ok,
     card_iin_known,
+    ein_ok,
     ipv4_ok,
     luhn_ok,
+    mac_ok,
     nanp_ok,
     plausible_dob,
     ssn_ok,
+    swift_ok,
+    vin_ok,
 )
 
 
@@ -99,3 +104,72 @@ def test_ipv4_ok(candidate, expected):
 )
 def test_plausible_dob(year, month, day, expected):
     assert plausible_dob(year, month, day) is expected
+
+
+@pytest.mark.parametrize(
+    "digits,expected",
+    [
+        ("021000021", True),   # Chase
+        ("111000025", True),   # Bank of America
+        ("021000022", False),  # last digit off
+        ("02100002", False),   # too short
+        ("abcdefghi", False),
+    ],
+)
+def test_aba_ok(digits, expected):
+    assert aba_ok(digits) is expected
+
+
+@pytest.mark.parametrize(
+    "vin,expected",
+    [
+        ("1HGCM82633A004352", True),
+        ("1M8GDM9AXKP042788", True),
+        ("1HGCM82633A004353", False),
+        ("1HGCM82633A00435", False),
+        ("1HGCM82633I004352", False),  # I is not a VIN character
+    ],
+)
+def test_vin_ok(vin, expected):
+    assert vin_ok(vin) is expected
+
+
+@pytest.mark.parametrize(
+    "code,expected",
+    [
+        ("CHASUS33", True),
+        ("DEUTDEFF", True),
+        ("DEUTDEFFXXX", True),
+        ("SOFTWARE", True),   # structurally valid; the detector must reject it
+        ("NOPE", False),
+        ("CHASUS3", False),
+    ],
+)
+def test_swift_ok(code, expected):
+    assert swift_ok(code) is expected
+
+
+@pytest.mark.parametrize(
+    "addr,expected",
+    [
+        ("00:1A:2B:3C:4D:5E", True),
+        ("00-1A-2B-3C-4D-5E", True),
+        ("00:1A-2B:3C:4D:5E", False),
+        ("00:1A:2B:3C:4D", False),
+        ("00:1A:2B:3C:4D:5G", False),
+    ],
+)
+def test_mac_ok(addr, expected):
+    assert mac_ok(addr) is expected
+
+
+@pytest.mark.parametrize(
+    "digits,expected",
+    [
+        ("123456789", True),   # prefix 12 is issued
+        ("003456789", False),  # prefix 00 is never issued
+        ("12345678", False),
+    ],
+)
+def test_ein_ok(digits, expected):
+    assert ein_ok(digits) is expected

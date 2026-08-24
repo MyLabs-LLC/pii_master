@@ -5,9 +5,25 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 
-from .entities import TAXONOMY, DocLabel, EntityType
+from .entities import TAXONOMY, DocLabel, EntityType, IdentifierKind
 from .models import DocumentReport, Entity
 from .pipeline import Pipeline, deep_pipeline
+
+# Combinations the sanitization literature treats as jointly identifying
+# even when no single field is. Papadopoulou et al. 2023 call this the
+# "span classification / combination" privacy-risk indicator; the classic
+# measurement is Golle (2006): gender + DOB + ZIP IDs 63–78% of the US.
+# We do not have gender or ZIP as first-class types, so the nearest
+# shippable triples use PERSON_NAME / DATE_DOB / ADDRESS / PHONE_US.
+_REID_COMBOS: tuple[tuple[str, frozenset[EntityType], float], ...] = (
+    ("name+dob+address", frozenset({
+        EntityType.PERSON_NAME, EntityType.DATE_DOB, EntityType.ADDRESS,
+    }), 20.0),
+    ("name+dob", frozenset({EntityType.PERSON_NAME, EntityType.DATE_DOB}), 12.0),
+    ("name+address", frozenset({EntityType.PERSON_NAME, EntityType.ADDRESS}), 12.0),
+    ("dob+address", frozenset({EntityType.DATE_DOB, EntityType.ADDRESS}), 12.0),
+    ("dob+phone", frozenset({EntityType.DATE_DOB, EntityType.PHONE_US}), 8.0),
+)
 
 # v1 stand-in for real health-context modeling (replaced at Stage 2/3).
 #
@@ -136,9 +152,37 @@ class DocumentClassifier:
                 f"{entity_type.value} x{len(found)} contributes "
                 f"{round(contribution, 1)} to risk"
             )
+
+        present = set(by_type)
+        combos: list[str] = []
+        # Longest (highest-bonus) combo first; skip a pair that is already
+        # covered by a triple so the report does not double-count Golle.
+        covered: set[frozenset[EntityType]] = set()
+        for name, needed, bonus in _REID_COMBOS:
+            if not needed <= present:
+                continue
+            if any(needed <= prev for prev in covered):
+                continue
+            combos.append(name)
+            covered.add(needed)
+            score += bonus
+            reasons.append(
+                f"re-identification combination {name} contributes "
+                f"{bonus:.0f} to risk (Papadopoulou et al. 2023 / Golle 2006)"
+            )
+
         if label is DocLabel.PHI:
             score += self.PHI_BONUS
         score = max(0.0, min(100.0, score))
+
+        direct = sum(
+            1 for e in entities
+            if TAXONOMY[e.type].identifier_kind is IdentifierKind.DIRECT
+        )
+        quasi = sum(
+            1 for e in entities
+            if TAXONOMY[e.type].identifier_kind is IdentifierKind.QUASI
+        )
 
         return DocumentReport(
             label=label,
@@ -146,6 +190,9 @@ class DocumentClassifier:
             entities=entities,
             counts={t.value: len(found) for t, found in sorted(by_type.items())},
             reasons=reasons,
+            direct_count=direct,
+            quasi_count=quasi,
+            reidentification_combos=combos,
         )
 
 
