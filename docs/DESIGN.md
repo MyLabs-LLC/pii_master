@@ -1,11 +1,12 @@
 # pii_master — Design & Roadmap
 
-**Status:** v0.3 (M2) — Stage 1 hardened; evaluation + benchmark harnesses and a measured
+**Status:** v0.4 — Stage 1 hardened; evaluation + benchmark harnesses and a measured
 baseline (docs/BASELINE_M1.md) committed, plus an **external** baseline on a
 Nemotron-PII holdout (docs/BASELINE_NEMOTRON.md). **Stage 2 is built and shipped
 behind `--deep`**: distilled, exported, fused, and measured — docs/DISTILLATION_PLAN.md,
 docs/DISTILLATION_RESULTS.md, docs/STAGE2_INTEGRATION.md.
-Post-M1 review and sequenced next steps: docs/IMPROVEMENT_PLAN.md.
+Post-M1 review: docs/IMPROVEMENT_PLAN.md. Take two (gazetteer + structure
+validators + privacy-risk indicators): docs/TAKE_TWO.md.
 **Production constraint:** inference must run on **1 CPU core / 4 GB RAM** and finish in
 **5 ms per document (p95), end-to-end**. Training may use a GPU.
 
@@ -205,7 +206,9 @@ v1 types (implemented in `src/pii_master/entities.py`):
 | `HEALTH_PLAN_ID` | yes | **yes** | #9 | cue-anchored regex (health-flavored cues only) | 0.80 |
 | `US_DRIVER_LICENSE` | yes | no | #11 | cue-anchored regex | 0.80 |
 
-v0.3 model-tier types (`--deep` only; `entities.MODEL_ONLY_TYPES`). None is
+v0.3 model-tier types (originally `--deep` only; `entities.STAGE2_TYPES`).
+Take two added a rules path for names, addresses, fax, routing, SWIFT, VIN,
+MAC and EIN; `MODEL_ONLY_TYPES` is what no rule can emit. None is
 `phi_specific` — a name or an address is an identifier in any context, so
 adopting them widens PII coverage without widening what may be called PHI:
 

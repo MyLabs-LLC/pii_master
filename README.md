@@ -57,10 +57,14 @@ Stage 2: the **[distillation plan](docs/DISTILLATION_PLAN.md)**, its
 **[measured results](docs/DISTILLATION_RESULTS.md)**, and the
 **[integration results](docs/STAGE2_INTEGRATION.md)**. Also: the
 **[Nemotron tag survey](docs/NEMOTRON_PII_TAGS.md)**, the
-**[post-M1 review](docs/IMPROVEMENT_PLAN.md)**, and a
-**[survey of prior art](docs/PRIOR_ART.md)**.
+**[post-M1 review](docs/IMPROVEMENT_PLAN.md)**, a
+**[survey of prior art](docs/PRIOR_ART.md)**, and
+**[take two](docs/TAKE_TWO.md)** (gazetteer + privacy-risk indicators).
 
-**Status:** v0.3 (milestone M2) — Stage 2 shipped behind `--deep`.
+**Status:** v0.4 — Stage 2 still ships behind `--deep`. Take two adds a
+gazetteer + checksum rules path for names, addresses, and the structured
+types that used to be model-only, and scores identifier *combinations*
+(docs/TAKE_TWO.md).
 
 ## Quickstart
 
@@ -243,11 +247,14 @@ payment network would issue.
 **Rules tier** (both modes) — `EMAIL`, `PHONE_US`, `SSN`,
 `CREDIT_CARD` (Luhn-validated), `IP_ADDRESS` (v4 + v6), `URL`,
 `DATE_DOB` (birth-cue anchored), `MRN`, `ACCOUNT_NUMBER`, `HEALTH_PLAN_ID`,
-`US_DRIVER_LICENSE` (cue anchored).
+`US_DRIVER_LICENSE` (cue anchored), plus the take-two additions:
+`BANK_ROUTING` (ABA checksum), `VEHICLE_ID` (VIN check digit),
+`SWIFT_BIC`, `MAC_ADDRESS`, `FAX_NUMBER` (fax-cue + NANP), `TAX_ID` (EIN),
+and a context-gated gazetteer for `PERSON_NAME` / `ADDRESS`.
 
-**Model tier** (`--deep` only) — `PERSON_NAME`, `ADDRESS`, `GEO_COORDINATE`,
-`DATE_TIME`, `FAX_NUMBER`, `BANK_ROUTING`, `SWIFT_BIC`, `VEHICLE_ID`,
-`DEVICE_ID`, `MAC_ADDRESS`, `NATIONAL_ID`, `TAX_ID`, `USER_ID`, `BIOMETRIC_ID`.
+**Model tier** (`--deep` only) — the same types at higher recall, plus
+`GEO_COORDINATE`, `DATE_TIME`, `DEVICE_ID`, `NATIONAL_ID`, `USER_ID`,
+`BIOMETRIC_ID` that no rule can emit.
 
 Every type maps to one of the 18 HIPAA Safe Harbor identifier categories
 (`entities.TAXONOMY`), and reports cite the row. Two Nemotron label groups are

@@ -43,16 +43,16 @@ def test_evaluate_exact_hit():
 def test_evaluate_undetectable_type_counts_as_fn():
     docs = [
         CorpusDoc(
-            "d1", "PII", "Applicant Jane Doe, SSN 123-45-6789.",
+            "d1", "PII", "Biometric id AB12 on file, SSN 123-45-6789.",
             [
-                GoldEntity("PERSON_NAME", 10, 18, "Jane Doe"),
-                GoldEntity("SSN", 24, 35, "123-45-6789"),
+                GoldEntity("BIOMETRIC_ID", 13, 17, "AB12"),
+                GoldEntity("SSN", 31, 42, "123-45-6789"),
             ],
         )
     ]
     report = evaluate(docs)
-    assert report.exact["PERSON_NAME"].fn == 1
-    assert report.exact["PERSON_NAME"].recall == 0.0
+    assert report.exact["BIOMETRIC_ID"].fn == 1
+    assert report.exact["BIOMETRIC_ID"].recall == 0.0
     assert report.exact["SSN"].tp == 1
 
 
@@ -95,13 +95,14 @@ def test_render_is_text(tmp_path):
     out = evaluate(docs).render()
     assert "Document-level" in out
     assert "PHI recall" in out
+    assert "leakage" in out
 
 
 def test_error_taxonomy_classes():
     docs = [
-        # undetectable: no detector can emit PERSON_NAME yet
-        CorpusDoc("d1", "PII", "Applicant Jane Doe applied.",
-                  [GoldEntity("PERSON_NAME", 10, 18, "Jane Doe")]),
+        # undetectable: no rule can emit BIOMETRIC_ID
+        CorpusDoc("d1", "PII", "Biometric id AB12 on file.",
+                  [GoldEntity("BIOMETRIC_ID", 13, 17, "AB12")]),
         # boundary: right type, gold span one char wider
         CorpusDoc("d2", "PII", "The form lists SSN 123-45-6789 today.",
                   [GoldEntity("SSN", 18, 30, " 123-45-6789")]),
@@ -239,6 +240,44 @@ def test_f2_is_gated_by_fail_under_like_every_other_metric():
                                     "f1": 0.89, "f2": 0.83}}}
     drops = compare_scores(worse, baseline)
     assert any("SSN.f2" in line for line in drops), drops
+
+
+def test_document_leakage_counts_a_missed_detectable_span():
+    """TAB / PRIOR_ART: one missed identifier makes the document unsafe."""
+    leaked = [
+        CorpusDoc("d1", "PII", "The form lists SSN 123-45-6789 today.",
+                  [GoldEntity("SSN", 19, 30, "123-45-6789"),
+                   GoldEntity("EMAIL", 0, 3, "The")]),
+    ]
+    report = evaluate(leaked)
+    assert report.docs_with_gold == 1
+    assert report.docs_leaked == 1
+    assert report.doc_leakage_rate == 1.0
+
+    clean = [
+        CorpusDoc("d1", "PII", "The form lists SSN 123-45-6789 today.",
+                  [GoldEntity("SSN", 19, 30, "123-45-6789")]),
+    ]
+    assert evaluate(clean).doc_leakage_rate == 0.0
+
+    # A model-only type does not count as leakage on the rules path.
+    excused = [
+        CorpusDoc("d1", "PII", "The form lists SSN 123-45-6789 today.",
+                  [GoldEntity("SSN", 19, 30, "123-45-6789"),
+                   GoldEntity("BIOMETRIC_ID", 4, 8, "form")]),
+    ]
+    assert evaluate(excused).doc_leakage_rate == 0.0
+
+
+def test_leakage_rise_is_a_regression_drop_is_not():
+    from pii_master.evaluation import compare_scores
+
+    base = {"doc_accuracy": 1.0, "phi_recall": 1.0, "doc_leakage_rate": 0.1,
+            "span_exact": {}}
+    worse = {**base, "doc_leakage_rate": 0.4}
+    better = {**base, "doc_leakage_rate": 0.0}
+    assert any("doc_leakage_rate" in line for line in compare_scores(worse, base))
+    assert compare_scores(better, base) == []
 
 
 def test_a_baseline_written_before_f2_existed_still_works():

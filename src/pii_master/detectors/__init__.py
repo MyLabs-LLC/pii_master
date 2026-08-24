@@ -5,9 +5,18 @@ from __future__ import annotations
 from .base import CueAnchoredIdDetector, Detector, RegexDetector
 from .contact import EmailDetector, UsPhoneDetector
 from .financial import AccountNumberDetector, CreditCardDetector
+from .gazetteer import GazetteerDetector
 from .government import SsnDetector, UsDriverLicenseDetector
 from .medical import DateOfBirthDetector, HealthPlanIdDetector, MrnDetector
 from .network import IpAddressDetector, Ipv6AddressDetector, UrlDetector
+from .structure import (
+    BankRoutingDetector,
+    FaxNumberDetector,
+    MacAddressDetector,
+    SwiftBicDetector,
+    TaxIdDetector,
+    VehicleIdDetector,
+)
 
 __all__ = [
     "Detector",
@@ -25,6 +34,13 @@ __all__ = [
     "DateOfBirthDetector",
     "HealthPlanIdDetector",
     "MrnDetector",
+    "BankRoutingDetector",
+    "VehicleIdDetector",
+    "SwiftBicDetector",
+    "MacAddressDetector",
+    "FaxNumberDetector",
+    "TaxIdDetector",
+    "GazetteerDetector",
     "default_detectors",
 ]
 
@@ -48,4 +64,11 @@ def default_detectors() -> list[Detector]:
         DateOfBirthDetector(),
         HealthPlanIdDetector(),
         MrnDetector(),
+        BankRoutingDetector(),
+        VehicleIdDetector(),
+        SwiftBicDetector(),
+        MacAddressDetector(),
+        FaxNumberDetector(),
+        TaxIdDetector(),
+        GazetteerDetector(),
     ]

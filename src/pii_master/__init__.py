@@ -9,11 +9,11 @@ See docs/DESIGN.md for the architecture and roadmap. Quick start:
 """
 
 from .classify import DocumentClassifier, default_pipeline, scan_text
-from .entities import DocLabel, EntityType
+from .entities import DocLabel, EntityType, IdentifierKind
 from .models import DocumentReport, Entity
 from .pipeline import Pipeline, deep_pipeline, fusion_rank
 
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 __all__ = [
     "DocLabel",
@@ -21,6 +21,7 @@ __all__ = [
     "DocumentReport",
     "Entity",
     "EntityType",
+    "IdentifierKind",
     "Pipeline",
     "deep_pipeline",
     "default_pipeline",

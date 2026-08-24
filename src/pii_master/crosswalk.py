@@ -23,7 +23,7 @@ separately.
 
 from __future__ import annotations
 
-from .entities import MODEL_ONLY_TYPES, EntityType
+from .entities import STAGE2_TYPES, EntityType
 
 # The 12 labels the Stage 1 rules tier targets. Two caveats, both deliberate
 # and measured:
@@ -124,8 +124,8 @@ ALL_UNMODELLED: frozenset[str] = frozenset(
 )
 
 assert not (set(NEMOTRON_TO_ENTITY) & ALL_UNMODELLED), "a label cannot be both"
-assert set(MODEL_MAPPED.values()) <= MODEL_ONLY_TYPES, (
-    "a label adopted for the model tier must be declared model-only"
+assert set(MODEL_MAPPED.values()) <= STAGE2_TYPES, (
+    "a label adopted at Stage 2 must be declared in STAGE2_TYPES"
 )
 
 

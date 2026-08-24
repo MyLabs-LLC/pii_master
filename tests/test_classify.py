@@ -127,3 +127,32 @@ def test_report_round_trips_through_json():
     assert payload["counts"]["MRN"] == 1
     types = {e["type"] for e in payload["entities"]}
     assert types == {"DATE_DOB", "MRN"}
+
+
+def test_name_plus_dob_is_a_reidentification_combo():
+    """Papadopoulou / Golle: name + DOB is jointly identifying."""
+    report = scan_text(
+        "Applicant Jane Doe, DOB: 03/14/1985, entered the housing lottery."
+    )
+    assert report.label is DocLabel.PII
+    assert "name+dob" in report.reidentification_combos
+    assert report.direct_count >= 1
+    assert report.quasi_count >= 1
+    assert any("re-identification combination" in r for r in report.reasons)
+
+
+def test_triple_combo_does_not_also_count_its_pairs():
+    report = scan_text(
+        "Jane Doe of 44 Elm Street, Springfield, DOB: 03/14/1985."
+    )
+    assert "name+dob+address" in report.reidentification_combos
+    assert "name+dob" not in report.reidentification_combos
+    assert "name+address" not in report.reidentification_combos
+
+
+def test_identifier_kind_marks_dob_as_quasi_and_ssn_as_direct():
+    from pii_master.entities import TAXONOMY, EntityType, IdentifierKind
+
+    assert TAXONOMY[EntityType.DATE_DOB].identifier_kind is IdentifierKind.QUASI
+    assert TAXONOMY[EntityType.SSN].identifier_kind is IdentifierKind.DIRECT
+    assert TAXONOMY[EntityType.PERSON_NAME].identifier_kind is IdentifierKind.DIRECT

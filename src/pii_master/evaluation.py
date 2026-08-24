@@ -179,6 +179,8 @@ class EvalReport:
     confusion: dict[str, dict[str, int]] = field(default_factory=dict)
     doc_count: int = 0
     doc_correct: int = 0
+    docs_with_gold: int = 0
+    docs_leaked: int = 0
     mislabeled: list[dict] = field(default_factory=list)
     errors: list[dict] = field(default_factory=list)
 
@@ -192,6 +194,18 @@ class EvalReport:
         return self.confusion.get("PHI", {}).get("PHI", 0) / gold_phi if gold_phi else 0.0
 
     @property
+    def doc_leakage_rate(self) -> float:
+        """Fraction of identifier-bearing documents that missed ≥1 gold span.
+
+        Pilán et al. (TAB, CL 2022) and PRIOR_ART.md §5.4: an entity is only
+        protected if every mention is found, and aggregate F1 hides the
+        operational failure — one miss makes a whole document unsafe. This
+        is that number. Detectable gold only: a type in ``undetectable``
+        cannot leak because this configuration was never asked to find it.
+        """
+        return self.docs_leaked / self.docs_with_gold if self.docs_with_gold else 0.0
+
+    @property
     def error_histogram(self) -> dict[str, int]:
         counts = {k: 0 for k in ERROR_CLASSES}
         for err in self.errors:
@@ -203,6 +217,7 @@ class EvalReport:
             "documents": self.doc_count,
             "doc_accuracy": round(self.doc_accuracy, 4),
             "phi_recall": round(self.phi_recall, 4),
+            "doc_leakage_rate": round(self.doc_leakage_rate, 4),
             "confusion": self.confusion,
             "mislabeled": self.mislabeled,
             "error_histogram": self.error_histogram,
@@ -220,6 +235,7 @@ class EvalReport:
         return {
             "doc_accuracy": round(self.doc_accuracy, 4),
             "phi_recall": round(self.phi_recall, 4),
+            "doc_leakage_rate": round(self.doc_leakage_rate, 4),
             "span_exact": {
                 t: {
                     "precision": round(sc.precision, 4),
@@ -270,6 +286,7 @@ class EvalReport:
         lines.append(
             f"documents: {self.doc_count}   accuracy: {self.doc_accuracy:.2f}"
             f"   PHI recall: {self.phi_recall:.2f}"
+            f"   leakage: {self.doc_leakage_rate:.2f}"
         )
         for m in self.mislabeled:
             lines.append(f"  mislabeled: {m['id']} gold={m['gold']} predicted={m['predicted']}")
@@ -398,6 +415,20 @@ def evaluate(
             report.mislabeled.append(
                 {"id": doc.id, "gold": doc.label, "predicted": result.label.name}
             )
+        detectable_gold = [g for g in doc.entities if g.type not in undetectable]
+        if detectable_gold:
+            report.docs_with_gold += 1
+            pred_keys = set(predicted)
+            leaked = any(
+                (g.type, g.start, g.end) not in pred_keys
+                and not any(
+                    g.type == p[0] and g.start < p[2] and p[1] < g.end
+                    for p in predicted
+                )
+                for g in detectable_gold
+            )
+            if leaked:
+                report.docs_leaked += 1
     return report
 
 
@@ -413,6 +444,10 @@ def compare_scores(current: dict, baseline: dict, tolerance: float = 1e-6) -> li
         was, now = baseline.get(key), current.get(key)
         if was is not None and now is not None and now < was - tolerance:
             drops.append(f"{key}: {was:.4f} -> {now:.4f}")
+    # Leakage is inverted: a rise is the regression.
+    was, now = baseline.get("doc_leakage_rate"), current.get("doc_leakage_rate")
+    if was is not None and now is not None and now > was + tolerance:
+        drops.append(f"doc_leakage_rate: {was:.4f} -> {now:.4f}")
     for entity_type, base in sorted(baseline.get("span_exact", {}).items()):
         cur = current.get("span_exact", {}).get(entity_type)
         if cur is None:

@@ -25,6 +25,7 @@ def load():
 
 
 def nemotron_labels():
+    pytest.importorskip("torch")
     path = pathlib.Path(__file__).resolve().parents[1] / "training" / "data.py"
     spec = importlib.util.spec_from_file_location("_data", path)
     module = importlib.util.module_from_spec(spec)
