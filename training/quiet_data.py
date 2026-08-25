@@ -64,10 +64,32 @@ from training.priority_data import (
 TRAIN_ROOT = Path("/home/lence/workspace/data/1-train")
 EVAL_ROOT = Path("/home/lence/workspace/data/2-eval")
 
+#: Corpora whose ``gold`` field is an exhaustive sensitive-tag catalogue, so a
+#: row listing no tag is a genuine negative rather than an unannotated one.
+#:
+#: This is declared, not inferred. ``priority_data.normalize_row`` infers it
+#: from ``dataset_dir.name.startswith("pii")`` -- and on 2026-08-25 an external
+#: pass renamed every dataset directory to a ``<rows>_<name>_<positives>``
+#: convention, so ``pii2_eval_30k`` became ``30000_pii2_eval_25.15k``. The
+#: prefix stopped matching, every unlabelled row silently became "unknown"
+#: instead of "negative", and 54,812 of the run's 70,600 negatives vanished
+#: without raising anything. A property of a corpus must not live in its
+#: folder name.
+COMPLETE_CATALOGUE_STEMS = frozenset({
+    "pii2_train", "pii2_eval",
+    "pii_trainset", "pii_holdout",
+    "ai4privacy_pii_masking_train", "ai4privacy_pii_masking_eval",
+    "betterdataai_ner_silver_train", "betterdataai_ner_silver_eval",
+    "openpii_pii_train", "openpii_pii_eval",
+})
+
 #: Directories whose rows carry judge entity/class/sensitivity fields.
+#: Matched by stem, not by literal name, for the reason in
+#: COMPLETE_CATALOGUE_STEMS -- these folder names carry row counts that an
+#: external pass rewrites, and a literal match silently stops matching.
 JUDGE_ASSERTED = (
-    "16000_datax-dualjudge-trainset-5.37k",
-    "26095_govdocs2-dualjudge-train80-14.25k",
+    "15986_datax-dualjudge-trainset-5.36k",
+    "23693_govdocs2-dualjudge-train80-12.86k",
     "4000_datax-dualjudge-evalset-1.32k",
     "6589_govdocs2-dualjudge-eval20-3.53k",
 )
@@ -83,6 +105,57 @@ COLLAPSE: dict[str, str] = {
     "sensitive_pii_middle_name": "sensitive_pii_full_name",
     "sensitive_pii_street_number_and_name": "sensitive_pii_address",
 }
+
+
+def _stems(names: tuple[str, ...]) -> frozenset[str]:
+    return frozenset(canonical_stem(n) for n in names)
+
+
+def canonical_stem(name: str) -> str:
+    """Corpus identity, independent of the size counters in its folder name.
+
+    ``30000_pii2_eval_25.15k`` and ``pii2_eval_30k`` are the same corpus; the
+    numbers are bookkeeping that an external pass rewrites. Strips a leading
+    row-count token and any trailing size token joined by ``_`` or ``-``.
+    """
+    def _size(tok: str) -> bool:
+        return bool(tok) and tok.rstrip("k").replace(".", "").isdigit()
+
+    parts = [p for p in name.split("_") if p]
+    if parts and _size(parts[0]):
+        parts = parts[1:]
+    if parts and _size(parts[-1]):
+        parts = parts[:-1]
+    stem = "_".join(parts)
+    head, sep, tail = stem.rpartition("-")
+    if sep and _size(tail):
+        stem = head
+    return stem
+
+
+def resolve_dataset(name: str, root: Path | None = None) -> Path:
+    """Find the directory currently holding a corpus, whatever it is called now.
+
+    Canonical names are the run's identity -- the cache, the suite and the
+    frozen snapshot are all keyed by them -- so a directory rename must not
+    break a run in flight. Matching is on the stem, and an ambiguous match is an
+    error rather than a guess.
+    """
+    stem = canonical_stem(name)
+    roots = [root] if root is not None else [TRAIN_ROOT, EVAL_ROOT]
+    hits = [d for r in roots if r.is_dir() for d in r.iterdir()
+            if d.is_dir() and canonical_stem(d.name) == stem]
+    if len(hits) == 1:
+        return hits[0]
+    if not hits:
+        raise FileNotFoundError(
+            f"no directory matches corpus stem {stem!r} under {[str(r) for r in roots]}")
+    raise ValueError(f"corpus stem {stem!r} matches {len(hits)} directories: "
+                     f"{[d.name for d in hits]}")
+
+
+#: The same four corpora, keyed by stem so a rename cannot detach them.
+JUDGE_ASSERTED_STEMS = _stems(JUDGE_ASSERTED)
 
 
 def collapse_tags(tags: object) -> tuple[str, ...]:
@@ -192,7 +265,7 @@ def assert_absence_contract(dataset_dir: Path) -> dict[str, int]:
 
 def _doc_gold(dataset_dir: Path, raw: dict[str, Any], base: CorpusRow) -> tuple[bool | None, str, str | None]:
     """The document-level target and where it came from."""
-    if dataset_dir.name in JUDGE_ASSERTED:
+    if canonical_stem(dataset_dir.name) in JUDGE_ASSERTED_STEMS:
         verdict, reason = classify_judge_row(raw)
         return verdict, reason, raw.get("pii_sensitivity")
     if base.label_complete:
@@ -204,8 +277,13 @@ def _doc_gold(dataset_dir: Path, raw: dict[str, Any], base: CorpusRow) -> tuple[
 
 
 def iter_quiet_corpus(dataset_dir: Path) -> Iterator[QuietRow]:
+    complete_catalogue = canonical_stem(dataset_dir.name) in COMPLETE_CATALOGUE_STEMS
     for index, raw in enumerate(iter_raw_rows(dataset_dir)):
         base = normalize_row(dataset_dir, raw, index)
+        if complete_catalogue and "gold" in raw:
+            # Declared, not inferred from the folder name -- see
+            # COMPLETE_CATALOGUE_STEMS for what this replaces and why.
+            base = replace(base, label_complete=True)
         has, source, sensitivity = _doc_gold(dataset_dir, raw, base)
         yield QuietRow(
             row=base,
@@ -261,8 +339,11 @@ __all__ = [
     "SENSITIVE_PREFIXES",
     "TRAIN_ROOT",
     "QuietRow",
+    "COMPLETE_CATALOGUE_STEMS",
     "assert_absence_contract",
+    "canonical_stem",
     "classify_judge_row",
+    "resolve_dataset",
     "collapse_tags",
     "iter_quiet_corpus",
     "list_dataset_dirs",

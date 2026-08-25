@@ -14,14 +14,22 @@ from training.quiet_data import (
     assert_absence_contract,
     collapse_tags,
     iter_quiet_corpus,
+    resolve_dataset,
 )
 
 
 def _dir(name: str) -> Path:
-    for root in (TRAIN_ROOT, EVAL_ROOT):
-        if (root / name).is_dir():
-            return root / name
-    pytest.skip(f"{name} not present")
+    """Resolve by stem, so a dataset rename skips no test silently.
+
+    A literal lookup here skipped `test_complete_corpus_reports_real_negatives`
+    the moment `pii2_eval_30k` was renamed -- and that is the test guarding the
+    4,851 negatives, so the suite would have gone green while the property it
+    exists to protect was the one that had just broken.
+    """
+    try:
+        return resolve_dataset(name)
+    except FileNotFoundError:
+        pytest.skip(f"{name} not present")
 
 
 @pytest.mark.parametrize("name", JUDGE_ASSERTED)

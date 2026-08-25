@@ -49,14 +49,14 @@ CONFIDENCE = 0.95
 #: only chosen when the recall would still be *provable* at holdout sample size.
 #: Only split sizes are used -- never holdout labels, predictions or scores.
 CORPUS_PAIRS = {
-    "16000_datax-dualjudge-trainset-5.37k": "4000_datax-dualjudge-evalset-1.32k",
-    "26095_govdocs2-dualjudge-train80-14.25k": "6589_govdocs2-dualjudge-eval20-3.53k",
-    "ai4privacy_pii_masking_train_42k": "ai4privacy_pii_masking_eval_10k",
-    "betterdataai_ner_silver_train_41k": "betterdataai_ner_silver_eval_10k",
-    "nemotron_train_22k": "nemotron_eval_6k",
-    "openpii_pii_train_155k": "openpii_pii_eval_38k",
-    "pii2_train_150k": "pii2_eval_30k",
-    "pii_trainset_100k": "pii_holdout_20k",
+    "15986_datax-dualjudge-trainset-5.36k": "4000_datax-dualjudge-evalset-1.32k",
+    "23693_govdocs2-dualjudge-train80-12.86k": "6589_govdocs2-dualjudge-eval20-3.53k",
+    "42504_ai4privacy_pii_masking_train_42.50k": "10626_ai4privacy_pii_masking_eval_10.63k",
+    "41429_betterdataai_ner_silver_train_41.43k": "10360_betterdataai_ner_silver_eval_10.36k",
+    "21743_nemotron_train_20.80k": "5617_nemotron_eval_5.36k",
+    "151708_openpii_pii_train_151.71k": "38937_openpii_pii_eval_38.94k",
+    "148775_pii2_train_98.81k": "30000_pii2_eval_25.15k",
+    "85593_pii_trainset_85.59k": "20000_pii_holdout_20.00k",
 }
 
 
