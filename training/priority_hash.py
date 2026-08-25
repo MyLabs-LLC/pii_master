@@ -366,4 +366,8 @@ def load_priority_model(directory: Path) -> HashCueModel | HybridPriorityModel:
         from training.priority_embeddingbag import LowRankEmbeddingBagModel
 
         return LowRankEmbeddingBagModel.load(directory)
+    if manifest["format"] == "pii-priority-fusion-v1":
+        from training.priority_fusion import FusionPriorityModel
+
+        return FusionPriorityModel.load(directory)
     raise ValueError(f"unsupported priority model format: {manifest['format']}")
