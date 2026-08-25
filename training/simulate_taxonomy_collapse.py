@@ -106,6 +106,91 @@ def score(family: str, project: Path, *, collapsed: bool, bootstrap: bool) -> di
     return {"aggregate": agg, "arms": arms}
 
 
+def emit_diagnostic(project: Path, family: str, *, bootstrap: bool = True) -> dict[str, Any]:
+    """Write the collapsed-taxonomy view beside a family's gate numbers.
+
+    **A diagnostic, never a gate.** The contract remains the current taxonomy;
+    this records what the same predictions score when the name and street tags
+    are folded, so the gap between "measures a concept" and "reproduces this
+    corpus's labelling convention" is visible on every run rather than resting
+    in one report. Called from ``final_bootstrap`` so nobody has to remember it.
+    """
+    current = score(family, project, collapsed=False, bootstrap=bootstrap)
+    collapsed = score(family, project, collapsed=True, bootstrap=bootstrap)
+    out_dir = project / "evaluations" / family / "collapsed"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    per_corpus = {}
+    for a, b in zip(current["arms"], collapsed["arms"]):
+        (out_dir / f"{b['dataset']}.json").write_text(
+            json.dumps(b, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        if a["macro_f2"] is not None and b["macro_f2"] is not None:
+            per_corpus[b["dataset"]] = {
+                "macro_f2": b["macro_f2"],
+                "macro_f2_delta": b["macro_f2"] - a["macro_f2"],
+                "micro_f1": b["micro_f1"],
+                "micro_f1_delta": b["micro_f1"] - a["micro_f1"],
+            }
+
+    ca, cb = current["aggregate"], collapsed["aggregate"]
+    summary = {
+        "family": family,
+        "role": "diagnostic - NOT a gate; the contract is the current taxonomy",
+        "collapse": COLLAPSE,
+        "current": {
+            "equal_corpus_macro_f2": ca["equal_corpus_macro_f2"],
+            "equal_corpus_micro_f1": ca["equal_corpus_micro_f1"],
+        },
+        "collapsed": {
+            "equal_corpus_macro_f2": cb["equal_corpus_macro_f2"],
+            "equal_corpus_micro_f1": cb["equal_corpus_micro_f1"],
+            "priority_conclusive_passes": cb["priority_conclusive_passes"],
+            "measurable": cb["measurable"],
+        },
+        "delta": {
+            "macro_f2": cb["equal_corpus_macro_f2"] - ca["equal_corpus_macro_f2"],
+            "micro_f1": cb["equal_corpus_micro_f1"] - ca["equal_corpus_micro_f1"],
+        },
+        "per_corpus": per_corpus,
+    }
+    (out_dir / "summary.json").write_text(
+        json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return summary
+
+
+def record_in_run(project: Path, summary: dict[str, Any]) -> None:
+    """Fold the diagnostic into ``run.json`` -- summary block plus arm notes."""
+    from training.priority_eval import record_artifacts
+
+    family = summary["family"]
+    run_path = project / "run.json"
+    rec = json.loads(run_path.read_text(encoding="utf-8"))
+    rec.setdefault("run_summary", {}).setdefault(family, {})[
+        "collapsed_taxonomy"
+    ] = {k: summary[k] for k in ("current", "collapsed", "delta")}
+
+    note_for = summary["per_corpus"]
+    for arm in rec.get("arms", []):
+        if arm.get("model") != family:
+            continue
+        entry = note_for.get(arm.get("dataset"))
+        if not entry:
+            continue
+        note = (
+            f"collapsed-taxonomy diagnostic: macro F2 {entry['macro_f2']:.4f} "
+            f"({entry['macro_f2_delta']:+.4f})"
+        )
+        existing = (arm.get("verdict") or "").split(" · collapsed-taxonomy")[0].strip()
+        arm["verdict"] = f"{existing} · {note}" if existing else note
+
+    record_artifacts(
+        rec, {f"collapsed_taxonomy::{family}": f"evaluations/{family}/collapsed/summary.json"}
+    )
+    run_path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project", type=Path, default=Path("projects/pii-priority-recall-v1"))
@@ -113,7 +198,22 @@ def main() -> int:
     ap.add_argument("--bootstrap", action="store_true")
     ap.add_argument("--out", type=Path,
                     default=Path("projects/pii-priority-recall-v1/taxonomy_collapse_scope.json"))
+    ap.add_argument("--emit", action="store_true",
+                    help="write the standing diagnostic beside each family's gate numbers "
+                         "and fold it into run.json")
     args = ap.parse_args()
+
+    if args.emit:
+        for family in args.families:
+            summary = emit_diagnostic(args.project, family, bootstrap=args.bootstrap)
+            record_in_run(args.project, summary)
+            d = summary["delta"]
+            print(f"{family:16} collapsed macro F2 "
+                  f"{summary['collapsed']['equal_corpus_macro_f2']:.4f} "
+                  f"({d['macro_f2']:+.4f})  micro F1 "
+                  f"{summary['collapsed']['equal_corpus_micro_f1']:.4f} "
+                  f"({d['micro_f1']:+.4f})")
+        return 0
 
     report: dict[str, Any] = {"collapse": COLLAPSE, "families": {}}
     print(f"{'family':14} {'taxonomy':10} {'macroF2':>8} {'microF1':>8} "

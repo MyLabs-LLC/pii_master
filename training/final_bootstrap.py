@@ -155,6 +155,18 @@ def run(project: Path, *, family: str) -> dict[str, Any]:
         {f"final_bootstrap::{family}": f"evaluations/{family}/bootstrap/summary.json"},
     )
     _save_json(run_path, run_record)
+
+    # Standing taxonomy diagnostic, written beside the gate numbers on every
+    # run. NOT a gate: the contract is the current taxonomy. It records what
+    # the same predictions score once the name and street tags are folded, so
+    # the share of the score that is reproducing this corpus's labelling
+    # convention stays visible instead of resting in one report. See
+    # reports/26-08-25_taxonomy-collapse-scope.md.
+    from training.simulate_taxonomy_collapse import emit_diagnostic, record_in_run
+
+    diagnostic = emit_diagnostic(project, family, bootstrap=False)
+    record_in_run(project, diagnostic)
+    summary["collapsed_taxonomy"] = diagnostic["delta"]
     return summary
 
 
