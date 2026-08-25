@@ -373,11 +373,24 @@ def fast_metrics(
 
 
 def _objective(metrics: dict[str, Any]) -> tuple[float, ...]:
+    passes = float(metrics["priority_point_passes"])
+    measurable = float(metrics["measurable_priority_gates"])
+    if passes == measurable:
+        # Inside the feasible region, follow the approved objective exactly:
+        # macro F2, then micro F1. Recall magnitude is only a later tie-break.
+        return (
+            1.0,
+            float(metrics["equal_corpus_macro_f2"]),
+            float(metrics["equal_corpus_micro_f1"]),
+            float(metrics["worst_priority_recall"]),
+        )
+    # Outside the feasible region, repair the most gates first, then the worst
+    # remaining tag/corpus arm before considering aggregate quality.
     return (
-        float(metrics["priority_point_passes"]),
+        0.0,
+        passes / measurable if measurable else 0.0,
         float(metrics["worst_priority_recall"]),
         float(metrics["equal_corpus_macro_f2"]),
-        float(metrics["equal_corpus_micro_f1"]),
     )
 
 

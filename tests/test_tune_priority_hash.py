@@ -4,6 +4,7 @@ import numpy as np
 
 from training.tune_priority_hash import (
     _is_validation,
+    _objective,
     fast_metrics,
     threshold_bank,
     trial_configs,
@@ -19,6 +20,18 @@ def test_trial_configs_are_unique_and_bounded() -> None:
 def test_validation_split_has_stable_missing_hash_fallback() -> None:
     row = {"dataset": "source", "uid": "missing", "text_sha256": ""}
     assert _is_validation(row) == _is_validation(dict(row))
+
+
+def test_feasible_objective_prefers_macro_f2_over_excess_recall() -> None:
+    recall_max = {
+        "priority_point_passes": 10,
+        "measurable_priority_gates": 10,
+        "worst_priority_recall": 0.99,
+        "equal_corpus_macro_f2": 0.4,
+        "equal_corpus_micro_f1": 0.5,
+    }
+    f2_max = {**recall_max, "worst_priority_recall": 0.90, "equal_corpus_macro_f2": 0.6}
+    assert _objective(f2_max) > _objective(recall_max)
 
 
 def test_threshold_bank_uses_worst_source_for_priority_tag() -> None:
