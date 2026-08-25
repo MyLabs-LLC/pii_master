@@ -357,3 +357,23 @@ def rows_from_predictions(
             )
         )
     return dict(grouped)
+
+
+def record_artifacts(run_record: dict, entries: dict[str, str]) -> None:
+    """Add artifact paths to ``run.json`` under either shape it may carry.
+
+    This project's ``run.json`` stores ``artifacts`` as a **named map**
+    (``{"bootstrap": "evaluations/.../summary.json", ...}``), which is more
+    useful than a bare list because a reader can ask for a specific artifact by
+    name. Two writers assumed a list and called ``.append`` on it, which raised
+    ``AttributeError`` after every corpus had already been scored and saved --
+    losing only the bookkeeping, but losing it silently enough that the run
+    record fell behind the evidence on disk. Handle both shapes.
+    """
+    artifacts = run_record.setdefault("artifacts", {})
+    if isinstance(artifacts, dict):
+        artifacts.update(entries)
+        return
+    for path in entries.values():
+        if path not in artifacts:
+            artifacts.append(path)

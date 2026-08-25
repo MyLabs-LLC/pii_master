@@ -16,6 +16,7 @@ from training.priority_eval import (
     rows_from_predictions,
 )
 from training.tune_priority_hash import _load_jsonl, _save_json
+from training.priority_eval import record_artifacts as _record_artifacts
 
 N_RESAMPLES = 1_000
 CONFIDENCE = 0.95
@@ -149,9 +150,10 @@ def run(project: Path, *, family: str) -> dict[str, Any]:
     run_record.setdefault("run_summary", {}).setdefault(family, {})[
         "final_bootstrap"
     ] = aggregate
-    artifact = f"evaluations/{family}/bootstrap/summary.json"
-    if artifact not in run_record.setdefault("artifacts", []):
-        run_record["artifacts"].append(artifact)
+    _record_artifacts(
+        run_record,
+        {f"final_bootstrap::{family}": f"evaluations/{family}/bootstrap/summary.json"},
+    )
     _save_json(run_path, run_record)
     return summary
 

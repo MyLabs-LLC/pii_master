@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from training.priority_data import read_document
+from training.priority_eval import record_artifacts as _record_artifacts
 from training.priority_eval import (
     aggregate_arms,
     evaluate_corpus,
@@ -201,12 +202,13 @@ def run(project: Path, *, family: str, workers: int) -> dict[str, Any]:
     run_record.setdefault("run_summary", {}).setdefault(family, {})["holdout"] = (
         summary["aggregate"]
     )
-    for artifact in (
-        f"evaluations/{family}/summary.json",
-        f"evaluations/{family}/predictions.jsonl",
-    ):
-        if artifact not in run_record.setdefault("artifacts", []):
-            run_record["artifacts"].append(artifact)
+    _record_artifacts(
+        run_record,
+        {
+            f"holdout_summary::{family}": f"evaluations/{family}/summary.json",
+            f"holdout_predictions::{family}": f"evaluations/{family}/predictions.jsonl",
+        },
+    )
     _save_json(run_path, run_record)
     return summary
 
