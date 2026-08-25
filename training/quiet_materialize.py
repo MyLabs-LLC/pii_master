@@ -148,10 +148,18 @@ def materialize(cascade_trial: dict, out_dir: Path) -> tuple[QuietCascade, dict[
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rank", type=int, default=0, help="which cascade finalist")
+    ap.add_argument("--trial", type=int, default=None,
+                    help="a specific cascade trial number, for a contrasting arm "
+                         "the top of the ranking does not cover")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
-    finalists = _best("cascade")
-    trial = finalists[args.rank]
+    if args.trial is not None:
+        pool = json.loads((TUNING / "cascade" / "trials.json").read_text(encoding="utf-8"))
+        trial = next((t for t in pool if t["number"] == args.trial), None)
+        if trial is None:
+            raise SystemExit(f"cascade trial {args.trial} not found")
+    else:
+        trial = _best("cascade")[args.rank]
     model, prov = materialize(trial, args.out)
     print(f"materialised cascade trial {trial['number']} -> {args.out}")
     print(f"  profile={prov['profile']} heads={prov['head_family']} "

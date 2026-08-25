@@ -29,7 +29,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from training.quiet_cache import load_catalogue  # noqa: E402
 from training.quiet_data import (  # noqa: E402
-    EVAL_ROOT, collapse_tags, iter_quiet_corpus, read_document,
+    EVAL_ROOT, canonical_stem, collapse_tags, iter_quiet_corpus, read_document,
+    resolve_dataset,
 )
 
 BUNDLE = Path("/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/"
@@ -39,12 +40,20 @@ PREDICTIONS = (Path("/home/lence/workspace/pii_master/projects/pii-priority-reca
 
 
 def _recorded() -> dict[str, dict[str, list[str]]]:
-    by_dataset: dict[str, dict[str, list[str]]] = {}
+    """Keyed by canonical stem, not by the dataset name the prior run wrote.
+
+    The predictions were recorded before the 2026-08-25 directory rename, so
+    they name `pii2_eval_30k` where the corpus is now `30000_pii2_eval_25.15k`.
+    Keying on the literal name silently matched nothing on six of eight corpora
+    and scored the baseline as predicting no tags at all -- which would have
+    flattered the new champion enormously on precision.
+    """
+    by_stem: dict[str, dict[str, list[str]]] = {}
     with PREDICTIONS.open(encoding="utf-8") as fh:
         for line in fh:
             r = json.loads(line)
-            by_dataset.setdefault(r["dataset"], {})[r["uid"]] = r["labels"]
-    return by_dataset
+            by_stem.setdefault(canonical_stem(r["dataset"]), {})[r["uid"]] = r["labels"]
+    return by_stem
 
 
 def _latency(n_docs: int = 150, min_chars: int = 10_000) -> tuple[float, float]:
@@ -55,7 +64,7 @@ def _latency(n_docs: int = 150, min_chars: int = 10_000) -> tuple[float, float]:
     window = int(model.read_window_chars)
     texts: list[str] = []
     for corpus in ("6589_govdocs2-dualjudge-eval20-3.53k", "4000_datax-dualjudge-evalset-1.32k"):
-        for qr in iter_quiet_corpus(EVAL_ROOT / corpus):
+        for qr in iter_quiet_corpus(resolve_dataset(corpus)):
             try:
                 text = read_document(Path(qr.path), limit=min_chars * 2)
             except (FileNotFoundError, OSError):
@@ -85,7 +94,7 @@ def baseline_predictions() -> tuple[dict[str, tuple[np.ndarray, np.ndarray]], fl
     for corpus_dir in sorted(d for d in EVAL_ROOT.iterdir() if d.is_dir()):
         name = corpus_dir.name
         rows = list(iter_quiet_corpus(corpus_dir))
-        preds = recorded.get(name, {})
+        preds = recorded.get(canonical_stem(name), {})
         fired = np.zeros((len(rows), len(catalogue)), dtype=bool)
         missing = 0
         for i, qr in enumerate(rows):
