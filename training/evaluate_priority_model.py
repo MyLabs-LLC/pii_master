@@ -17,14 +17,18 @@ from training.priority_eval import (
     evaluate_corpus,
     rows_from_predictions,
 )
-from training.priority_hash import HashCueModel
+from training.priority_hash import (
+    HashCueModel,
+    HybridPriorityModel,
+    load_priority_model,
+)
 
-_WORKER_MODEL: HashCueModel | None = None
+_WORKER_MODEL: HashCueModel | HybridPriorityModel | None = None
 
 
 def _load_worker(model_dir: str) -> None:
     global _WORKER_MODEL
-    _WORKER_MODEL = HashCueModel.load(Path(model_dir))
+    _WORKER_MODEL = load_priority_model(Path(model_dir))
 
 
 def _predict_one(payload: tuple[str, str, str]) -> tuple[str, str, list[str], str]:
@@ -56,7 +60,7 @@ def run(project: Path, *, family: str, workers: int) -> dict[str, Any]:
 
     os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")
     model_dir = project / "models" / family
-    model = HashCueModel.load(model_dir)
+    model = load_priority_model(model_dir)
     index_rows = _load_jsonl(project / "data" / "eval_index.jsonl")
     frozen = json.loads(
         (project / "data" / "evaluation_catalogue.json").read_text(encoding="utf-8")

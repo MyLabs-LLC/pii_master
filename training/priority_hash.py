@@ -292,3 +292,74 @@ class HashCueModel:
         config["weights"] = f"array{self.weights.shape}"
         config["thresholds"] = self.thresholds.tolist()
         return config
+
+
+@dataclass(frozen=True)
+class HybridPriorityModel:
+    """Use a recall-max head for priority tags and an F2 head elsewhere."""
+
+    priority_model: HashCueModel
+    generic_model: HashCueModel
+    priority_tags: frozenset[str]
+
+    def __post_init__(self) -> None:
+        if self.priority_model.labels != self.generic_model.labels:
+            raise ValueError("hybrid component label catalogues differ")
+
+    @property
+    def labels(self) -> tuple[str, ...]:
+        return self.priority_model.labels
+
+    @property
+    def read_window_chars(self) -> int:
+        return max(
+            self.priority_model.read_window_chars,
+            self.generic_model.read_window_chars,
+        )
+
+    @property
+    def score_mode(self) -> str:
+        return f"priority={self.priority_model.score_mode};generic={self.generic_model.score_mode}"
+
+    def predict(self, text: str) -> list[str]:
+        priority_predictions = set(self.priority_model.predict(text))
+        generic_predictions = set(self.generic_model.predict(text))
+        return [
+            label
+            for label in self.labels
+            if (label in self.priority_tags and label in priority_predictions)
+            or (label not in self.priority_tags and label in generic_predictions)
+        ]
+
+    def save(self, directory: Path, metadata: dict[str, Any] | None = None) -> None:
+        directory.mkdir(parents=True, exist_ok=True)
+        self.priority_model.save(directory / "priority")
+        self.generic_model.save(directory / "generic")
+        manifest = {
+            "format": "pii-priority-hybrid-v1",
+            "priority_tags": sorted(self.priority_tags),
+            "priority_model": "priority",
+            "generic_model": "generic",
+            "metadata": metadata or {},
+        }
+        (directory / "model.json").write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
+    @classmethod
+    def load(cls, directory: Path) -> HybridPriorityModel:
+        manifest = json.loads((directory / "model.json").read_text(encoding="utf-8"))
+        return cls(
+            priority_model=HashCueModel.load(directory / manifest["priority_model"]),
+            generic_model=HashCueModel.load(directory / manifest["generic_model"]),
+            priority_tags=frozenset(manifest["priority_tags"]),
+        )
+
+
+def load_priority_model(directory: Path) -> HashCueModel | HybridPriorityModel:
+    manifest = json.loads((directory / "model.json").read_text(encoding="utf-8"))
+    if manifest["format"] == "pii-priority-hash-cue-v1":
+        return HashCueModel.load(directory)
+    if manifest["format"] == "pii-priority-hybrid-v1":
+        return HybridPriorityModel.load(directory)
+    raise ValueError(f"unsupported priority model format: {manifest['format']}")

@@ -7,6 +7,7 @@ import numpy as np
 from training.priority_hash import (
     HashCounts,
     HashCueModel,
+    HybridPriorityModel,
     build_weights,
     document_features,
     score_modes,
@@ -50,3 +51,21 @@ def test_model_round_trip(tmp_path: Path) -> None:
     model.save(tmp_path)
     loaded = HashCueModel.load(tmp_path)
     assert loaded.predict("passport number XY999999") == ["tag-a"]
+
+
+def test_hybrid_uses_priority_and_generic_heads(tmp_path: Path) -> None:
+    labels = ("priority", "generic")
+    features = document_features("passport number AB123456")
+    priority_weights = np.zeros((2, 1 << 17), dtype=np.float32)
+    generic_weights = np.zeros_like(priority_weights)
+    priority_weights[0, features] = 2.0
+    generic_weights[1, features] = 2.0
+    priority = HashCueModel(labels, priority_weights, np.ones(2), "top1", 20_000)
+    generic = HashCueModel(labels, generic_weights, np.ones(2), "top1", 20_000)
+    hybrid = HybridPriorityModel(priority, generic, frozenset({"priority"}))
+    assert hybrid.predict("passport number XY999999") == ["priority", "generic"]
+    hybrid.save(tmp_path)
+    assert HybridPriorityModel.load(tmp_path).predict("passport number XY999999") == [
+        "priority",
+        "generic",
+    ]
