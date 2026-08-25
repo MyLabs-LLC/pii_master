@@ -7,6 +7,7 @@ import json
 import os
 import random
 import time
+import zlib
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -48,7 +49,13 @@ def _save_json(path: Path, payload: Any) -> None:
 
 
 def _is_validation(row: dict[str, Any]) -> bool:
-    return int(row["text_sha256"][:8], 16) % 10 == 0
+    digest = str(row.get("text_sha256") or "")
+    if len(digest) >= 8:
+        bucket_value = int(digest[:8], 16)
+    else:
+        stable_key = f"{row.get('dataset', '')}::{row.get('uid', '')}".encode()
+        bucket_value = zlib.crc32(stable_key)
+    return bucket_value % 10 == 0
 
 
 def _load_excluded(path: Path) -> set[tuple[str, str]]:

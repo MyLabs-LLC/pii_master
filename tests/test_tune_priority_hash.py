@@ -2,13 +2,23 @@ from __future__ import annotations
 
 import numpy as np
 
-from training.tune_priority_hash import fast_metrics, threshold_bank, trial_configs
+from training.tune_priority_hash import (
+    _is_validation,
+    fast_metrics,
+    threshold_bank,
+    trial_configs,
+)
 
 
 def test_trial_configs_are_unique_and_bounded() -> None:
     configs = trial_configs(300)
     assert len(configs) == 300
     assert len({tuple(config.values()) for config in configs}) == 300
+
+
+def test_validation_split_has_stable_missing_hash_fallback() -> None:
+    row = {"dataset": "source", "uid": "missing", "text_sha256": ""}
+    assert _is_validation(row) == _is_validation(dict(row))
 
 
 def test_threshold_bank_uses_worst_source_for_priority_tag() -> None:
