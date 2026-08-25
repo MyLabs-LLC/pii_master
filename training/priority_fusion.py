@@ -32,6 +32,7 @@ class FusionPriorityModel:
     labels: tuple[str, ...]
     components: dict[str, Any]
     strategies: dict[str, str]
+    read_window_override: int | None = None
 
     def __post_init__(self) -> None:
         if set(self.strategies) != set(self.labels):
@@ -42,6 +43,8 @@ class FusionPriorityModel:
 
     @property
     def read_window_chars(self) -> int:
+        if self.read_window_override is not None:
+            return self.read_window_override
         return max(model.read_window_chars for model in self.components.values())
 
     @property
@@ -85,6 +88,7 @@ class FusionPriorityModel:
             "labels": list(self.labels),
             "components": component_paths,
             "strategies": self.strategies,
+            "read_window_override": self.read_window_override,
             "metadata": metadata or {},
         }
         (directory / "model.json").write_text(
@@ -106,4 +110,5 @@ class FusionPriorityModel:
             strategies={
                 str(key): str(value) for key, value in manifest["strategies"].items()
             },
+            read_window_override=manifest.get("read_window_override"),
         )

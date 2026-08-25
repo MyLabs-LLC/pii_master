@@ -40,3 +40,22 @@ def test_shared_feature_fusion_matches_component_predictions() -> None:
     component = HashCueModel(labels, weights, np.ones(1), "top1", 20_000)
     model = FusionPriorityModel(labels, {"a": component}, {"tag": "source:a"})
     assert model.predict(text) == component.predict(text)
+
+
+def test_read_window_override_round_trip(tmp_path: Path) -> None:
+    labels = ("tag",)
+    component = HashCueModel(
+        labels,
+        np.zeros((1, 1 << 17), dtype=np.float32),
+        np.ones(1),
+        "top1",
+        20_000,
+    )
+    model = FusionPriorityModel(
+        labels,
+        {"a": component},
+        {"tag": "source:a"},
+        read_window_override=1_000,
+    )
+    model.save(tmp_path)
+    assert load_priority_model(tmp_path).read_window_chars == 1_000
