@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pickle
 import sys
 import time
@@ -50,9 +51,13 @@ from training.quiet_fit import (  # noqa: E402
     accumulate, build_weights, carve_holdin, load, priority_indices, score, train_corpora,
 )
 from training.quiet_objective import Score, evaluate, evaluate_gate, group_masks  # noqa: E402
-from training.quiet_select import select_doc_threshold, select_per_label  # noqa: E402
+from training.quiet_select import (  # noqa: E402
+    select_doc_threshold, select_doc_threshold_robust,
+    select_per_label, select_per_label_robust,
+)
 
-PROJECT = Path("/home/lence/workspace/pii_master/projects/pii-quiet-alarm")
+PROJECT = Path(os.environ.get(
+    "QUIET_PROJECT", "/home/lence/workspace/pii_master/projects/pii-quiet-alarm"))
 TUNING = PROJECT / "tuning"
 PROFILES = ("fast", "std", "deep")
 #: Labels are independent; fitting them in parallel is what keeps the
@@ -82,6 +87,9 @@ class Workspace:
                 "ds": ds, "fit": fit_mask, "calib_mask": calib_mask, "calib": calib,
                 "Ycal": np.asarray(calib.Y.todense()).astype(bool),
                 "groups": group_masks(calib.corpus, calib.corpus_names),
+                # Source identity per calibration row: the axis the robust
+                # threshold rule requires the recall floor to hold along.
+                "source": calib.corpus,
                 "priority": priority_indices(calib.labels),
             }
         return self._ds[profile]
@@ -164,13 +172,15 @@ def trial_docgate(t: optuna.Trial, ws: Workspace) -> tuple[Score, dict]:
     select_on = t.suggest_categorical("select_on", ["real", "all"])
     rec_target = t.suggest_float("recall_target", 0.85, 0.97)
     spec_target = t.suggest_float("spec_target", 0.85, 0.99)
+    margin = t.suggest_float("margin", 0.0, 0.12)
 
     d = ws.data(profile)
     g = ws.gate(profile, alpha, loss, max_iter, neg_weight)
     calib = d["calib"]
     sel = d["groups"]["real"] if select_on == "real" else np.ones(len(g), dtype=bool)
-    cut, _ = select_doc_threshold(g[sel], calib.doc_target[sel],
-                                  recall_floor=rec_target, specificity_floor=spec_target)
+    cut, _ = select_doc_threshold_robust(
+        g[sel], calib.doc_target[sel], d["source"][sel],
+        recall_floor=rec_target, specificity_floor=spec_target, margin=margin)
     s = evaluate_gate(g, cut, calib.doc_target, d["groups"])
     return s, {"gate_threshold": float(cut), "profile": profile}
 
@@ -184,14 +194,16 @@ def trial_tagcount(t: optuna.Trial, ws: Workspace) -> tuple[Score, dict]:
     idf_power = t.suggest_float("idf_power", 0.0, 2.5)
     mode = t.suggest_categorical("score_mode", ["sum", "mean", "top3", "top6"])
     recall_floor = t.suggest_float("recall_floor", 0.75, 0.95)
+    margin = t.suggest_float("margin", 0.0, 0.15)
     min_support = t.suggest_int("min_support_fit", 5, 200, log=True)
 
     d = ws.data(profile)
     W = build_weights(ws.counts(profile), alpha=alpha, partial_weight=partial_weight,
                       min_df=min_df, clip=clip, idf_power=idf_power)
     S = score(d["calib"].X, W, mode=mode)
-    thr, _ = select_per_label(S, d["Ycal"], d["calib"].tag_complete,
-                              beta=0.5, recall_floor=recall_floor, min_support=min_support)
+    thr, _ = select_per_label_robust(
+        S, d["Ycal"], d["calib"].tag_complete, d["source"],
+        beta=0.5, recall_floor=recall_floor, margin=margin, min_support=min_support)
     s = evaluate(S, thr, d["Ycal"], d["calib"].tag_complete, d["calib"].doc_target,
                  d["groups"], d["priority"], doc_constraints=False)
     return s, {"profile": profile, "score_mode": mode}
@@ -203,12 +215,14 @@ def trial_tagdisc(t: optuna.Trial, ws: Workspace) -> tuple[Score, dict]:
     max_iter = t.suggest_categorical("max_iter", [8, 15])
     pos_weight = t.suggest_categorical("pos_weight", [1.0, 3.0, 10.0])
     recall_floor = t.suggest_float("recall_floor", 0.75, 0.95)
+    margin = t.suggest_float("margin", 0.0, 0.15)
     min_support = t.suggest_int("min_support_fit", 5, 200, log=True)
 
     d = ws.data(profile)
     S = ws.heads(profile, alpha, max_iter, pos_weight)
-    thr, _ = select_per_label(S, d["Ycal"], d["calib"].tag_complete,
-                              beta=0.5, recall_floor=recall_floor, min_support=min_support)
+    thr, _ = select_per_label_robust(
+        S, d["Ycal"], d["calib"].tag_complete, d["source"],
+        beta=0.5, recall_floor=recall_floor, margin=margin, min_support=min_support)
     s = evaluate(S, thr, d["Ycal"], d["calib"].tag_complete, d["calib"].doc_target,
                  d["groups"], d["priority"], doc_constraints=False)
     return s, {"profile": profile}
@@ -251,15 +265,18 @@ def trial_cascade(t: optuna.Trial, ws: Workspace) -> tuple[Score, dict]:
     # together, rather than freezing one and tuning the other.
     gate_shift = t.suggest_float("gate_shift", -3.0, 3.0)
     recall_floor = t.suggest_float("recall_floor", 0.75, 0.95)
+    margin = t.suggest_float("margin", 0.0, 0.15)
     min_support = t.suggest_int("min_support_fit", 5, 200, log=True)
     cut = gate_cfg["extra"]["gate_threshold"] + gate_shift
 
     open_doc = g >= cut
     # Tag thresholds are chosen on the documents the gate lets through, because
-    # that is the only population they will ever see at serving time.
-    thr, _ = select_per_label(S[open_doc], d["Ycal"][open_doc],
-                              d["calib"].tag_complete[open_doc],
-                              beta=0.5, recall_floor=recall_floor, min_support=min_support)
+    # that is the only population they will ever see at serving time -- and
+    # required to hold per source, not on their average.
+    thr, _ = select_per_label_robust(
+        S[open_doc], d["Ycal"][open_doc], d["calib"].tag_complete[open_doc],
+        d["source"][open_doc],
+        beta=0.5, recall_floor=recall_floor, margin=margin, min_support=min_support)
     s = evaluate(S, thr, d["Ycal"], d["calib"].tag_complete, d["calib"].doc_target,
                  d["groups"], d["priority"], gate=g, gate_threshold=cut)
     return s, {"profile": profile, "gate_threshold": float(cut),

@@ -16,14 +16,16 @@ number traces to a JSON artifact or to MLflow.
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-PROJECT = Path("/home/lence/workspace/pii_master/projects/pii-quiet-alarm")
-RUN_ID = "pii-quiet-alarm-2026-08-25"
+PROJECT = Path(os.environ.get(
+    "QUIET_PROJECT", "/home/lence/workspace/pii_master/projects/pii-quiet-alarm"))
+RUN_ID = os.environ.get("QUIET_RUN_ID", "pii-quiet-alarm-2026-08-25")
 
 #: The commands that produced this run's artifacts, in order. Captured output
 #: for the long-running ones is in the named log files beside them.
@@ -143,7 +145,7 @@ def main() -> int:
     counts = _trial_counts()
     run = {
         "run_id": RUN_ID,
-        "project": "pii-quiet-alarm",
+        "project": PROJECT.name,
         "date": datetime.now(UTC).strftime("%Y-%m-%d"),
         "task_type": "multi_label_document_tagging_with_document_gate",
         "primary_metric": "priority_macro_f05",

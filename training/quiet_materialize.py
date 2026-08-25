@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,9 +34,10 @@ from training.quiet_fit import (  # noqa: E402
 )
 from training.quiet_model import QuietCascade  # noqa: E402
 from training.quiet_objective import evaluate, group_masks  # noqa: E402
-from training.quiet_select import select_per_label  # noqa: E402
+from training.quiet_select import select_per_label_robust  # noqa: E402
 
-PROJECT = Path("/home/lence/workspace/pii_master/projects/pii-quiet-alarm")
+PROJECT = Path(os.environ.get(
+    "QUIET_PROJECT", "/home/lence/workspace/pii_master/projects/pii-quiet-alarm"))
 TUNING = PROJECT / "tuning"
 HEAD_JOBS = 12
 TOLERANCE = 0.02
@@ -109,9 +111,17 @@ def materialize(cascade_trial: dict, out_dir: Path) -> tuple[QuietCascade, dict[
     S_cal = score(calib.X, W, mode=score_mode)
     Ycal = np.asarray(calib.Y.todense()).astype(bool)
     open_doc = g_cal >= cut
-    thr, _ = select_per_label(S_cal[open_doc], Ycal[open_doc], calib.tag_complete[open_doc],
-                              beta=0.5, recall_floor=cascade_trial["params"]["recall_floor"],
-                              min_support=cascade_trial["params"]["min_support_fit"])
+    # Must be the same selection rule the trial used, including its margin and
+    # its source grouping. Using the pooled rule here produced thresholds that
+    # scored 0.9304 against the trial's recorded 0.8244 -- a "better" model that
+    # was simply not the one the search selected, and the drift check below is
+    # what caught it.
+    thr, _ = select_per_label_robust(
+        S_cal[open_doc], Ycal[open_doc], calib.tag_complete[open_doc],
+        calib.corpus[open_doc],
+        beta=0.5, recall_floor=cascade_trial["params"]["recall_floor"],
+        margin=cascade_trial["params"].get("margin", 0.0),
+        min_support=cascade_trial["params"]["min_support_fit"])
 
     reproduced = evaluate(S_cal, thr, Ycal, calib.tag_complete, calib.doc_target,
                           group_masks(calib.corpus, calib.corpus_names),

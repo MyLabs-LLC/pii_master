@@ -104,6 +104,85 @@ def select_per_label(S: np.ndarray, Y: np.ndarray, tag_complete: np.ndarray,
     return thresholds, report
 
 
+def group_recall_cap(scores: np.ndarray, positive: np.ndarray, group: np.ndarray,
+                     *, floor: float, min_group_support: int = 20) -> float:
+    """The highest threshold at which **every** source group still clears `floor`.
+
+    This is the fix for the failure mode that blocked `pii-quiet-alarm`. Choosing
+    a threshold so pooled recall lands exactly on the floor leaves no margin: the
+    pooled optimum is a weighted average, so a source with a harder score
+    distribution sits below the bar while the average sits on it. Eleven of that
+    run's nineteen failing tag-corpus pairs came back between 0.70 and 0.77
+    against a 0.75 floor -- not a capability limit, a threshold with nothing to
+    spare.
+
+    Requiring the floor **per group** and taking the tightest cap costs recall
+    headroom on the easy sources, which is exactly the headroom that was
+    illusory. Groups with too few positives to estimate a quantile are skipped
+    rather than allowed to set the cap from noise.
+    """
+    caps: list[float] = []
+    for g in np.unique(group):
+        pos_scores = scores[positive & (group == g)]
+        if pos_scores.size < min_group_support:
+            continue
+        # The threshold at which this group's recall is exactly `floor`.
+        caps.append(float(np.quantile(pos_scores, 1.0 - floor)))
+    return min(caps) if caps else -np.inf
+
+
+def select_per_label_robust(
+    S: np.ndarray, Y: np.ndarray, tag_complete: np.ndarray, group: np.ndarray,
+    *, beta: float = 0.5, recall_floor: float = 0.75, margin: float = 0.0,
+    min_support: int = 5, min_group_support: int = 20,
+) -> tuple[np.ndarray, list[dict[str, float]]]:
+    """Per-label F-beta optimum, capped so no source group falls under the floor.
+
+    ``margin`` raises the floor used for the cap above the floor that will be
+    gated on. The sealed corpora are different sources again, so holding
+    ``recall_floor`` exactly on the worst *training* source is still the edge of
+    the cliff; a margin buys distance from it at a known cost in precision.
+    """
+    n_labels = S.shape[1]
+    thresholds = np.full(n_labels, np.inf, dtype=np.float32)
+    report: list[dict[str, float]] = []
+    capped_floor = min(recall_floor + margin, 0.999)
+    for j in range(n_labels):
+        positive = Y[:, j].astype(bool)
+        if positive.sum() < min_support:
+            report.append({"label": j, "precision": 0.0, "recall": 0.0, "f": 0.0,
+                           "support": float(positive.sum()), "floor_met": False,
+                           "disabled": True, "cap": None})
+            continue
+        cap = group_recall_cap(S[:, j], positive, group, floor=capped_floor,
+                               min_group_support=min_group_support)
+        precision, recall, thr = sweep(S[:, j], positive, tag_complete & ~positive)
+        if not len(thr):
+            report.append({"label": j, "precision": 0.0, "recall": 0.0, "f": 0.0,
+                           "support": float(positive.sum()), "floor_met": False,
+                           "disabled": True, "cap": cap})
+            continue
+        f = fbeta(precision, recall, beta)
+        # Admissible: at or below the cap, and still clearing the pooled floor.
+        ok = (thr <= cap) & (recall >= recall_floor)
+        if ok.any():
+            idx = int(np.flatnonzero(ok)[np.argmax(f[ok])])
+            floor_met = True
+        elif (thr <= cap).any():
+            admissible = np.flatnonzero(thr <= cap)
+            idx = int(admissible[np.argmax(recall[admissible])])
+            floor_met = False
+        else:
+            idx = int(np.argmax(recall))
+            floor_met = False
+        thresholds[j] = thr[idx]
+        report.append({"label": j, "precision": float(precision[idx]),
+                       "recall": float(recall[idx]), "f": float(f[idx]),
+                       "support": float(positive.sum()), "floor_met": floor_met,
+                       "disabled": False, "cap": cap})
+    return thresholds, report
+
+
 def doc_metrics(fired: np.ndarray, target: np.ndarray) -> dict[str, float | None]:
     """Document-level confusion on rows whose gold can answer the question."""
     known = target >= 0
@@ -148,5 +227,57 @@ def select_doc_threshold(gate: np.ndarray, target: np.ndarray, *,
     return cut, doc_metrics(gate >= cut, target)
 
 
-__all__ = ["best_threshold", "doc_metrics", "fbeta", "select_doc_threshold",
-           "select_per_label", "sweep"]
+def select_doc_threshold_robust(
+    gate: np.ndarray, target: np.ndarray, group: np.ndarray, *,
+    recall_floor: float, specificity_floor: float, margin: float = 0.0,
+    min_group_support: int = 50,
+) -> tuple[float, dict[str, float | None]]:
+    """The document cut, required to hold on every group rather than on average.
+
+    Same reasoning as :func:`select_per_label_robust`. `pii-quiet-alarm`'s gate
+    was selected on real-world calibration and still returned 0.66 document
+    recall on govdocs2 against a 0.85 floor, because "real" pooled two corpora
+    with quite different score distributions.
+    """
+    known = target >= 0
+    if not known.any():
+        return -np.inf, doc_metrics(np.ones(len(gate), dtype=bool), target)
+    capped = min(recall_floor + margin, 0.999)
+
+    # Recall pushes the threshold DOWN (cap from above); specificity pushes it
+    # UP (floor from below). A group must satisfy both, and the admissible band
+    # is the intersection across groups -- which can be empty, and says so.
+    upper: list[float] = []
+    lower: list[float] = []
+    for g in np.unique(group[known]):
+        m = known & (group == g)
+        pos, neg = gate[m & (target == 1)], gate[m & (target == 0)]
+        if pos.size >= min_group_support:
+            upper.append(float(np.quantile(pos, 1.0 - capped)))
+        if neg.size >= min_group_support:
+            lower.append(float(np.quantile(neg, min(specificity_floor + margin, 0.999))))
+    cap = min(upper) if upper else np.inf
+    base = max(lower) if lower else -np.inf
+    if base > cap:
+        # No cut satisfies both floors on every group. Split the difference and
+        # let the caller see the floors were missed rather than silently
+        # favouring one of them.
+        cut = float((base + cap) / 2.0)
+        return cut, doc_metrics(gate >= cut, target)
+    s, g_ = gate[known], target[known].astype(bool)
+    order = np.argsort(-s, kind="stable")
+    s, g_ = s[order], g_[order]
+    tp = np.cumsum(g_)
+    fp = np.cumsum(~g_)
+    last = np.r_[s[1:] != s[:-1], True]
+    tp, fp, thr = tp[last], fp[last], s[last]
+    precision = tp / np.maximum(tp + fp, 1)
+    ok = (thr <= cap) & (thr >= base)
+    idx = int(np.flatnonzero(ok)[np.argmax(precision[ok])]) if ok.any() else int(np.argmax(precision))
+    cut = float(thr[idx])
+    return cut, doc_metrics(gate >= cut, target)
+
+
+__all__ = ["best_threshold", "doc_metrics", "fbeta", "group_recall_cap",
+           "select_doc_threshold", "select_doc_threshold_robust",
+           "select_per_label", "select_per_label_robust", "sweep"]
