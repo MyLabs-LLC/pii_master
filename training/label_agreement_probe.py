@@ -28,9 +28,37 @@ from typing import Any
 
 import numpy as np
 
-DATAX = Path("/home/lence/workspace/data/datax/data")
+#: Frozen copy inside the project: ``{sha256: [labels]}`` for each judge,
+#: extracted from the two 270 MB manifests with the document text dropped. It
+#: exists because the raw corpora were moved to ``data/3-junk/`` -- the label
+#: agreement measured here is what the ``target_infeasible`` verdict and the
+#: renegotiated 0.5138 target rest on, so it must not depend on a directory
+#: named for deletion.
+#: Lives *inside the dataset folder*, not in the project: each dataset under
+#: ``2-eval/`` must be self-contained so ``zip -r`` it and it runs elsewhere.
+#: Keyed by the corpus's own ``doc_id``, covering the documents in this corpus
+#: that both judges labelled.
+FROZEN = Path(
+    "/home/lence/workspace/data/2-eval/4000_datax-dualjudge-evalset-1.32k/judge_labels.json"
+)
+
+#: Raw manifests, tried in order if the frozen copy is missing.
+DATAX_CANDIDATES = (
+    Path("/home/lence/workspace/data/3-junk/datax/data"),
+    Path("/home/lence/workspace/data/datax/data"),
+)
 JUDGE_A = "manifest_gemini_5k_v4.jsonl"
 JUDGE_B = "manifest_sonnet_5k_v4.jsonl"
+
+
+def _datax_dir() -> Path:
+    for candidate in DATAX_CANDIDATES:
+        if (candidate / JUDGE_A).exists():
+            return candidate
+    return DATAX_CANDIDATES[0]
+
+
+DATAX = _datax_dir()
 
 #: datax judge vocabulary -> the pipeline's priority tag names. Only the tags
 #: that actually collide with the 16 gated ones matter here; the rest are
@@ -56,6 +84,11 @@ def _key(row: dict) -> str | None:
 
 
 def load_judge(path: Path) -> dict[str, set[str]]:
+    """Labels for one judge, from the frozen copy when it exists."""
+    if FROZEN.exists():
+        payload = json.loads(FROZEN.read_text(encoding="utf-8"))
+        side = "a" if JUDGE_A in str(path) else "b"
+        return {k: set(v[side]) for k, v in payload["labels"].items()}
     out: dict[str, set[str]] = {}
     with path.open(encoding="utf-8") as stream:
         for line in stream:
