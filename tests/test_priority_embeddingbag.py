@@ -26,14 +26,14 @@ def test_embeddingbag_model_round_trip(tmp_path: Path) -> None:
     embeddings = np.zeros((1 << 17, 2), dtype=np.float32)
     embeddings[features, 0] = 2.0
     head = np.asarray([[1.0, 0.0]], dtype=np.float32)
-    scale, bias = identity_calibration(1)
+    calibration, bias = identity_calibration(1)
     raw = embeddingbag_scores(embeddings, head, features)
     assert raw[0] == 2.0
     model = LowRankEmbeddingBagModel(
         labels,
         embeddings,
         head,
-        scale,
+        calibration,
         bias,
         np.asarray([1.0]),
         20_000,

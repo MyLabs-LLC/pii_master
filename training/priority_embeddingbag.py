@@ -48,7 +48,7 @@ class LowRankEmbeddingBagModel:
     labels: tuple[str, ...]
     embeddings: np.ndarray
     head: np.ndarray
-    scale: np.ndarray
+    calibration: np.ndarray
     bias: np.ndarray
     thresholds: np.ndarray
     read_window_chars: int
@@ -67,7 +67,7 @@ class LowRankEmbeddingBagModel:
             max_features=self.max_document_features,
         )
         raw = embeddingbag_scores(self.embeddings, self.head, features)
-        return raw * self.scale + self.bias
+        return self.calibration @ raw + self.bias
 
     def predict(self, text: str) -> list[str]:
         scores = self.predict_scores(text)
@@ -81,7 +81,7 @@ class LowRankEmbeddingBagModel:
             directory / "model.npz",
             embeddings=self.embeddings.astype(np.float16),
             head=self.head.astype(np.float16),
-            scale=self.scale.astype(np.float32),
+            calibration=self.calibration.astype(np.float32),
             bias=self.bias.astype(np.float32),
             thresholds=self.thresholds.astype(np.float32),
         )
@@ -107,7 +107,7 @@ class LowRankEmbeddingBagModel:
                 labels=tuple(manifest["labels"]),
                 embeddings=stored["embeddings"].astype(np.float32),
                 head=stored["head"].astype(np.float32),
-                scale=stored["scale"].astype(np.float32),
+                calibration=stored["calibration"].astype(np.float32),
                 bias=stored["bias"].astype(np.float32),
                 thresholds=stored["thresholds"].astype(np.float32),
                 read_window_chars=int(manifest["read_window_chars"]),
@@ -117,7 +117,7 @@ class LowRankEmbeddingBagModel:
 
 
 def identity_calibration(n_labels: int) -> tuple[np.ndarray, np.ndarray]:
-    return np.ones(n_labels, dtype=np.float32), np.zeros(n_labels, dtype=np.float32)
+    return np.eye(n_labels, dtype=np.float32), np.zeros(n_labels, dtype=np.float32)
 
 
 def default_model_shapes(rank: int) -> tuple[tuple[int, int], tuple[int, int]]:
