@@ -29,3 +29,14 @@ def test_fusion_model_round_trip(tmp_path: Path) -> None:
     )
     model.save(tmp_path)
     assert load_priority_model(tmp_path).predict("passport number XY999999") == ["tag"]
+
+
+def test_shared_feature_fusion_matches_component_predictions() -> None:
+    labels = ("tag",)
+    text = "passport number AB123456"
+    features = document_features(text)
+    weights = np.zeros((1, 1 << 17), dtype=np.float32)
+    weights[0, features] = 2.0
+    component = HashCueModel(labels, weights, np.ones(1), "top1", 20_000)
+    model = FusionPriorityModel(labels, {"a": component}, {"tag": "source:a"})
+    assert model.predict(text) == component.predict(text)

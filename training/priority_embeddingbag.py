@@ -66,8 +66,17 @@ class LowRankEmbeddingBagModel:
             max_tokens=self.max_tokens,
             max_features=self.max_document_features,
         )
+        return self.predict_scores_from_features(features)
+
+    def predict_scores_from_features(self, features: np.ndarray) -> np.ndarray:
         raw = embeddingbag_scores(self.embeddings, self.head, features)
         return self.calibration @ raw + self.bias
+
+    def predict_from_features(self, features: np.ndarray) -> list[str]:
+        scores = self.predict_scores_from_features(features)
+        return [
+            label for label, keep in zip(self.labels, scores >= self.thresholds) if keep
+        ]
 
     def predict(self, text: str) -> list[str]:
         scores = self.predict_scores(text)

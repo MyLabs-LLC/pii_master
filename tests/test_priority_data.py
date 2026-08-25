@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import json
+import zipfile
 from pathlib import Path
 
-from training.priority_data import PRIORITY_TAGS, iter_corpus, normalized_text_digest
+from training.priority_data import (
+    PRIORITY_TAGS,
+    iter_corpus,
+    normalized_text_digest,
+    read_document,
+)
 
 
 def test_priority_catalog_has_requested_tags() -> None:
@@ -39,7 +45,9 @@ def test_coarse_rows_are_positive_unlabelled(tmp_path: Path) -> None:
     corpus.mkdir()
     (corpus / "one.txt").write_text("Name: Ada Lovelace", encoding="utf-8")
     (corpus / "manifest.json").write_text(
-        json.dumps([{"doc_id": "one", "path": "one.txt", "pii_entities": ["Full Name"]}]),
+        json.dumps(
+            [{"doc_id": "one", "path": "one.txt", "pii_entities": ["Full Name"]}]
+        ),
         encoding="utf-8",
     )
     row = next(iter_corpus(corpus))
@@ -49,3 +57,10 @@ def test_coarse_rows_are_positive_unlabelled(tmp_path: Path) -> None:
 
 def test_digest_normalizes_space_and_case() -> None:
     assert normalized_text_digest("SSN  123") == normalized_text_digest("ssn\n123")
+
+
+def test_zip_xml_read_honors_requested_limit(tmp_path: Path) -> None:
+    document = tmp_path / "long.docx"
+    with zipfile.ZipFile(document, "w") as archive:
+        archive.writestr("word/document.xml", "<w:t>" + "alpha " * 10_000 + "</w:t>")
+    assert len(read_document(document, limit=1_000)) == 1_000

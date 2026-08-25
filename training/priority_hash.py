@@ -239,7 +239,16 @@ class HashCueModel:
             max_tokens=self.max_tokens,
             max_features=self.max_document_features,
         )
+        return self.predict_scores_from_features(features)
+
+    def predict_scores_from_features(self, features: np.ndarray) -> np.ndarray:
         return score_modes(self.weights, features)[self.score_mode]
+
+    def predict_from_features(self, features: np.ndarray) -> list[str]:
+        scores = self.predict_scores_from_features(features)
+        return [
+            label for label, keep in zip(self.labels, scores >= self.thresholds) if keep
+        ]
 
     def predict(self, text: str) -> list[str]:
         scores = self.predict_scores(text)
@@ -322,8 +331,19 @@ class HybridPriorityModel:
         return f"priority={self.priority_model.score_mode};generic={self.generic_model.score_mode}"
 
     def predict(self, text: str) -> list[str]:
-        priority_predictions = set(self.priority_model.predict(text))
-        generic_predictions = set(self.generic_model.predict(text))
+        features = document_features(
+            text[: self.read_window_chars],
+            n_features=self.priority_model.n_features,
+            max_tokens=max(
+                self.priority_model.max_tokens, self.generic_model.max_tokens
+            ),
+            max_features=max(
+                self.priority_model.max_document_features,
+                self.generic_model.max_document_features,
+            ),
+        )
+        priority_predictions = set(self.priority_model.predict_from_features(features))
+        generic_predictions = set(self.generic_model.predict_from_features(features))
         return [
             label
             for label in self.labels

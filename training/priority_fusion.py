@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from training.priority_hash import document_features
+
 
 def fuse_strategy(strategy: str, predicted: dict[str, set[str]], label: str) -> bool:
     operation, raw_names = strategy.split(":", 1)
@@ -47,8 +49,23 @@ class FusionPriorityModel:
         return "per_label_boolean_fusion"
 
     def predict(self, text: str) -> list[str]:
+        first = next(iter(self.components.values()))
+        n_features = (
+            first.n_features
+            if hasattr(first, "n_features")
+            else first.embeddings.shape[0]
+        )
+        features = document_features(
+            text[: self.read_window_chars],
+            n_features=n_features,
+            max_tokens=max(model.max_tokens for model in self.components.values()),
+            max_features=max(
+                model.max_document_features for model in self.components.values()
+            ),
+        )
         predicted = {
-            name: set(model.predict(text)) for name, model in self.components.items()
+            name: set(model.predict_from_features(features))
+            for name, model in self.components.items()
         }
         return [
             label

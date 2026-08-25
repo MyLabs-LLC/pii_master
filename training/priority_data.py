@@ -181,7 +181,15 @@ def resolve_document_path(dataset_dir: Path, row: dict[str, Any]) -> Path:
 
 
 def _sensitive(labels: Iterable[Any]) -> tuple[str, ...]:
-    return tuple(sorted({str(label) for label in labels if str(label).startswith(SENSITIVE_PREFIXES)}))
+    return tuple(
+        sorted(
+            {
+                str(label)
+                for label in labels
+                if str(label).startswith(SENSITIVE_PREFIXES)
+            }
+        )
+    )
 
 
 def normalize_row(dataset_dir: Path, raw: dict[str, Any], index: int) -> CorpusRow:
@@ -204,19 +212,27 @@ def normalize_row(dataset_dir: Path, raw: dict[str, Any], index: int) -> CorpusR
     uid = str(raw.get("uid") or raw.get("doc_id") or raw.get("n") or f"row-{index}")
     # A source that emits catalog gold is complete for its declared catalogue.
     # Coarse entity lists are positive-only observations and therefore masked.
-    label_complete = "gold" in raw and (bool(labels) or dataset_dir.name.startswith("pii"))
+    label_complete = "gold" in raw and (
+        bool(labels) or dataset_dir.name.startswith("pii")
+    )
     if coarse_found and "gold" not in raw:
         label_complete = False
     return CorpusRow(
         dataset=dataset_dir.name,
-        split=str(raw.get("split") or ("eval" if "eval" in dataset_dir.name else "train")),
+        split=str(
+            raw.get("split") or ("eval" if "eval" in dataset_dir.name else "train")
+        ),
         uid=uid,
         path=str(path),
         labels=tuple(sorted(labels)),
         native_labels=tuple(sorted(native)),
         label_complete=label_complete,
-        provenance=str(raw.get("provenance") or raw.get("label_provenance") or "unknown"),
-        source_corpus=str(raw.get("source_corpus") or raw.get("corpus") or dataset_dir.name),
+        provenance=str(
+            raw.get("provenance") or raw.get("label_provenance") or "unknown"
+        ),
+        source_corpus=str(
+            raw.get("source_corpus") or raw.get("corpus") or dataset_dir.name
+        ),
         supplied_hash=str(raw.get("sha256_read_window") or raw.get("sha256") or ""),
     )
 
@@ -226,7 +242,7 @@ def iter_corpus(dataset_dir: Path) -> Iterator[CorpusRow]:
         yield normalize_row(dataset_dir, raw, index)
 
 
-def _xml_archive_text(path: Path) -> str:
+def _xml_archive_text(path: Path, limit: int) -> str:
     chunks: list[str] = []
     with zipfile.ZipFile(path) as archive:
         for name in sorted(archive.namelist()):
@@ -235,9 +251,9 @@ def _xml_archive_text(path: Path) -> str:
             if not name.startswith(("word/", "ppt/slides/", "xl/sharedStrings")):
                 continue
             with archive.open(name) as stream:
-                payload = stream.read(READ_WINDOW * 20).decode("utf-8", errors="ignore")
+                payload = stream.read(limit * 20).decode("utf-8", errors="ignore")
             chunks.append(_TAG_RE.sub(" ", payload))
-            if sum(map(len, chunks)) >= READ_WINDOW:
+            if sum(map(len, chunks)) >= limit:
                 break
     return " ".join(chunks)
 
@@ -251,7 +267,7 @@ def read_document(path: Path, *, limit: int = READ_WINDOW) -> str:
         if suffix in {".htm", ".html", ".xml"}:
             text = _TAG_RE.sub(" ", text)
     elif suffix in _ZIP_XML_EXTENSIONS:
-        text = _xml_archive_text(path)
+        text = _xml_archive_text(path, limit)
     elif suffix == ".pdf":
         completed = subprocess.run(
             ["pdftotext", "-layout", str(path), "-"],
@@ -281,7 +297,11 @@ def normalized_text_digest(text: str) -> str:
 
 
 def list_dataset_dirs(root: Path) -> list[Path]:
-    return sorted(path for path in root.iterdir() if path.is_dir() and (path / "manifest.json").is_file())
+    return sorted(
+        path
+        for path in root.iterdir()
+        if path.is_dir() and (path / "manifest.json").is_file()
+    )
 
 
 def summarize_tags(rows: Iterable[CorpusRow]) -> Counter[str]:

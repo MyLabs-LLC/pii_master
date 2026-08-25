@@ -12,7 +12,6 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import random
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -73,19 +72,24 @@ def _bootstrap_recall_ci(
     confidence: float,
     seed: int,
 ) -> tuple[float | None, float | None]:
-    rng = random.Random(seed)
+    import numpy as np
+
     n_rows = len(rows)
-    samples: list[float] = []
-    for _ in range(n_resamples):
-        support = 0
-        true_positive = 0
-        for _ in range(n_rows):
-            row = rows[rng.randrange(n_rows)]
-            if tag in row.gold:
-                support += 1
-                true_positive += tag in row.predicted
-        if support:
-            samples.append(true_positive / support)
+    true_positive = sum(tag in row.gold and tag in row.predicted for row in rows)
+    false_negative = sum(tag in row.gold and tag not in row.predicted for row in rows)
+    other = n_rows - true_positive - false_negative
+    if true_positive + false_negative == 0:
+        return None, None
+    # A document bootstrap collapsed into TP/FN/other categories is exactly a
+    # multinomial draw, avoiding materializing n_resamples x n_rows indices.
+    rng = np.random.default_rng(seed)
+    draws = rng.multinomial(
+        n_rows,
+        np.asarray([true_positive, false_negative, other], dtype=np.float64) / n_rows,
+        size=n_resamples,
+    )
+    support = draws[:, 0] + draws[:, 1]
+    samples = (draws[support > 0, 0] / support[support > 0]).tolist()
     alpha = (1.0 - confidence) / 2.0
     return _percentile(samples, alpha), _percentile(samples, 1.0 - alpha)
 
