@@ -1,0 +1,100 @@
+{
+ "bundle_name": "pii-cascade-p88r90-v1",
+ "out_dir": "/home/lence/workspace/pii_master/projects/pii-target-8070/dist",
+ "entry_point": "tagger.py",
+ "model_card": "MODEL_CARD.md",
+ "readme": "README.md",
+ "run": "pii-target-8070/26-08-26-1",
+ "license": "proprietary - internal",
+ "files": [
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/models/cascade_p88r90",
+   "dst": "models/model"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/tagger.py",
+   "dst": "tagger.py"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/runtime",
+   "dst": "runtime"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/examples",
+   "dst": "examples"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/reports",
+   "dst": "docs"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/stage_pii-cascade-p88r90-v1/MODEL_CARD.md",
+   "dst": "MODEL_CARD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/stage_pii-cascade-p88r90-v1/README.md",
+   "dst": "README.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/HOW_TO_BUILD.md",
+   "dst": "HOW_TO_BUILD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/probe/ci_cascade_p88r90.json",
+   "dst": "docs/confidence_intervals.json"
+  }
+ ],
+ "config": {
+  "read_window_chars": 12000,
+  "n_labels": 61,
+  "score_mode": "sum",
+  "cpu_budget": 1,
+  "box": {
+   "precision": 0.88,
+   "recall": 0.9
+  }
+ },
+ "requirements": [
+  "numpy>=1.24"
+ ],
+ "metadata": {
+  "architecture": "hashed n-gram cascade: document gate + 61 per-tag linear heads",
+  "n_labels": 61,
+  "derived_from": "cascade_scorecard61",
+  "change": "thresholds re-selected into the box P>=0.88, R>=0.90 on the training carve",
+  "evaluator": "training/h2h_eval.py (unchanged)",
+  "promoted": "no - meets the stated target on the point estimate but does not clear it conclusively; did not pass the per-tag ship gate",
+  "sealed_metrics": {
+   "equal_corpus_doc_precision": 0.8955589153693518,
+   "equal_corpus_doc_recall": 0.7974565203069138,
+   "equal_corpus_doc_specificity": 0.8791637100209538,
+   "macro_f05": 0.7034918427467346,
+   "macro_f2": 0.6479551374912262,
+   "micro_f1": 0.8469773769378662,
+   "p95_latency_ms": 4.028980752627831,
+   "precision_macro_catalogue": 0.7530409932136536,
+   "precision_micro": 0.9000247836112976,
+   "recall_macro_catalogue": 0.5801574736833572,
+   "recall_micro": 0.8019621253013611,
+   "severity_recall_min": 0.4798829198947975
+  },
+  "confidence": {
+   "aggregation": "equal_corpus",
+   "corpus_bootstrap_precision_95": [
+    0.8448345240215577,
+    0.9516632016632016
+   ],
+   "corpus_bootstrap_recall_95": [
+    0.7494923248886626,
+    0.8996897433567432
+   ]
+  }
+ },
+ "verification": {
+  "checked": "20000_pii_holdout_20.00k through the packaged tagger.py",
+  "n": 20000,
+  "metric": "micro_f1",
+  "expected": 0.9300847053527832,
+  "measured": 0.9300786557959653
+ }
+}

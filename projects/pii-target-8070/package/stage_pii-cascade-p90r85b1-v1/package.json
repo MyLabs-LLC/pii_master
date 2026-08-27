@@ -1,0 +1,119 @@
+{
+ "bundle_name": "pii-cascade-p90r85b1-v1",
+ "out_dir": "/home/lence/workspace/pii_master/projects/pii-target-8070/dist",
+ "entry_point": "tagger.py",
+ "model_card": "MODEL_CARD.md",
+ "readme": "README.md",
+ "run": "pii-target-8070/26-08-27-1",
+ "license": "proprietary - internal",
+ "files": [
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/models/cascade_p90r85b1",
+   "dst": "models/model"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/tagger.py",
+   "dst": "tagger.py"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/runtime",
+   "dst": "runtime"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/examples",
+   "dst": "examples"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/reports",
+   "dst": "docs"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/stage_pii-cascade-p90r85b1-v1/MODEL_CARD.md",
+   "dst": "MODEL_CARD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/stage_pii-cascade-p90r85b1-v1/README.md",
+   "dst": "README.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/HOW_TO_BUILD.md",
+   "dst": "HOW_TO_BUILD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/probe/ci_cascade_p90r85b1.json",
+   "dst": "docs/confidence_intervals.json"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/evaluations/holdout_cascade_p90r85b1.json",
+   "dst": "docs/out_of_distribution_holdout.json"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/model training history.md",
+   "dst": "docs/model_training_history.md"
+  }
+ ],
+ "config": {
+  "read_window_chars": 12000,
+  "n_labels": 61,
+  "score_mode": "sum",
+  "cpu_budget": 1,
+  "box": {
+   "precision": 0.9,
+   "recall": 0.85,
+   "beta": 1.0
+  }
+ },
+ "requirements": [
+  "numpy>=1.24"
+ ],
+ "metadata": {
+  "architecture": "hashed n-gram cascade: document gate + 61 per-tag linear heads",
+  "n_labels": 61,
+  "derived_from": "cascade_scorecard61",
+  "change": "thresholds re-selected into the box P>=0.90, R>=0.85, F1-optimal inside it",
+  "evaluator": "training/h2h_eval.py (unchanged)",
+  "promoted": "no - does not meet the 90% precision target and did not pass the per-tag ship gate; selected as the most robust model measured",
+  "sealed_metrics": {
+   "micro_f1": 0.8564026713371277,
+   "precision_micro": 0.8721342802047729,
+   "recall_micro": 0.8414944052696228,
+   "macro_f05": 0.7028216540813446,
+   "macro_f2": 0.6864910423755646,
+   "recall_macro_catalogue": 0.6367105160440717,
+   "precision_macro_catalogue": 0.7218242347240448,
+   "severity_recall_min": 0.5397874606507165,
+   "equal_corpus_doc_recall": 0.7974565203069138,
+   "equal_corpus_doc_precision": 0.8955589153693518,
+   "equal_corpus_doc_specificity": 0.8791637100209538,
+   "p95_latency_ms": 4.028980752627831
+  },
+  "out_of_distribution": {
+   "f1_micro": 0.5452853441238403,
+   "precision_micro": 0.7155795097351074,
+   "recall_micro": 0.44046351313591003,
+   "f2_macro_catalogue": 0.30197975039482117,
+   "f05_macro_catalogue": 0.36946287751197815,
+   "recall_macro_catalogue": 0.32599547505378723,
+   "precision_macro_catalogue": 0.4934094250202179,
+   "prediction_rate": 0.8120347394540943
+  },
+  "confidence": {
+   "aggregation": "equal_corpus",
+   "corpus_bootstrap_precision_95": [
+    0.8066060287685706,
+    0.93940954824057
+   ],
+   "corpus_bootstrap_recall_95": [
+    0.7997331413823978,
+    0.9201236639355389
+   ]
+  }
+ },
+ "verification": {
+  "checked": "20000_pii_holdout_20.00k through the packaged tagger.py",
+  "n": 20000,
+  "metric": "micro_f1",
+  "expected": 0.9355338215827942,
+  "measured": 0.935518802597628
+ }
+}

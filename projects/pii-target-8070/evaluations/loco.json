@@ -1,0 +1,140 @@
+{
+ "folds": 9,
+ "pairs": {
+  "148775_pii2_train_98.81k": "30000_pii2_eval_25.15k",
+  "151708_openpii_pii_train_151.71k": "38937_openpii_pii_eval_38.94k",
+  "15986_datax-dualjudge-trainset-5.36k": "4000_datax-dualjudge-evalset-1.32k",
+  "21743_nemotron_train_20.80k": "5617_nemotron_eval_5.36k",
+  "23693_govdocs2-dualjudge-train80-12.86k": "6589_govdocs2-dualjudge-eval20-3.53k",
+  "41429_betterdataai_ner_silver_train_41.43k": "10360_betterdataai_ner_silver_eval_10.36k",
+  "42504_ai4privacy_pii_masking_train_42.50k": "10626_ai4privacy_pii_masking_eval_10.63k",
+  "85593_pii_trainset_85.59k": "20000_pii_holdout_20.00k",
+  "1290_synthetic_pdf_train_1.27k": "322_synthetic_pdf_eval_318"
+ },
+ "results": [
+  {
+   "held_out_train": "148775_pii2_train_98.81k",
+   "evaluated_on": "30000_pii2_eval_25.15k",
+   "n_train_rows": 383946,
+   "n_eval_rows": 30000,
+   "metrics": {
+    "f1_micro": 0.6034548282623291,
+    "precision_micro": 0.5566363334655762,
+    "recall_micro": 0.6588725447654724,
+    "f2_macro_catalogue": 0.36755242943763733,
+    "f05_macro_catalogue": 0.3808966875076294,
+    "recall_macro_catalogue": 0.3843832314014435,
+    "precision_macro_catalogue": 0.4822750985622406
+   },
+   "seconds": 43.0
+  },
+  {
+   "held_out_train": "151708_openpii_pii_train_151.71k",
+   "evaluated_on": "38937_openpii_pii_eval_38.94k",
+   "n_train_rows": 381013,
+   "n_eval_rows": 38937,
+   "metrics": {
+    "f1_micro": 0.7754327058792114,
+    "precision_micro": 0.7501862645149231,
+    "recall_micro": 0.8024376034736633,
+    "f2_macro_catalogue": 0.6151849627494812,
+    "f05_macro_catalogue": 0.6429622769355774,
+    "recall_macro_catalogue": 0.636189877986908,
+    "precision_macro_catalogue": 0.667472779750824
+   },
+   "seconds": 71.0
+  },
+  {
+   "held_out_train": "15986_datax-dualjudge-trainset-5.36k",
+   "evaluated_on": "4000_datax-dualjudge-evalset-1.32k",
+   "n_train_rows": 516735,
+   "n_eval_rows": 4000,
+   "metrics": {
+    "recall_macro_catalogue": 0.6739346981048584
+   },
+   "seconds": 94.0
+  },
+  {
+   "held_out_train": "21743_nemotron_train_20.80k",
+   "evaluated_on": "5617_nemotron_eval_5.36k",
+   "n_train_rows": 510978,
+   "n_eval_rows": 5617,
+   "metrics": {},
+   "seconds": 95.3
+  },
+  {
+   "held_out_train": "23693_govdocs2-dualjudge-train80-12.86k",
+   "evaluated_on": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "n_train_rows": 509028,
+   "n_eval_rows": 6589,
+   "metrics": {
+    "recall_macro_catalogue": 0.4214797616004944
+   },
+   "seconds": 93.0
+  },
+  {
+   "held_out_train": "41429_betterdataai_ner_silver_train_41.43k",
+   "evaluated_on": "10360_betterdataai_ner_silver_eval_10.36k",
+   "n_train_rows": 491292,
+   "n_eval_rows": 10360,
+   "metrics": {
+    "f1_micro": 0.338765949010849,
+    "precision_micro": 0.26573455333709717,
+    "recall_micro": 0.46715274453163147,
+    "f2_macro_catalogue": 0.20185185968875885,
+    "f05_macro_catalogue": 0.1632785052061081,
+    "recall_macro_catalogue": 0.28569838404655457,
+    "precision_macro_catalogue": 0.16399994492530823
+   },
+   "seconds": 92.2
+  },
+  {
+   "held_out_train": "42504_ai4privacy_pii_masking_train_42.50k",
+   "evaluated_on": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "n_train_rows": 490217,
+   "n_eval_rows": 10626,
+   "metrics": {
+    "f1_micro": 0.5048059821128845,
+    "precision_micro": 0.4491961598396301,
+    "recall_micro": 0.5761299729347229,
+    "f2_macro_catalogue": 0.44196122884750366,
+    "f05_macro_catalogue": 0.4851228594779968,
+    "recall_macro_catalogue": 0.4831894338130951,
+    "precision_macro_catalogue": 0.6039609313011169
+   },
+   "seconds": 93.5
+  },
+  {
+   "held_out_train": "85593_pii_trainset_85.59k",
+   "evaluated_on": "20000_pii_holdout_20.00k",
+   "n_train_rows": 447128,
+   "n_eval_rows": 20000,
+   "metrics": {
+    "f1_micro": 0.805269181728363,
+    "precision_micro": 0.7790079712867737,
+    "recall_micro": 0.8333627581596375,
+    "f2_macro_catalogue": 0.5561668276786804,
+    "f05_macro_catalogue": 0.5923087000846863,
+    "recall_macro_catalogue": 0.5818741917610168,
+    "precision_macro_catalogue": 0.6816611886024475
+   },
+   "seconds": 78.6
+  },
+  {
+   "held_out_train": "1290_synthetic_pdf_train_1.27k",
+   "evaluated_on": "322_synthetic_pdf_eval_318",
+   "n_train_rows": 531431,
+   "n_eval_rows": 322,
+   "metrics": {
+    "f1_micro": 0.585587203502655,
+    "precision_micro": 0.6598505973815918,
+    "recall_micro": 0.5263488292694092,
+    "f2_macro_catalogue": 0.36092057824134827,
+    "f05_macro_catalogue": 0.385373055934906,
+    "recall_macro_catalogue": 0.4239369034767151,
+    "precision_macro_catalogue": 0.4574245810508728
+   },
+   "seconds": 94.4
+  }
+ ]
+}

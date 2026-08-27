@@ -1,0 +1,201 @@
+{
+ "split": "training calibration carve",
+ "aggregation": "equal_corpus",
+ "baseline": "02_box_beta1.0",
+ "target": {
+  "precision": 0.9,
+  "recall": 0.8,
+  "micro_f1": 0.8
+ },
+ "results": [
+  {
+   "mechanism": "02_box_beta1.0",
+   "kind": "threshold",
+   "note": "same box, but the point inside it maximises F1.0 instead of F0.5",
+   "calib_precision": 0.8984156207109448,
+   "calib_recall": 0.8804797513063057,
+   "calib_f1": 0.8886381247093915,
+   "delta_f1_vs_baseline": 0.012379052978078287
+  },
+  {
+   "mechanism": "03_box_beta2.0",
+   "kind": "threshold",
+   "note": "same box, but the point inside it maximises F2.0 instead of F0.5",
+   "calib_precision": 0.8460854695280364,
+   "calib_recall": 0.91899900202037,
+   "calib_f1": 0.8766308960530423,
+   "delta_f1_vs_baseline": 0.0003718243217291084
+  },
+  {
+   "mechanism": "19_majority_of_three_boxes",
+   "kind": "runtime",
+   "note": "fire when at least two of three differently-parameterised boxes agree",
+   "calib_precision": 0.9242698468166342,
+   "calib_recall": 0.8353783869757833,
+   "calib_f1": 0.8762949514656836,
+   "delta_f1_vs_baseline": 3.587973437035874e-05
+  },
+  {
+   "mechanism": "00_baseline_box_p88r90",
+   "kind": "threshold",
+   "note": "the shipped mechanism: F0.5 optimum inside P>=0.88, R>=0.90",
+   "calib_precision": 0.9244325761492653,
+   "calib_recall": 0.8351987243136237,
+   "calib_f1": 0.8762590717313132,
+   "delta_f1_vs_baseline": 0.0
+  },
+  {
+   "mechanism": "06_zscore_then_box",
+   "kind": "threshold",
+   "note": "standardise each tag's score distribution before selecting, so one threshold rule sees comparable scales across tags",
+   "calib_precision": 0.9244325761492653,
+   "calib_recall": 0.8351987243136237,
+   "calib_f1": 0.8762590717313132,
+   "delta_f1_vs_baseline": 0.0
+  },
+  {
+   "mechanism": "17_per_vertical_box",
+   "kind": "threshold",
+   "note": "PHI leans to recall, PCI to precision, PII stays put \u2014 the three verticals have different costs of error",
+   "calib_precision": 0.9243735643885913,
+   "calib_recall": 0.8351503459177028,
+   "calib_f1": 0.8762082661460964,
+   "delta_f1_vs_baseline": -5.080558521686207e-05
+  },
+  {
+   "mechanism": "07_length_normalised",
+   "kind": "threshold",
+   "note": "divide scores by sqrt(active features): removes the advantage a long document gets from sheer length",
+   "calib_precision": 0.9244198886983821,
+   "calib_recall": 0.8351167711984697,
+   "calib_f1": 0.8762074037597297,
+   "delta_f1_vs_baseline": -5.166797158351333e-05
+  },
+  {
+   "mechanism": "13_parent_implied_by_child",
+   "kind": "runtime",
+   "note": "if a name subtype fires, the parent tag fires too \u2014 the taxonomy says a given_name IS a full_name, so silence on the parent is incoherent",
+   "calib_precision": 0.914750895001232,
+   "calib_recall": 0.8393716512366381,
+   "calib_f1": 0.8740266474177452,
+   "delta_f1_vs_baseline": -0.002232424313568071
+  },
+  {
+   "mechanism": "20_intersection_of_three_boxes",
+   "kind": "runtime",
+   "note": "fire only when all three boxes agree \u2014 maximum precision",
+   "calib_precision": 0.9371953026370339,
+   "calib_recall": 0.8164127370749721,
+   "calib_f1": 0.8707353661712239,
+   "delta_f1_vs_baseline": -0.005523705560089298
+  },
+  {
+   "mechanism": "14_child_requires_parent",
+   "kind": "runtime",
+   "note": "the converse: suppress a subtype unless the parent also fires, on the grounds that a lone subtype is usually a false positive",
+   "calib_precision": 0.9273072352239248,
+   "calib_recall": 0.8171828224774387,
+   "calib_f1": 0.8675488062786282,
+   "delta_f1_vs_baseline": -0.008710265452685051
+  },
+  {
+   "mechanism": "15_strict_on_marginal_docs",
+   "kind": "runtime",
+   "note": "raise every threshold by 1.0 on the weakest-scoring quartile of documents, leaving confident documents alone",
+   "calib_precision": 0.9357446004893857,
+   "calib_recall": 0.8090723076318006,
+   "calib_f1": 0.8646403183584275,
+   "delta_f1_vs_baseline": -0.01161875337288576
+  },
+  {
+   "mechanism": "11_margin_0.5",
+   "kind": "threshold",
+   "note": "require the score to clear its threshold by 0.5, not merely reach it",
+   "calib_precision": 0.9378380810522859,
+   "calib_recall": 0.8039492537645193,
+   "calib_f1": 0.8634301389428753,
+   "delta_f1_vs_baseline": -0.012828932788437886
+  },
+  {
+   "mechanism": "04_prevalence_prior_x0.5",
+   "kind": "threshold",
+   "note": "shift each threshold by the tag's prior log-odds: rare tags are asked for more evidence, common tags less",
+   "calib_precision": 0.9354081799095949,
+   "calib_recall": 0.8015612064249528,
+   "calib_f1": 0.8612411182668048,
+   "delta_f1_vs_baseline": -0.015017953464508405
+  },
+  {
+   "mechanism": "01_box_beta0.25",
+   "kind": "threshold",
+   "note": "same box, but the point inside it maximises F0.25 instead of F0.5",
+   "calib_precision": 0.9322901723446976,
+   "calib_recall": 0.8016537399091213,
+   "calib_f1": 0.859937576270366,
+   "delta_f1_vs_baseline": -0.01632149546094719
+  },
+  {
+   "mechanism": "12_margin_1.0",
+   "kind": "threshold",
+   "note": "require the score to clear its threshold by 1.0, not merely reach it",
+   "calib_precision": 0.9500282633665735,
+   "calib_recall": 0.767059936031789,
+   "calib_f1": 0.8450921667325236,
+   "delta_f1_vs_baseline": -0.031166904998789602
+  },
+  {
+   "mechanism": "05_prevalence_prior_x1.0",
+   "kind": "threshold",
+   "note": "shift each threshold by the tag's prior log-odds: rare tags are asked for more evidence, common tags less",
+   "calib_precision": 0.9396577422620778,
+   "calib_recall": 0.7529996034560437,
+   "calib_f1": 0.8331279564098181,
+   "delta_f1_vs_baseline": -0.04313111532149516
+  },
+  {
+   "mechanism": "16_disable_unreachable",
+   "kind": "threshold",
+   "note": "silence every tag whose curve never enters the box, rather than parking it at its best-F0.5 point",
+   "calib_precision": 0.927289692473113,
+   "calib_recall": 0.6855489670711382,
+   "calib_f1": 0.7827045667586743,
+   "delta_f1_vs_baseline": -0.09355450497263895
+  },
+  {
+   "mechanism": "10_topk_cap_8",
+   "kind": "runtime",
+   "note": "emit at most 8 tags per document, keeping the highest-scoring \u2014 a precision play against documents that light up everything",
+   "calib_precision": 0.9162446968170448,
+   "calib_recall": 0.5681766695978867,
+   "calib_f1": 0.6883803498895427,
+   "delta_f1_vs_baseline": -0.18787872184177057
+  },
+  {
+   "mechanism": "18_cooccurrence_prune",
+   "kind": "runtime",
+   "note": "drop a tag when it never co-occurs in training gold with the document's highest-scoring tag",
+   "calib_precision": 0.8897685818123667,
+   "calib_recall": 0.5549230256597276,
+   "calib_f1": 0.6585623751747003,
+   "delta_f1_vs_baseline": -0.21769669655661295
+  },
+  {
+   "mechanism": "09_topk_cap_5",
+   "kind": "runtime",
+   "note": "emit at most 5 tags per document, keeping the highest-scoring \u2014 a precision play against documents that light up everything",
+   "calib_precision": 0.9094832456038153,
+   "calib_recall": 0.4647104926231319,
+   "calib_f1": 0.6010513742875466,
+   "delta_f1_vs_baseline": -0.2752076974437666
+  },
+  {
+   "mechanism": "08_topk_cap_3",
+   "kind": "runtime",
+   "note": "emit at most 3 tags per document, keeping the highest-scoring \u2014 a precision play against documents that light up everything",
+   "calib_precision": 0.9088438759111214,
+   "calib_recall": 0.34891657040646645,
+   "calib_f1": 0.4919978045113867,
+   "delta_f1_vs_baseline": -0.38426126721992654
+  }
+ ]
+}

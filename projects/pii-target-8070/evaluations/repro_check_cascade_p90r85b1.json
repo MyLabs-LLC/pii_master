@@ -1,0 +1,15 @@
+{
+ "what": "re-ran the TRAINING.md reproduce command against the current cache",
+ "shipped_corpora": 8,
+ "current_cache_corpora": 9,
+ "added_since": [
+  "322_synthetic_pdf_eval_318"
+ ],
+ "shipped_f1_micro": 0.8564026713371277,
+ "rerun_f1_micro": 0.805698573589325,
+ "common_measurable": 5,
+ "shipped_equal_corpus_on_common": 0.8564026713371277,
+ "rerun_equal_corpus_on_common": 0.8564026713371277,
+ "identical_on_common": true,
+ "explanation": "the model is unchanged and reproduces exactly; the headline differs only because the cache was later rebuilt with a ninth corpus, so an equal-corpus mean today spans 9 sources where the shipped figure spans 8"
+}

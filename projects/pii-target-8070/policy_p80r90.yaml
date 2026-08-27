@@ -1,0 +1,109 @@
+# pii-target-8070 -- ARM B's policy: 80% precision, and the lineage's 0.90 recall gate kept.
+#
+# Declared 2026-08-26, on instruction ("get me 80% precision across the board and
+# 70% recall"), and written BEFORE the arm it gates was built. That ordering is
+# the point: a ladder assembled once results are in is not a gate.
+#
+# WHAT CHANGED FROM THE LINEAGE'S USUAL POLICY, AND WHY IT IS A REAL CHANGE.
+# Every previous policy in this repo gates per-tag RECALL at 0.90 and lets
+# precision fall where it may. This one gates both, and KEEPS the recall bar at
+# 0.90, so precision has to be bought from somewhere else. Measured on the calibration carve before building
+# anything:
+#
+#     P >= 0.80 and R >= 0.70   ->  54 of 61 tags reachable by threshold alone
+#     P >= 0.80 and R >= 0.90   ->  38 of 61
+#
+# So the 16-tag difference is exactly what the recall relaxation buys. Arm A
+# (`policy_p80r70.yaml`) relaxes it to 0.70 and is measured beside this one, so the trade
+# is reported rather than assumed.
+#
+# The honest cost, stated up front: only 38 of 61 tags can satisfy both bars, so
+# this arm is expected to fail more gates than Arm A. That is the trade being
+# measured -- it fails them for a stated reason rather than by drifting.
+name: pii-target-p80r90
+
+constraints:
+  # ------------------------------------------------------------------ 1
+  # PRECISION, per tag x corpus, on the bootstrap lower bound. `across: each`
+  # means every measurable pair must clear it -- "across the board" read
+  # literally, not as an average that a strong common tag can carry.
+  - name: per-tag precision >= 0.80 (conclusive)
+    metric: precision
+    op: ">="
+    threshold: 0.80
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    # Under ~30 instances a corpus cannot tell you a tag's precision clears 0.80.
+    # Those pairs are NOT_MEASURABLE and are named as excluded in the report:
+    # "could not measure" and "passed" are different claims.
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 2
+  # RECALL, same basis, same scope. Lowered from the lineage's 0.90.
+  - name: per-tag recall >= 0.90 (conclusive)
+    metric: recall
+    op: ">="
+    threshold: 0.90
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 3
+  # THE SERVING CONSTRAINT. 8 ms on one core -- the deployment's stated hard
+  # requirement as of 2026-08-26. Re-thresholding cannot change latency (the
+  # weights and the gate are untouched; only comparisons move), so this is
+  # carried from the measured cascade rather than re-measured, and said to be.
+  - name: one-core p95 <= 8 ms
+    metric: p95_latency_ms
+    op: "<="
+    threshold: 8.0
+    severity: hard
+
+  # ---------------------------------------------------------------- advisory
+  - name: document-level precision
+    metric: doc_precision
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: document-level recall
+    metric: doc_recall
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: prediction rate
+    metric: prediction_rate
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+  - name: worst measurable priority recall
+    metric: severity_recall_min
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+preferences:
+  # Ranking is unchanged from the precision-led order settled earlier: micro F1,
+  # then micro precision, then the macro views. The gate moved; the ranker did
+  # not, so a difference between arms is attributable to the gate.
+  - metric: micro_f1
+    min_relative_change: 0.0
+  - metric: precision_micro
+  - metric: macro_f05
+  - metric: macro_f2
+  - metric: p95_latency_ms
+    greater_is_better: false

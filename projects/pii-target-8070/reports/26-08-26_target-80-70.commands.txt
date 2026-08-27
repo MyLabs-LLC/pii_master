@@ -1,0 +1,225 @@
+[2026-08-27T05:35:47Z] Exit: 0 | Context: re-select thresholds into the box P>=0.80 R>=0.70 | Took: 5.4s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_target_box.py --precision 0.80 --recall 0.70 --name cascade_p80r70
+--- Output ---
+66,867 gate-admitted calibration rows; target P>=0.8 R>=0.7
+selection: {'in_box': 54, 'unreachable': 7}
+
+cannot reach the box at any threshold (7):
+  pci_swift_code                                     sup=74     bestP@R=0.4417  chosen P=0.8947 R=0.4595
+  pii_country_of_origin                              sup=307    bestP@R=0.7143  chosen P=1.0000 R=0.6059
+  pii_county                                         sup=1057   bestP@R=0.7385  chosen P=0.7899 R=0.6083
+  pii_employment_status                              sup=994    bestP@R=0.7080  chosen P=0.9301 R=0.5221
+  pii_nationality                                    sup=359    bestP@R=0.6951  chosen P=0.9810 R=0.5766
+  pii_sexual_identity_and_orientation                sup=142    bestP@R=0.5952  chosen P=0.9000 R=0.5070
+  pii_username                                       sup=545    bestP@R=0.7860  chosen P=0.9452 R=0.6018
+
+-> projects/pii-target-8070/models/cascade_p80r70  (61 enabled tags)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:35:53Z] Exit: 0 | Context: re-select thresholds into the box P>=0.80 R>=0.90 | Took: 5.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_target_box.py --precision 0.80 --recall 0.90 --name cascade_p80r90
+--- Output ---
+66,867 gate-admitted calibration rows; target P>=0.8 R>=0.9
+selection: {'in_box': 38, 'unreachable': 23}
+
+cannot reach the box at any threshold (23):
+  pci_financial_instrument_global_identifier_figi    sup=6519   bestP@R=0.6230  chosen P=0.9021 R=0.7107
+  pci_swift_code                                     sup=74     bestP@R=0.1709  chosen P=0.8947 R=0.4595
+  phi_medical_condition                              sup=472    bestP@R=0.5498  chosen P=1.0000 R=0.8305
+  phi_medication                                     sup=250    bestP@R=0.6148  chosen P=1.0000 R=0.8600
+  phi_patient_id_number                              sup=248    bestP@R=0.6022  chosen P=1.0000 R=0.8468
+  pii_country_of_origin                              sup=307    bestP@R=0.0782  chosen P=1.0000 R=0.6059
+  pii_country_of_residence                           sup=1205   bestP@R=0.4792  chosen P=0.9166 R=0.6747
+  pii_county                                         sup=1057   bestP@R=0.1971  chosen P=0.7899 R=0.6083
+  pii_date_of_birth_dob                              sup=3457   bestP@R=0.4145  chosen P=0.9458 R=0.6002
+  pii_driver_s_license_number                        sup=7343   bestP@R=0.6488  chosen P=0.9169 R=0.7112
+  pii_educational_level                              sup=740    bestP@R=0.2176  chosen P=0.9444 R=0.6432
+  pii_employment_status                              sup=994    bestP@R=0.2054  chosen P=0.9301 R=0.5221
+  pii_ethnicity                                      sup=441    bestP@R=0.2168  chosen P=0.9388 R=0.6259
+  pii_geolocation                                    sup=240    bestP@R=0.0308  chosen P=0.9655 R=0.7000
+  pii_income                                         sup=302    bestP@R=0.0860  chosen P=0.9950 R=0.6656
+  pii_ipv6                                           sup=646    bestP@R=0.7844  chosen P=0.9616 R=0.6594
+  pii_marital_status                                 sup=246    bestP@R=0.2506  chosen P=1.0000 R=0.8171
+  pii_nationality                                    sup=359    bestP@R=0.1319  chosen P=0.9810 R=0.5766
+  pii_password                                       sup=1158   bestP@R=0.4638  chosen P=0.9259 R=0.6908
+  pii_religion                                       sup=246    bestP@R=0.1300  chosen P=0.9299 R=0.5935
+  pii_sexual_identity_and_orientation                sup=142    bestP@R=0.0114  chosen P=0.9000 R=0.5070
+  pii_state                                          sup=8682   bestP@R=0.7612  chosen P=0.9246 R=0.7467
+  pii_username                                       sup=545    bestP@R=0.0671  chosen P=0.9452 R=0.6018
+
+-> projects/pii-target-8070/models/cascade_p80r90  (61 enabled tags)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:36:53Z] Exit: 0 | Context: score cascade_p80r70 on the eight sealed corpora | Took: 22.6s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p80r70 --name cascade_p80r70 --label cascade_scorecard61 re-thresholded into the p80r70 box --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p80r70.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p80r70 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    1.3s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.6s
+  20000_pii_holdout_20.00k                          20,000 docs    3.3s
+  30000_pii2_eval_25.15k                            30,000 docs    4.4s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    7.4s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.6s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.4s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    1.2s
+
+metric                                  cascade_p80r70
+micro_f1                                        0.8394
+precision_micro                                 0.9165
+macro_f05                                       0.7093
+macro_f2                                        0.6406
+recall_macro_catalogue                          0.5668
+precision_macro_catalogue                       0.7616
+severity_recall_min                             0.4830
+prediction_rate                                 0.7656
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r70.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:37:16Z] Exit: 0 | Context: score cascade_p80r90 on the eight sealed corpora | Took: 21.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p80r90 --name cascade_p80r90 --label cascade_scorecard61 re-thresholded into the p80r90 box --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p80r90.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p80r90 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    1.0s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.3s
+  20000_pii_holdout_20.00k                          20,000 docs    3.4s
+  30000_pii2_eval_25.15k                            30,000 docs    5.0s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    6.9s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.5s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    1.1s
+
+metric                                  cascade_p80r90
+micro_f1                                        0.8474
+precision_micro                                 0.8844
+macro_f05                                       0.7056
+macro_f2                                        0.6564
+recall_macro_catalogue                          0.5872
+precision_macro_catalogue                       0.7456
+severity_recall_min                             0.4921
+prediction_rate                                 0.7855
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r90.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:38:39Z] Exit: 0 | Context: expose per-tag precision scopes for cascade_p80r70 | Took: 1.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_scopes.py projects/pii-target-8070/evaluations/arm_cascade_p80r70.json
+--- Output ---
+arm_cascade_p80r70.json: 131 scopes -> 259 (+180 precision)
+  corpora whose gold cannot measure precision, skipped: 3
+    10360_betterdataai_ner_silver_eval_10.36k          12 tags
+    10626_ai4privacy_pii_masking_eval_10.63k           38 tags
+    20000_pii_holdout_20.00k                           49 tags
+    30000_pii2_eval_25.15k                             53 tags
+    38937_openpii_pii_eval_38.94k                      28 tags
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r70.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:38:41Z] Exit: 0 | Context: expose per-tag precision scopes for cascade_p80r90 | Took: 1.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_scopes.py projects/pii-target-8070/evaluations/arm_cascade_p80r90.json
+--- Output ---
+arm_cascade_p80r90.json: 131 scopes -> 259 (+181 precision)
+  corpora whose gold cannot measure precision, skipped: 3
+    10360_betterdataai_ner_silver_eval_10.36k          13 tags
+    10626_ai4privacy_pii_masking_eval_10.63k           39 tags
+    20000_pii_holdout_20.00k                           49 tags
+    30000_pii2_eval_25.15k                             53 tags
+    38937_openpii_pii_eval_38.94k                      27 tags
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r90.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:38:43Z] Exit: 0 | Context: expose per-tag precision scopes for baseline_scorecard61 | Took: 1.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_scopes.py projects/pii-target-8070/evaluations/arm_baseline_scorecard61.json
+--- Output ---
+arm_baseline_scorecard61.json: 131 scopes -> 288 (+210 precision)
+  corpora whose gold cannot measure precision, skipped: 3
+    10360_betterdataai_ner_silver_eval_10.36k          22 tags
+    10626_ai4privacy_pii_masking_eval_10.63k           45 tags
+    20000_pii_holdout_20.00k                           50 tags
+    30000_pii2_eval_25.15k                             57 tags
+    38937_openpii_pii_eval_38.94k                      36 tags
+-> projects/pii-target-8070/evaluations/arm_baseline_scorecard61.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:38:52Z] Exit: 1 | Context: decide all three arms under p80r70 | Took: 0.8s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-target-8070/policy_p80r70.yaml --arms projects/pii-target-8070/evaluations/arm_baseline_scorecard61.json projects/pii-target-8070/evaluations/arm_cascade_p80r70.json projects/pii-target-8070/evaluations/arm_cascade_p80r90.json --suite projects/pii-target-8070/suite.yaml --out projects/pii-target-8070/decision/p80r70.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | per-tag precision >= 0.80 (conclusive) | per-tag recall >= 0.70 (conclusive) | one-core p95 <= 8 ms | document-level precision *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | micro_f1 | precision_micro | macro_f05 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 102/210 (0) | **FAIL** 47/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7299 | 0.6360 | 0.6230 | 0.6651 | 4.0290 |
+| cascade_p80r70 | **blocked** | **FAIL** 141/180 (0) | **FAIL** 44/55 (0) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.8394 | 0.9165 | 0.7093 | 0.6406 | 4.0290 |
+| cascade_p80r90 | **blocked** | **FAIL** 139/181 (0) | **FAIL** 45/55 (0) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.8474 | 0.8844 | 0.7056 | 0.6564 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_scorecard61: per-tag recall >= 0.70 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - cascade_p80r70: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_p80r70: per-tag recall >= 0.70 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - cascade_p80r90: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_p80r90: per-tag recall >= 0.70 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-target-8070/decision/p80r70.json
+--------------
+
+[2026-08-27T05:38:54Z] Exit: 1 | Context: decide all three arms under p80r90 | Took: 1.0s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-target-8070/policy_p80r90.yaml --arms projects/pii-target-8070/evaluations/arm_baseline_scorecard61.json projects/pii-target-8070/evaluations/arm_cascade_p80r70.json projects/pii-target-8070/evaluations/arm_cascade_p80r90.json --suite projects/pii-target-8070/suite.yaml --out projects/pii-target-8070/decision/p80r90.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | per-tag precision >= 0.80 (conclusive) | per-tag recall >= 0.90 (conclusive) | one-core p95 <= 8 ms | document-level precision *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | micro_f1 | precision_micro | macro_f05 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 102/210 (0) | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7299 | 0.6360 | 0.6230 | 0.6651 | 4.0290 |
+| cascade_p80r70 | **blocked** | **FAIL** 141/180 (0) | **FAIL** 21/55 (0) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.8394 | 0.9165 | 0.7093 | 0.6406 | 4.0290 |
+| cascade_p80r90 | **blocked** | **FAIL** 139/181 (0) | **FAIL** 25/55 (0) | PASS | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.8474 | 0.8844 | 0.7056 | 0.6564 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_scorecard61: per-tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - cascade_p80r70: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_p80r70: per-tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - cascade_p80r90: per-tag precision >= 0.80 (conclusive) FAILED at sensitive_pci_credit_card_expiration_date@10626_ai4privacy_pii_masking_eval_10.63k
+  - cascade_p80r90: per-tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-target-8070/decision/p80r90.json
+--------------
+

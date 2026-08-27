@@ -76,6 +76,15 @@ EVAL_ROOT = Path("/home/lence/workspace/data/2-eval")
 #: without raising anything. A property of a corpus must not live in its
 #: folder name.
 COMPLETE_CATALOGUE_STEMS = frozenset({
+    # Added 2026-08-27. Its own `metadata/taxonomy.json` IS the GAIA scorecard's
+    # 60 tags, so an absent tag is an asserted absence rather than an unannotated
+    # one. Declared here rather than inferred, for the reason this constant exists.
+    # NOT added to `h2h_eval.DOC_MEASURABLE_STEMS`: only 20 of its 1,612 documents
+    # carry no tag, which is far too few negatives to judge document precision.
+    "Synthetic_PDF_Corpus_v2",
+    # The 80/20 split of that corpus, now first-class train/eval members.
+    # Same taxonomy, same asserted-absence semantics.
+    "synthetic_pdf_train", "synthetic_pdf_eval",
     "pii2_train", "pii2_eval",
     "pii_trainset", "pii_holdout",
     "ai4privacy_pii_masking_train", "ai4privacy_pii_masking_eval",

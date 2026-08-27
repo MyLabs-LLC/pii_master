@@ -1,0 +1,458 @@
+{
+ "folds": 9,
+ "boxes": {
+  "p88r90": [
+   0.88,
+   0.9,
+   0.5
+  ],
+  "p90r85b1": [
+   0.9,
+   0.85,
+   1.0
+  ]
+ },
+ "pairs": {
+  "148775_pii2_train_98.81k": "30000_pii2_eval_25.15k",
+  "151708_openpii_pii_train_151.71k": "38937_openpii_pii_eval_38.94k",
+  "15986_datax-dualjudge-trainset-5.36k": "4000_datax-dualjudge-evalset-1.32k",
+  "21743_nemotron_train_20.80k": "5617_nemotron_eval_5.36k",
+  "23693_govdocs2-dualjudge-train80-12.86k": "6589_govdocs2-dualjudge-eval20-3.53k",
+  "41429_betterdataai_ner_silver_train_41.43k": "10360_betterdataai_ner_silver_eval_10.36k",
+  "42504_ai4privacy_pii_masking_train_42.50k": "10626_ai4privacy_pii_masking_eval_10.63k",
+  "85593_pii_trainset_85.59k": "20000_pii_holdout_20.00k",
+  "1290_synthetic_pdf_train_1.27k": "322_synthetic_pdf_eval_318"
+ },
+ "results": [
+  {
+   "held_out_train": "148775_pii2_train_98.81k",
+   "evaluated_on": "30000_pii2_eval_25.15k",
+   "n_train_rows": 383946,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.6034548282623291,
+      "precision_micro": 0.5566363334655762,
+      "recall_micro": 0.6588725447654724,
+      "f2_macro_catalogue": 0.36755242943763733,
+      "f05_macro_catalogue": 0.3808966875076294,
+      "recall_macro_catalogue": 0.3843832314014435,
+      "precision_macro_catalogue": 0.4822750985622406
+     },
+     "verdicts": {},
+     "enabled_tags": 56
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.5733910202980042,
+      "precision_micro": 0.5872860550880432,
+      "recall_micro": 0.5601382851600647,
+      "f2_macro_catalogue": 0.29613804817199707,
+      "f05_macro_catalogue": 0.33881205320358276,
+      "recall_macro_catalogue": 0.30115190148353577,
+      "precision_macro_catalogue": 0.4629874527454376
+     },
+     "verdicts": {
+      "in_box": 34,
+      "not_measurable": 7,
+      "unreachable": 20
+     },
+     "enabled_tags": 54
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.5730575919151306,
+      "precision_micro": 0.5448222756385803,
+      "recall_micro": 0.604379415512085,
+      "f2_macro_catalogue": 0.3328666090965271,
+      "f05_macro_catalogue": 0.3636394143104553,
+      "recall_macro_catalogue": 0.3509784936904907,
+      "precision_macro_catalogue": 0.46698909997940063
+     },
+     "verdicts": {
+      "in_box": 35,
+      "not_measurable": 7,
+      "unreachable": 19
+     },
+     "enabled_tags": 54
+    }
+   },
+   "n_eval_rows": 30000,
+   "seconds": 57.8
+  },
+  {
+   "held_out_train": "151708_openpii_pii_train_151.71k",
+   "evaluated_on": "38937_openpii_pii_eval_38.94k",
+   "n_train_rows": 381013,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.7754327058792114,
+      "precision_micro": 0.7501862645149231,
+      "recall_micro": 0.8024376034736633,
+      "f2_macro_catalogue": 0.6151849627494812,
+      "f05_macro_catalogue": 0.6429622769355774,
+      "recall_macro_catalogue": 0.636189877986908,
+      "precision_macro_catalogue": 0.667472779750824
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.7823585271835327,
+      "precision_micro": 0.8730387687683105,
+      "recall_micro": 0.7087432742118835,
+      "f2_macro_catalogue": 0.591359555721283,
+      "f05_macro_catalogue": 0.6687805652618408,
+      "recall_macro_catalogue": 0.5785260200500488,
+      "precision_macro_catalogue": 0.7106746435165405
+     },
+     "verdicts": {
+      "in_box": 35,
+      "unreachable": 26
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.8127003908157349,
+      "precision_micro": 0.8295064568519592,
+      "recall_micro": 0.7965617775917053,
+      "f2_macro_catalogue": 0.6389667987823486,
+      "f05_macro_catalogue": 0.662193775177002,
+      "recall_macro_catalogue": 0.6409282684326172,
+      "precision_macro_catalogue": 0.6745966672897339
+     },
+     "verdicts": {
+      "in_box": 37,
+      "unreachable": 24
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 38937,
+   "seconds": 114.9
+  },
+  {
+   "held_out_train": "15986_datax-dualjudge-trainset-5.36k",
+   "evaluated_on": "4000_datax-dualjudge-evalset-1.32k",
+   "n_train_rows": 516735,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "recall_macro_catalogue": 0.6739346981048584
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "recall_macro_catalogue": 0.41250863671302795
+     },
+     "verdicts": {
+      "in_box": 39,
+      "unreachable": 22
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "recall_macro_catalogue": 0.5729362964630127
+     },
+     "verdicts": {
+      "in_box": 42,
+      "unreachable": 19
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 4000,
+   "seconds": 102.1
+  },
+  {
+   "held_out_train": "21743_nemotron_train_20.80k",
+   "evaluated_on": "5617_nemotron_eval_5.36k",
+   "n_train_rows": 510978,
+   "policies": {
+    "baseline": {
+     "metrics": {},
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {},
+     "verdicts": {
+      "in_box": 39,
+      "unreachable": 22
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {},
+     "verdicts": {
+      "in_box": 41,
+      "unreachable": 20
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 5617,
+   "seconds": 104.5
+  },
+  {
+   "held_out_train": "23693_govdocs2-dualjudge-train80-12.86k",
+   "evaluated_on": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "n_train_rows": 509028,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "recall_macro_catalogue": 0.4214797616004944
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "recall_macro_catalogue": 0.36895066499710083
+     },
+     "verdicts": {
+      "in_box": 38,
+      "unreachable": 23
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "recall_macro_catalogue": 0.4071727693080902
+     },
+     "verdicts": {
+      "in_box": 41,
+      "unreachable": 20
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 6589,
+   "seconds": 107.1
+  },
+  {
+   "held_out_train": "41429_betterdataai_ner_silver_train_41.43k",
+   "evaluated_on": "10360_betterdataai_ner_silver_eval_10.36k",
+   "n_train_rows": 491292,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.338765949010849,
+      "precision_micro": 0.26573455333709717,
+      "recall_micro": 0.46715274453163147,
+      "f2_macro_catalogue": 0.20185185968875885,
+      "f05_macro_catalogue": 0.1632785052061081,
+      "recall_macro_catalogue": 0.28569838404655457,
+      "precision_macro_catalogue": 0.16399994492530823
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.3692023456096649,
+      "precision_micro": 0.37900736927986145,
+      "recall_micro": 0.35989177227020264,
+      "f2_macro_catalogue": 0.18289858102798462,
+      "f05_macro_catalogue": 0.1731872409582138,
+      "recall_macro_catalogue": 0.221267968416214,
+      "precision_macro_catalogue": 0.19513431191444397
+     },
+     "verdicts": {
+      "in_box": 38,
+      "unreachable": 23
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.4295247495174408,
+      "precision_micro": 0.4215210974216461,
+      "recall_micro": 0.43783825635910034,
+      "f2_macro_catalogue": 0.19808140397071838,
+      "f05_macro_catalogue": 0.17225201427936554,
+      "recall_macro_catalogue": 0.24401532113552094,
+      "precision_macro_catalogue": 0.21837128698825836
+     },
+     "verdicts": {
+      "in_box": 41,
+      "unreachable": 20
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 10360,
+   "seconds": 104.6
+  },
+  {
+   "held_out_train": "42504_ai4privacy_pii_masking_train_42.50k",
+   "evaluated_on": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "n_train_rows": 490217,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.5048059821128845,
+      "precision_micro": 0.4491961598396301,
+      "recall_micro": 0.5761299729347229,
+      "f2_macro_catalogue": 0.44196122884750366,
+      "f05_macro_catalogue": 0.4851228594779968,
+      "recall_macro_catalogue": 0.4831894338130951,
+      "precision_macro_catalogue": 0.6039609313011169
+     },
+     "verdicts": {},
+     "enabled_tags": 60
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.5137321352958679,
+      "precision_micro": 0.621466338634491,
+      "recall_micro": 0.4378318190574646,
+      "f2_macro_catalogue": 0.41362693905830383,
+      "f05_macro_catalogue": 0.517671525478363,
+      "recall_macro_catalogue": 0.41269651055336,
+      "precision_macro_catalogue": 0.6836391091346741
+     },
+     "verdicts": {
+      "in_box": 41,
+      "unreachable": 19,
+      "not_measurable": 1
+     },
+     "enabled_tags": 60
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.561086893081665,
+      "precision_micro": 0.5975868701934814,
+      "recall_micro": 0.5287889242172241,
+      "f2_macro_catalogue": 0.4640253484249115,
+      "f05_macro_catalogue": 0.5471917986869812,
+      "recall_macro_catalogue": 0.46982240676879883,
+      "precision_macro_catalogue": 0.6625357866287231
+     },
+     "verdicts": {
+      "in_box": 42,
+      "unreachable": 18,
+      "not_measurable": 1
+     },
+     "enabled_tags": 60
+    }
+   },
+   "n_eval_rows": 10626,
+   "seconds": 104.3
+  },
+  {
+   "held_out_train": "85593_pii_trainset_85.59k",
+   "evaluated_on": "20000_pii_holdout_20.00k",
+   "n_train_rows": 447128,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.805269181728363,
+      "precision_micro": 0.7790079712867737,
+      "recall_micro": 0.8333627581596375,
+      "f2_macro_catalogue": 0.5561668276786804,
+      "f05_macro_catalogue": 0.5923087000846863,
+      "recall_macro_catalogue": 0.5818741917610168,
+      "precision_macro_catalogue": 0.6816611886024475
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.8412569761276245,
+      "precision_micro": 0.902189314365387,
+      "recall_micro": 0.7880343794822693,
+      "f2_macro_catalogue": 0.49825385212898254,
+      "f05_macro_catalogue": 0.5993210673332214,
+      "recall_macro_catalogue": 0.4829212725162506,
+      "precision_macro_catalogue": 0.8392539620399475
+     },
+     "verdicts": {
+      "in_box": 29,
+      "unreachable": 32
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.8528124690055847,
+      "precision_micro": 0.8822557926177979,
+      "recall_micro": 0.8252708911895752,
+      "f2_macro_catalogue": 0.5456213355064392,
+      "f05_macro_catalogue": 0.6144317388534546,
+      "recall_macro_catalogue": 0.5385814309120178,
+      "precision_macro_catalogue": 0.7697411775588989
+     },
+     "verdicts": {
+      "in_box": 35,
+      "unreachable": 26
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 20000,
+   "seconds": 99.3
+  },
+  {
+   "held_out_train": "1290_synthetic_pdf_train_1.27k",
+   "evaluated_on": "322_synthetic_pdf_eval_318",
+   "n_train_rows": 531431,
+   "policies": {
+    "baseline": {
+     "metrics": {
+      "f1_micro": 0.585587203502655,
+      "precision_micro": 0.6598505973815918,
+      "recall_micro": 0.5263488292694092,
+      "f2_macro_catalogue": 0.36092057824134827,
+      "f05_macro_catalogue": 0.385373055934906,
+      "recall_macro_catalogue": 0.4239369034767151,
+      "precision_macro_catalogue": 0.4574245810508728
+     },
+     "verdicts": {},
+     "enabled_tags": 61
+    },
+    "p88r90": {
+     "metrics": {
+      "f1_micro": 0.5034454464912415,
+      "precision_micro": 0.7113401889801025,
+      "recall_micro": 0.389585942029953,
+      "f2_macro_catalogue": 0.26862815022468567,
+      "f05_macro_catalogue": 0.35151606798171997,
+      "recall_macro_catalogue": 0.2869705855846405,
+      "precision_macro_catalogue": 0.4701947271823883
+     },
+     "verdicts": {
+      "in_box": 35,
+      "unreachable": 26
+     },
+     "enabled_tags": 61
+    },
+    "p90r85b1": {
+     "metrics": {
+      "f1_micro": 0.5524584054946899,
+      "precision_micro": 0.7214357852935791,
+      "recall_micro": 0.4476160705089569,
+      "f2_macro_catalogue": 0.3068051338195801,
+      "f05_macro_catalogue": 0.36978036165237427,
+      "recall_macro_catalogue": 0.3321738541126251,
+      "precision_macro_catalogue": 0.4728222191333771
+     },
+     "verdicts": {
+      "in_box": 41,
+      "unreachable": 20
+     },
+     "enabled_tags": 61
+    }
+   },
+   "n_eval_rows": 322,
+   "seconds": 112.8
+  }
+ ]
+}

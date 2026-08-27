@@ -227,3 +227,11 @@ training/artifacts/
 # checksums, source commit, measured scores, limitations -- is in version
 # control even though the weights are distributed separately.
 dist/
+
+# Build outputs of the model pipeline: weights and hashed feature caches are
+# reproducible from training/ and run to gigabytes. dist/ is already ignored above.
+projects/*/models/
+projects/*/cache/
+projects/*/artifacts/
+projects/*/mlflow.db
+mlruns/

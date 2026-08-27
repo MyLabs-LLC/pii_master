@@ -1,0 +1,565 @@
+[2026-08-27T13:42:36Z] Exit: 0 | Context: check the Synthetic PDF corpus maps into the 61-label catalogue | Took: 1.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_import_pdf_corpus.py --check
+--- Output ---
+taxonomy: 60 tags across ['PCI', 'PHI', 'PII']
+all 60 taxonomy tags map into the 61-label catalogue
+
+1,612 documents, 20 with no tag (1.2% — too few document-level negatives to measure doc precision; NOT added to DOC_MEASURABLE_STEMS)
+23,744 entity spans over 1,592 documents
+60 distinct tags present; catalogue tags with no gold here: 1
+
+most common tags:
+    pii_full_name                                   1,592
+    pii_email                                       1,562
+    pii_phone_number                                1,222
+    pii_address                                     1,162
+    pii_state                                       1,162
+    pii_street_number_and_name                      1,162
+    pii_zip_code                                    1,162
+    pii_date_of_birth_dob                             711
+
+--check: nothing written
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:42:50Z] Exit: 0 | Context: import the Synthetic PDF corpus into the loader contract | Took: 1.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_import_pdf_corpus.py
+--- Output ---
+taxonomy: 60 tags across ['PCI', 'PHI', 'PII']
+all 60 taxonomy tags map into the 61-label catalogue
+
+1,612 documents, 20 with no tag (1.2% — too few document-level negatives to measure doc precision; NOT added to DOC_MEASURABLE_STEMS)
+23,744 entity spans over 1,592 documents
+60 distinct tags present; catalogue tags with no gold here: 1
+
+most common tags:
+    pii_full_name                                   1,592
+    pii_email                                       1,562
+    pii_phone_number                                1,222
+    pii_address                                     1,162
+    pii_state                                       1,162
+    pii_street_number_and_name                      1,162
+    pii_zip_code                                    1,162
+    pii_date_of_birth_dob                             711
+
+-> /home/lence/workspace/data/2-eval/Synthetic_PDF_Corpus_v2_1612/labels.jsonl
+-> /home/lence/workspace/data/2-eval/Synthetic_PDF_Corpus_v2_1612/spans.jsonl
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:43:41Z] Exit: 0 | Context: rebuild the 61-label cache to include the new corpus | Took: 30.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_scorecard_catalogue.py --out projects/pii-scorecard-60/cache
+--- Output ---
+scorecard: Scorecard - GAIA Catalog(Rasool-PII-PCI-PHI).csv
+catalogue: 61 labels (dropped ['sensitive_pci_routing_number'], kept off-scorecard ['sensitive_pci_swift_code'])
+
+tags with no gold anywhere: 0
+sensitive tags in the gold but NOT on the scorecard: 1
+    sensitive_pci_routing_number                                    1   DROPPED from the catalogue
+
+-> projects/pii-scorecard-60/cache/catalogue.json
+  10360_betterdataai_ner_silver_eval_10.36k             10,360 rows     13,304 tag hits
+  10626_ai4privacy_pii_masking_eval_10.63k              10,626 rows     34,093 tag hits
+  148775_pii2_train_98.81k                             148,775 rows    430,945 tag hits
+  151708_openpii_pii_train_151.71k                     151,708 rows  1,666,344 tag hits
+  15986_datax-dualjudge-trainset-5.36k                  15,986 rows      6,716 tag hits
+  20000_pii_holdout_20.00k                              20,000 rows    158,554 tag hits
+  21743_nemotron_train_20.80k                           21,743 rows          0 tag hits
+  23693_govdocs2-dualjudge-train80-12.86k               23,693 rows     28,702 tag hits
+  30000_pii2_eval_25.15k                                30,000 rows     76,083 tag hits
+  38937_openpii_pii_eval_38.94k                         38,937 rows    435,341 tag hits
+  4000_datax-dualjudge-evalset-1.32k                     4,000 rows      1,663 tag hits
+  41429_betterdataai_ner_silver_train_41.43k            41,429 rows     52,967 tag hits
+  42504_ai4privacy_pii_masking_train_42.50k             42,504 rows    134,576 tag hits
+  5617_nemotron_eval_5.36k                               5,617 rows          0 tag hits
+  6589_govdocs2-dualjudge-eval20-3.53k                   6,589 rows      8,885 tag hits
+  85593_pii_trainset_85.59k                             85,593 rows    656,492 tag hits
+  counts_w1000                                         SKIPPED (no dataset dir)
+
+-> projects/pii-scorecard-60/cache  (16 cache files)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:44:27Z] Exit: 0 | Context: hash features for the new PDF corpus into the shared cache | Took: 15.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/cache_pdf.py
+--- Output ---
+catalogue for feature build: 58 labels (collapsed)
+caching Synthetic_PDF_Corpus_v2_1612 -> /home/lence/workspace/pii_master/projects/pii-quiet-alarm/cache
+-> 1,612 rows, 1,119,618 nnz@deep, 0 read errors, 2.1 MB
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    Synthetic_PDF_Corpus_v2_1612: 1/1 chunks
+--------------
+
+[2026-08-27T13:45:06Z] Exit: 0 | Context: rebuild the 61-label cache, now including the PDF corpus | Took: 30.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_scorecard_catalogue.py --out projects/pii-scorecard-60/cache
+--- Output ---
+scorecard: Scorecard - GAIA Catalog(Rasool-PII-PCI-PHI).csv
+catalogue: 61 labels (dropped ['sensitive_pci_routing_number'], kept off-scorecard ['sensitive_pci_swift_code'])
+
+tags with no gold anywhere: 0
+sensitive tags in the gold but NOT on the scorecard: 1
+    sensitive_pci_routing_number                                    1   DROPPED from the catalogue
+
+-> projects/pii-scorecard-60/cache/catalogue.json
+  10360_betterdataai_ner_silver_eval_10.36k             10,360 rows     13,304 tag hits
+  10626_ai4privacy_pii_masking_eval_10.63k              10,626 rows     34,093 tag hits
+  148775_pii2_train_98.81k                             148,775 rows    430,945 tag hits
+  151708_openpii_pii_train_151.71k                     151,708 rows  1,666,344 tag hits
+  15986_datax-dualjudge-trainset-5.36k                  15,986 rows      6,716 tag hits
+  20000_pii_holdout_20.00k                              20,000 rows    158,554 tag hits
+  21743_nemotron_train_20.80k                           21,743 rows          0 tag hits
+  23693_govdocs2-dualjudge-train80-12.86k               23,693 rows     28,702 tag hits
+  30000_pii2_eval_25.15k                                30,000 rows     76,083 tag hits
+  38937_openpii_pii_eval_38.94k                         38,937 rows    435,341 tag hits
+  4000_datax-dualjudge-evalset-1.32k                     4,000 rows      1,663 tag hits
+  41429_betterdataai_ner_silver_train_41.43k            41,429 rows     52,967 tag hits
+  42504_ai4privacy_pii_masking_train_42.50k             42,504 rows    134,576 tag hits
+  5617_nemotron_eval_5.36k                               5,617 rows          0 tag hits
+  6589_govdocs2-dualjudge-eval20-3.53k                   6,589 rows      8,885 tag hits
+  85593_pii_trainset_85.59k                             85,593 rows    656,492 tag hits
+  Synthetic_PDF_Corpus_v2_1612                           1,612 rows     15,965 tag hits
+  counts_w1000                                         SKIPPED (no dataset dir)
+
+-> projects/pii-scorecard-60/cache  (17 cache files)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:45:32Z] Exit: 0 | Context: score cascade_p88r90 on the 9-corpus suite including the PDF corpus | Took: 15.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p88r90 --name cascade_p88r90_v9 --label cascade_p88r90 on 9 corpora --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p88r90_v9.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p88r90 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.7s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.0s
+  20000_pii_holdout_20.00k                          20,000 docs    2.4s
+  30000_pii2_eval_25.15k                            30,000 docs    2.8s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    5.0s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.8s
+  Synthetic_PDF_Corpus_v2_1612                       1,612 docs    0.3s
+
+metric                               cascade_p88r90_v9
+micro_f1                                        0.7890
+precision_micro                                 0.8677
+macro_f05                                       0.6435
+macro_f2                                        0.5837
+recall_macro_catalogue                          0.5428
+precision_macro_catalogue                       0.7090
+severity_recall_min                             0.4199
+prediction_rate                                 0.7848
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p88r90_v9.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:45:49Z] Exit: 0 | Context: score cascade_p80r90 on the 9-corpus suite including the PDF corpus | Took: 15.6s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p80r90 --name cascade_p80r90_v9 --label cascade_p80r90 on 9 corpora --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p80r90_v9.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p80r90 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.7s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.0s
+  20000_pii_holdout_20.00k                          20,000 docs    2.4s
+  30000_pii2_eval_25.15k                            30,000 docs    2.8s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    5.3s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.5s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.8s
+  Synthetic_PDF_Corpus_v2_1612                       1,612 docs    0.3s
+
+metric                               cascade_p80r90_v9
+micro_f1                                        0.7923
+precision_micro                                 0.8555
+macro_f05                                       0.6468
+macro_f2                                        0.5924
+recall_macro_catalogue                          0.5501
+precision_macro_catalogue                       0.7056
+severity_recall_min                             0.4306
+prediction_rate                                 0.7884
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r90_v9.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:46:06Z] Exit: 0 | Context: score cascade_p80r70 on the 9-corpus suite including the PDF corpus | Took: 16.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p80r70 --name cascade_p80r70_v9 --label cascade_p80r70 on 9 corpora --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p80r70_v9.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p80r70 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.7s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.0s
+  20000_pii_holdout_20.00k                          20,000 docs    2.6s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    5.3s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.5s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.8s
+  Synthetic_PDF_Corpus_v2_1612                       1,612 docs    0.4s
+
+metric                               cascade_p80r70_v9
+micro_f1                                        0.7834
+precision_micro                                 0.8840
+macro_f05                                       0.6478
+macro_f2                                        0.5784
+recall_macro_catalogue                          0.5317
+precision_macro_catalogue                       0.7128
+severity_recall_min                             0.4226
+prediction_rate                                 0.7707
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p80r70_v9.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:46:23Z] Exit: 0 | Context: score cascade_scorecard61 on the 9-corpus suite including the PDF corpus | Took: 16.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-scorecard-60/models/cascade_scorecard61 --name cascade_scorecard61_v9 --label cascade_scorecard61 on 9 corpora --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_scorecard61_v9.json
+--- Output ---
+scoring projects/pii-scorecard-60/models/cascade_scorecard61 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.9s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.1s
+  20000_pii_holdout_20.00k                          20,000 docs    2.6s
+  30000_pii2_eval_25.15k                            30,000 docs    3.0s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    5.3s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.5s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.8s
+  Synthetic_PDF_Corpus_v2_1612                       1,612 docs    0.3s
+
+metric                            cascade_scorecard61_v9
+micro_f1                                        0.7055
+precision_micro                                 0.6401
+macro_f05                                       0.5828
+macro_f2                                        0.6145
+recall_macro_catalogue                          0.6459
+precision_macro_catalogue                       0.5972
+severity_recall_min                             0.5483
+prediction_rate                                 0.8177
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_scorecard61_v9.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:51:26Z] Exit: 0 | Context: holdout scorer smoke test on p88r90 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-target-8070/models/cascade_p88r90 --name cascade_p88r90 --out projects/pii-target-8070/evaluations/holdout_cascade_p88r90.json
+--- Output ---
+cascade_p88r90 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+
+  15 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_condition                          gold   611
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_country_of_origin                          gold    30
+    pii_county                                     gold   610
+    pii_geolocation                                gold   100
+    pii_income                                     gold   120
+    pii_marital_status                             gold    60
+    pii_nationality                                gold    50
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_p88r90.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:51:56Z] Exit: 0 | Context: holdout score for cascade_scorecard61 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-scorecard-60/models/cascade_scorecard61 --name cascade_scorecard61 --out projects/pii-target-8070/evaluations/holdout_cascade_scorecard61.json
+--- Output ---
+cascade_scorecard61 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+  f1_micro                        0.5836
+  precision_micro                 0.6606
+  recall_micro                    0.5227
+  f2_macro_catalogue              0.3618
+  f05_macro_catalogue             0.3814
+  recall_macro_catalogue          0.4257
+  precision_macro_catalogue       0.4610
+  prediction_rate                 0.8145
+
+  10 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_condition                          gold   611
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_marital_status                             gold    60
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_scorecard61.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:51:59Z] Exit: 0 | Context: holdout score for cascade_p88r90 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-target-8070/models/cascade_p88r90 --name cascade_p88r90 --out projects/pii-target-8070/evaluations/holdout_cascade_p88r90.json
+--- Output ---
+cascade_p88r90 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+  f1_micro                        0.4992
+  precision_micro                 0.7061
+  recall_micro                    0.3861
+  f2_macro_catalogue              0.2627
+  f05_macro_catalogue             0.3438
+  recall_macro_catalogue          0.2810
+  precision_macro_catalogue       0.4889
+  prediction_rate                 0.8120
+
+  15 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_condition                          gold   611
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_country_of_origin                          gold    30
+    pii_county                                     gold   610
+    pii_geolocation                                gold   100
+    pii_income                                     gold   120
+    pii_marital_status                             gold    60
+    pii_nationality                                gold    50
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_p88r90.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:54:56Z] Exit: 0 | Context: finalist: box P>=0.88 R>=0.90 beta=1.0 (round-1 calibration leader) | Took: 3.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_target_box.py --precision 0.88 --recall 0.90 --beta 1.0 --name cascade_p88r90b1
+--- Output ---
+66,867 gate-admitted calibration rows; target P>=0.88 R>=0.9
+selection: {'in_box': 35, 'unreachable': 26}
+
+cannot reach the box at any threshold (26):
+  pci_financial_instrument_global_identifier_figi    sup=6519   bestP@R=0.6230  chosen P=0.8551 R=0.7756
+  pci_swift_code                                     sup=74     bestP@R=0.1709  chosen P=0.7736 R=0.5541
+  phi_medical_condition                              sup=472    bestP@R=0.5498  chosen P=1.0000 R=0.8305
+  phi_medical_record_number_mrn                      sup=698    bestP@R=0.8618  chosen P=0.9754 R=0.8510
+  phi_medication                                     sup=250    bestP@R=0.6148  chosen P=0.9909 R=0.8680
+  phi_patient_id_number                              sup=248    bestP@R=0.6022  chosen P=1.0000 R=0.8468
+  pii_country_of_origin                              sup=307    bestP@R=0.0782  chosen P=0.9660 R=0.6482
+  pii_country_of_residence                           sup=1205   bestP@R=0.4792  chosen P=0.8514 R=0.7751
+  pii_county                                         sup=1057   bestP@R=0.1971  chosen P=0.6927 R=0.7635
+  pii_date_of_birth_dob                              sup=3457   bestP@R=0.4145  chosen P=0.8483 R=0.7035
+  pii_driver_s_license_number                        sup=7343   bestP@R=0.6488  chosen P=0.8522 R=0.7971
+  pii_educational_level                              sup=740    bestP@R=0.2176  chosen P=0.8615 R=0.7311
+  pii_employment_status                              sup=994    bestP@R=0.2054  chosen P=0.8237 R=0.6298
+  pii_ethnicity                                      sup=441    bestP@R=0.2168  chosen P=0.8588 R=0.6893
+  pii_geolocation                                    sup=240    bestP@R=0.0308  chosen P=0.9457 R=0.7250
+  pii_given_name                                     sup=30966  bestP@R=0.8643  chosen P=0.8698 R=0.8946
+  pii_income                                         sup=302    bestP@R=0.0860  chosen P=0.9394 R=0.7185
+  pii_ipv6                                           sup=646    bestP@R=0.7844  chosen P=0.8212 R=0.8746
+  pii_marital_status                                 sup=246    bestP@R=0.2506  chosen P=1.0000 R=0.8171
+  pii_nationality                                    sup=359    bestP@R=0.1319  chosen P=0.9113 R=0.6295
+  pii_password                                       sup=1158   bestP@R=0.4638  chosen P=0.8651 R=0.7642
+  pii_personal_identification_number_pin             sup=443    bestP@R=0.8544  chosen P=0.9714 R=0.8442
+  pii_religion                                       sup=246    bestP@R=0.1300  chosen P=0.8789 R=0.6789
+  pii_sexual_identity_and_orientation                sup=142    bestP@R=0.0114  chosen P=0.7188 R=0.6479
+  pii_state                                          sup=8682   bestP@R=0.7612  chosen P=0.8522 R=0.8443
+  pii_username                                       sup=545    bestP@R=0.0671  chosen P=0.8741 R=0.6624
+
+-> projects/pii-target-8070/models/cascade_p88r90b1  (61 enabled tags)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:55:10Z] Exit: 0 | Context: score the beta=1.0 finalist sealed | Took: 14.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_any.py --model projects/pii-target-8070/models/cascade_p88r90b1 --name cascade_p88r90b1 --label box 0.88/0.90 beta=1.0 --latency projects/pii-scorecard-60/evaluations/latency_scorecard61.json --out projects/pii-target-8070/evaluations/arm_cascade_p88r90b1.json
+--- Output ---
+scoring projects/pii-target-8070/models/cascade_p88r90b1 (61 labels)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.9s
+  20000_pii_holdout_20.00k                          20,000 docs    2.2s
+  30000_pii2_eval_25.15k                            30,000 docs    2.7s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.8s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                                cascade_p88r90b1
+micro_f1                                        0.8557
+precision_micro                                 0.8634
+macro_f05                                       0.7015
+macro_f2                                        0.6877
+recall_macro_catalogue                          0.6381
+precision_macro_catalogue                       0.7196
+severity_recall_min                             0.5378
+prediction_rate                                 0.7975
+equal_corpus_doc_recall                         0.7975
+equal_corpus_doc_precision                      0.8956
+
+-> projects/pii-target-8070/evaluations/arm_cascade_p88r90b1.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:55:45Z] Exit: 0 | Context: holdout score for cascade_p90r85b1 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-target-8070/models/cascade_p90r85b1 --name cascade_p90r85b1 --out projects/pii-target-8070/evaluations/holdout_cascade_p90r85b1.json
+--- Output ---
+cascade_p90r85b1 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+  f1_micro                        0.5453
+  precision_micro                 0.7156
+  recall_micro                    0.4405
+  f2_macro_catalogue              0.3020
+  f05_macro_catalogue             0.3695
+  recall_macro_catalogue          0.3260
+  precision_macro_catalogue       0.4934
+  prediction_rate                 0.8120
+
+  13 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_country_of_origin                          gold    30
+    pii_geolocation                                gold   100
+    pii_income                                     gold   120
+    pii_marital_status                             gold    60
+    pii_nationality                                gold    50
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_p90r85b1.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:55:47Z] Exit: 0 | Context: holdout score for cascade_p88r90b1 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-target-8070/models/cascade_p88r90b1 --name cascade_p88r90b1 --out projects/pii-target-8070/evaluations/holdout_cascade_p88r90b1.json
+--- Output ---
+cascade_p88r90b1 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+  f1_micro                        0.5427
+  precision_micro                 0.7100
+  recall_micro                    0.4392
+  f2_macro_catalogue              0.3039
+  f05_macro_catalogue             0.3683
+  recall_macro_catalogue          0.3290
+  precision_macro_catalogue       0.4785
+  prediction_rate                 0.8120
+
+  14 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_condition                          gold   611
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_country_of_origin                          gold    30
+    pii_geolocation                                gold   100
+    pii_income                                     gold   120
+    pii_marital_status                             gold    60
+    pii_nationality                                gold    50
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_p88r90b1.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T13:55:50Z] Exit: 0 | Context: holdout score for cascade_p80r90 | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_holdout.py --model projects/pii-target-8070/models/cascade_p80r90 --name cascade_p80r90 --out projects/pii-target-8070/evaluations/holdout_cascade_p80r90.json
+--- Output ---
+cascade_p80r90 on Synthetic_PDF_Corpus_v2_1612: 1,612 documents, 0.2s
+  f1_micro                        0.5167
+  precision_micro                 0.7108
+  recall_micro                    0.4059
+  f2_macro_catalogue              0.2720
+  f05_macro_catalogue             0.3523
+  recall_macro_catalogue          0.2904
+  precision_macro_catalogue       0.5056
+  prediction_rate                 0.8120
+
+  15 tag(s) with >=30 gold instances that NEVER fire:
+    pci_credit_card_number                         gold    41
+    pci_credit_score                               gold    40
+    pci_last_four_credit_card_number_digits        gold    61
+    phi_icd_10                                     gold   120
+    phi_icd_code                                   gold    80
+    phi_medical_condition                          gold   611
+    phi_medical_treatment                          gold   611
+    phi_medication                                 gold   561
+    phi_patient_id_number                          gold   611
+    pii_country_of_origin                          gold    30
+    pii_county                                     gold   610
+    pii_geolocation                                gold   100
+    pii_income                                     gold   120
+    pii_marital_status                             gold    60
+    pii_nationality                                gold    50
+
+-> projects/pii-target-8070/evaluations/holdout_cascade_p80r90.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T14:02:28Z] Exit: 0 | Context: confidence intervals for p90r85b1 | Took: 0.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/ci_p90r85b1.py
+--- Output ---
+pooled over 5 precision-measurable corpora
+  tp 648,535  fp 55,848  fn 68,840
+  micro precision 0.9207   Wilson 95% [0.9201, 0.9213]
+  micro recall    0.9040   Wilson 95% [0.9034, 0.9047]
+
+corpus-level bootstrap (5,000 resamples of the 5 corpora):
+  micro precision 95% [0.8066, 0.9394]
+  micro recall    95% [0.7997, 0.9201]
+
+clears P>=0.90 conclusively (Wilson lower)?  YES
+clears P>=0.90 conclusively (corpus bootstrap lower)?  NO
+-> projects/pii-target-8070/probe/ci_cascade_p90r85b1.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T14:43:30Z] Exit: 1 | Context: full evaluation matrix: 11 models x 9 corpora | Took: 91.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_eval_matrix.py
+--- Output ---
+11 models x 9 corpora (8 sealed + 1 holdout) = 99 measurements
+
+  cascade_scorecard61    61 labels  9/9 corpora   12.8s
+  cascade_p80r70         61 labels  9/9 corpora   12.9s
+  cascade_p80r90         61 labels  9/9 corpora   12.9s
+  cascade_p88r90         61 labels  9/9 corpora   12.8s
+  cascade_p90r90         61 labels  9/9 corpora   12.8s
+  cascade_p90r85b1       61 labels  9/9 corpora   12.8s
+  cascade_p88r90b1       61 labels  9/9 corpora   12.8s
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Traceback (most recent call last):
+  File "/home/lence/workspace/pii_master/training/h2h_eval_matrix.py", line 177, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/h2h_eval_matrix.py", line 117, in main
+    tagger = load_fused(path)
+  File "/home/lence/workspace/pii_master/training/h2h_eval_matrix.py", line 92, in load_fused
+    return mod.Tagger(bundle)
+           ~~~~~~~~~~^^^^^^^^
+  File "/home/lence/workspace/pii_master/projects/pii-content-v5/package/tagger.py", line 89, in __init__
+    from model2vec import StaticModel
+ModuleNotFoundError: No module named 'model2vec'
+--------------
+
