@@ -1,0 +1,31 @@
+{
+  "acceptance_rule": "the project's frozen DecisionSpec (decision/policy.yaml): hard priority recall ci_lower >= 0.90 on every scope with support >= 30, hard one-core p95 <= 5 ms, then macro_f2, then micro_f1. Applied by `mp decide`, recorded in decision_r1/decision.json. The two-split non-regression rule was NOT the acceptance test here: held-in was used for threshold selection, so a held-in macro_f2 delta would be a selection artifact rather than independent evidence.",
+  "action_taken": "selected by mp decide over 9 arms; new champion candidate perlabel_v4",
+  "candidate_id": "t1-c1",
+  "decision": "accept",
+  "delta_ho": 0.009715660572317042,
+  "editable_surface": "per-tag thresholds (declared config surface) via new training/select_priority_thresholds.py + training/materialize_perlabel.py; only HashCueModel.thresholds for the 16 priority labels changed",
+  "evaluator": "training/priority_eval.py unchanged (frozen span/document protocol, 1000-resample document bootstrap); selection touched held-in train_index only; holdout scored through the same evaluator",
+  "expected_effect": "precision-side gain in macro_f2 and micro_f1 with all 55 priority recall gates preserved",
+  "gates_after": "55/55 conclusive",
+  "gates_before": "55/55 conclusive",
+  "harness_parent": "champion_1k (commit d662a3a)",
+  "iteration": 1,
+  "metric": "equal_corpus_macro_f2 (primary), equal_corpus_micro_f1 (tie-break)",
+  "micro_f1_after": 0.4249105595117525,
+  "micro_f1_before": 0.38118396080534256,
+  "notes": "Latency is unchanged by construction (thresholds-only edit) and measured head-to-head at 1 core on the same 1,000-document sample: champion 1.697 ms p95, candidate 1.717 ms. The 2.200 ms in read_depth.json was measured under different machine conditions and is not comparable to either. Four holdout scorings were spent on this candidate; each revision corrected the selection procedure on a stated principle rather than tuning against the sealed numbers.",
+  "p95_ms_after": 1.7168549,
+  "p95_ms_before": 1.6972052999999998,
+  "regression_risk": "raising thresholds costs recall; the gate is ci_lower >= 0.90 on scopes as small as 30 positives, so a threshold provable on a held-in corpus can be inconclusive on its 4x smaller holdout twin",
+  "rejected_siblings": {
+    "perlabel_1k": "label_complete filter hid govdocs2 from selection; full_name 0.8467 / address 0.8620 -> 2 gate FAILURES",
+    "perlabel_v2": "50/55 conclusive, 5 inconclusive - selected on held-in point recall, ignoring that a holdout scope has ~1/4 the statistical power",
+    "perlabel_v3": "53/55 conclusive, 2 inconclusive - holdout-power scaling added, margin 0.005 still too thin for the train->eval recall shift"
+  },
+  "score_ho_after": 0.4931731543924182,
+  "score_ho_before": 0.48345749382010117,
+  "targeted_mechanism": "tune_priority_hash._thresholds_for_trial selects ONE shared priority_target_index for all 16 priority tags, so the recall target the hardest tag needs is imposed on tags already saturated at worst-corpus recall 1.0000. All 16 priority tags consequently route to source:recall and the champion runs at ~0.99 recall / ~0.16 implied macro precision.",
+  "worst_priority_recall_after": 0.9463276836158192,
+  "worst_priority_recall_before": 0.9887766554433222
+}

@@ -1,0 +1,28 @@
+DATA DICTIONARY — EXCERPT
+OBJECT: ESCRW.WIRE_INSTR_PARTY
+CLASSIFICATION: Restricted
+REVISION: 1.7 (2016)
+
+FIELDS
+01. WIRE_INSTR_ID — int IDENTITY — NOT NULL — PK.
+02. FILE_NBR — varchar(20) — NOT NULL — FK, ESCRW.FILE_HDR.
+03. PTY_ID — bigint — NOT NULL — FK, dbo.PTY_MASTER.
+04. BENE_NAME — varchar(120) — NOT NULL — Entered from written instruction only.
+05. BENE_ACCT_NBR_ENC — varbinary(256) — NOT NULL — Encrypted at column level.
+06. BENE_ROUTING_NBR_ENC — varbinary(256) — NOT NULL — Encrypted at column level.
+07. BENE_ADDR_LINE_1 — varchar(80) — NULL —
+08. BENE_BANK_NAME — varchar(80) — NOT NULL —
+09. CALLBACK_VERIF_FLAG — bit — NOT NULL — Default 0. Must be 1 before release.
+10. CALLBACK_BY_USER — varchar(30) — NULL — Application login of the verifying Escrow Officer.
+11. CALLBACK_DTM — datetime — NULL —
+12. ENTERED_BY_USER — varchar(30) — NOT NULL —
+13. ENTERED_DTM — datetime — NOT NULL —
+
+ACCESS
+Read and write restricted to Escrow Operations and Treasury. Decrypted read is logged. No screen displays fields 05 or 06 in full; display is truncated by the application layer.
+
+RETENTION
+Row retained with the escrow file. Fields 05 and 06 are nulled thirty days after final disbursement by job JB_WIRE_SCRUB.
+
+EXTRACTS
+None. This object is excluded from all reporting replication and from the marketing data mart by explicit filter in the publication.

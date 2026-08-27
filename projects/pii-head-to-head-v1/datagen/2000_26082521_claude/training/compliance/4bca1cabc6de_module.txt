@@ -1,0 +1,76 @@
+COUNTY HEALTH DEPARTMENT
+OFFICE OF PRIVACY AND INFORMATION GOVERNANCE
+ANNUAL WORKFORCE PRIVACY TRAINING -- MODULE 2 SLIDE SCRIPT
+DOCUMENT CONTROL NO. PIG-TRN-02   REV 4   ISSUED MARCH 2016
+
+SLIDE 2 OF 9 -- "WHAT IS RESTRICTED"
+
+PRESENTER NOTE. Read the tier definitions verbatim. Do not paraphrase the
+control codes. The column headed FIELD LABELS lists the column names that
+appear in the source systems; the tier attaches to the label, not to the
+program area that happens to hold it.
+
++------+--------------------------------+----------------------------------------------+--------+
+| TIER | INFORMATION CATEGORY           | FIELD LABELS PRESENT IN SOURCE SYSTEM        | CTRL   |
++------+--------------------------------+----------------------------------------------+--------+
+|  1   | Protected Health Information   | Patient Name; Date of Birth; Med Rec No.     | E2 A4  |
+|      |                                | Diagnosis Code; Date of Service              |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  2   | Financial Account Identifiers  | Social Security No.; Bank Routing No.;       | E2 A4  |
+|      |                                | Card Account No.; Billing Address            |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  3   | Communicable Disease Registry  | Case ID; Reportable Condition; Contact       | E2 A5  |
+|      |                                | Name; Exposure Site; Specimen No.            |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  4   | Workforce Personnel Records    | Employee ID; Home Address; Home Phone;       | E1 A3  |
+|      |                                | Salary Grade; Background Check Result        |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  5   | Vital Records                  | Certificate No.; Informant Name; Cause       | E2 A5  |
+|      |                                | of Death; Attendant Signature                |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  6   | Investigative and Legal Hold   | Complaint No.; Subject Name; Custodian       | E2 A5  |
+|      |                                | Assignment; Warrant No.                      |        |
++------+--------------------------------+----------------------------------------------+--------+
+|  P   | Public / Unrestricted          | Program Name; Facility Address; Clinic       | --     |
+|      |                                | Hours; Aggregate Case Count                  |        |
++------+--------------------------------+----------------------------------------------+--------+
+
+CONTROL CODE LEGEND
+  E1  AES-256 at rest.
+  E2  AES-256 at rest and TLS 1.2 or higher in transit.
+  A3  Role-based access; recertification by the supervisor each fiscal year.
+  A4  Minimum necessary standard; every access logged; log retained six years.
+  A5  Written authorization or statutory authority required before release;
+      the Records Custodian countersigns each release.
+
+SLIDE 3 OF 9 -- "WHY THE TIER MATTERS"
+
+PRESENTER NOTE. Three points, then advance.
+
+First, tier assignment is determined by the presence of a listed field label
+in the record, not by the sensitivity a staff member assigns to the content.
+A roster carrying only the columns Program Name and Aggregate Case Count is
+Tier P. Add the column Date of Birth and the same roster becomes Tier 1.
+
+Second, aggregation raises the tier. Two Tier P extracts that can be joined
+on a common key are treated at the tier of the resulting joined set. The
+Privacy Officer makes the determination; staff may not make it locally.
+
+Third, the tier travels with the copy. Printing, screen capture, export to
+removable media, and forwarding to a personal account each create a copy
+that carries the original controls. There is no de-escalation by format.
+
+SLIDE 4 OF 9 -- "WHAT MISHANDLING COSTS"
+
+PRESENTER NOTE. Summarize; the sanction schedule is distributed separately
+as Attachment B and is not read aloud.
+
+Mishandling is addressed on three tracks that run independently. The
+administrative track is progressive discipline applied by the Human
+Resources Director. The regulatory track is a civil money penalty assessed
+per violation against the Department, with an annual cap for identical
+provisions. The criminal track applies to knowing disclosure, obtaining
+records under false pretenses, and disclosure for personal gain or malicious
+harm. A finding on one track does not bar a finding on the others.
+
+Advance to Slide 5 and distribute Form PIG-TRN-02Q.

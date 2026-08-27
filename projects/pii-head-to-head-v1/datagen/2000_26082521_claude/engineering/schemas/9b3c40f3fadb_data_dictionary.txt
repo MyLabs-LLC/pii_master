@@ -1,0 +1,77 @@
+COUNTY HEALTH DEPARTMENT
+DIVISION OF INFORMATION SERVICES
+RECORD LAYOUT ABSTRACT — FORM DP-114 (REV. 03/97)
+
+SECTION 1 — FILE IDENTIFICATION
+  Physical file .......... MBRMAST
+  Logical view ........... V_MBR_CURR
+  Platform ............... AS/400 V3R7 / DB2 400
+  Owning program area .... Community Health Services, Member Enrollment Unit
+  Custodian of record .... the Records Custodian, Division of Information Services
+  Update frequency ....... Nightly batch (JOBQ CHSNITE), plus on-line maintenance 0700–1730
+  Row count (approx.) .... See DP-114A supplement, filed monthly
+
+SECTION 2 — COLUMN INVENTORY
+
+  COLUMN NAME      TYPE           NULL  NOTES
+  ---------------  -------------  ----  ------------------------------------------
+  MBR_KEY          DEC(9,0)       N     System-assigned. Primary key. Non-reused.
+  MBR_ID_NBR       CHAR(12)       N     Program-facing identifier. Restricted.
+  SSN_NBR          CHAR(9)        Y     Restricted Class A. Not printed on any
+                                        report. Masked in all on-line displays
+                                        except panel CHS310 (supervisor profile).
+  LAST_NAM         CHAR(25)       N     Restricted Class A.
+  FRST_NAM         CHAR(15)       N     Restricted Class A.
+  MID_INIT         CHAR(1)        Y     Restricted Class A.
+  DOB_DTE          DATE           N     Restricted Class A. Converted from 6-byte
+                                        packed to CCYYMMDD under Y2K task order
+                                        97-118. Do not re-derive age in program.
+  SEX_CDE          CHAR(1)        N     Domain per state reporting manual.
+  ADDR_LINE_1      CHAR(30)       Y     Restricted Class A.
+  ADDR_LINE_2      CHAR(30)       Y     Restricted Class A.
+  CITY_NAM         CHAR(20)       Y     Restricted Class A.
+  ST_CDE           CHAR(2)        Y     USPS domain.
+  ZIP_CDE          CHAR(9)        Y     First five positions releasable in
+                                        aggregate for service-area analysis.
+  PHN_NBR_HOME     CHAR(10)       Y     Restricted Class A. Suppressed on extracts.
+  PHN_NBR_ALT      CHAR(10)       Y     Restricted Class A. Suppressed on extracts.
+  HH_KEY           DEC(9,0)       Y     Household grouping. Nullable for singles.
+  ENRL_STAT_CDE    CHAR(2)        N     Domain table CHSD12.
+  ENRL_EFF_DTE     DATE           N
+  ENRL_END_DTE     DATE           Y     Null indicates open enrollment segment.
+  ELIG_PGM_CDE     CHAR(4)        N     Multiple rows permitted via MBRPGM.
+  CLINIC_ORG_CDE   CHAR(3)        N     Assigned service site.
+  LANG_PREF_CDE    CHAR(3)        Y     Defaulted at intake if omitted.
+  CONF_FLG         CHAR(1)        N     Y = confidential handling per state code.
+                                        Row excluded from all extracts in §4.
+  LST_MNT_USR      CHAR(10)       N     Sign-on of last maintainer. Audit only.
+  LST_MNT_TS       TIMESTAMP      N     Audit only.
+
+SECTION 3 — ACCESS RESTRICTION
+  3.1  Class A columns are released only under an approved DP-207 access request
+       countersigned by the program supervisor and the Records Custodian.
+  3.2  Query profiles QRY01–QRY04 are constructed against V_MBR_CURR, which
+       omits SSN_NBR, PHN_NBR_HOME and PHN_NBR_ALT.
+  3.3  Ad hoc download to diskette or workstation drive is prohibited. Refer all
+       requests to the Division for scheduled extract.
+
+SECTION 4 — DOWNSTREAM EXTRACTS
+  EXT-01  State immunization registry, weekly, fixed 240-byte record.
+  EXT-02  WIC state agency reconciliation, monthly, tape transmittal.
+  EXT-03  Epidemiology aggregate, quarterly. Class A columns suppressed;
+          ZIP_CDE truncated to 5; DOB_DTE replaced by derived age band.
+  EXT-04  Billing service bureau, semi-monthly. Class A columns limited to those
+          enumerated on the executed data exchange agreement.
+
+SECTION 5 — RETENTION
+  5.1  Active rows retained on-line 24 months following ENRL_END_DTE.
+  5.2  Purged rows written to archive file MBRHIST, retained seven (7) years
+       per the state records retention schedule, series HD-4.
+  5.3  Extract work files scratched at job end. No intermediate copies retained.
+  5.4  Destruction of archive media requires DP-260 certificate of erasure.
+
+SECTION 6 — APPROVALS
+  Prepared by ............ Systems Analyst, Applications Section
+  Reviewed by ............ the Records Custodian
+  Approved by ............ Division Manager, Information Services
+  Supersedes ............. DP-114 (REV. 09/95)

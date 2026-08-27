@@ -1,0 +1,45 @@
+MEMORANDUM
+
+TO:      Records Custodian, Vital Statistics Unit
+         Data Steward, Communicable Disease Registry
+FROM:    Application Support Lead, Information Systems Division
+DATE:    March 14, 2016
+SUBJECT: Nightly ETL run summary — job VSTAT_LOAD_NIGHTLY, cycle 2016-03-14
+
+The nightly load completed with rejects above the standing threshold of 0.10 percent. Run detail is reproduced below from the scheduler log. No further operator action was taken overnight.
+
+Job name:        VSTAT_LOAD_NIGHTLY
+Job identifier:  VSTAT-ETL-0316-041
+Started:         2016-03-14 02:00:04 CDT
+Completed:       2016-03-14 02:41:52 CDT
+Elapsed:         00:41:48
+Source:          intake staging table STG_VITAL_INTAKE
+Target:          warehouse table DW_VITAL_FACT
+
+Rows read:            184,206
+Rows transformed:     184,206
+Rows written:         183,911
+Rows rejected:            254
+Rows quarantined:          41
+Distinct reject codes:      6
+
+Rejects grouped by the field that failed the rule:
+
+  DATE_OF_BIRTH ................ 96
+  RESIDENCE_ZIP ................ 61
+  MEDICAID_ID .................. 44
+  PHONE_HOME ................... 29
+  EMAIL_PRIMARY ................ 15
+  GUARDIAN_LAST_NAME ............ 9
+
+The quarantine set consists of rows in which the tokenisation step could not resolve a surrogate for SSN or MEDICAL_RECORD_NUMBER because the key service returned a timeout at 02:17:31. Those rows are held in QTN_VITAL_HOLD with all direct-identifier columns written as masked placeholders and the source values discarded, per the standing rule in the masking profile. They will be reprocessed on the 2016-03-15 cycle without operator intervention.
+
+Two observations for the stewards:
+
+1. The DATE_OF_BIRTH rejects continue to cluster on rows sourced from the paper intake queue, where the field arrives as free text rather than a formatted date. The transformation rule accepts four patterns; anything else is rejected with code VAL-DOB-002. Intake staff should be reminded of the accepted entry format.
+
+2. The RESIDENCE_ZIP rejects are almost entirely nine-digit entries where the hyphen is absent. The mapping rule truncates to five characters before validation, so the failure is in the length check upstream of truncation. Information Systems will file a change request to reorder those two steps.
+
+No masked or tokenised values were written to the operator log at any point in this cycle. The log level for the transformation stage remains INFO; raising it to DEBUG would emit field contents and must not be done on the production scheduler.
+
+Please confirm receipt and advise whether the 254 rejected rows should be routed to manual correction or held for the weekly batch.

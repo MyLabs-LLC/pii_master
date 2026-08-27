@@ -1,0 +1,66 @@
+ETL JOB OUTPUT
+Job: JOB-EDW-NIGHTLY-4471
+Stream: PAS-PL to EDW staging and dimensional load
+Scheduler: CTRLM-EDW, calendar NIGHTLY-PL
+Node: edwetl03
+
+  Step 010 — EXTRACT
+    Start ......... 2011-03-15 01:12:06
+    End ........... 2011-03-15 01:43:55
+    Rows read ..... 418,332
+    Rows written .. 418,332
+    Note .......... tokenise-on-extract applied to PARTY_SSN,
+                    DRIVER_LIC_NBR, BANK_ACCT_NBR, BANK_ROUTING_NBR,
+                    HOME_PHONE_NBR, MOBILE_PHONE_NBR, EMAIL_ADDR_TXT
+    Return code ... 0
+
+  Step 020 — VALIDATE
+    Start ......... 2011-03-15 01:44:02
+    End ........... 2011-03-15 03:09:58
+    Rows in ....... 418,332
+    Rows out ...... 411,906
+    Rows rejected . 6,426
+    Return code ... 4 (warning threshold 2.00 percent, actual 1.54 percent)
+
+  Step 030 — MASK
+    Start ......... 2011-03-15 03:10:11
+    End ........... 2011-03-15 03:28:40
+    Rows in ....... 411,906
+    Columns masked  16 of 41, per MASK-CFG-0114
+    Sample render . GIVEN_NAME=X*, FAMILY_NAME=X*, BIRTH_DT=XXXX-XX-####,
+                    STREET_LINE_1=[MASKED], POSTAL_CD=###XX,
+                    VIN_TOKEN=XXXXXXXXXXXXX####
+    Return code ... 0
+
+  Step 040 — LOAD STAGING
+    Start ......... 2011-03-15 03:28:52
+    End ........... 2011-03-15 04:02:19
+    EDW.STG_PARTY ..... inserted 411,906 / updated 0 / rejected 0
+    EDW.STG_CONTACT ... inserted 409,884 / updated 0 / rejected 0
+    EDW.STG_POLICY .... inserted 411,906 / updated 0 / rejected 0
+    Return code ....... 0
+
+  Step 050 — MERGE DIMENSIONS
+    Start ......... 2011-03-15 04:02:31
+    End ........... 2011-03-15 05:14:07
+    DIM_PARTY ......... new 3,118 / changed 27,440 / unchanged 381,348
+    DIM_CONTACT ....... new 2,904 / changed 19,006 / unchanged 387,974
+    DIM_POLICY_TERM ... new 4,201 / changed 12,655 / unchanged 395,050
+    Return code ....... 0
+
+  Step 060 — RECONCILE
+    Start ......... 2011-03-15 05:14:20
+    End ........... 2011-03-15 05:21:48
+    Source control count .. 418,332
+    Target control count .. 411,906
+    Variance .............. 6,426, fully accounted to validation queues
+    Return code ........... 0
+
+  JOB SUMMARY
+    Elapsed ......... 04:09:42
+    Highest RC ...... 4
+    Status .......... COMPLETED WITH WARNINGS
+    Downstream ...... RPT-PL-DAILY-0088 released 2011-03-15 05:22:10
+    Operator note ... The ETL Operator logged the 6,426 rejects against
+                      incident INC-2011-03-0912 and notified the Data
+                      Steward before the 09:00 call.

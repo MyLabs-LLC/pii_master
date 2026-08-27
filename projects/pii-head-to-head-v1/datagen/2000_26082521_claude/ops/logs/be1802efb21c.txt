@@ -1,0 +1,72 @@
+CORPORATE DATA ADMINISTRATION — MAPPING RULE SET
+FILE: ETLMAP.RX.PATDIM.CFG          REV 04
+EFFECTIVE 1998-11-02 00:00 CST      SUPERSEDES REV 03 (1998-06-15)
+OWNER: Data Administration Group / countersigned by the Records Custodian
+
+  1. JOB BINDING
+     1.1 Job identifier .............. RXW0412
+     1.2 Stream ...................... NIGHTLY_PATDIM
+     1.3 Predecessor ................. RXW0407 (host extract, AS/400 LIB RXPROD)
+     1.4 Successor ................... RXW0418 (dimension publish)
+     1.5 Run window .................. 01:15–03:40 CST, Mon–Sat
+     1.6 Restart mode ................ CHECKPOINT, interval 25000 rows
+
+  2. SOURCE DEFINITION
+     2.1 Copybook .................... PATMSTR.CPY (host record length 812)
+     2.2 Extract volume, prior run ... 1,884,317 rows
+     2.3 Reject file ................. RXW0412.REJ (fixed, LRECL 812)
+     2.4 Character set ............... EBCDIC 037 → ASCII on landing
+
+  3. FIELD MAPPING — PATIENT SEGMENT
+     3.1 PAT_LAST_NM ................. → DIM_PAT.LAST_NM_TKN      rule TOKENIZE
+     3.2 PAT_FIRST_NM ................ → DIM_PAT.FIRST_NM_TKN     rule TOKENIZE
+     3.3 PAT_MID_INIT ................ → (not carried)            rule SUPPRESS
+     3.4 PAT_DOB ..................... → DIM_PAT.BIRTH_YR_ONLY    rule TRUNCATE_YYYY
+     3.5 PAT_SEX_CD .................. → DIM_PAT.SEX_CD           rule PASS
+     3.6 PAT_SSN ..................... → (not carried)            rule SUPPRESS
+     3.7 PAT_ADDR_LN1 ................ → (not carried)            rule SUPPRESS
+     3.8 PAT_ADDR_LN2 ................ → (not carried)            rule SUPPRESS
+     3.9 PAT_CITY .................... → DIM_PAT.CITY_NM          rule PASS
+     3.10 PAT_ST ..................... → DIM_PAT.ST_CD            rule PASS
+     3.11 PAT_ZIP5 ................... → DIM_PAT.ZIP3            rule TRUNCATE_3
+     3.12 PAT_ZIP4 ................... → (not carried)            rule SUPPRESS
+     3.13 PAT_HOME_PHONE ............. → (not carried)            rule SUPPRESS
+     3.14 PAT_WORK_PHONE ............. → (not carried)            rule SUPPRESS
+     3.15 PAT_EMAIL_ADDR ............. → DIM_PAT.CONTACT_FLG      rule PRESENCE_ONLY
+     3.16 GUARANTOR_LAST_NM .......... → (not carried)            rule SUPPRESS
+     3.17 EMPLOYER_NM ................ → DIM_PAT.EMPLR_TKN        rule TOKENIZE
+
+  4. FIELD MAPPING — THIRD PARTY SEGMENT
+     4.1 TPP_CARDHOLDER_ID ........... → DIM_PLAN.CARDHOLDER_TKN  rule TOKENIZE
+     4.2 TPP_PERSON_CD ............... → DIM_PLAN.PERSON_CD       rule PASS
+     4.3 TPP_GROUP_NBR ............... → DIM_PLAN.GROUP_TKN       rule TOKENIZE
+     4.4 RELATIONSHIP_CD ............. → DIM_PLAN.REL_CD          rule PASS
+     4.5 PLAN_ID ..................... → DIM_PLAN.PLAN_ID         rule PASS
+     4.6 ELIG_EFF_DT ................. → DIM_PLAN.ELIG_EFF_DT     rule PASS
+     4.7 ELIG_TERM_DT ................ → DIM_PLAN.ELIG_TERM_DT    rule PASS
+
+  5. FIELD MAPPING — PRESCRIBER AND FILL SEGMENTS
+     5.1 PRESCRIBER_DEA_NBR .......... → FCT_FILL.PRSCR_TKN       rule TOKENIZE
+     5.2 PRESCRIBER_LAST_NM .......... → (not carried)            rule SUPPRESS
+     5.3 PRESCRIBER_STATE_LIC_NBR .... → (not carried)            rule SUPPRESS
+     5.4 RX_NBR ...................... → FCT_FILL.RX_SURR         rule TOKENIZE
+     5.5 FILL_NBR .................... → FCT_FILL.FILL_SEQ        rule PASS
+     5.6 NDC_CD ...................... → FCT_FILL.NDC_CD          rule PASS
+     5.7 DAW_CD ...................... → FCT_FILL.DAW_CD          rule PASS
+     5.8 SIG_TXT ..................... → (not carried)            rule SUPPRESS
+     5.9 ALLERGY_TXT ................. → (not carried)            rule SUPPRESS
+     5.10 DIAG_CD .................... → FCT_FILL.DIAG_CD         rule PASS
+
+  6. TOKENIZATION SERVICE
+     6.1 Vault ....................... TKNSVC.PROD, port 4471
+     6.2 Token format ................ TKN_############ (14 positions, fixed)
+     6.3 Re-identification ........... denied to all warehouse roles
+     6.4 Key custody ................. Records Custodian, quarterly rotation
+     6.5 Failure action .............. abort load, do not pass through raw
+
+  7. CHANGE CONTROL
+     7.1 Rule additions require sign-off by the Records Custodian.
+     7.2 Any change to rule PASS on a patient-segment field requires review
+         by the Pharmacy Systems Supervisor before promotion to PROD.
+     7.3 Y2K remediation note: all date fields carry 4-position century.
+         Century-window inference is disabled for PAT_DOB and ELIG_EFF_DT.

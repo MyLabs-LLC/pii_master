@@ -1,0 +1,49 @@
+INTERNAL MEMORANDUM
+
+TO:      Applications Support; Records Management; Billing Systems
+FROM:    Database Administration Group
+DATE:    14 October 1998
+SUBJECT: Data Dictionary Excerpt — CUSTMAST (Customer Master), Release 4.2
+
+The following excerpt covers the personal-data bearing segment of CUSTMAST only. Columns outside the range CUST_ID through EXTR_SUPR_FLG are documented in the full dictionary binder held by the Records Custodian. Direct any correction requests to the DBA Group through the standard change form.
+
+COLUMN NAME       TYPE          NULL  OPERATIONAL NOTES
+----------------- ------------- ----- --------------------------------------
+CUST_ID           CHAR(9)       N     Primary key. Assigned by sequence.
+CUST_LGL_NM       VARCHAR(60)   N     Legal entity name as filed.
+CUST_DBA_NM       VARCHAR(60)   Y     Trade name where filed separately.
+CTC_LAST_NM       VARCHAR(30)   N     Restricted. See access note 1.
+CTC_FRST_NM       VARCHAR(20)   N     Restricted. See access note 1.
+CTC_MID_INIT      CHAR(1)       Y     Restricted. Not carried downstream.
+CTC_TITL_CD       CHAR(4)       Y     Coded against TITLREF.
+CTC_PHON_NBR      CHAR(10)      Y     Digits only. No formatting stored.
+CTC_FAX_NBR       CHAR(10)      Y     Digits only.
+CTC_EMAIL_ADR     VARCHAR(50)   Y     Added Release 4.0. Sparse population.
+CTC_DOB_DT        DATE          Y     Restricted. Note 2 applies.
+CTC_TAX_ID_NBR    CHAR(9)       Y     Restricted. Note 2 applies. Sole
+                                      proprietors only.
+BILL_ADR_LN1      VARCHAR(40)   N     Restricted.
+BILL_ADR_LN2      VARCHAR(40)   Y     Restricted.
+BILL_CITY_NM      VARCHAR(28)   N
+BILL_ST_CD        CHAR(2)       N     Validated against STATEREF.
+BILL_POST_CD      CHAR(9)       N     Right-padded where 5-digit.
+SHIP_ADR_LN1      VARCHAR(40)   Y     Restricted. Defaults from BILL_ADR_LN1
+                                      when SHIP_SAME_FLG is set.
+SHIP_ADR_LN2      VARCHAR(40)   Y     Restricted.
+SHIP_SAME_FLG     CHAR(1)       N     Y/N.
+ACCT_STAT_CD      CHAR(2)       N     Coded against STATREF.
+CRDT_LMT_AMT      DECIMAL(11,2) Y     Zero implies prepay terms.
+OPEN_DT           DATE          N     Four-digit year as of Release 4.1.
+LAST_ACTV_DT      DATE          Y     Refreshed by nightly posting job.
+PURGE_ELIG_DT     DATE          Y     Derived. See retention note 3.
+EXTR_SUPR_FLG     CHAR(1)       N     Suppression flag. See note 4.
+
+Access note 1: Columns marked Restricted are readable only under the security group PROD.CUSTMAST.PII.READ. Application programs requiring these columns must bind through the restricted plan. Ad hoc query IDs are not eligible.
+
+Access note 2: CTC_DOB_DT and CTC_TAX_ID_NBR are write-once from the account opening screen and are not displayed on any inquiry panel. Amendment requires a signed correction form countersigned by the Records Custodian.
+
+Retention note 3: PURGE_ELIG_DT is calculated as LAST_ACTV_DT plus seven years for closed accounts. The quarterly purge utility clears restricted columns to low-values and retains the balance of the row for statistical use. Rows carrying an unresolved claim indicator are excluded from purge until released by Legal.
+
+Note 4: Where EXTR_SUPR_FLG is set, the row is withheld from the marketing extract and from the carrier partner file. It is not withheld from billing, EDI acknowledgement, or the operations routing extract, which remain necessary to perform the contract.
+
+Downstream extracts drawing on this segment: nightly billing interface, weekly EDI 810 companion file, monthly marketing extract, quarterly carrier partner file. Only the billing interface receives restricted columns, and only BILL_ADR_LN1 through BILL_POST_CD.

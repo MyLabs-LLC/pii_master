@@ -1,0 +1,15 @@
+{
+  "candidate": "t0-c6",
+  "stage": "propose",
+  "proposal": "Make the immutable internal split robust to legitimately hashless unreadable rows by falling back to CRC32(dataset::uid), without changing any hashed row assignment.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "4abd413",
+  "commit": "4db586a",
+  "decision": "accepted",
+  "evidence": {
+    "trigger": "ValueError on empty text_sha256 after 25,000 source rows",
+    "tests": "4 passed",
+    "ruff": "passed",
+    "partial_model_or_cache_accepted": false
+  }
+}

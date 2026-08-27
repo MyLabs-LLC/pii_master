@@ -1,0 +1,33 @@
+MEMORANDUM — OPERATIONS
+
+TO:    Data Services Group, Second Shift
+FROM:  Records Custodian
+DATE:  22 July 1998
+REF:   DSG-98-0388
+RE:    Reject listing, job CM4470, nightly candidate load
+
+Extract of VALERR.LOG for the run of 21 July 1998 follows. Rejects are held in the suspense file pending branch correction. Suspense rows do not age off; they accumulate until cleared.
+
+1998-07-21 23:41:02 CM4470 STEP030 INFO  VALIDATE BEGIN  INPUT ROWS=18,442
+1998-07-21 23:41:19 CM4470 STEP030 ERR   ROW 00114 COL CAND_TAX_ID       RULE 07 CHECKDIGIT FAIL
+1998-07-21 23:41:19 CM4470 STEP030 ERR   ROW 00114 COL CAND_DOB          RULE 12 DATE NOT PARSEABLE
+1998-07-21 23:43:55 CM4470 STEP030 ERR   ROW 00907 COL CAND_POSTAL_CD    RULE 21 NOT IN ZIP XREF
+1998-07-21 23:44:10 CM4470 STEP030 ERR   ROW 00931 COL CAND_LAST_NM      RULE 02 REQUIRED FIELD EMPTY
+1998-07-21 23:47:33 CM4470 STEP030 ERR   ROW 02218 COL CAND_HOME_PHONE_NBR RULE 15 AREA CODE UNASSIGNED
+1998-07-21 23:47:33 CM4470 STEP030 ERR   ROW 02218 COL CAND_ALT_PHONE_NBR  RULE 15 AREA CODE UNASSIGNED
+1998-07-21 23:52:08 CM4470 STEP030 WARN  ROW 03440 COL CAND_ADDR_LINE_2  RULE 33 LENGTH TRUNCATED TO 30
+1998-07-22 00:03:41 CM4470 STEP030 ERR   ROW 07752 COL PAY_ROUTING_NBR   RULE 09 ABA CHECKSUM FAIL
+1998-07-22 00:03:41 CM4470 STEP030 ERR   ROW 07752 COL PAY_ACCT_REF      RULE 41 TOKEN NOT ISSUED
+1998-07-22 00:11:26 CM4470 STEP030 ERR   ROW 09014 COL WORK_AUTH_STATUS_CD RULE 44 CODE NOT IN XREF
+1998-07-22 00:18:52 CM4470 STEP030 ERR   ROW 12106 COL CAND_DOB          RULE 13 PIVOT AMBIGUOUS
+1998-07-22 00:29:37 CM4470 STEP030 INFO  VALIDATE END    ACCEPT=18,309  REJECT=127  WARN=6
+
+Notes.
+
+Rule 13 (pivot ambiguous) fired 41 times across the run, all against CAND_DOB where the source carried a two-digit year and no century marker. These rows are not to be corrected by estimation at branch level. Return them to the originating office for reference to the signed application.
+
+Rule 41 indicates a routing number was keyed before the account token was issued. The sequence is token first. Branches keying in the reverse order will continue to generate rejects on both PAY_ACCT_REF and PAY_ROUTING_NBR.
+
+Reject detail is written to the suspense file with the row ordinal and column name only. Field contents are not carried into VALERR.LOG. Correction requires retrieval of the source document; the log will not tell the clerk what the value was.
+
+Suspense count at close of run: 1,904 rows, oldest dated 09 April 1998. Districts with suspense older than sixty days are listed in the weekly exception report.

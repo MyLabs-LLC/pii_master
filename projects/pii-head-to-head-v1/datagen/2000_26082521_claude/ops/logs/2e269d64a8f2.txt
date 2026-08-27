@@ -1,0 +1,83 @@
+RUN LOG EXTRACT — achd-etl-orchestrator
+NODE achd-etl-02  ENV PROD  TZ America/Chicago
+EXTRACT WINDOW 2021-07-14T02:00:00 through 2021-07-14T02:47:00
+
+02:00:04  JOB-ELR-20210714-0033  START
+              pipeline: elr_ingest -> stage -> mask -> ods
+              trigger: cron 0 2 * * *
+              config hash: mp14-a7d0
+02:00:06      STAGE 1 EXTRACT
+                  source: LAB-HL7-DROP (sftp)
+                  files claimed: 38
+                  messages parsed: 41,208
+                  parse failures: 0
+02:04:19      STAGE 1 COMPLETE  duration 253s  rows_out 41,208
+02:04:20      STAGE 2 VALIDATE
+                  ruleset: elr_v9
+                  rows_in 41,208
+02:07:52          RULE VAL-101 required-not-null [patient_last_name]
+                      violations 118
+                      disposition QUARANTINE
+02:07:52          RULE VAL-103 required-not-null [date_of_birth]
+                      violations 74
+                      disposition QUARANTINE
+02:07:53          RULE VAL-117 format [primary_phone] expects NNN-NNN-NNNN
+                      violations 402
+                      disposition COERCE_THEN_MASK
+                      coerced 391  residual 11 -> QUARANTINE
+02:07:55          RULE VAL-140 domain [result_loinc] not in active LOINC subset
+                      violations 63
+                      disposition REJECT
+02:07:56          RULE VAL-142 referential [reporting_lab_code] no match in lab_master
+                      violations 29
+                      distinct codes 4
+                      disposition REJECT
+02:07:58          RULE VAL-155 range [specimen_collect_date] future-dated
+                      violations 12
+                      disposition REJECT
+02:08:01      STAGE 2 COMPLETE  rows_pass 40,700  rows_quarantine 404  rows_reject 104
+02:08:02      STAGE 3 MASK
+                  policy: masking-policy.conf rev 14
+                  suppressed columns 5
+                  tokenised columns 4
+                  masked columns 11
+02:11:40          WARN MASK-DENY-UNMAPPED column [guardian_email] absent from policy
+                      action: column dropped, run continues under Section 4.1
+                      notification: the Records Custodian, the Privacy Officer
+02:11:41          token vault calls 40,700  cache hits 38,912  vault misses 1,788
+02:12:33      STAGE 3 COMPLETE  rows_out 40,700  duration 271s
+02:12:34      STAGE 4 LOAD
+                  target: ods.elr_result_f
+                  mode: upsert on (tkn_specimen, result_loinc)
+02:19:47          inserted 27,455
+                  updated 13,240
+                  no-op 5
+02:19:48      STAGE 4 COMPLETE
+02:19:49  JOB-ELR-20210714-0033  END  status SUCCESS_WITH_WARNINGS  elapsed 1,185s
+
+02:20:00  JOB-IIS-20210714-0034  START
+              pipeline: iis_dose_reconcile
+02:20:02      rows_in 9,733
+02:22:14      RULE VAL-201 required-not-null [vaccine_cvx]  violations 3  disposition REJECT
+02:22:15      RULE VAL-208 duplicate key [tkn_client_id, vaccine_cvx, dose_number]
+                  violations 611
+                  disposition COLLAPSE_LATEST
+02:25:31      STAGE MASK COMPLETE  masked columns 11  suppressed columns 5
+02:29:08      LOAD ods.iis_dose_f  inserted 6,102  updated 3,017  rejected 3
+02:29:09  JOB-IIS-20210714-0034  END  status SUCCESS  elapsed 549s
+
+02:30:00  JOB-VR-20210714-0035  START
+              pipeline: vital_records_death_match
+02:30:01      rows_in 1,144
+02:31:40      RULE VAL-303 required-not-null [date_of_death]  violations 2  disposition QUARANTINE
+02:33:12      ABORT  token vault timeout, endpoint achd-tokvault-prod-b, 30,000 ms
+                  fail_mode HARD_STOP invoked per Section 3.5
+                  rows written 0
+                  quarantine retained 1,144
+02:33:13  JOB-VR-20210714-0035  END  status FAILED  elapsed 193s
+              retry scheduled 2021-07-14T05:30:00
+              ticket OPS-4471 raised to the Systems Administrator
+
+02:47:00  ORCHESTRATOR WINDOW CLOSED
+              jobs 3  success 1  success_with_warnings 1  failed 1
+              aggregate rows_in 52,085  rows_loaded 49,819  quarantined 1,550  rejected 107

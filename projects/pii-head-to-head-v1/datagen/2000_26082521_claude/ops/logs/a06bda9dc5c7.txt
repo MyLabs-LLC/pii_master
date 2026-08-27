@@ -1,0 +1,31 @@
+MASKING PROFILE DMSK-0417 — REGISTRAR EXTRACT (RG-DW)
+EFFECTIVE 2004-03-01 00:00 CST / SUPERSEDES DMSK-0392
+OWNER: OFFICE OF THE REGISTRAR — RECORDS CUSTODIAN
+APPROVER: UNIVERSITY DATA STEWARDSHIP COMMITTEE
+
+- Profile scope confirmed: source schema REGPROD, target schema RGDW_STG. Applies to all outbound extracts except transcript print stream (see DMSK-0311).
+- Rule set loaded from /u01/app/etl/cfg/dmsk_0417.cfg at instance startup. Checksum verified against control copy held by the Records Custodian.
+- Field-level rule inventory verified — 19 rules active, 3 rules suspended pending FERPA review:
+    - STU_SSN .................. RULE=FULL_SUP, OUT='XXX-XX-XXXX', LEN=11
+    - STU_LAST_NAME ............ RULE=TOKEN, VAULT=TKV_NAME, OUT=<TKN:NM>
+    - STU_FIRST_NAME ........... RULE=TOKEN, VAULT=TKV_NAME, OUT=<TKN:NM>
+    - STU_MIDDLE_INIT .......... RULE=NULLIFY, OUT=NULL
+    - STU_BIRTH_DT ............. RULE=GENERALIZE, GRAIN=YYYY, OUT=[MASK]
+    - PERM_ADDR_LINE_1 ......... RULE=FULL_SUP, OUT=[MASK]
+    - PERM_ADDR_LINE_2 ......... RULE=FULL_SUP, OUT=[MASK]
+    - PERM_CITY ................ RULE=RETAIN (aggregate reporting)
+    - PERM_POSTAL_CD ........... RULE=TRUNCATE, KEEP=3, OUT=[MASK]
+    - HOME_PHONE_NBR ........... RULE=FULL_SUP, OUT='(###) ###-####'
+    - CELL_PHONE_NBR ........... RULE=FULL_SUP, OUT='(###) ###-####'
+    - UNIV_EMAIL_ADDR .......... RULE=TOKEN, VAULT=TKV_ADDR, OUT=<TKN:EM>
+    - EMERG_CONTACT_NAME ....... RULE=NULLIFY, OUT=NULL
+    - EMERG_CONTACT_PHONE ...... RULE=NULLIFY, OUT=NULL
+    - PARENT_GUARD_NAME ........ RULE=SUSPENDED
+    - VISA_DOC_NBR ............. RULE=FULL_SUP, OUT=[MASK]
+    - DRIVER_LIC_NBR ........... RULE=FULL_SUP, OUT=[MASK]
+    - BURSAR_ACCT_NBR .......... RULE=FULL_SUP, OUT='****'
+    - STU_UNIV_ID .............. RULE=HASH, ALG=MD5, SALT=CFG, OUT=<HASH:ID>
+- Referential integrity check passed: hashed STU_UNIV_ID remains join-stable across STU_DIM, ENRL_FACT, AWD_FACT.
+- LOG_VALUE_ECHO = OFF. Reject files inherit profile; no unmasked column may be written to /u01/app/etl/rej.
+- Suspended rules re-review scheduled 2004-04-12 with the Records Custodian.
+- Profile validated against 2,000-row control extract: 0 rule misses, 0 pass-through columns.

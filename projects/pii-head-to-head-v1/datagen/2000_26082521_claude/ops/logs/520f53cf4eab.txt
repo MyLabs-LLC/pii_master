@@ -1,0 +1,23 @@
+MASKING PROFILE — TITLE/ESCROW PRODUCTION EXTRACT
+File: E:\PRODCTL\MSKPROF.CFG (rev 11, generated 1998-10-01 06:12:44)
+Loaded by JOB ESCMSK01 at each extract; no runtime override permitted.
+
+* PROFILE_ID = MSK-TE-004; OWNER = the Records Custodian; APPROVER = the Escrow Operations Manager
+* BORR_SSN — rule FULLMASK — emit ***-**-**** — length preserved (11)
+* COBORR_SSN — rule FULLMASK — emit ***-**-****
+* SELLER_TIN — rule FULLMASK — emit **-*******
+* BORR_DOB — rule SUPPRESS — column omitted from output record
+* GRANTOR_NAME / GRANTEE_NAME — rule TOKENISE — vault ref VLT/PARTY/nnnnnnn
+* PROP_ADDR_LINE1, PROP_ADDR_LINE2 — rule TOKENISE — vault ref VLT/SITU/nnnnnnn
+* PROP_CITY, PROP_ST, PROP_ZIP5 — rule PASS (geographic rollup permitted)
+* PHONE_HM, PHONE_WK, PHONE_FAX — rule SUPPRESS
+* EMAIL_ADDR — rule SUPPRESS (column added 1998-07; never populated downstream)
+* ESCROW_ACCT_NO — rule PARTIAL — emit last 0 of 12; leading fill '*'
+* DISBURSE_ACCT_NO, WIRE_ABA — rule FULLMASK — emit ************
+* POLICY_NO, FILE_NO, ORDER_NO — rule PASS (non-personal identifiers)
+* LEGAL_DESC_TXT — rule TRUNCATE at 0 chars; free text not released
+* Checklist before promote:
+  - [x] rule count reconciles to copybook column count (68 of 68)
+  - [x] no rule set to PASS on a class-P column
+  - [x] output length map re-verified against DDL
+  - [ ] quarterly re-attestation due 1999-01-15

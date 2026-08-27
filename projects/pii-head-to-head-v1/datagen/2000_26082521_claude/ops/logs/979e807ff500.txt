@@ -1,0 +1,77 @@
+CENTRAL VALLEY FEDERAL CREDIT UNION
+INFORMATION SERVICES DIVISION — MEMBER DATA WAREHOUSE PROGRAMME
+FIELD MAPPING SPECIFICATION: MBRMAST (VSAM) TO ODS_MEMBER_DIM (DB2 UDB 7.2)
+
+Document Ref .... ISD-MAP-0417
+Revision ........ 6
+Effective ....... 2004-03-01
+Supersedes ...... Revision 5, dated 2003-09-15
+Owner ........... The Records Custodian, Member Data Stewardship Unit
+Approver ........ The Chief Information Officer
+Review Cycle .... Semi-annual
+
+1.  SCOPE
+
+1.1  This specification governs the movement of member master attributes from
+     copybook MBRMAST01 into the operational data store dimension table
+     ODS_MEMBER_DIM. It applies to nightly job CUEXT410 and to any ad hoc
+     re-extract authorised under clause 4.3.
+
+1.2  No column enumerated in the table at clause 2 may be propagated to a
+     downstream mart, reporting extract, or third-party file transfer except in
+     the transformed state prescribed in the TRANSFORM RULE column.
+
+2.  MAPPING TABLE
+
++-----+--------------------------+------------------------+-------+-----+------------------+--------+
+| SEQ | SOURCE FIELD (COPYBOOK)  | TARGET COLUMN          | TYPE  | LEN | TRANSFORM RULE   | MASK   |
++-----+--------------------------+------------------------+-------+-----+------------------+--------+
+| 001 | MBR-LAST-NAME            | MBR_SURNAME            | CHAR  | 030 | TRIM+UPPER       | M-NAM  |
+| 002 | MBR-FIRST-NAME           | MBR_GIVEN_NAME         | CHAR  | 020 | TRIM+UPPER       | M-NAM  |
+| 003 | MBR-MIDDLE-INIT          | MBR_MIDDLE_INIT        | CHAR  | 001 | PASS-THRU        | M-NAM  |
+| 004 | MBR-SSN                  | MBR_TIN_TKN            | CHAR  | 011 | TOKENISE-FF1     | M-TIN  |
+| 005 | MBR-BIRTH-DATE           | MBR_BIRTH_YR           | SMINT | 004 | YEAR-ONLY        | M-DOB  |
+| 006 | MBR-ADDR-LINE-1          | MBR_ADDR_LN_1          | CHAR  | 040 | TRIM             | M-ADR  |
+| 007 | MBR-ADDR-LINE-2          | MBR_ADDR_LN_2          | CHAR  | 040 | TRIM             | M-ADR  |
+| 008 | MBR-CITY-NAME            | MBR_CITY_NAME          | CHAR  | 028 | TRIM+UPPER       | M-ADR  |
+| 009 | MBR-STATE-CD             | MBR_STATE_CD           | CHAR  | 002 | PASS-THRU        | M-GEO  |
+| 010 | MBR-POSTAL-CD            | MBR_POSTAL_3           | CHAR  | 003 | LEFT-3           | M-GEO  |
+| 011 | MBR-PHONE-HOME           | MBR_PHONE_HOME_TKN     | CHAR  | 010 | TOKENISE-FF1     | M-TEL  |
+| 012 | MBR-PHONE-WORK           | MBR_PHONE_WORK_TKN     | CHAR  | 010 | TOKENISE-FF1     | M-TEL  |
+| 013 | MBR-EMAIL-ADDR           | MBR_EMAIL_TKN          | CHAR  | 060 | HASH-SHA1-TKN    | M-EML  |
+| 014 | MBR-MOTHER-MAIDEN-NM     | <SUPPRESSED>           | ----- | 000 | SUPPRESS         | M-SUP  |
+| 015 | MBR-DRIVER-LIC-NBR       | MBR_DL_TKN             | CHAR  | 015 | TOKENISE-FF1     | M-GOV  |
+| 016 | MBR-EMPLOYER-NAME        | MBR_EMPLOYER_NM        | CHAR  | 040 | TRIM+UPPER       | M-EMP  |
+| 017 | JNT-OWNER-NAME           | JNT_OWNER_SURNAME      | CHAR  | 030 | TRIM+UPPER       | M-NAM  |
+| 018 | ACCT-SHARE-NBR           | ACCT_SHARE_SK          | BIN   | 018 | SURROGATE-KEY    | M-ACT  |
+| 019 | ACCT-DRAFT-NBR           | ACCT_DRAFT_SK          | BIN   | 018 | SURROGATE-KEY    | M-ACT  |
+| 020 | CARD-PAN                 | CARD_PAN_TKN           | CHAR  | 019 | TOKENISE-PAN     | M-PAN  |
+| 021 | MBR-OPEN-DATE            | MBR_OPEN_DT            | DATE  | 010 | PASS-THRU        | M-NON  |
+| 022 | BRANCH-CD                | BRANCH_CD              | CHAR  | 004 | PASS-THRU        | M-NON  |
++-----+--------------------------+------------------------+-------+-----+------------------+--------+
+
+3.  TRANSFORMATION CLAUSES
+
+3.1  TOKENISE-FF1 shall resolve against the token vault instance TKNVLT1 prior
+     to write. Where the vault does not return a reference within the session
+     timeout, the row shall be rejected to CUEXT410.REJECT and not defaulted.
+
+3.2  YEAR-ONLY shall retain the four-digit year component only. The month and
+     day components are discarded at the reader and are not written to any
+     staging area, sort work file, or session log.
+
+3.3  SUPPRESS directs the reader to bypass the field entirely. The target table
+     carries no column for sequence 014 and none shall be added.
+
+3.4  LEFT-3 retains the first three positions of the postal code. Rows carrying
+     fewer than three positions are counted under rule VR-0110.
+
+4.  CHANGE CONTROL
+
+4.1  Amendments to this table require joint sign-off by the Records Custodian
+     and the Information Security Officer.
+
+4.2  Revision 6 adds sequences 015 and 020 and reclassifies sequence 010 from
+     PASS-THRU to LEFT-3.
+
+4.3  Ad hoc re-extracts require a written request retained for seven years.

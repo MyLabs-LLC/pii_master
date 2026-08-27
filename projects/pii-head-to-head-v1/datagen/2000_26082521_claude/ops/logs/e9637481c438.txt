@@ -1,0 +1,48 @@
+JOB LOG EXTRACT — ELR_NIGHTLY
+Job id: ETL-2021-1104-0037
+Host: etl-app-02
+Window: 2021-11-04 01:00:00 to 02:00:00
+
+  01:00:02  INFO   Scheduler released job ETL-2021-1104-0037 (trigger: cron, nightly)
+  01:00:04  INFO   Stage 1 — INGEST
+              01:00:04  Source: sftp drop /inbound/elr/2021-11-03/
+              01:00:09  Files claimed: 14
+              01:00:11  Records read: 41,208
+              01:00:11  Header validation passed on 14 of 14 files
+              01:01:57  Stage 1 complete. Rows staged: 41,208. Duration 113s.
+  01:01:58  INFO   Stage 2 — STANDARDIZE
+              01:01:58  Applying map dph_elr_map v4.2
+              01:02:20  Column patient_last_name resolved from source alias PT_LNAME
+              01:02:20  Column patient_first_name resolved from source alias PT_FNAME
+              01:02:21  Column date_of_birth resolved from source alias PT_DOB
+              01:02:21  Column medical_record_number resolved from source alias PT_MRN
+              01:02:22  Column ordering_provider_npi resolved from source alias ORD_NPI
+              01:02:22  WARN  Source alias PT_SSN present in 3 files; not in map v4.2
+              01:02:22  WARN  Routing PT_SSN to quarantine per unmapped_field_action
+              01:04:40  Stage 2 complete. Rows standardized: 41,171. Rows quarantined: 37.
+  01:04:41  INFO   Stage 3 — MASK
+              01:04:41  Policy dph_phi_mask.conf rev 7 loaded
+              01:04:43  Token vault handshake OK (namespace mrn, plan)
+              01:06:02  Tokenized: medical_record_number 41,171; member_id 33,904
+              01:06:03  Suppressed: patient_last_name, patient_first_name, street_address_line_1, email_address
+              01:06:03  Masked in place: ssn [MASKED], primary_phone [MASKED]
+              01:06:04  Generalized: date_of_birth to birth_year_only 41,171
+              01:06:04  Truncated: postal_code 40,988; null on input 183
+              01:07:30  Stage 3 complete. Mask events written to etl_audit.mask_events: 288,197.
+  01:07:31  INFO   Stage 4 — VALIDATE
+              01:07:31  Rule pack surveillance_v9 loaded (44 rules)
+              01:09:15  Rows passing all rules: 40,602
+              01:09:15  Rows failing at least one rule: 569
+              01:09:16  Top failing rules: V-014 (211), V-007 (168), V-022 (94), V-031 (61), V-009 (35)
+              01:09:16  Stage 4 complete.
+  01:09:17  INFO   Stage 5 — LOAD
+              01:09:17  Target: reporting.elr_result_fact
+              01:11:48  Inserted: 40,602. Updated: 0. Rejected: 0.
+              01:11:49  Target: reporting.elr_reject_queue
+              01:11:52  Inserted: 606 (569 validation, 37 unmapped column)
+              01:11:53  Stage 5 complete.
+  01:11:54  INFO   Reconciliation
+              01:11:54  Read 41,208 = loaded 40,602 + rejected 606. Balanced.
+  01:11:55  INFO   Job ETL-2021-1104-0037 finished with status SUCCESS_WITH_WARNINGS
+  01:11:55  INFO   Notification sent to distribution list dl-etl-ops and to the Records Custodian
+  01:11:56  INFO   Next scheduled run 2021-11-05 01:00:00

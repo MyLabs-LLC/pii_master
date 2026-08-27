@@ -1,0 +1,36 @@
+MEMORANDUM
+
+TO:      Interface Analyst, Information Systems Division
+FROM:    Data Steward, Communicable Disease Registry
+DATE:    June 2, 2016
+SUBJECT: Approved field mapping, laboratory intake feed to registry — mapping set LAB_INTAKE_V3
+
+The mapping set below is approved for promotion. Apply it to job LAB_INTAKE_HOURLY beginning with the 2016-06-06 cycle. Columns not listed are not to be mapped.
+
+SOURCE FIELD              TARGET COLUMN            RULE
+------------------------  -----------------------  ----------------------------
+lab_pat_last              PATIENT_LAST_NAME        direct, trim
+lab_pat_first             PATIENT_FIRST_NAME       direct, trim
+lab_pat_dob               DATE_OF_BIRTH            parse date, 4 patterns
+lab_pat_ssn               SSN                      tokenise before load
+lab_pat_mrn               MEDICAL_RECORD_NUMBER    tokenise before load
+lab_pat_addr1             RESIDENCE_STREET_1       direct, trim
+lab_pat_zip               RESIDENCE_ZIP            truncate to 5, then validate
+lab_pat_phone             PHONE_HOME               strip non-digits
+lab_pat_email             EMAIL_PRIMARY            lowercase, trim
+lab_ord_provider_npi      PROVIDER_NPI             direct
+lab_ord_facility          FACILITY_CODE            lookup, table REF_FACILITY
+lab_spec_collect_dt       SPECIMEN_COLLECTED_AT    parse timestamp, to CDT
+lab_result_code           RESULT_CODE              lookup, table REF_LOINC
+lab_result_value          RESULT_VALUE             direct
+lab_report_dt             REPORT_RECEIVED_AT       parse timestamp, to CDT
+
+Two rules changed from V2 and should be confirmed in the promotion ticket.
+
+RESIDENCE_ZIP now truncates before validating rather than after. This was the cause of the recurring length rejects reported in March.
+
+lab_pat_ssn is tokenised at the transformation stage rather than at load. The source value is not to be written to any staging table, log or reject file at any stage. Reject records for this field are to carry the field name and rule code only.
+
+Pilot results from the 2016-05-31 test cycle, job LAB-ETL-0531-009: 12,404 rows read, 12,391 written, 13 rejected, 0 quarantined. All 13 rejects were RESULT_CODE values absent from REF_LOINC and are unrelated to the mapping changes above.
+
+Confirm promotion by return memo.

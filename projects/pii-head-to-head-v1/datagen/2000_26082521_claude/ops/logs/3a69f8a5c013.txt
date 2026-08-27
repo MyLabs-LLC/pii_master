@@ -1,0 +1,73 @@
+METROPOLITAN TRANSIT AUTHORITY
+INFORMATION SERVICES DIVISION — DATA STEWARDSHIP UNIT
+FORM IS-114 (Rev. 02/2011) — FIELD MASKING RULE REGISTER
+
+SECTION A — REGISTER IDENTIFICATION
+Register No. ......... MSK-REG-2011-017
+Effective ............ 2011-03-07 00:00:00
+Supersedes ........... MSK-REG-2010-041
+Review due ........... 2011-09-07
+Custodian ............ the Records Custodian, Data Stewardship Unit
+Classification ....... INTERNAL — CONTROLLED
+
+SECTION B — SOURCE SYSTEMS IN SCOPE
+B.1  FARECARD  (smartcard registration master, Oracle 10gR2)
+B.2  CONCESS   (concession entitlement register, DB2 z/OS)
+B.3  PARATRAN  (accessible services eligibility file, VSAM extract)
+B.4  HRPAY     (operator establishment file, feed HR-217 only)
+
+SECTION C — FIELD INVENTORY AND TREATMENT
+Codes: SUP=suppress at source, TKN=deterministic token, PART=partial mask,
+GEN=generalise, HASH=one-way digest, PASS=carry unchanged.
+
+SEQ | SOURCE COLUMN            | SYS      | CLASS | RULE | OUTPUT FORM
+----+--------------------------+----------+-------+------+-----------------
+001 | PATRON_SURNAME           | FARECARD | PII-1 | SUP  | (null)
+002 | PATRON_GIVEN_NAME        | FARECARD | PII-1 | SUP  | (null)
+003 | PATRON_REF               | FARECARD | PII-2 | TKN  | TKN:<16>
+004 | DATE_OF_BIRTH            | FARECARD | PII-1 | GEN  | CCYY only
+005 | RESIDENTIAL_ADDR_LINE_1  | FARECARD | PII-1 | SUP  | (null)
+006 | RESIDENTIAL_ADDR_LINE_2  | FARECARD | PII-1 | SUP  | (null)
+007 | POSTAL_CODE              | FARECARD | PII-3 | PART | ##** 
+008 | CONTACT_TELEPHONE        | FARECARD | PII-1 | SUP  | (null)
+009 | CONTACT_EMAIL            | FARECARD | PII-1 | HASH | SHA1:<40>
+010 | CARD_PAN                 | FARECARD | PCI   | PART | ****-****-****-****
+011 | AUTOLOAD_BANK_ACCT_REF   | FARECARD | PCI   | SUP  | (null)
+012 | NATIONAL_ID_REF          | CONCESS  | PII-1 | SUP  | (null)
+013 | CONCESSION_CARD_NO       | CONCESS  | PII-2 | TKN  | TKN:<16>
+014 | ELIGIBILITY_CATEGORY     | CONCESS  | OPS   | PASS | as sourced
+015 | PARATRANSIT_MEMBER_ID    | PARATRAN | PII-2 | TKN  | TKN:<16>
+016 | MOBILITY_AID_INDICATOR   | PARATRAN | SENS  | PASS | Y/N
+017 | GUARDIAN_CONTACT_NAME    | PARATRAN | PII-1 | SUP  | (null)
+018 | EMPLOYEE_PAYROLL_NO      | HRPAY    | PII-2 | TKN  | TKN:<16>
+019 | EMERGENCY_CONTACT_PHONE  | HRPAY    | PII-1 | SUP  | (null)
+
+SECTION D — TOKEN VAULT PARAMETERS
+Vault instance ....... TKV-PRD-02
+Algorithm ............ FPE, format-preserving, alphanumeric 16
+Determinism .......... consistent across systems B.1–B.4
+Re-key interval ...... 24 months
+Reversal ............. by written request to the Records Custodian only
+
+SECTION E — EXCLUSIONS
+E.1  Fields classed OPS or SENS are not masked; they carry operational meaning
+     required by scheduling and demand analysis.
+E.2  Free-text column TRIP_REQUEST_NOTES is excluded from downstream extracts
+     in full. Scanning for embedded identifiers is not performed.
+E.3  Archive tapes written before 2009-01-01 are out of scope pending
+     remediation project RP-2011-004.
+
+SECTION F — VERIFICATION
+Last verification job ... PTA_MSK_VERIFY_0093
+Executed ................ 2011-03-19 01:42:11
+Rows sampled ............ 250,000
+Rows failing pattern .... 0
+Rows with residual value  0
+Verifier ................ the Assurance Officer, Internal Audit
+
+SECTION G — AUTHORISATION
+Prepared by ...... the Data Stewardship Analyst .......... 2011-03-02
+Endorsed by ...... the Manager, Information Services ..... 2011-03-04
+Approved by ...... the Privacy Officer .................. 2011-03-06
+
+END OF FORM IS-114

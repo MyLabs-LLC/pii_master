@@ -1,0 +1,54 @@
+DATA DICTIONARY EXCERPT
+SCHEMA: DEP_CORE          TABLE: SHARE_ACCOUNT
+REVISION: 6.1             EFFECTIVE: 2021-09-20
+OWNER: the Deposit Operations Manager
+TECHNICAL STEWARD: the Database Administrator on record
+
+I.   TABLE DEFINITION
+     A.  Grain: one row per share or certificate account, all suffixes included.
+     B.  Volume: partitioned monthly on ACCT_OPEN_DT.
+     C.  Source: nightly posting from the core banking platform; no direct user insert.
+
+II.  IDENTITY AND LINKAGE
+     A.  SHARE_ACCT_SK          BIGINT          NOT NULL
+         1.  Surrogate key, system generated, stable across core conversions.
+     B.  SHARE_ACCT_NBR         VARCHAR(17)     NOT NULL
+         1.  Restricted column. Presented to service staff in full; masked to trailing four positions in reporting views and in every environment below production.
+         2.  Never permitted as a join key to externally sourced files.
+     C.  ACCT_SUFFIX_CD         CHAR(4)         NOT NULL
+     D.  PRIMARY_MEMBER_SK      BIGINT          NOT NULL
+         1.  Foreign key to MBR_CORE.MEMBER_MASTER.
+     E.  JOINT_OWNER_MEMBER_SK  BIGINT          nullable
+         1.  Populated only for jointly held accounts; multi-party holdings above two owners are carried in ACCT_OWNER_BRIDGE.
+
+III. PRODUCT AND STATUS ATTRIBUTES
+     A.  PRODUCT_CD             CHAR(6)         NOT NULL
+     B.  ACCT_STATUS_CD         CHAR(2)         NOT NULL
+     C.  ACCT_OPEN_DT           DATE            NOT NULL
+     D.  ACCT_CLOSE_DT          DATE            nullable
+     E.  DORMANCY_FLAG          CHAR(1)         NOT NULL
+         1.  Set by the escheatment job; manual override requires dual authorisation.
+     F.  ESCHEAT_ELIGIBLE_DT    DATE            nullable
+
+IV.  BALANCE AND RATE ATTRIBUTES
+     A.  CURRENT_BAL_AMT        DECIMAL(15,2)   NOT NULL
+     B.  AVAILABLE_BAL_AMT      DECIMAL(15,2)   NOT NULL
+     C.  HOLD_AMT               DECIMAL(15,2)   NOT NULL, defaults to zero
+     D.  DIVIDEND_RATE_PCT      DECIMAL(7,5)    nullable
+     E.  MATURITY_DT            DATE            nullable, certificates only
+
+V.   ACCESS RESTRICTION
+     A.  Clause II.B is classified Confidential — Member Financial. Select is granted by role, never by individual account.
+     B.  Balance columns under section IV are readable by the finance reporting role in aggregate views only; row-level access requires membership in DEP_ANALYST_ROW.
+     C.  All decryption and unmasking events are written to the database audit trail and reviewed monthly by the Records Custodian.
+
+VI.  RETENTION
+     A.  Active rows retained indefinitely.
+     B.  Closed accounts retained seven years past ACCT_CLOSE_DT to satisfy the deposit records schedule, then moved to the archive schema with clause II.B tokenised.
+     C.  Dormant and escheated rows are exempt from clause VI.B until the state remittance is confirmed.
+
+VII. DOWNSTREAM EXTRACTS
+     A.  DEP_EXT_02 — nightly to the enterprise warehouse. Carries all of section III and IV; clause II.B is tokenised, clause II.D is passed as a surrogate only.
+     B.  DEP_EXT_05 — monthly to the regulatory reporting utility. Aggregated by PRODUCT_CD and branch; no account-level column leaves the boundary.
+     C.  DEP_EXT_11 — quarterly to the external auditor. Full section II is included under the engagement letter; the file is delivered by managed transfer and expires at thirty days.
+     D.  No extract not enumerated in this section may be scheduled against this table.

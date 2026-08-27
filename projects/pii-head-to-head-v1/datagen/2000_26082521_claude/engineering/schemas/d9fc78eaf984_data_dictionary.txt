@@ -1,0 +1,47 @@
+AUTHORITY-WIDE DATA DICTIONARY, SECTION 7 — CUSTOMER SUBJECT AREA
+TABLE CUST.ACCOUNT_HOLDER (Sybase ASE 12.5). Sheet 1 of 3. Revision 2, 2004.
+Custody of this sheet rests with the Records Custodian, Information Systems.
+
++----------------------------+---------------+-------+------------------------------------------------------+
+| COLUMN NAME                | DATA TYPE     | NULL  | OPERATIONAL AND CUSTODIAL NOTE                       |
++----------------------------+---------------+-------+------------------------------------------------------+
+| ACCT_HOLDER_ID             | numeric(10)   | NO    | Surrogate key. Not printed on any customer output.   |
+| ACCT_PUBLIC_REF            | varchar(16)   | NO    | Disclosable to the holder after identity check.      |
+| LEGAL_SURNAME              | varchar(40)   | NO    | Restricted. Service Centre and Custodian roles.      |
+| LEGAL_GIVEN_NAME           | varchar(40)   | NO    | Restricted. Sourced from the signed application.     |
+| DATE_OF_BIRTH              | datetime      | NO    | Restricted. Concession adjudication use only.        |
+| GOVT_ID_NUMBER_ENC         | varbinary(64) | YES   | Encrypted at rest. Cleartext never displayed.        |
+| MAILING_ADDR_LINE1         | varchar(60)   | NO    | Restricted. Fulfilment and statutory notices only.   |
+| MAILING_ADDR_LINE2         | varchar(60)   | YES   | Optional continuation. Restriction as line above.    |
+| MAILING_POSTAL_CODE        | varchar(12)   | NO    | Released to Planning only in aggregated bands.       |
+| CONTACT_TELEPHONE          | varchar(14)   | YES   | Restricted. Service interruption contact only.       |
+| CONTACT_EMAIL              | varchar(80)   | YES   | Restricted. No marketing use absent consent.         |
+| SMARTCARD_SERIAL_ENC       | varbinary(64) | NO    | Encrypted. Cleartext by Fare Systems request only.   |
+| AUTOLOAD_PAY_TOKEN         | varchar(24)   | YES   | Vendor token. No instrument data held here.          |
+| CONCESSION_TYPE_CD         | char(2)       | NO    | Domain ordered in reference table CONCESSION_CD.     |
+| ACCOUNT_STATUS_CD          | char(1)       | NO    | Domain A, S, C, L. Closure starts retention.         |
+| ACCOUNT_CLOSED_DATE        | datetime      | YES   | Null while open. Anchors the disposition clock.      |
++----------------------------+---------------+-------+------------------------------------------------------+
+
+DOWNSTREAM EXTRACT REGISTER
+
++-------------+----------------------------+--------------------------------+
+| EXTRACT ID  | RECIPIENT                  | COLUMNS RELEASED               |
++-------------+----------------------------+--------------------------------+
+| CX-101      | Planning and Scheduling    | Non-restricted columns only    |
+| CX-204      | Card fulfilment contractor | Name and mailing columns       |
+| CX-330      | Office of the Controller   | Financial and status columns   |
+| CX-415      | Regional fare partners     | Public reference and status    |
++-------------+----------------------------+--------------------------------+
+
+Retention. Every row of this table, together with each column enumerated above,
+shall be retained for a period of seven years reckoned from the value held in
+ACCOUNT_CLOSED_DATE, and shall thereafter be destroyed by the scheduled purge
+routine without further authorisation, save where a litigation hold has been
+placed upon the account by the Office of the General Counsel, in which event the
+purge routine shall bypass the affected rows until the hold is released in writing.
+
+Access. No extract, report, or ad hoc query touching a column marked Restricted
+may be created, scheduled, or amended except upon the written approval of the
+Records Custodian, which approval shall record the purpose, the recipient, the
+columns concerned, and the date upon which the authorisation expires.

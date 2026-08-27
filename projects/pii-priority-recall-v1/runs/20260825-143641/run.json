@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-25",
+  "run_id": "20260825-143641",
+  "commands": [
+    {
+      "ts": "2026-08-25T14:36:50Z",
+      "command": "env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.final_bootstrap --project projects/pii-priority-recall-v1 --family perlabel_v4",
+      "output": "{\n  \"equal_corpus_macro_f2\": 0.4931731543924182,\n  \"equal_corpus_macro_f2_ci\": {\n    \"ci_high\": 0.5980218078051055,\n    \"ci_low\": 0.35341039489039516,\n    \"confidence\": 0.95,\n    \"n_resamples\": 1000,\n    \"unit\": \"holdout_corpus\",\n    \"value\": 0.4931731543924183\n  },\n  \"equal_corpus_micro_f1\": 0.4249105595117525,\n  \"equal_corpus_micro_f1_ci\": {\n    \"ci_high\": 0.5701702841016248,\n    \"ci_low\": 0.2875011134045814,\n    \"confidence\": 0.95,\n    \"n_resamples\": 1000,\n    \"unit\": \"holdout_corpus\",\n    \"value\": 0.4249105595117525\n  },\n  \"macro_f2_target\": 0.9,\n  \"macro_f2_target_pass\": false,\n  \"measurable_priority_gates\": 55,\n  \"n_arms\": 8,\n  \"n_complete_arms\": 5,\n  \"priority_conclusive_passes\": 55,\n  \"priority_failures\": 0,\n  \"priority_gate_pass\": true,\n  \"priority_inconclusive\": 0,\n  \"priority_point_passes\": 55,\n  \"worst_priority_recall\": 0.9463276836158192\n}\n",
+      "exit_code": 0,
+      "context": "bootstrap-v4-rerun",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 8.536
+    }
+  ],
+  "commands_source": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/runs/20260825-143641/events.jsonl"
+}

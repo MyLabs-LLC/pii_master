@@ -1,0 +1,77 @@
+DATA QUALITY VALIDATION REPORT — NIGHTLY SIS EXTRACT
+Northfield Consolidated School District 214
+
+SECTION A — JOB IDENTIFICATION
+  Job Name .................. NIGHTLY_SIS_DEMOGRAPHIC_LOAD
+  Job ID .................... JOB-EDW-STG-0091
+  Run ID .................... 20160921-0034
+  Scheduler ................. Control-M / folder D214_EDW
+  Executing Host ............ etl02.int.d214
+  Package ................... sis_demographic_v4.ktr (Pentaho 5.4.0)
+  Ruleset Applied ........... MAP-SIS-EDW-0417 v4.2.1
+  Report Generated .......... 2016-09-21T04:12:55-05:00
+
+SECTION B — RUN WINDOW
+  Start ..................... 2016-09-21T03:00:04-05:00
+  End ....................... 2016-09-21T03:52:31-05:00
+  Elapsed ................... 00:52:27
+  Prior Successful Run ...... 2016-09-20T03:47:19-05:00
+  Exit Code ................. 4 (COMPLETED WITH WARNINGS)
+
+SECTION C — VOLUMES
+  Rows read from source ..... 44,902
+  Rows mapped ............... 44,902
+  Rows loaded to stg ........ 44,617
+  Rows rejected ............. 285
+  Rows quarantined .......... 285
+  Rows deleted (soft) ....... 61
+  Reject rate ............... 0.63%
+  Reject threshold .......... 1.00%
+
+SECTION D — VALIDATION ERROR DETAIL
+  Values for failing columns are not written to this report; the quarantine
+  table holds tokenised references only. Retrieve by REJECT_KEY.
+
+  CODE     | FIELD LABEL                | RULE                          | COUNT | VALUE
+  ---------+----------------------------+-------------------------------+-------+---------
+  VE-1001  | DATE_OF_BIRTH              | NOT_NULL                      |    38 | [WITHHELD]
+  VE-1002  | DATE_OF_BIRTH              | GENERALIZE(year) parse failed |    12 | [WITHHELD]
+  VE-1104  | POSTAL_CODE                | TRUNCATE(3) length < 3        |    47 | [WITHHELD]
+  VE-1203  | STATE_TESTING_ID           | TOKENIZE vault timeout        |     9 | [WITHHELD]
+  VE-1204  | LOCAL_STUDENT_NUMBER       | TOKENIZE collision            |     2 | [WITHHELD]
+  VE-1310  | GENDER_CODE                | CODE_SET_MEMBERSHIP           |     6 | [WITHHELD]
+  VE-1311  | RACE_ETHNICITY_CODE        | CODE_SET_MEMBERSHIP           |    21 | [WITHHELD]
+  VE-1312  | HOME_LANGUAGE_CODE         | CODE_SET_MEMBERSHIP           |    54 | [WITHHELD]
+  VE-1420  | ENROLLMENT_ENTRY_DATE      | ENTRY <= EXIT                 |    31 | [WITHHELD]
+  VE-1421  | ENROLLMENT_EXIT_DATE       | FUTURE_DATE                   |     4 | [WITHHELD]
+  VE-1505  | GUARDIAN_1_PHONE           | DERIVE_PRESENCE unresolved    |    58 | [WITHHELD]
+  VE-1610  | BUILDING_CODE              | FK_BUILDING_DIM              |     3 | [WITHHELD]
+  ---------+----------------------------+-------------------------------+-------+---------
+                                          TOTAL REJECTED ROWS  |   285 |
+
+SECTION E — GATE RESULTS
+  gate_01 row_count in band (41000..47500) ......... PASS  (44,902)
+  gate_02 null rate on student_key = 0.0000 ........ PASS  (0.0000)
+  gate_03 suppressed columns absent from DDL ....... PASS  (0 of 8 present)
+  gate_04 postal_prefix length = 3 ................. WARN  (47 short values nulled)
+  gate_05 reject rate below threshold .............. PASS  (0.63% of 1.00%)
+
+SECTION F — SUPPRESSION CONFIRMATION
+  Columns declared SUPPRESS in ruleset ............. 8
+  Columns present in target DDL .................... 0
+  Columns declared BLOCK at extract view ........... 2
+  Columns returned by extract view ................. 0
+  Detokenisation calls during run .................. 0
+
+SECTION G — DISPOSITION
+  Quarantine Table .......... edw_stg.qtn_student_demographic
+  Quarantine Retention ...... 30 days, purge job JOB-EDW-PRG-0012
+  Reprocess Window .......... next scheduled run, 2016-09-22T03:00:00-05:00
+  Assigned To ............... the SIS Data Steward
+  Escalation ................ the Records Custodian if reject rate exceeds threshold on two consecutive runs
+  Ticket Raised ............. DQ-8871 (code set drift, HOME_LANGUAGE_CODE)
+
+SECTION H — ACKNOWLEDGEMENT
+  Reviewed by role .......... the SIS Data Steward
+  Review timestamp .......... 2016-09-21T08:34:00-05:00
+  Status .................... ACCEPTED FOR DOWNSTREAM PUBLICATION

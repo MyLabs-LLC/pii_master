@@ -1,0 +1,32 @@
+UNIFIED SCHOOL DISTRICT NO. 4 — TECHNOLOGY SERVICES
+COMMUNITY EDUCATION MEMBER FILE — DICTIONARY EXCERPT SHEET 2 OF 6
+TABLE: CE_MEMBER  |  PLATFORM: SQL SERVER 2000  |  EFFECTIVE 07/01/2004
+
+1. COLUMN LIST
+   1.1  MBR_ID | int | NOT NULL | identity, surrogate key
+   1.2  MBR_NM_LAST | varchar(30) | NOT NULL | restricted
+   1.3  MBR_NM_FIRST | varchar(20) | NOT NULL | restricted
+   1.4  MBR_DT_BIRTH | smalldatetime | NULL | required for youth programs
+   1.5  MBR_ADDR_STREET | varchar(40) | NULL | restricted
+   1.6  MBR_ADDR_ZIP | char(10) | NULL | resident-rate test
+   1.7  MBR_PHONE_DAY | varchar(14) | NULL | restricted
+   1.8  MBR_EMAIL | varchar(60) | NULL | restricted, opt-in only
+   1.9  MBR_CARD_NBR | varchar(20) | NULL | encrypted at rest, no plain read
+   1.10 MBR_FL_WAIVER | char(1) | NULL | liability form on file
+   1.11 MBR_DT_JOIN | smalldatetime | NOT NULL | drives dues cycle
+   1.12 MBR_DT_LAPSE | smalldatetime | NULL | null while current
+
+2. ACCESS
+   2.1 Read access is limited to the Community Education Registrar role.
+   2.2 MBR_CARD_NBR is never returned to any application screen or report.
+   2.3 Support staff query through view vwMemberRoster only.
+
+3. RETENTION
+   3.1 Lapsed member rows are archived twenty-four months after MBR_DT_LAPSE.
+   3.2 Payment-bearing columns are purged at archive.
+
+4. EXTRACTS
+   4.1 Facility scheduling load, weekly, key and program code only.
+   4.2 Mailing house file, twice yearly, suppressed for opt-out rows.
+
+Prepared by the Applications Analyst. Reviewed by the Records Custodian.

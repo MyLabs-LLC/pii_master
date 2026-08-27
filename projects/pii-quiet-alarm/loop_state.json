@@ -1,0 +1,33 @@
+{
+  "approval_gates_hit": 1,
+  "history": [
+    {
+      "doc_specificity_verdict": "plausible",
+      "reason": "precision-first lineage; spec, suite, policy and both feasibility probes written; awaiting sign-off before any training compute",
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "measure",
+      "tag_precision_verdict": "unlikely"
+    },
+    {
+      "best_arm": "quiet-cascade",
+      "decision_file": "projects/pii-quiet-alarm/decision/decision.json",
+      "feasible_arms": 0,
+      "promotion": "refused_no_feasible_arm",
+      "round_no": 0,
+      "route": "awaiting_approval",
+      "selected": null,
+      "stage": "measure"
+    }
+  ],
+  "mlflow_parent_run_id": null,
+  "project": "pii-quiet-alarm",
+  "renegotiated_target": null,
+  "round_no": 1,
+  "route": "budget_exhausted",
+  "stage": "validate",
+  "stopped_reason": "1,000-trial budget spent. Best arm quiet-cascade lifts priority macro F0.5 from 0.2057 to 0.8233 and document specificity from 0.0005 to 0.8693, but clears no gate set: doc precision 1/3 corpora, doc specificity 2/3, doc recall 1/3, priority tag recall 36/55 pairs. Failures concentrate on the two real-world corpora and on per-label thresholds calibrated on pooled held-in data; both have unexplored mechanisms, so this is budget exhausted rather than an established ceiling.",
+  "trials_used": 1000,
+  "updated_at": "2026-08-25T20:44:45.935262+00:00",
+  "wallclock_s": 0.0
+}

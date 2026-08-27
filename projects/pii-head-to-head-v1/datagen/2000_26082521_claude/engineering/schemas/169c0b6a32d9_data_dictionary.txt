@@ -1,0 +1,38 @@
+TRANSIT AUTHORITY — REDUCED FARE ADMINISTRATION
+LEGACY MEMBER FILE (VSAM KSDS RFAD.MEMBER.MASTER), COPYBOOK RFADMBR
+DATA DICTIONARY EXCERPT, SHEET 2 OF 5. Reviewed by the Records Custodian, 2004.
+
+FIELD NAME                        PICTURE       NULLS  NOTE
+--------------------------------- ------------- ------ ----
+MBR-KEY-SEQ ..................... 9(09) COMP-3  NO     1
+MBR-APPL-REF-NO ................. X(12)         NO     1
+MBR-LAST-NAME ................... X(30)         NO     2
+MBR-FIRST-NAME .................. X(20)         NO     2
+MBR-MIDDLE-INIT ................. X(01)         YES    2
+MBR-BIRTH-DATE .................. 9(08)         NO     3
+MBR-TAXPAYER-ID-ENCR ............ X(32)         YES    4
+MBR-STREET-ADDR-1 ............... X(40)         NO     2
+MBR-STREET-ADDR-2 ............... X(40)         YES    2
+MBR-CITY-NAME ................... X(28)         NO     2
+MBR-STATE-CODE .................. X(02)         NO     2
+MBR-POSTAL-CODE ................. X(09)         NO     5
+MBR-TELEPHONE-NO ................ X(10)         YES    2
+MBR-ELIG-TYPE ................... X(02)         NO     6
+MBR-CERT-EXPIRE-DT .............. 9(08)         YES    6
+MBR-CARD-SERIAL-ENCR ............ X(32)         NO     4
+MBR-STATUS-IND .................. X(01)         NO     6
+MBR-TERM-DATE ................... 9(08)         YES    6
+
+1  Control fields. May be quoted in correspondence and in audit workpapers.
+2  Restricted. Readable only by clerks assigned to Reduced Fare Administration
+   and by the Records Custodian. Every read is journalled to SMF. These fields
+   are stripped by program RFAD210 before any file is passed to Planning.
+3  Restricted. Held for the sole purpose of establishing entitlement to the
+   senior and disability fare categories, and for no other purpose whatsoever.
+4  Enciphered at rest under the Authority key management standard. Deciphering
+   is performed only within program RFAD880 and only for card reissue.
+5  The first five positions may be released in aggregate to Planning. The full
+   field may not be released to any party outside this office.
+6  Programme administration fields. MBR-TERM-DATE governs disposition: the
+   record shall be retained seven years from that date and then deleted by the
+   quarterly purge, subject to any hold imposed by the General Counsel.

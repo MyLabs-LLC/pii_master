@@ -1,0 +1,46 @@
+DATA DICTIONARY EXCERPT — BILLING & PAYER CONTACT (BLG)
+Object: PROD.BLG_ACCT_PARTY | Revision 2021.07
+
+FIELD ENTRY FORMAT: name / type / null / notes
+
+  BLG_ACCT_SK          NUMBER(18)      NOT NULL
+      Warehouse surrogate. No business meaning.
+
+  BLG_ACCT_NBR         VARCHAR2(14)    NOT NULL
+      Class 2. Printed on statements. Reused across a group's
+      subordinate divisions; not unique on its own.
+
+  PAYER_NAME_FULL      VARCHAR2(80)    NULL
+      Class 3. Single-field capture for individual payers; group
+      payers use GRP_LEGAL_NM in the group subject area instead.
+
+  BANK_ACCT_NBR_ENC    RAW(64)         NULL
+      Class 4. Stored as ciphertext only; the clear column was
+      dropped in the 2020.11 release. Decryption is restricted to
+      the EFT service account and is logged to AUD_DECRYPT_LOG.
+
+  BANK_RTG_NBR_ENC     RAW(64)         NULL
+      Class 4. Same handling as above.
+
+  CARD_LAST4           CHAR(4)         NULL
+      Class 3. Retained for reconciliation display. Full PAN is
+      not stored in this environment; the gateway token is held
+      in PAY_TOKEN_REF.
+
+  PAY_TOKEN_REF        VARCHAR2(36)    NULL
+      Vault token. Class 2. Rotates on card replacement.
+
+  BILL_ADDR_LINE_1     VARCHAR2(60)    NULL
+      Class 3. Falls back to the member address when null.
+
+  BILL_EMAIL_ADDR      VARCHAR2(120)   NULL
+      Class 3. Used by the paperless statement job.
+
+  DELINQ_DAYS_CNT      NUMBER(4)       NOT NULL
+      Derived nightly. Default 0.
+
+  LAST_UPDT_TS         TIMESTAMP(6)    NOT NULL
+
+Extracts: only DELINQ_DAYS_CNT, BLG_ACCT_SK, and CARD_LAST4 appear in the
+weekly collections file. Retention follows the seven-year member rule; the
+two encrypted columns are crypto-shredded at 24 months post-termination.

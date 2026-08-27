@@ -1,0 +1,42 @@
+EXTRACT AND FEED INVENTORY — CUSTOMER AND MEMBER SCHEMAS
+CONTRACT LOGISTICS DIVISION — INFORMATION GOVERNANCE FILE 11/CG/07
+Compiled by the Records Custodian with the Data Warehouse Team Leader
+Position as at the September 2011 review
+
+Work through the list in order. Each item is closed only when the named owner has confirmed the column list against the current job definition, not against the specification document.
+
+* FEED CG-01 — NIGHTLY DEPOT MANIFEST (Informatica session s_m_DEPOT_MAN)
+  - Columns carried: CUST_ID, TRADING_NAME_TXT, ADDR_LINE_1_TXT, ADDR_LINE_2_TXT, POSTCODE_TXT, DELIV_INSTR_TXT, SERVICE_LVL_CD.
+  - Types: as source; DELIV_INSTR_TXT is VARCHAR2(255) and is nullable.
+  - Note: LEGAL_NAME_TXT was removed from this feed in April 2011. Confirm the removal still holds after the September upgrade.
+  - Retention on the depot handheld server: 14 days rolling.
+
+* FEED CG-02 — MAILING HOUSE SELECTION (flat file, PGP, fortnightly)
+  - Columns carried: MBR_NO, TITLE_CD, FORENAME_TXT, SURNAME_TXT, HOME_ADDR_KEY, SCHEME_CD, MKTG_CONSENT_FLG, POST_SUPPRESS_FLG.
+  - Nullability: all name columns nullable on the extract layout even where NOT NULL at source, because the salutation build tolerates absence.
+  - Note: file must be deleted from the transfer server within 5 working days of collection. Confirm the housekeeping job is scheduled and has not failed silently.
+  - Contractual retention at the mailing house: 90 days, per schedule 4 of their agreement.
+
+* FEED CG-03 — CLAIMS AND LOSS INVESTIGATION (Cognos cube CLM_ANALYSIS)
+  - Columns carried: MBR_NO, DOB_DT, PREV_SURNAME_TXT, CLAIM_REF_NO, CLAIM_VALUE_AMT, DEPOT_CD.
+  - Types: CLAIM_VALUE_AMT is DECIMAL(11,2), NOT NULL; DEPOT_CD is CHAR(4), NOT NULL.
+  - Note: this is the only downstream route by which DOB_DT leaves the source schema. Confirm the cube security has the Claims Handling role applied at the dimension level and not only at report level.
+  - Retention: cube rebuilt monthly; historic cube files kept 12 months.
+
+* FEED CG-04 — CARRIER PARTNER TRACKING INTERFACE (web service, on demand)
+  - Columns carried: CONSIGNMENT_NO, POSTCODE_TXT, CONSIGNEE_SURNAME_TXT, MOBILE_TEL_TXT, DELIV_WINDOW_TS.
+  - Nullability: MOBILE_TEL_TXT nullable; the partner is not to reject a call where it is absent.
+  - Note: the mobile number is passed for delivery notification only. Confirm the partner's written undertaking not to retain beyond delivery plus 30 days is on file and in date.
+
+* FEED CG-05 — LEGACY REPORTING VIEW V_CUST_ALL
+  - Columns exposed: the whole of CUST_MASTER, unmasked, including NAT_INS_NO_TXT.
+  - Note: this view was raised as a finding in the internal audit of March 2011. Confirm whether the view has been dropped. If it has not, record who holds select on it and obtain a date for removal.
+  - Action owner: Data Warehouse Team Leader.
+
+GENERAL CHECKS FOR THIS REVIEW
+
+* Confirm every feed above has a named business owner recorded in the interface register.
+* Confirm no feed has been added since the March review without a completed privacy impact note.
+* Confirm the restricted column list held by the DBA team matches Section B of the MBR_PROFILE dictionary entry.
+* Confirm test and training environments are refreshed using the scrambling routine and not from a straight production copy.
+* Confirm the retention periods quoted above match the periods stated in the retention schedule; report any difference to the Data Protection Officer rather than amending either document locally.

@@ -1,0 +1,57 @@
+DATA DICTIONARY EXCERPT — CONSIGNEE_CONTACT
+Operational database, Oracle 11g, instance OPSPROD2, schema OPSOWNER
+Held for delivery execution only. Reviewed by the Records Custodian, November 2011.
+
+- CONSIGNEE_ID
+    Type: NUMBER(14)
+    Null: NOT NULL
+    Note: generated per consignment, not per person. Confirm the operational teams understand there is no single record of an individual on this table.
+
+- CONSIGNMENT_NO
+    Type: VARCHAR2(18)
+    Null: NOT NULL
+    Note: foreign key to CONSIGNMENT_HDR.
+
+- CONSIGNEE_NAME_TXT
+    Type: VARCHAR2(90)
+    Null: NULL
+    Note: restricted. Displayed on the handheld device at the point of delivery and nowhere else.
+
+- CONSIGNEE_TEL_TXT
+    Type: VARCHAR2(24)
+    Null: NULL
+    Note: restricted. Used by the pre-delivery call routine. Confirm call centre screens show the number only while the consignment is in an active status.
+
+- CONSIGNEE_EMAIL_TXT
+    Type: VARCHAR2(160)
+    Null: NULL
+    Note: restricted. Populated only where the sender supplied it on the booking file.
+
+- DELIV_ADDR_LINE_1_TXT through DELIV_ADDR_LINE_5_TXT
+    Type: VARCHAR2(60)
+    Null: line 1 NOT NULL, remainder NULL
+
+- DELIV_POSTCODE_TXT
+    Type: VARCHAR2(10)
+    Null: NOT NULL
+
+- SIGNATORY_NAME_TXT
+    Type: VARCHAR2(60)
+    Null: NULL
+    Note: restricted. Captured at proof of delivery. Retained 24 months as evidence, then purged with the signature image.
+
+- SIGNATURE_IMG_REF
+    Type: VARCHAR2(40)
+    Null: NULL
+    Note: pointer to the image store. Confirm the purge routine clears the image as well as the pointer.
+
+- POD_TS
+    Type: TIMESTAMP
+    Null: NULL
+
+CHECKLIST FOR THE NEXT CYCLE
+
+- Confirm the 24 month purge ran in each of the last four quarters and that the counts were reconciled.
+- Confirm no restricted column above is replicated to the reporting standby other than in the aggregate delivery performance table.
+- Confirm handheld device caches are cleared on return to the depot cradle.
+- Confirm sender-supplied contact details are not merged into CUST_MASTER by any interface.

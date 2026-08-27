@@ -1,0 +1,24 @@
+{
+  "candidate": "t0-c10",
+  "stage": "propose",
+  "proposal": "Run the 300-arm TF-IDF-linear allocation using the same leakage-safe combined sufficient statistics, unsupervised IDF from every fit document, positive/unlabelled-safe supervised coefficients, and the corrected feasible-region objective.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "1576cb7",
+  "commit": "d7db504",
+  "decision": "accepted_as_non_champion_component",
+  "evidence": {
+    "tests": "11 passed",
+    "ruff": "passed",
+    "allocated_trials": 300,
+    "idf_power": 0.65,
+    "source_counts": "478,316-row combined fit cache",
+    "completed_trials": 300,
+    "best_trial": 133,
+    "internal_equal_corpus_macro_f2": 0.4595891721617253,
+    "holdout_equal_corpus_macro_f2": 0.48315801616287235,
+    "holdout_priority_point_passes": 50,
+    "holdout_measurable_priority_gates": 55,
+    "holdout_worst_priority_recall": 0.16,
+    "champion_eligible": false
+  }
+}

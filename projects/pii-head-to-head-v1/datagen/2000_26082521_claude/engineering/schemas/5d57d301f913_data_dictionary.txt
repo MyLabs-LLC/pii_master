@@ -1,0 +1,51 @@
+DATA DICTIONARY EXCERPT — SUBJECT AREA: MEMBER MASTER
+Document Control No. DD-MBR-0117 / Revision C
+Effective: 2016-03-14
+Maintained by: Data Governance Office, Enterprise Information Management
+Approved by: the Records Custodian; the Chief Privacy Officer (concurrence)
+
+SECTION 1 — OBJECT IDENTIFICATION
+Physical object: EDW_PRD.MBR_MASTER (Oracle 11.2.0.4)
+Source of record: Group Policy Administration System (GPAS), COBOL copybook MBRREC01
+Load method: Informatica PowerCenter 9.6.1, mapping m_MBR_MASTER_LOAD
+Load frequency: Nightly, 02:15–03:40 batch window
+Grain: One row per member per coverage segment
+
+SECTION 2 — COLUMN INVENTORY
+
+COLUMN NAME              TYPE            NULL  NOTES
+MBR_SK                   NUMBER(12)      N     Surrogate key. Sequence-generated. No business meaning.
+MBR_NBR                  VARCHAR2(12)    N     Natural key from GPAS. Restricted Tier 2.
+SUBSCR_NBR               VARCHAR2(12)    N     Contract-level identifier. Restricted Tier 2.
+MBR_LAST_NM              VARCHAR2(35)    N     Restricted Tier 3. Masked in all non-production copies.
+MBR_FIRST_NM             VARCHAR2(25)    N     Restricted Tier 3. Masked in all non-production copies.
+MBR_MID_INIT             CHAR(1)         Y     Trailing spaces trimmed at load.
+MBR_SSN                  VARCHAR2(9)     Y     Restricted Tier 4. Column-level encryption (TDE). Access by explicit grant only.
+MBR_BIRTH_DT             DATE            N     Restricted Tier 3. Used for age-band derivation; do not propagate raw.
+MBR_GENDER_CD            CHAR(1)         N     Domain maintained in REF.GENDER_CD.
+ADDR_LINE_1              VARCHAR2(50)    N     Restricted Tier 3.
+ADDR_LINE_2              VARCHAR2(50)    Y     Restricted Tier 3.
+ADDR_CITY_NM             VARCHAR2(30)    N     Restricted Tier 3.
+ADDR_STATE_CD            CHAR(2)         N     Permitted in aggregate reporting.
+ADDR_POSTAL_CD           VARCHAR2(10)    N     First five positions permitted in aggregate reporting.
+HOME_PHONE_NBR           VARCHAR2(10)    Y     Restricted Tier 3. Digits only; formatting stripped at load.
+MOBILE_PHONE_NBR         VARCHAR2(10)    Y     Restricted Tier 3. Sourced from self-service portal.
+EMAIL_ADDR_TXT           VARCHAR2(80)    Y     Restricted Tier 3. Nullable; not populated for pre-2011 enrollments.
+COVG_EFF_DT              DATE            N     Segment start.
+COVG_TERM_DT             DATE            Y     Null indicates active coverage.
+PLAN_CD                  VARCHAR2(8)     N     Joins REF.PLAN_DIM.
+GRP_NBR                  VARCHAR2(10)    N     Employer group identifier.
+REC_LOAD_TS              TIMESTAMP(6)    N     Batch audit column.
+REC_SRC_SYS_CD           VARCHAR2(6)     N     Batch audit column.
+
+SECTION 3 — ACCESS RESTRICTION
+Tier 2 and above require an approved Data Access Request (form DAR-04) countersigned by the requester's director. Tier 4 columns are excluded from the standard analyst role EDW_ANLYST_RO and are available only through role EDW_PII_ELEV, reviewed quarterly. Ad hoc SELECT against Tier 3 and Tier 4 columns is logged to the database audit trail and reviewed monthly by Information Security.
+
+SECTION 4 — RETENTION
+Active member rows retained for the life of coverage. Terminated segments retained ten (10) years following COVG_TERM_DT per state insurance record retention requirements, then purged by job PRG_MBR_RETN. Tier 4 columns are overwritten with nulls at year seven under the early-suppression standard.
+
+SECTION 5 — DOWNSTREAM EXTRACTS
+EXT-114 Actuarial Reserving Extract — age band only; name and address columns excluded.
+EXT-207 Wellness Vendor File — subscriber identifier tokenized; SFTP delivery.
+EXT-330 Regulatory Filing Support — state and postal prefix only.
+Any new extract consuming Tier 3 or Tier 4 columns requires Privacy Office sign-off before scheduling.

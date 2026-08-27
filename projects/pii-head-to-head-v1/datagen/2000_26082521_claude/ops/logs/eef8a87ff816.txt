@@ -1,0 +1,14 @@
+PRE-RUN CHECK — JOB_CIS_ARREARS_WKLY, RUN-20210422-0500-ARR
+Prepared 2021-04-21 16:20. Sign-off required before release to scheduler.
+
+• Rule map version matches production policy (POL-CIS-MASK-v4.2) — confirmed.
+• Vault `tv-cis-01` reachable; key epoch 2021-01 current — confirmed.
+• Fail-closed default active for unmapped columns — confirmed.
+• Columns in extract manifest: tkn_acct, tkn_prem, tkn_party, RATE_CLASS, TARIFF_CODE, BILL_CYCLE, ARREARS_BAL, ARREARS_BAND, ARREARS_AGE_DAYS, CONCESSION_TYPE, HARDSHIP_FLAG, DISCONNECT_ELIGIBLE_IND.
+• Columns explicitly barred from this extract: CUST_FIRST_NAME, CUST_LAST_NAME, DOB, SSN_LAST4, TAX_ID, EMAIL_ADDR, PRIMARY_PHONE, SVC_ADDR_LINE1, BANK_ACCT_NBR, CARD_PAN, LIFE_SUPPORT_IND, MEDICAL_CERT_FLAG — confirmed absent from manifest.
+• Expected row volume 96,000–104,000. Prior run 99,412. Variance threshold ±8%.
+• Output destination DWH_STG.ARREARS_MSK. Retention 90 days.
+• Unmasked-pattern scan enabled on all string columns — confirmed.
+• Reject and quarantine paths writable — confirmed.
+• Outstanding: TCK-2021-1188 not yet closed; does not affect this job (EMAIL_ADDR not in manifest).
+• Released to scheduler by the Data Operations Lead, 2021-04-21 16:38.

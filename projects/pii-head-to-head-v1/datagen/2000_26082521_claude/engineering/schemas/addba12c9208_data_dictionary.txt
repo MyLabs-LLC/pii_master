@@ -1,0 +1,26 @@
+DATA DICTIONARY — SUPPLEMENTAL SHEET 2021-07
+SCHEMA: CHD_PROG | TABLE: PARTICIPANT_ROSTER
+
+PART A — AUTHORITY
+This sheet is issued under the Department's Records Management Directive and is
+binding upon all custodians of the named table.
+
+PART B — ENUMERATED COLUMNS
+NAME | TYPE | NULLABLE | NOTE
+PARTICIPANT_SK | BIGINT | N | Surrogate; no external meaning
+LEGAL_NAME_LAST_TXT | VARCHAR(60) | N | Restricted; role-gated
+LEGAL_NAME_FIRST_TXT | VARCHAR(60) | N | Restricted; role-gated
+BIRTH_DT | DATE | N | Generalized to year in extracts
+MAILING_ADDR_TXT | VARCHAR(180) | Y | Suppressed below county level
+CONTACT_PHONE_NBR | VARCHAR(20) | Y | Outreach only
+STATE_PROGRAM_ID | VARCHAR(18) | Y | Reconciled quarterly
+ENROLL_STATUS_CD | CHAR(2) | N | Domain table CHD_REF.STATUS_CD
+LAST_CONTACT_DT | DATE | Y | Drives lapse reporting
+
+PART C — CONDITIONS
+1. Restricted columns shall not be replicated to any environment lacking equivalent controls.
+2. Retention: five (5) years from ENROLL_STATUS_CD attaining terminal value.
+3. Downstream: EXT_PROG_SUMMARY (aggregate only). No row-level export is authorized.
+
+PART D — ISSUANCE
+Issued by the Data Steward. Acknowledged by the Program Manager.

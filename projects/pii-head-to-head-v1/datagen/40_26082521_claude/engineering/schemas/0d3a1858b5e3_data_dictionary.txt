@@ -1,0 +1,80 @@
+MEMORANDUM
+
+TO:       Enrollment Services; Interface Support Desk
+FROM:     Office of the Records Custodian
+DATE:     22 September 2021
+SUBJECT:  Data Dictionary Excerpt — COVERAGE_ENROLLMENT
+REFERENCE: DG-2021-114
+
+1.0  Table description
+
+     1.1  COVERAGE_ENROLLMENT holds one row per member per coverage
+          segment. Segments are non-overlapping within a payer.
+
+     1.2  The table is loaded by the eligibility interface and is not
+          maintained by direct entry except under the correction
+          procedure held by the Enrollment Services Manager.
+
+2.0  Key and identifier columns
+
+     2.1  ENROLL_SK — NUMBER(18), NOT NULL. Surrogate key.
+
+     2.2  MBR_SK — NUMBER(18), NOT NULL. Foreign key to MBR_MASTER.
+          Carries no meaning outside this system.
+
+     2.3  SUBSCRIBER_ID — VARCHAR2(30), NOT NULL. Restricted. Assigned
+          by the payer. Appears in the payer reconciliation extract in
+          full, as required by the trading partner agreement; appears
+          nowhere else outside the source table.
+
+     2.4  MBR_DOB_DT — DATE, NOT NULL. Restricted. Held here for
+          eligibility matching only. Read access is confined to the
+          eligibility service account and to the Interface Support Desk
+          role group.
+
+     2.5  MBR_SSN — VARCHAR2(11), NULLABLE. Restricted — highest tier.
+          Populated only where the payer requires it for matching.
+          Column-level encryption applies at rest. Excluded from every
+          extract, view and report without exception; the exclusion is
+          enforced in the extract control table and cannot be waived by
+          the scheduling team.
+
+3.0  Coverage columns
+
+     3.1  PAYER_CD — VARCHAR2(8), NOT NULL, reference-coded.
+
+     3.2  PLAN_CD — VARCHAR2(12), NOT NULL, reference-coded.
+
+     3.3  GROUP_NO — VARCHAR2(20), NULLABLE. Employer group identifier.
+
+     3.4  COVERAGE_FROM_DT — DATE, NOT NULL.
+
+     3.5  COVERAGE_THRU_DT — DATE, NULLABLE. A null denotes open
+          coverage and is expected on active segments.
+
+     3.6  COB_ORDER_NO — NUMBER(1), NOT NULL. Coordination of benefits
+          sequence.
+
+     3.7  ELIG_VERIFIED_TS — TIMESTAMP, NULLABLE. Set by the nightly
+          verification job.
+
+4.0  Retention
+
+     4.1  Closed segments are retained for seven years from
+          COVERAGE_THRU_DT.
+
+     4.2  On expiry, SUBSCRIBER_ID, MBR_DOB_DT and MBR_SSN are
+          overwritten in place. PAYER_CD, PLAN_CD and the two date
+          columns are retained indefinitely for actuarial reporting.
+
+5.0  Downstream extracts
+
+     5.1  Payer reconciliation file — daily. Carries the columns at
+          2.3, 3.1 through 3.6.
+
+     5.2  Denials analysis file — weekly. Carries 2.2, 3.1, 3.2, 3.4,
+          3.5. No direct identifier is included.
+
+     5.3  Additions to either column list require the written approval
+          of the Records Custodian and are recorded against this
+          reference number.

@@ -1,0 +1,40 @@
+INTERNAL MEMORANDUM
+
+TO:      Data Services duty log
+FROM:    Scheduler, batch stream NIGHT_2
+DATE:    8 November 2011
+REF:     DS-RUN-2011-1108
+SUBJECT: Overnight ETL cycle output — cycle NIGHT_2 of 2011-11-07
+
+Output of the overnight cycle is transcribed below for the duty log. The cycle completed with one warning and no failures.
+
+  2011-11-07 23:45:02  CYCLE NIGHT_2 START  cycle_id=N2-20111107
+  2011-11-07 23:45:04  JOB ETL_INGEST_DEPOT   id=J-44120  START
+  2011-11-08 00:31:19  JOB J-44120  read=186,442  written=186,442  rejected=0
+  2011-11-08 00:31:19  JOB J-44120  tokenised: CONSIGNEE_FORENAME, CONSIGNEE_SURNAME,
+                                    CONSIGNEE_ADDR_LINE_1, CONSIGNEE_ADDR_LINE_2,
+                                    CONSIGNEE_CONTACT_TEL, CONSIGNEE_CONTACT_EMAIL,
+                                    SIGNATORY_NAME, DRIVER_PAYROLL_NUMBER
+  2011-11-08 00:31:20  JOB J-44120  vault A refs=744,112  vault B refs=372,884
+                                    vault C refs=  2,908
+  2011-11-08 00:31:21  JOB J-44120  END rc=0
+  2011-11-08 00:31:25  JOB ETL_VALIDATE       id=J-44121  START
+  2011-11-08 01:02:48  JOB J-44121  read=186,442  passed=185,209  rejected=1,233
+  2011-11-08 01:02:48  JOB J-44121  top code V-011 (mandatory field empty) rows=902
+  2011-11-08 01:02:49  JOB J-44121  END rc=0
+  2011-11-08 01:02:55  JOB ETL_LOAD_SHIPWH    id=J-44122  START
+  2011-11-08 02:14:31  JOB J-44122  inserted=185,209  updated=41,776  deleted=0
+  2011-11-08 02:14:32  JOB J-44122  END rc=0
+  2011-11-08 02:14:40  JOB EXTRACT_VENDOR_FEED_03  id=J-44123  START
+  2011-11-08 02:14:41  JOB J-44123  masking profile MASK_SHIPWH_STD v6 applied
+  2011-11-08 02:38:12  JOB J-44123  WARN unmapped column encountered in view
+                                    V_SHIPWH_VENDOR: SHP_RCPT_ALT_TEL
+  2011-11-08 02:38:12  JOB J-44123  action=ABORT_ON_UNMAPPED  rows_emitted=0
+  2011-11-08 02:38:13  JOB J-44123  END rc=4
+  2011-11-08 02:40:00  JOB EXTRACT_VENDOR_FEED_03_RETRY  id=J-44124  START
+  2011-11-08 02:40:01  JOB J-44124  view rebuilt without SHP_RCPT_ALT_TEL
+  2011-11-08 03:09:54  JOB J-44124  read=185,209  emitted=185,209  masked_fields=8
+  2011-11-08 03:09:55  JOB J-44124  END rc=0
+  2011-11-08 03:10:02  CYCLE N2-20111107 END  rc=0  warnings=1
+
+Note for the duty log: the warning on J-44123 was raised because a column was added to the vendor view without a corresponding entry in the masking profile. The job aborted before emitting any rows, which is the intended behaviour. A change note is required before SHP_RCPT_ALT_TEL is reinstated in that view, and the profile must be amended first.

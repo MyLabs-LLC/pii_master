@@ -1,0 +1,22 @@
+RTA REVENUE SYSTEMS — NIGHTLY BATCH OPERATOR LOG
+Cycle 20040412 / window 02:00–04:30 / console TERM-RS03 / operator initials on file with shift supervisor
+
+- 02:00:04  JOB_CONC_EXTR_0412 started. Source CONCESSION_MASTER (DB2 v7, subsystem DSNP). Reader opened in bind-variable mode, commit interval 5000.
+- 02:00:11  Confirm mask profile CONC_STD_V4 loaded from parameter library; checksum matched control copy. Do not proceed if checksum differs — page the Records Custodian.
+- 02:07:38  JOB_CONC_EXTR_0412 ended RC=0. Rows read 418,022. Rows written 418,022. Rows rejected 0. Elapsed 00:07:34.
+- 02:07:40  Verify each restricted column left the extract tokenised or suppressed. Record null counts as shown:
+    APPLICANT_SURNAME .............. TOKEN  nulls 0
+    APPLICANT_GIVEN_NAME ........... TOKEN  nulls 0
+    APPLICANT_DATE_OF_BIRTH ........ SUPPRESSED  nulls 418,022
+    APPLICANT_NATIONAL_ID .......... SUPPRESSED  nulls 418,022
+    RESIDENTIAL_ADDR_LINE_1 ........ SUPPRESSED  nulls 418,022
+    RESIDENTIAL_POSTCODE ........... TRUNC(3)  nulls 217
+    DAYTIME_CONTACT_NUMBER ......... SUPPRESSED  nulls 418,022
+    CONCESSION_CARD_SERIAL ......... TOKEN  nulls 0
+- 02:11:02  JOB_FARE_TXN_0412 started. Source flat file FARETXN.D20040412.SEQ from gate controller consolidation, 1,904,551 records staged on volume TR0447.
+- 02:39:17  JOB_FARE_TXN_0412 ended RC=4. Rows read 1,904,551. Rows loaded 1,904,383. Rows to reject file 168.
+- 02:39:20  Check reject file FARETXN.REJ.D20040412 before releasing the window. All 168 rejects carry reason code V-114 (BOARDING_ZONE_CODE not in reference set). No restricted columns present in the reject payload — the reject writer emits CARD_TOKEN only.
+- 03:04:55  JOB_AGG_RIDERSHIP_0412 started against the loaded partition.
+- 03:22:41  JOB_AGG_RIDERSHIP_0412 ended RC=0. Input rows 1,904,383. Output rows 8,412 (route × hour × fare class). No row-level identifiers carried into the aggregate.
+- 03:25:00  Confirm the aggregate table contains none of: PASSENGER_TOKEN, CONCESSION_CARD_SERIAL, EMAIL_CONTACT. Query the catalogue, do not eyeball the layout.
+- 03:31:12  Close the window. Log tape volumes returned to the vault. Leave the reject file in place for the data steward's morning review; do not resubmit rejects without a signed correction note.

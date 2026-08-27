@@ -1,0 +1,47 @@
+CENTRAL VALLEY FEDERAL CREDIT UNION
+DATA QUALITY EXCEPTION REGISTER
+SOURCE JOB CUEXT410 / RUN ID 0000418 / BATCH DATE 2004-03-16
+GENERATED 2004-03-16-03.04.52.771 BY CUDQ0080
+DISTRIBUTION: RECORDS CUSTODIAN; INFORMATION SECURITY OFFICER; ISD MANAGER
+
+1.  BASIS
+
+1.1  Exceptions below were raised by the validation engine against the mapping
+     specification at ISD-MAP-0417 revision 6.
+
+1.2  A single rejected row may raise more than one exception. The 684 exceptions
+     recorded here arise from 541 distinct rejected rows.
+
+2.  EXCEPTION DETAIL
+
+RULE ID    FIELD LABEL              VALIDATION CLAUSE                 SEV     ROWS
+---------  -----------------------  --------------------------------  ---  -------
+VR-0101    MBR-SSN                  VAULT REFERENCE NOT RESOLVED       H       118
+VR-0102    MBR-BIRTH-DATE           CENTURY DIGIT ABSENT (PACKED)      H        64
+VR-0110    MBR-POSTAL-CD            NOT IN USPS REFERENCE TABLE        M       173
+VR-0115    MBR-PHONE-HOME           LENGTH <> 10 AFTER PUNCT STRIP     L        96
+VR-0120    MBR-EMAIL-ADDR           DOMAIN PART ABSENT                 L        42
+VR-0131    CARD-PAN                 LUHN CHECK FAILED PRE-TOKENISE     H         7
+VR-0140    JNT-OWNER-NAME           PRESENT WITHOUT JOINT ACCT FLAG    M        29
+VR-0155    MBR-MOTHER-MAIDEN-NM     SUPPRESSION DIRECTIVE NOT RUN      H        12
+VR-0160    MBR-ADDR-LINE-1          TRAILING LOW-VALUES IN FIELD       L        88
+VR-0175    MBR-EMPLOYER-NAME        EXCEEDS TARGET COLUMN WIDTH        L        55
+---------  -----------------------  --------------------------------  ---  -------
+                                                       TOTAL                  684
+
+3.  DISPOSITION
+
+3.1  VR-0155 is escalated to the Information Security Officer within one
+     business day. The 12 held rows are not to be released to any mart until
+     the suppression directive is confirmed operative.
+
+3.2  VR-0101 and VR-0131 are reprocessed on the next cycle without operator
+     intervention, subject to vault availability.
+
+3.3  VR-0110 and VR-0175 are referred to the Member Services supervisor for
+     correction at source. No warehouse-side defaulting is authorised.
+
+3.4  Severity codes: H requires same-cycle escalation; M requires correction at
+     source within ten business days; L is monitored for trend only.
+
+4.  This register is retained for seven years under the records schedule.

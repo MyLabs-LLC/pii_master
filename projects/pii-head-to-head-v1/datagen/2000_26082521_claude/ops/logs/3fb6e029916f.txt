@@ -1,0 +1,63 @@
+INTEROFFICE MEMORANDUM
+ADMINISTRATIVE COMPUTING SERVICES
+
+TO:     Assistant Registrar for Systems
+FROM:   Data Integration Group
+DATE:   22 March 2004
+RE:     Masking profile MASK_PROF_STU_03, revision 4 — configuration as deployed
+
+Deployed to the extract server 2004-03-19 18:40 CST. Effective with cycle RGSTR_NGT_0421. Prior revision archived. Listing follows verbatim.
+
+# mask_prof_stu_03.cfg  rev 4
+# owner: Records Custodian
+# applies to: RGSTR_NGT_*, RGSTR_WKLY_*, IR_CENSUS_*
+# order of operations: suppress -> tokenize -> partial -> passthrough
+
+[profile]
+name                = MASK_PROF_STU_03
+revision            = 4
+fail_on_unbound     = true
+emit_placeholder    = true
+
+[suppress]
+# column                  placeholder
+PERM_ADDR_LINE1         = [SUPPRESSED]
+PERM_ADDR_LINE2         = [SUPPRESSED]
+MAIL_ADDR_LINE1         = [SUPPRESSED]
+MAIL_ADDR_LINE2         = [SUPPRESSED]
+HOME_PHONE              = XXX-XXX-XXXX
+CELL_PHONE              = XXX-XXX-XXXX
+EMERG_CONTACT_NAME      = [SUPPRESSED]
+EMERG_CONTACT_PHONE     = XXX-XXX-XXXX
+PARENT_GUARDIAN_NAME    = [SUPPRESSED]
+EMAIL_ADDR              = [SUPPRESSED]
+
+[tokenize]
+# column                  target          algorithm   vault
+SSN                     = SSN_TKN        hmac-sha1   VLT_REG_01
+DOB                     = DOB_TKN        hmac-sha1   VLT_REG_01
+SPRIDEN_ID              = STUDENT_TKN    hmac-sha1   VLT_REG_01
+
+[partial]
+SSN_LAST4               = mask_left(9,5)     -> XXXXX####
+PERM_ADDR_ZIP           = truncate(3)        -> ###
+DOB_YEAR                = derive(DOB,'YYYY') -> CCYY
+
+[passthrough]
+# retained in clear per steward determination 2004-02-11
+GENDER_CD
+CITIZENSHIP_CD
+RESIDENCY_CD
+MAJOR_CD
+TERM_CD
+CLASS_STANDING_CD
+ENROLL_STATUS_CD
+
+[unbound_action]
+LAST_NAME               = abort
+FIRST_NAME              = abort
+MIDDLE_NAME             = abort
+PREFERRED_NAME          = abort
+# name columns have no approved treatment; job aborts rather than land them
+
+Two notes for the record. First, fail_on_unbound is now true, so any column added to the source view without a profile entry will halt the cycle rather than land in clear. Second, ETHNIC_CD was removed from [passthrough] at the steward's instruction and is not yet bound; it is presently subject to the abort rule and is not being extracted. Direction is requested on whether ETHNIC_CD should be bound to [suppress] or restored to [passthrough] for census reporting.

@@ -1,0 +1,47 @@
+MEMORANDUM
+
+TO:      Data Administration Committee
+FROM:    Office of the Records Custodian
+DATE:    11 September 1998
+RE:      Data Dictionary Excerpt — CUSTOMER MASTER (CUSTMAST), Release 4.2
+CC:      Manager of Escrow Operations; Manager of Title Production; Corporate Counsel
+FILE:    DA-DD-1998-041
+
+Pursuant to Section 6.3 of the Records Administration Manual, and in furtherance of the resolution of this Committee adopted at its meeting of 27 August 1998, there is set forth below the dictionary excerpt for the customer master file as it presently exists on the production LPAR. The definitions below govern in the event of any conflict with the COBOL copybook member CUSTMAST or with any departmental abstract heretofore circulated. No column enumerated herein may be altered, extended, or repurposed except upon written authorization of the undersigned countersigned by the Manager of Escrow Operations.
+
+COLUMN NAME            TYPE            NULL  OPERATIONAL NOTE
+---------------------  --------------  ----  ------------------------------------
+CUST_ID                DECIMAL(11,0)   NO    Surrogate key; assigned by sequence.
+ESCROW_FILE_NBR        CHAR(12)        NO    Foreign key to ESCFILE. Indexed.
+PARTY_ROLE_CD          CHAR(2)         NO    Buyer, seller, lender, agent, other.
+LAST_NAME              VARCHAR(40)     NO    Restricted. See Article III below.
+FIRST_NAME             VARCHAR(30)     YES   Restricted. Null for entity parties.
+MIDDLE_INIT            CHAR(1)         YES   Restricted.
+NAME_SUFFIX            CHAR(5)         YES   Restricted.
+ENTITY_NAME            VARCHAR(60)     YES   Populated when PARTY_ROLE_CD is 09.
+TAXPAYER_ID_NBR        CHAR(11)        YES   Restricted, Class A. Masked on report.
+TIN_TYPE_CD            CHAR(1)         NO    Defaults to space where unfurnished.
+DATE_OF_BIRTH          DATE            YES   Restricted, Class A. Not extracted.
+MARITAL_STATUS_CD      CHAR(1)         YES   Vesting use only.
+MAIL_ADDR_LINE_1       VARCHAR(35)     YES   Restricted, Class B.
+MAIL_ADDR_LINE_2       VARCHAR(35)     YES   Restricted, Class B.
+CITY_NAME              VARCHAR(28)     YES   Restricted, Class B.
+STATE_CD               CHAR(2)         YES   Edited against STATETBL.
+POSTAL_CD              CHAR(9)         YES   Restricted, Class B.
+HOME_PHONE_NBR         CHAR(10)        YES   Restricted, Class A.
+WORK_PHONE_NBR         CHAR(10)        YES   Restricted, Class A.
+FACSIMILE_NBR          CHAR(10)        YES   Restricted, Class A.
+ELEC_MAIL_ADDR         VARCHAR(50)     YES   Added Rel. 4.1. Restricted, Class A.
+LENDER_LOAN_NBR        CHAR(15)        YES   Restricted, Class A.
+ESCROW_TRUST_ACCT_NBR  CHAR(17)        YES   Restricted, Class A. Audit-logged.
+WIRE_ROUTING_NBR       CHAR(9)         YES   Restricted, Class A. Audit-logged.
+POLICY_NBR             CHAR(14)        YES   Populated at policy issuance.
+UNDERWRITER_CD         CHAR(3)         NO    Defaults to house underwriter.
+CLOSING_DT             DATE            YES   Drives retention clock. See below.
+RECORDATION_DT         DATE            YES   County confirmation required.
+RETENTION_CLASS_CD     CHAR(2)         NO    See Schedule R, as amended.
+LAST_MAINT_USER_ID     CHAR(8)         NO    Populated by trigger; not keyable.
+LAST_MAINT_TS          TIMESTAMP       NO    Populated by trigger; not keyable.
+PURGE_ELIGIBLE_DT      DATE            YES   Computed nightly by job CU0450P.
+
+GENERAL NOTES. Columns designated Class A are accessible only to those user profiles enrolled in group ESCADM or TTLADM, and any display thereof at a terminal outside the closing suite is prohibited. Columns designated Class B may be viewed by production staff but may not be keyed to a print queue not physically situated within the branch of file origin. The retention clock for all rows commences upon the later of CLOSING_DT and RECORDATION_DT and runs for the period prescribed by the applicable state schedule, in no event less than seven years. Rows bearing a null CLOSING_DT are excluded from purge and are reported monthly to this Committee for disposition.

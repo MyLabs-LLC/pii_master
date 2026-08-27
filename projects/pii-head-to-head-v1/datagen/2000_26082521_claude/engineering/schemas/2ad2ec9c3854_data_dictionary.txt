@@ -1,0 +1,62 @@
+DATA DICTIONARY EXCERPT — SUPPLEMENTAL SHEET
+FORM PFS-DD-11 (Rev. 11/2016) | PAGE 1 OF 1
+
+1. IDENTIFICATION
+   1.1 Schema ......... PFS_ARCHIVE
+   1.2 Object ......... MEMBER_MASTER_HIST
+   1.3 Class .......... Type-2 history, closed to insert 12/2016
+   1.4 Custodian ...... the Records Custodian
+   1.5 Steward ........ Manager, Revenue Cycle Applications
+
+2. COLUMN LISTING
+   2.1  HIST_SK ................ NUMBER(15)     NOT NULL
+        Surrogate. Ascending, no gaps enforced.
+   2.2  MBR_SK ................. NUMBER(12)     NOT NULL
+        Business linkage to current master.
+   2.3  MRN_TXT ................ VARCHAR2(20)   NOT NULL
+        Category 3. Indexed.
+   2.4  MBR_LAST_NAME_TXT ...... VARCHAR2(60)   NOT NULL
+        Category 3.
+   2.5  MBR_FIRST_NAME_TXT ..... VARCHAR2(60)   NOT NULL
+        Category 3.
+   2.6  MBR_MAIDEN_NAME_TXT .... VARCHAR2(60)   NULL
+        Retained for matching against legacy accounts only.
+   2.7  MBR_DOB_DT ............. DATE           NOT NULL
+        Category 3.
+   2.8  MBR_SSN_LAST4_TXT ...... CHAR(4)        NULL
+        Category 4. Retained for agency reconciliation. Successor column to
+        full-value storage discontinued 01/2016.
+   2.9  MBR_ADDR_LINE_1_TXT .... VARCHAR2(80)   NULL
+   2.10 MBR_POSTAL_CD .......... VARCHAR2(10)   NULL
+   2.11 MBR_PHONE_TXT .......... VARCHAR2(15)   NULL
+   2.12 GUARANTOR_ACCT_NBR ..... VARCHAR2(18)   NULL
+   2.13 CHG_TYPE_CD ............ CHAR(1)        NOT NULL   I/U/D
+   2.14 CHG_SRC_CD ............. VARCHAR2(8)    NOT NULL
+   2.15 VALID_FROM_TS .......... TIMESTAMP      NOT NULL
+   2.16 VALID_TO_TS ............ TIMESTAMP      NULL
+   2.17 LEGAL_HOLD_IND ......... CHAR(1)        NOT NULL   Default N
+
+3. ACCESS RESTRICTION
+   3.1 Read access by ticket only, one request per purpose, expiring at
+       ticket closure. No standing grants.
+   3.2 Bulk SELECT (over 1000 rows) blocked by resource plan; override
+       requires DBA action and is reported to the quarterly access review.
+   3.3 Columns 2.4 through 2.11 are excluded from every published view.
+
+4. RETENTION
+   4.1 Base schedule: 7 years from VALID_TO_TS.
+   4.2 Rows where LEGAL_HOLD_IND is set are exempt from purge without
+       exception; release requires written notice from Legal.
+   4.3 Annual certification of purge completion filed on Form RM-08.
+
+5. DOWNSTREAM EXTRACTS
+   5.1 EXT-152, bad debt agency placement — reads 2.2, 2.8, 2.12 only.
+   5.2 EXT-190, audit response packets — assembled manually, logged
+       individually, no automated feed.
+   5.3 No feed to Decision Support. Prior feed EXT-141 decommissioned 07/2016.
+
+6. CERTIFICATION
+   Reviewed this cycle by the Records Custodian and the Manager, Revenue
+   Cycle Applications. Discrepancies: none noted.
+
+   Signature ______________________   Date ____________

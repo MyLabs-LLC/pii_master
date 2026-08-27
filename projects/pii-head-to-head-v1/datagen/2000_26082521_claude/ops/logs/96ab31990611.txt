@@ -1,0 +1,27 @@
+MEMORANDUM
+
+TO:      Records Custodian
+FROM:    ETL Operations
+DATE:    16 September 2021
+SUBJECT: Validation rejects, run 20210914-0217, disposition
+
+The 427 rejected rows from Tuesday's load break down as follows. Field names are given; values are held in quarantine and are not reproduced here.
+
+RULE_ID        FIELD              CONDITION                    ROWS
+V-101          MEMBER_NBR         length <> 9                   381
+V-101          MEMBER_NBR         non-numeric character          22
+V-114          DOB                date not parseable              9
+V-114          DOB                date in future                  2
+V-207          POSTAL_CODE        not in reference table          8
+V-233          EMAIL_ADDR         no @ separator                  4
+V-233          EMAIL_ADDR         length > 254                    1
+                                                        ----------
+                                                               427
+
+Sample of the error stream:
+
+2021-09-14 02:44:02 ERROR [validate] V-101 MEMBER_NBR row_key=<suppressed> len=8
+2021-09-14 02:44:02 ERROR [validate] V-114 DOB row_key=<suppressed> parse failed
+2021-09-14 02:44:03 ERROR [validate] V-207 POSTAL_CODE row_key=<suppressed> lookup miss
+
+Proposed disposition: V-101 rows hold for the vendor change request. V-114 and V-233 rows go to branch operations for correction at source. V-207 rows are a reference-table gap, not a data fault; the reference table is being refreshed on 20 September. Please confirm by Friday so the remediation pass can be scheduled.

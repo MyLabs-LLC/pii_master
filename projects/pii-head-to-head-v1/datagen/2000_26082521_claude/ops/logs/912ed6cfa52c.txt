@@ -1,0 +1,46 @@
+# rxmask.cfg -- masking profile for EDW staging loads
+# host: edwetl02   profile: RXMBR_STG   revision: 11
+# last modified: 2004-03-09 17:26:03 CST by data services on-call
+# do not edit by hand; regenerate from MAP_RXMBR_V7
+
+[profile]
+name                = RXMBR_STG
+default_action      = SUPPRESS
+mask_char           = *
+placeholder_token   = <MASKED>
+null_representation = <NULL>
+log_source_values   = 0
+abort_on_unmapped   = 1
+
+[fields]
+FIELD_LABEL              ACTION       MASK_PATTERN     LEN  AUDIT
+-----------------------  -----------  ---------------  ---  -----
+MEMBER_LAST_NAME         TOKENIZE     <TOKEN>           30  Y
+MEMBER_FIRST_NAME        TOKENIZE     <TOKEN>           20  Y
+MEMBER_MIDDLE_INITIAL    MASK_FULL    *                  1  N
+MEMBER_BIRTH_YEAR        PARTIAL      ****-**-**        10  Y
+MEMBER_TAX_ID            MASK_FULL    *********          9  Y
+MEMBER_STREET_1          MASK_FULL    ****              40  N
+MEMBER_STREET_2          MASK_FULL    ****              40  N
+MEMBER_POSTAL_TRUNC      PARTIAL      ***xxxxxx          9  N
+MEMBER_HOME_PHONE        MASK_FULL    ***-***-****      12  Y
+MEMBER_EMAIL_ADDRESS     MASK_FULL    <MASKED>          60  Y
+MEMBER_PLAN_ID           TOKENIZE     <TOKEN>           12  Y
+SUBSCRIBER_ID            TOKENIZE     <TOKEN>           18  Y
+SCRIPT_NUMBER            TOKENIZE     <TOKEN>            9  Y
+PRESCRIBER_LAST_NAME     MASK_FULL    ****              30  N
+PRESCRIBER_DEA_ID        TOKENIZE     <TOKEN>            9  Y
+DISPENSER_STAFF_ID       TOKENIZE     <TOKEN>            8  Y
+
+[audit]
+sink            = EDW_AUD.MASK_EVENT
+write_mode      = APPEND
+retain_days     = 2555
+value_capture   = DISABLED
+# value_capture must remain DISABLED. Enabling it writes cleartext to the
+# audit sink and voids the profile sign-off held by the Records Custodian.
+
+[exceptions]
+# fields present in source but absent from [fields] are rejected, not passed
+on_unmapped     = REJECT
+reject_sink     = /edw/reject/rxmbr_stg/

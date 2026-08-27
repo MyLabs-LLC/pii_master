@@ -1,0 +1,94 @@
+{
+ "bundle_name": "pii-content-v5e-fused-v1",
+ "out_dir": "/home/lence/workspace/pii_master/projects/pii-content-v5/dist",
+ "entry_point": "tagger.py",
+ "model_card": "MODEL_CARD.md",
+ "readme": "README.md",
+ "run": "pii-content-v5/26-08-26-1",
+ "license": "proprietary - internal",
+ "files": [
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/models/cascade_p80r70",
+   "dst": "models/cascade"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/models/v5b-m2v",
+   "dst": "models/m2v"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/models/v5c-tagger/head.npz",
+   "dst": "models/content/head.npz"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/stage_pii-content-v5e-fused-v1/fusion.json",
+   "dst": "models/fusion.json"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/tagger.py",
+   "dst": "tagger.py"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/runtime",
+   "dst": "runtime"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/examples",
+   "dst": "examples"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/reports",
+   "dst": "docs"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/stage_pii-content-v5e-fused-v1/MODEL_CARD.md",
+   "dst": "MODEL_CARD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-content-v5/package/stage_pii-content-v5e-fused-v1/README.md",
+   "dst": "README.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/HOW_TO_BUILD.md",
+   "dst": "HOW_TO_BUILD.md"
+  }
+ ],
+ "config": {
+  "read_window_chars": 12000,
+  "content_read_chars": 6000,
+  "n_labels": 61,
+  "score_mode": "sum",
+  "cpu_budget": 1
+ },
+ "requirements": [
+  "numpy>=1.24",
+  "model2vec>=0.9.0"
+ ],
+ "metadata": {
+  "architecture": "hashed n-gram cascade fused per-tag with a static-token-embedding content tagger",
+  "n_labels": 61,
+  "catalogue": "GAIA scorecard 60 tags, less routing_number, plus swift_code",
+  "evaluator": "training/h2h_eval.py (unchanged)",
+  "promoted": "no - did not clear its declared gate",
+  "sealed_metrics": {
+   "micro_f1": 0.8372746109962463,
+   "precision_micro": 0.9189902782440186,
+   "macro_f05": 0.6954086601734162,
+   "macro_f2": 0.6213971048593521,
+   "recall_macro_catalogue": 0.5473952804292951,
+   "precision_macro_catalogue": 0.7541397988796235,
+   "severity_recall_min": 0.47289906814694405,
+   "equal_corpus_doc_recall": 0.7974565203069138,
+   "equal_corpus_doc_precision": 0.8955589153693518,
+   "equal_corpus_doc_specificity": 0.8791637100209538,
+   "p95_latency_ms": 6.410651563783175
+  }
+ },
+ "verification": {
+  "checked": "20000_pii_holdout_20.00k through the packaged tagger.py",
+  "n": 20000,
+  "metric": "micro_f1",
+  "expected": 0.9212124943733215,
+  "measured": 0.9212063709016597,
+  "note": "measured through the bundle's own entry point; expected is the fixed evaluator's f1_micro on the same corpus"
+ }
+}

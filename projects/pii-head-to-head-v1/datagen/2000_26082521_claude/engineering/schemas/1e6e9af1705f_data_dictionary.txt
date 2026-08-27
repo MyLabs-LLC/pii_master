@@ -1,0 +1,26 @@
+MUNICIPAL UTILITIES DEPARTMENT — INFORMATION SERVICES DIVISION
+DATA DICTIONARY EXCERPT: CIS.CUST_MSTR (CUSTOMER MASTER)
+REVISION 04-3 / EFFECTIVE 01 SEP 2004 / MAINTAINED BY THE DATABASE ADMINISTRATOR
+
+  1.0 IDENTIFIERS AND CONTROL
+      1.1 CUST_ID — NUMBER(10) — NOT NULL — surrogate, sequence CIS_CUST_SEQ. Not printed on bill stock.
+      1.2 ACCT_NBR — CHAR(12) — NOT NULL — right-justified, zero-filled. Carried forward from AS/400 conversion, FY1998.
+      1.3 PREM_ID — NUMBER(10) — NOT NULL — FK to CIS.PREMISE. One customer may hold multiple premises.
+      1.4 CUST_STAT_CD — CHAR(2) — NOT NULL — domain AC, IN, FN, WO, PD. Default 'AC'.
+      1.5 CUST_CLASS_CD — CHAR(3) — NOT NULL — RES, COM, IND, MUN, IRR.
+
+  2.0 RESTRICTED PERSONAL COLUMNS
+      2.1 CUST_LAST_NAME / CUST_FIRST_NAME / CUST_MI — VARCHAR2(30) / VARCHAR2(20) / CHAR(1) — NOT NULL / NOT NULL / NULL.
+      2.2 SSN_NBR — CHAR(9) — NULL — collected for deposit-waiver scoring only. Column grant limited to role CIS_CREDIT. Excluded from every reporting view; masked in CIS.V_CUST_PUBLIC.
+      2.3 DOB — DATE — NULL — populated only where senior discount or medical hold applies.
+      2.4 PHONE_HOME / PHONE_WORK — CHAR(10) — NULL — unformatted, no punctuation stored, no extension field.
+      2.5 SVC_ADDR_LN1 / SVC_ADDR_LN2 / SVC_CITY / SVC_ST / SVC_ZIP5 / SVC_ZIP4 — VARCHAR2(40) / VARCHAR2(40) / VARCHAR2(28) / CHAR(2) / CHAR(5) / CHAR(4) — LN2 and ZIP4 nullable, remainder NOT NULL.
+      2.6 MAIL_ADDR_LN1 / MAIL_ADDR_LN2 / MAIL_CITY / MAIL_ST / MAIL_ZIP5 — as above, all NULL. Blank implies service address.
+      2.7 EMAIL_ADDR — VARCHAR2(60) — NULL — populated only through e-bill enrollment pilot. No validation routine in place.
+      2.8 DRV_LIC_NBR — CHAR(15) — NULL — identity verification at counter. Deprecated; no new writes since rev 04-1.
+
+  3.0 OPERATIONAL NOTES
+      3.1 Access. SELECT on the base table is granted to CIS_BILLING, CIS_CREDIT and DBA only. Counter and phone staff read CIS.V_CUST_CSR, which omits 2.2, 2.3 and 2.8. Ad hoc query accounts are denied at the base table without exception.
+      3.2 Retention. Master record retained seven years following final bill, then written to archive tape and purged under Records Retention Schedule item 4-118. Purge job runs first Saturday, quarterly. Deposit and credit columns purge at three years.
+      3.3 Downstream extracts. Nightly EXT_CUST_BILLPRT to the print contractor, name and mailing columns only, no 2.2 or 2.3. Monthly EXT_CUST_COLL to the collections vendor, encrypted, transmittal logged in OPS_XFER_LOG. Annual EXT_CUST_GIS to Engineering carries PREM_ID and service address columns, no name columns.
+      3.4 Change control. Column additions require written approval of the Records Custodian and the Utilities Business Manager. Requests filed with Information Services.

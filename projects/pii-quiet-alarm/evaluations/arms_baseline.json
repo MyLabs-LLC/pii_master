@@ -1,0 +1,1240 @@
+{
+ "arms": [
+  {
+   "name": "champion_1k",
+   "label": "pii-priority-fusion-1k-v1 (prior champion)",
+   "metrics": {
+    "priority_macro_f05": {
+     "value": 0.20571019001049035,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "macro_f05": {
+     "value": 0.4163175705322756,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "priority_macro_precision": {
+     "value": 0.18268934875225137,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "priority_macro_recall": {
+     "value": 0.999712608747765,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "equal_corpus_doc_precision": {
+     "value": 0.6161723207912716,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "equal_corpus_doc_specificity": {
+     "value": 0.0005437737901033171,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "equal_corpus_doc_recall": {
+     "value": 0.9994259471871412,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "p95_latency_ms": {
+     "value": 8.568736264714968,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "docs_per_s": {
+     "value": 174.689249407426,
+     "ci_low": null,
+     "ci_high": null
+    },
+    "prediction_rate": {
+     "value": 0.9997913188647747,
+     "ci_low": null,
+     "ci_high": null
+    }
+   },
+   "scopes": {
+    "doc@4000_datax-dualjudge-evalset-1.32k": {
+     "doc_precision": {
+      "value": 0.47825,
+      "ci_low": 0.463,
+      "ci_high": 0.49325,
+      "support": 4000
+     },
+     "doc_recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 1913
+     },
+     "doc_specificity": {
+      "value": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "support": 2087
+     }
+    },
+    "sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_patient_id_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_address@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 350
+     }
+    },
+    "sensitive_pii_driver_s_license_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_full_name@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_military_identification_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_passport_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_password@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 12
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_social_security_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_visa_number@4000_datax-dualjudge-evalset-1.32k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "doc@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "doc_precision": {
+      "value": 0.5319669623738146,
+      "ci_low": 0.5208013093063091,
+      "ci_high": 0.5441095001194931,
+      "support": 6538
+     },
+     "doc_recall": {
+      "value": 0.9982778415614236,
+      "ci_low": 0.9968427095292767,
+      "ci_high": 0.9994259471871412,
+      "support": 3484
+     },
+     "doc_specificity": {
+      "value": 0.0016313213703099511,
+      "ci_low": 0.0003262642740619902,
+      "ci_high": 0.0032626427406199023,
+      "support": 3065
+     }
+    },
+    "sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 3
+     }
+    },
+    "sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 2
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_patient_id_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_address@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": 0.9887766554433222,
+      "ci_low": 0.9809203142536476,
+      "ci_high": 0.9955106621773289,
+      "support": 891
+     }
+    },
+    "sensitive_pii_driver_s_license_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_full_name@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": 0.9975116640746501,
+      "ci_low": 0.9956454121306376,
+      "ci_high": 0.9990668740279938,
+      "support": 3215
+     }
+    },
+    "sensitive_pii_military_identification_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_passport_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_password@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 9
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_social_security_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 4
+     }
+    },
+    "sensitive_pii_visa_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_bank_account_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 531
+     }
+    },
+    "sensitive_pci_credit_card_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 524
+     }
+    },
+    "sensitive_pci_iban@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 431
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_patient_id_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_address@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 2529
+     }
+    },
+    "sensitive_pii_driver_s_license_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 1101
+     }
+    },
+    "sensitive_pii_full_name@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 0.9992687385740402,
+      "ci_low": 0.9985374771480804,
+      "ci_high": 0.9998171846435101,
+      "support": 5470
+     }
+    },
+    "sensitive_pii_military_identification_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_passport_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 0.9990925589836661,
+      "ci_low": 0.9972776769509982,
+      "ci_high": 1.0,
+      "support": 1102
+     }
+    },
+    "sensitive_pii_password@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 0.9991967871485944,
+      "ci_low": 0.9975903614457832,
+      "ci_high": 1.0,
+      "support": 1245
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 145
+     }
+    },
+    "sensitive_pii_social_security_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": 0.9995833333333334,
+      "ci_low": 0.99875,
+      "ci_high": 1.0,
+      "support": 2400
+     }
+    },
+    "sensitive_pii_visa_number@ai4privacy_pii_masking_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_bank_account_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 5
+     }
+    },
+    "sensitive_pci_credit_card_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 2
+     }
+    },
+    "sensitive_pci_iban@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 151
+     }
+    },
+    "sensitive_phi_patient_id_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 28
+     }
+    },
+    "sensitive_pii_address@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 254
+     }
+    },
+    "sensitive_pii_driver_s_license_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_full_name@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 8592
+     }
+    },
+    "sensitive_pii_military_identification_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_passport_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pii_password@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 50
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_social_security_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pii_visa_number@betterdataai_ner_silver_eval_10k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_bank_account_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_credit_card_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_iban@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_patient_id_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_address@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_driver_s_license_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_full_name@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_military_identification_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_passport_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_password@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_social_security_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_visa_number@nemotron_eval_6k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_bank_account_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pci_credit_card_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 8908
+     }
+    },
+    "sensitive_pci_iban@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 7672
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_phi_patient_id_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_address@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 0.9999344992467414,
+      "ci_low": 0.999803497740224,
+      "ci_high": 1.0,
+      "support": 15267
+     }
+    },
+    "sensitive_pii_driver_s_license_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 8538
+     }
+    },
+    "sensitive_pii_full_name@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 30464
+     }
+    },
+    "sensitive_pii_military_identification_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 0.9997820242679648,
+      "ci_low": 0.9994913899585847,
+      "ci_high": 1.0,
+      "support": 13763
+     }
+    },
+    "sensitive_pii_passport_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 0.9997093656906197,
+      "ci_low": 0.9994187313812396,
+      "ci_high": 0.9999273414226549,
+      "support": 13763
+     }
+    },
+    "sensitive_pii_password@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@openpii_pii_eval_38k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pii_social_security_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 6748
+     }
+    },
+    "sensitive_pii_visa_number@openpii_pii_eval_38k": {
+     "recall": {
+      "value": 0.9997820242679648,
+      "ci_low": 0.9994913899585847,
+      "ci_high": 1.0,
+      "support": 13763
+     }
+    },
+    "doc@pii2_eval_30k": {
+     "doc_precision": {
+      "value": 0.8383,
+      "ci_low": 0.8340333333333333,
+      "ci_high": 0.8424691666666667,
+      "support": 30000
+     },
+     "doc_recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 25149
+     },
+     "doc_specificity": {
+      "value": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "support": 4851
+     }
+    },
+    "sensitive_pci_bank_account_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 316
+     }
+    },
+    "sensitive_pci_credit_card_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 309
+     }
+    },
+    "sensitive_pci_iban@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 309
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 234
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 536
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 535
+     }
+    },
+    "sensitive_phi_patient_id_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 326
+     }
+    },
+    "sensitive_pii_address@pii2_eval_30k": {
+     "recall": {
+      "value": 0.9975360788454769,
+      "ci_low": 0.9954241464273144,
+      "ci_high": 0.9992960225272791,
+      "support": 2841
+     }
+    },
+    "sensitive_pii_driver_s_license_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 219
+     }
+    },
+    "sensitive_pii_full_name@pii2_eval_30k": {
+     "recall": {
+      "value": 0.9996998198919351,
+      "ci_low": 0.9992995797478487,
+      "ci_high": 1.0,
+      "support": 9994
+     }
+    },
+    "sensitive_pii_military_identification_number@pii2_eval_30k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pii_passport_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 227
+     }
+    },
+    "sensitive_pii_password@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 196
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 182
+     }
+    },
+    "sensitive_pii_social_security_number@pii2_eval_30k": {
+     "recall": {
+      "value": 0.9957805907172996,
+      "ci_low": 0.9873417721518988,
+      "ci_high": 1.0,
+      "support": 237
+     }
+    },
+    "sensitive_pii_visa_number@pii2_eval_30k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 227
+     }
+    },
+    "sensitive_pci_bank_account_number@pii_holdout_20k": {
+     "recall": {
+      "value": 0.9983079526226735,
+      "ci_low": 0.9949238578680203,
+      "ci_high": 1.0,
+      "support": 591
+     }
+    },
+    "sensitive_pci_credit_card_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 2415
+     }
+    },
+    "sensitive_pci_iban@pii_holdout_20k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 0
+     }
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 2637
+     }
+    },
+    "sensitive_phi_health_plan_beneficiary_number@pii_holdout_20k": {
+     "recall": {
+      "value": 0.9943502824858758,
+      "ci_low": 0.9858757062146892,
+      "ci_high": 1.0,
+      "support": 354
+     }
+    },
+    "sensitive_phi_medical_record_number_mrn@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 418
+     }
+    },
+    "sensitive_phi_patient_id_number@pii_holdout_20k": {
+     "recall": {
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "support": 1
+     }
+    },
+    "sensitive_pii_address@pii_holdout_20k": {
+     "recall": {
+      "value": 0.9992385013706976,
+      "ci_low": 0.9984770027413951,
+      "ci_high": 0.9998477002741395,
+      "support": 6566
+     }
+    },
+    "sensitive_pii_driver_s_license_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 2808
+     }
+    },
+    "sensitive_pii_full_name@pii_holdout_20k": {
+     "recall": {
+      "value": 0.9997379683815181,
+      "ci_low": 0.9993885928902088,
+      "ci_high": 1.0,
+      "support": 11449
+     }
+    },
+    "sensitive_pii_military_identification_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 4327
+     }
+    },
+    "sensitive_pii_passport_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 4327
+     }
+    },
+    "sensitive_pii_password@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 232
+     }
+    },
+    "sensitive_pii_personal_identification_number_pin@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 286
+     }
+    },
+    "sensitive_pii_social_security_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 3166
+     }
+    },
+    "sensitive_pii_visa_number@pii_holdout_20k": {
+     "recall": {
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "support": 4327
+     }
+    }
+   },
+   "extra": {
+    "lineage": "pii-priority-recall-v1",
+    "note": "recall-first baseline"
+   },
+   "per_corpus": {
+    "4000_datax-dualjudge-evalset-1.32k": {
+     "macro_f05": null,
+     "priority_macro_f05": null,
+     "priority_macro_precision": null,
+     "priority_macro_recall": null,
+     "n_measurable_tags": 0,
+     "n_priority_measurable": 0,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 6,
+     "n_rows": 4000
+    },
+    "6589_govdocs2-dualjudge-eval20-3.53k": {
+     "macro_f05": null,
+     "priority_macro_f05": null,
+     "priority_macro_precision": null,
+     "priority_macro_recall": null,
+     "n_measurable_tags": 0,
+     "n_priority_measurable": 0,
+     "prediction_rate": 0.998330550918197,
+     "tags_predicted_zero_times": 5,
+     "n_rows": 6589
+    },
+    "ai4privacy_pii_masking_eval_10k": {
+     "macro_f05": 0.3909999431164057,
+     "priority_macro_f05": 0.18421969854027648,
+     "priority_macro_precision": 0.15732992442199814,
+     "priority_macro_recall": 0.9997141418039635,
+     "n_measurable_tags": 24,
+     "n_priority_measurable": 10,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 5,
+     "n_rows": 10626
+    },
+    "betterdataai_ner_silver_eval_10k": {
+     "macro_f05": 0.2338679371528956,
+     "priority_macro_f05": 0.22838722510295698,
+     "priority_macro_precision": 0.2183681606523807,
+     "priority_macro_recall": 1.0,
+     "n_measurable_tags": 10,
+     "n_priority_measurable": 4,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 6,
+     "n_rows": 10360
+    },
+    "nemotron_eval_6k": {
+     "macro_f05": null,
+     "priority_macro_f05": null,
+     "priority_macro_precision": null,
+     "priority_macro_recall": null,
+     "n_measurable_tags": 0,
+     "n_priority_measurable": 0,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 5,
+     "n_rows": 5617
+    },
+    "openpii_pii_eval_38k": {
+     "macro_f05": 0.6040904926281867,
+     "priority_macro_f05": 0.3854051735250479,
+     "priority_macro_precision": 0.3406412783287919,
+     "priority_macro_recall": 0.9999119903859212,
+     "n_measurable_tags": 23,
+     "n_priority_measurable": 9,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 7,
+     "n_rows": 38937
+    },
+    "pii2_eval_30k": {
+     "macro_f05": 0.37823106274856544,
+     "priority_macro_f05": 0.04527178628366587,
+     "priority_macro_precision": 0.0381026933047967,
+     "priority_macro_recall": 0.999534432630314,
+     "n_measurable_tags": 51,
+     "n_priority_measurable": 15,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 1,
+     "n_rows": 30000
+    },
+    "pii_holdout_20k": {
+     "macro_f05": 0.47439841701532415,
+     "priority_macro_f05": 0.18526706660050432,
+     "priority_macro_precision": 0.15900468705328955,
+     "priority_macro_recall": 0.9994024789186262,
+     "n_measurable_tags": 46,
+     "n_priority_measurable": 14,
+     "prediction_rate": 1.0,
+     "tags_predicted_zero_times": 5,
+     "n_rows": 20000
+    }
+   }
+  }
+ ]
+}

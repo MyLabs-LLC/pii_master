@@ -1,0 +1,19 @@
+{
+  "candidate": "t0-c2",
+  "stage": "measure",
+  "proposal": "Freeze a support-aware sensitive-tag evaluator before fitting any candidate. Use the canonical model_pipeline tagging evaluator for complete-label rows, add catalogue-locked macro F2, micro F1, and per-priority-tag recall gates, and mark partial-label precision/F2 as not assessable.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "c2c0158",
+  "commit": "d1910a0",
+  "decision": "accepted",
+  "evidence": {
+    "focused_tests": "9 passed",
+    "ruff": "passed",
+    "full_suite": "325 passed, 14 skipped, 2 environment-dependent failures (torch and optional ML runtime absent)",
+    "frozen_catalogue": "projects/pii-priority-recall-v1/data/evaluation_catalogue.json",
+    "catalogue_size": 61,
+    "corpora": 8,
+    "read_depths_chars": [1000, 2500, 10000, 20000]
+  },
+  "metric_mutability": "Metric formulas, support floor, recall gate, and eval catalogues are frozen from this point forward."
+}

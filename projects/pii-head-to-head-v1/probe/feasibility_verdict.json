@@ -1,0 +1,42 @@
+{
+  "metric": "equal_corpus_doc_recall",
+  "target": 0.85,
+  "verdict": "unlikely",
+  "supported_target": 0.6231,
+  "ceiling": 0.6231,
+  "ceiling_method": "frontier walk on sealed real corpora, balanced+regularised gate",
+  "agreement": null,
+  "agreement_source": "",
+  "baseline": 0.7532,
+  "terminal_slope": -0.042559544796256475,
+  "curve": [
+    {
+      "fraction": 0.0,
+      "n": null,
+      "score": 0.6279
+    },
+    {
+      "fraction": 0.2,
+      "n": null,
+      "score": 0.6358
+    },
+    {
+      "fraction": 0.4,
+      "n": null,
+      "score": 0.6072
+    },
+    {
+      "fraction": 0.7,
+      "n": null,
+      "score": 0.6376
+    },
+    {
+      "fraction": 1.0,
+      "n": null,
+      "score": 0.6157
+    }
+  ],
+  "notes": [
+    "label-budget curve flat across 7,370 target-distribution documents; in-distribution CV ceiling AUC 0.869"
+  ]
+}

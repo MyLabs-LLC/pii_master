@@ -1,0 +1,64 @@
+VALIDATION EXCEPTION REGISTER
+Ruleset: RS-CIS-07
+Covering runs: ETL-BIL-2021-0769 through ETL-BIL-2021-0771
+Register opened: 2021-03-12T08:15:00Z
+Register updated: 2021-03-14T08:44:26Z
+Maintained by: Batch Operations Analyst
+
+1. PURPOSE
+1.1 This register records validation exceptions raised during nightly load and the disposition of each.
+1.2 One clause is opened per rule code per run. Clauses are closed only when the underlying source or configuration defect is corrected.
+
+2. OPEN EXCEPTIONS
+
+2.1 Exception EX-2021-0088
+    Rule code: R-4310
+    Field: date_of_birth
+    Condition: RESIDUAL_VALUE_DETECTED
+    First seen: 2021-03-12T02:24:11Z (run ETL-BIL-2021-0769)
+    Occurrences by run: 0769 = 9, 0770 = 12, 0771 = 11
+    Assessment: the NULLOUT class is not firing for rows sourced from the legacy conversion partition.
+    Disposition: rows quarantined, not loaded. Referred to the Records Custodian.
+    Target close date: 2021-03-19
+
+2.2 Exception EX-2021-0089
+    Rule code: R-4203
+    Field: national_id_number
+    Condition: TOKEN_FORMAT_INVALID
+    First seen: 2021-03-13T02:19:52Z (run ETL-BIL-2021-0770)
+    Occurrences by run: 0770 = 17, 0771 = 14
+    Assessment: surrogate minted against the prior year token scope; see mapping clause 6.2.
+    Disposition: auto re-tokenised on next run. No manual action.
+    Target close date: 2021-03-16
+
+2.3 Exception EX-2021-0090
+    Rule code: R-4102
+    Field: service_address_postcode
+    Condition: NULL_NOT_PERMITTED
+    First seen: 2021-03-12T02:23:40Z (run ETL-BIL-2021-0769)
+    Occurrences by run: 0769 = 71, 0770 = 66, 0771 = 63
+    Assessment: source defect in the new-connections intake screen. Field is optional upstream, mandatory downstream.
+    Disposition: released to the Data Steward for source correction.
+    Target close date: 2021-04-02
+
+2.4 Exception EX-2021-0091
+    Rule code: R-4117
+    Field: primary_phone
+    Condition: LENGTH_AFTER_MASK_MISMATCH
+    First seen: 2021-03-14T02:26:38Z (run ETL-BIL-2021-0771)
+    Occurrences by run: 0771 = 29
+    Assessment: values shorter than five characters cannot satisfy the LAST4 class.
+    Disposition: rule amendment proposed to emit [MASKED] where length is below threshold.
+    Target close date: 2021-03-20
+
+3. CLOSED SINCE LAST UPDATE
+3.1 EX-2021-0084, rule R-4009, field email_address, closed 2021-03-13T11:02:00Z after source de-duplication. Final occurrence count 4.
+3.2 EX-2021-0086, rule R-4150, field mailing_address_line_1, closed 2021-03-13T16:40:00Z, superseded by mapping clause 3.4.
+
+4. TOTALS
+4.1 Quarantined rows across the three runs: 0769 = 128, 0770 = 141, 0771 = 117.
+4.2 Open exceptions: 4. Closed this period: 2.
+
+5. HANDLING
+5.1 No field values are recorded in this register. Entries carry the field name, rule code, run identifier, and count only.
+5.2 The register is reviewed each Monday by the Data Steward and retained for two years.

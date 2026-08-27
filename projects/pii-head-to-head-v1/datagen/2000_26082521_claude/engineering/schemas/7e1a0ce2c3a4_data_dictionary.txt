@@ -1,0 +1,16 @@
+DATA DICTIONARY EXCERPT — MEMBER CONTACT PREFERENCE TABLE
+Table: MBRPREF, library RXPRDDTA
+Added: current release. Read by the mailing selection program only.
+
+    - MBR_ID — CHAR(10), NOT NULL. Foreign key to the member master. Enforced by trigger, not by referential constraint.
+    - PREF_MAIL_IND — CHAR(1), NOT NULL. Y or N. Defaults to Y at enrollment. A counter request to suppress sets this to N the same day.
+    - PREF_PHON_IND — CHAR(1), NOT NULL. Y or N. Defaults to N. Set to Y only on a signed enrollment form.
+    - PREF_EMAIL_IND — CHAR(1), NOT NULL. Defaults to N.
+    - PREF_LANG_CD — CHAR(2), NULL ALLOWED. Drives label and counseling-sheet language.
+    - PREF_UPD_TS — TIMESTAMP, NOT NULL. Set by the update program. Not to be set by the caller.
+    - PREF_UPD_USER — CHAR(10), NOT NULL. Sign-on profile of the operator making the change.
+
+    Notes
+        - Suppression is honored across all extracts. The mailing selection program joins this table first and drops the member before any name or address column is read.
+        - Rows are retained as long as the member master row exists and are carried into archive unchanged, so that suppression survives reactivation.
+        - PREF_UPD_USER is reviewed monthly by Internal Audit against the store roster.

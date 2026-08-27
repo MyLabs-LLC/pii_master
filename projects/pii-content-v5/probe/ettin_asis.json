@@ -1,0 +1,197 @@
+{
+ "model": "kalyan-ks/ettin-68m-nemotron-pii",
+ "corpus": "148775_pii2_train_98.81k",
+ "n_docs": 1200,
+ "split": "train",
+ "mapped_tags": 32,
+ "read_chars": 12000,
+ "max_tokens": 1024,
+ "per_tag": {
+  "sensitive_pci_bank_account_number": {
+   "support": 10,
+   "precision": 0.02564102564102564,
+   "recall": 0.3,
+   "f1": 0.047244094488188976
+  },
+  "sensitive_pci_card_verification_value_cvv": {
+   "support": 4,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pci_credit_card_number": {
+   "support": 8,
+   "precision": 0.006666666666666667,
+   "recall": 1.0,
+   "f1": 0.013245033112582783
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+   "support": 4,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+   "support": 2,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+   "support": 4,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_age": {
+   "support": 72,
+   "precision": 0.75,
+   "recall": 0.08333333333333333,
+   "f1": 0.15
+  },
+  "sensitive_pii_county": {
+   "support": 23,
+   "precision": 0.17708333333333334,
+   "recall": 0.7391304347826086,
+   "f1": 0.2857142857142857
+  },
+  "sensitive_pii_date_of_birth_dob": {
+   "support": 150,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_educational_level": {
+   "support": 39,
+   "precision": 0.20270270270270271,
+   "recall": 0.38461538461538464,
+   "f1": 0.26548672566371684
+  },
+  "sensitive_pii_email": {
+   "support": 264,
+   "precision": 0.9573643410852714,
+   "recall": 0.9356060606060606,
+   "f1": 0.9463601532567051
+  },
+  "sensitive_pii_employment_status": {
+   "support": 50,
+   "precision": 0.13636363636363635,
+   "recall": 0.06,
+   "f1": 0.08333333333333333
+  },
+  "sensitive_pii_ethnicity": {
+   "support": 18,
+   "precision": 0.06060606060606061,
+   "recall": 0.2222222222222222,
+   "f1": 0.09523809523809523
+  },
+  "sensitive_pii_family_name": {
+   "support": 500,
+   "precision": 0.8133640552995391,
+   "recall": 0.706,
+   "f1": 0.7558886509635974
+  },
+  "sensitive_pii_gender_and_sex": {
+   "support": 44,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_geolocation": {
+   "support": 14,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_given_name": {
+   "support": 499,
+   "precision": 0.7682403433476395,
+   "recall": 0.717434869739479,
+   "f1": 0.7419689119170985
+  },
+  "sensitive_pii_ipv4": {
+   "support": 5,
+   "precision": 0.25,
+   "recall": 0.2,
+   "f1": 0.22222222222222224
+  },
+  "sensitive_pii_ipv6": {
+   "support": 3,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_mac_address": {
+   "support": 3,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_password": {
+   "support": 10,
+   "precision": 0.375,
+   "recall": 0.3,
+   "f1": 0.33333333333333326
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+   "support": 7,
+   "precision": 0.018518518518518517,
+   "recall": 0.14285714285714285,
+   "f1": 0.03278688524590164
+  },
+  "sensitive_pii_phone_number": {
+   "support": 189,
+   "precision": 0.8823529411764706,
+   "recall": 0.7142857142857143,
+   "f1": 0.7894736842105262
+  },
+  "sensitive_pii_religion": {
+   "support": 13,
+   "precision": 0.08333333333333333,
+   "recall": 0.15384615384615385,
+   "f1": 0.10810810810810811
+  },
+  "sensitive_pii_sexual_identity_and_orientation": {
+   "support": 10,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_social_security_number": {
+   "support": 12,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_state": {
+   "support": 202,
+   "precision": 0.46842105263157896,
+   "recall": 0.8811881188118812,
+   "f1": 0.6116838487972508
+  },
+  "sensitive_pii_street_number_and_name": {
+   "support": 169,
+   "precision": 0.568904593639576,
+   "recall": 0.9526627218934911,
+   "f1": 0.7123893805309736
+  },
+  "sensitive_pii_username": {
+   "support": 29,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_vehicle_identification_number_vin": {
+   "support": 6,
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0
+  },
+  "sensitive_pii_zip_code": {
+   "support": 170,
+   "precision": 0.8674033149171271,
+   "recall": 0.9235294117647059,
+   "f1": 0.8945868945868946
+  }
+ }
+}

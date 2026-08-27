@@ -1,0 +1,63 @@
+CENTRAL HAULAGE GROUP LIMITED
+STANDARD OPERATING PROCEDURE SOP-IG-07
+PERSONAL INFORMATION: CATEGORIES, ACCESS, RETENTION AND DISPOSAL
+
+Document reference : SOP-IG-07
+Version            : 3.0
+Effective from     : 04 October 2021
+Supersedes         : SOP-IG-07 v2.1
+Document owner     : Records Custodian
+Approving body     : Information Governance Group
+Review frequency   : 12 months
+
+1. PURPOSE
+
+This procedure states, for each category of personal information processed by the group, its security classification, the lawful basis relied upon, the retention period applied and the roles permitted to access it. It is binding on all depots and on all functions holding personal information on behalf of the group.
+
+2. CATEGORY SCHEDULE
+
+REF   CATEGORY                      CLASSIFICATION    LAWFUL BASIS            RETENTION
+----  ----------------------------  ----------------  ----------------------  ------------------------
+PD1   Workforce identity records    Confidential      Contract                6 years post-exit
+PD2   Driving entitlement records   Confidential      Legal obligation        5 years post-expiry
+PD3   Drivers' hours and tachograph Confidential      Legal obligation        24 months from entry
+PD4   Remuneration and deductions   Confidential      Legal obligation        7 years post tax year
+PD5   Occupational health records   Special category  Legal obligation        40 years from last entry
+PD6   Customer contact records      Restricted        Contract                3 years post-delivery
+PD7   Vehicle telematics and CCTV   Restricted        Legitimate interests    31 days rolling
+PD8   Applicant screening records   Confidential      Legitimate interests    6 months post-decision
+
+3. ACCESS MATRIX
+
+Role key: R1 Records Custodian; R2 Personnel Administrator; R3 Transport Manager;
+R4 Payroll Administrator; R5 Occupational Health Lead; R6 Customer Service Lead;
+R7 Security Supervisor. Entry key: W = create, amend and read; R = read only; - = no access.
+
+REF   R1  R2  R3  R4  R5  R6  R7
+----  --  --  --  --  --  --  --
+PD1   W   W   R   R   -   -   -
+PD2   W   R   W   -   -   -   -
+PD3   W   -   W   -   -   -   -
+PD4   W   R   -   W   -   -   -
+PD5   R   -   -   -   W   -   -
+PD6   W   -   R   -   -   W   -
+PD7   W   -   R   -   -   -   W
+PD8   W   W   -   -   -   -   -
+
+Rights not shown in this matrix do not exist. Requests for additional rights are made to the Records Custodian and are granted for a fixed term only.
+
+4. DISPOSAL
+
+MEDIUM            METHOD                          AUTHORISED BY         EVIDENCE RECORDED
+----------------  ------------------------------  --------------------  -----------------
+Paper             Cross-cut shredding to DIN P-4  Records Custodian     Destruction certificate
+Optical media     Physical destruction            IT Operations Lead    Asset disposal log entry
+Portable media    Physical destruction            IT Operations Lead    Asset disposal log entry
+Server storage    Cryptographic erasure           IT Operations Lead    Erasure job identifier
+Telematics feed   Scheduled overwrite             Security Supervisor   Overwrite cycle log
+
+Disposal is initiated only on a written instruction from the Records Custodian and must be completed within 20 working days of that instruction.
+
+5. DESTRUCTION LOG
+
+The following fields are recorded for every disposal event: category reference; classification; medium; volume disposed; retention trigger date; date of disposal; method applied; role of operative; role of witness; certificate or job reference; date of entry into the log. The log is held for six years from the date of the last entry and is examined at each internal audit of information governance.

@@ -1,0 +1,52 @@
+DATA DICTIONARY EXCERPT — CIS_PROD.CUST_CONTACT_PREF
+Prepared by the Data Administration Unit / Reference DD-2011-031
+
+TABLE PURPOSE: One row per customer per notification channel. Populated by the
+web self-service portal and by counter maintenance screen CS210.
+
+COLUMN: PREF_ID
+  Type: NUMBER(12)   Null: No
+  Notes: Surrogate key. Composite unique on CUST_ID + CHANNEL_CD.
+
+COLUMN: CUST_ID
+  Type: NUMBER(12)   Null: No
+  Notes: FK to CUST_MSTR. Cascade is not enabled; orphans are swept monthly.
+
+COLUMN: CONTACT_NM
+  Type: VARCHAR2(60)   Null: Yes
+  Notes: Free text. May differ from the account holder of record. Restricted.
+
+COLUMN: NOTIFY_PHONE_NBR
+  Type: VARCHAR2(14)   Null: Yes
+  Notes: Fed to the outbound dialer. Do-not-call scrub applied at extract time.
+
+COLUMN: NOTIFY_EMAIL_ADDR
+  Type: VARCHAR2(60)   Null: Yes
+  Notes: Confirmed by double opt-in since release 7.3. Restricted.
+
+COLUMN: NOTIFY_SMS_NBR
+  Type: VARCHAR2(14)   Null: Yes
+  Notes: Added October 2010. Carrier gateway lookup performed nightly.
+
+COLUMN: CHANNEL_CD
+  Type: CHAR(3)   Null: No
+  Notes: PHN, EML, SMS, PPR. FK to CHANNEL_REF.
+
+COLUMN: OPT_IN_TS
+  Type: TIMESTAMP(6)   Null: Yes
+  Notes: Evidence of consent. Required before any extract release.
+
+COLUMN: OPT_OUT_TS
+  Type: TIMESTAMP(6)   Null: Yes
+  Notes: Non-null suppresses the row from every outbound feed.
+
+ACCESS: SELECT to CIS_CSR_ROLE and CIS_DBA_ROLE. The three contact columns are
+masked in the reporting replica. No ad hoc query tool is licensed against this
+table.
+
+RETENTION: Purged 24 months after OPT_OUT_TS, or with the parent account under
+LG-4200, whichever occurs first.
+
+EXTRACTS: EXT_OUTAGE_RT (outage notification platform, near real time) and
+EXT_DIALER_DAILY. Both are transmitted over SFTP to the vendor drop and are
+deleted from the staging directory after transmission acknowledgment.

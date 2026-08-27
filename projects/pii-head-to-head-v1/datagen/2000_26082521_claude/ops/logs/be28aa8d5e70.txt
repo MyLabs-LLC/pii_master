@@ -1,0 +1,61 @@
+MAPPING RULESET — POLICY ADMINISTRATION TO ENTERPRISE DATA WAREHOUSE
+Ruleset ID: MAP-PAS-EDW-0114
+Effective: 2011-03-14 00:00:00 CST
+Owner of record: the Records Custodian, Policy Operations
+Approver: the Data Steward, Personal Lines
+
+  1. SCOPE
+     1.1 Source system: PAS-PL (Personal Lines Policy Admin, release 7.2.3)
+     1.2 Target schema: EDW.STG_PARTY, EDW.STG_POLICY, EDW.STG_CONTACT
+     1.3 Load pattern: nightly full extract, delta merge on natural key hash
+     1.4 Excluded partitions: PAS-PL commercial umbrella, surplus lines
+
+  2. PARTY IDENTITY MAPPING
+     2.1 PARTY_FIRST_NM        -> STG_PARTY.GIVEN_NAME
+         2.1.1 Transform: trim, upper, collapse internal whitespace
+         2.1.2 Null handling: reject row to VAL-QUEUE-A
+     2.2 PARTY_MIDDLE_INIT     -> STG_PARTY.MIDDLE_INITIAL
+         2.2.1 Transform: first character only
+         2.2.2 Null handling: permitted, pad with single space
+     2.3 PARTY_LAST_NM         -> STG_PARTY.FAMILY_NAME
+     2.4 PARTY_SUFFIX_CD       -> STG_PARTY.NAME_SUFFIX
+         2.4.1 Domain: JR, SR, II, III, IV, MD, ESQ
+     2.5 PARTY_DOB             -> STG_PARTY.BIRTH_DT
+         2.5.1 Source format: MMDDYYYY packed decimal
+         2.5.2 Target format: DATE
+         2.5.3 Downstream visibility: restricted, see MASK-CFG-0114
+     2.6 PARTY_SSN             -> STG_PARTY.TAX_ID_TOKEN
+         2.6.1 Transform: tokenise at extract boundary, never land in clear
+         2.6.2 Token vault: VLT-PARTY-01, format TKN-PTY-nnnnnnnn
+     2.7 PARTY_GENDER_CD       -> STG_PARTY.GENDER_CD
+     2.8 PARTY_MARITAL_STAT_CD -> STG_PARTY.MARITAL_STATUS_CD
+
+  3. CONTACT MAPPING
+     3.1 ADDR_LINE_1           -> STG_CONTACT.STREET_LINE_1
+     3.2 ADDR_LINE_2           -> STG_CONTACT.STREET_LINE_2
+     3.3 ADDR_CITY_NM          -> STG_CONTACT.CITY_NAME
+     3.4 ADDR_STATE_CD         -> STG_CONTACT.STATE_CD
+         3.4.1 Domain check against REF_STATE_CD
+     3.5 ADDR_POSTAL_CD        -> STG_CONTACT.POSTAL_CD
+         3.5.1 Retain first five positions for rating geography
+     3.6 HOME_PHONE_NBR        -> STG_CONTACT.PHONE_TOKEN_HOME
+     3.7 MOBILE_PHONE_NBR      -> STG_CONTACT.PHONE_TOKEN_MOBILE
+     3.8 EMAIL_ADDR_TXT        -> STG_CONTACT.EMAIL_TOKEN
+         3.8.1 Transform: lowercase before tokenisation
+     3.9 PREF_CONTACT_METH_CD  -> STG_CONTACT.PREFERRED_METHOD_CD
+
+  4. POLICY AND VEHICLE MAPPING
+     4.1 POLICY_NBR            -> STG_POLICY.POLICY_NUMBER
+     4.2 POLICY_EFF_DT         -> STG_POLICY.EFFECTIVE_DT
+     4.3 POLICY_EXP_DT         -> STG_POLICY.EXPIRATION_DT
+     4.4 DRIVER_LIC_NBR        -> STG_POLICY.LICENSE_TOKEN
+     4.5 DRIVER_LIC_STATE_CD   -> STG_POLICY.LICENSE_STATE_CD
+     4.6 VEH_VIN               -> STG_POLICY.VIN_TOKEN
+     4.7 BANK_ACCT_NBR         -> STG_POLICY.EFT_ACCT_TOKEN
+     4.8 BANK_ROUTING_NBR      -> STG_POLICY.EFT_ROUTING_TOKEN
+
+  5. CHANGE CONTROL
+     5.1 Any addition to sections 2 through 4 requires sign-off by the Data
+         Steward and the Privacy Office analyst on duty.
+     5.2 Ruleset revisions are numbered sequentially; superseded revisions are
+         retained for seven years in CFGARCH.

@@ -1,0 +1,31 @@
+2011-06-14 01:02:58,004 INFO  [JobRunner] job=ETL_CND_MSTR run=20110614.001 profile=CND->DIM v11.2 node=APPSRV04
+2011-06-14 01:03:11,447 INFO  [MapEngine] resolved columns=46 pii=9 spii=4 open=33 ruleset=R11-02
+2011-06-14 01:03:11,502 WARN  [MapEngine] no rule bound for source column CAND_PREF_NM class=PII action=SUPPRESS (default)
+2011-06-14 01:03:12,110 INFO  [TokenSvc ] vault=TKV_STAFF_01 handshake ok latency=38ms
+2011-06-14 01:07:33,876 INFO  [TokenSvc ] tokenised rows=184226 cache hit=0.91 miss=16480
+2011-06-14 01:09:44,921 ERROR [Validator] rule=V0117 column=DATE_OF_BIRTH not parseable rows=118 value logging suppressed class=SPII
+2011-06-14 01:09:45,003 ERROR [Validator] rule=V0101 column=NATL_INS_NO mandatory absent rows=412
+2011-06-14 01:14:02,559 INFO  [Loader   ] target=STG_CANDIDATE committed rows=182993 batches=184 rc=0
+
+COLUMN RESOLUTION - job ETL_CND_MSTR run 20110614.001
+
+SOURCE_COLUMN         TARGET_COLUMN         CLS   RULE     ROWS_IN  ROWS_OUT
+--------------------  --------------------  ----  -------  -------  --------
+CAND_FIRST_NM         CND_FIRST_TKN         PII   R11-001   184226    184226
+CAND_LAST_NM          CND_LAST_TKN          PII   R11-002   184226    184226
+DATE_OF_BIRTH         CND_DOB_SHIFT         SPII  R11-004   184086    184086
+NATL_INS_NO           CND_NINO_MSK          SPII  R11-005   183647    183647
+HOME_ADDR_LN1         <DROPPED>             PII   R11-007   181004         0
+POSTAL_CODE           CND_PCODE_MSK         PII   R11-010   183338    183338
+MOBILE_PHONE_NO       CND_MOB_MSK           PII   R11-012   179442    179442
+EMAIL_ADDR_PERS       CND_EML_MSK           PII   R11-013   171209    171209
+BANK_SORT_CODE        PAY_SORT_MSK          SPII  R11-015   168330    168330
+BANK_ACCT_NO          PAY_ACCT_MSK          SPII  R11-016   168330    168330
+PASSPORT_NO           <NULLIFIED>           SPII  R11-017   162880         0
+CAND_PREF_NM          <DROPPED>             PII   DEFAULT    41207         0
+
+2011-06-14 01:14:03,101 WARN  [JobRunner] unmapped column count=1 exceeds advisory threshold=0
+2011-06-14 01:14:03,118 INFO  [JobRunner] audit row written CTL_MASK_AUDIT key=20110614001
+2011-06-14 01:14:03,140 INFO  [JobRunner] job=ETL_CND_MSTR run=20110614.001 status=COMPLETED_WITH_WARNINGS rc=4 elapsed=00:11:05
+
+ACTION QUEUED: bind CAND_PREF_NM in ruleset R11-03, submit to the Records Custodian before cycle 20110621.001.

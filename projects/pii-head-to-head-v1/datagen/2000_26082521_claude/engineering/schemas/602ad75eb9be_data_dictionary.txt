@@ -1,0 +1,53 @@
+DATA DICTIONARY EXCERPT
+FORM DD-04 (REV. 3) — CUSTOMER / MEMBER MASTER
+Contract Logistics Division — Application Data Management
+
+SECTION A — DOCUMENT CONTROL
+A.1  Reference: DD/CUST/0114
+A.2  Schema / Object: CUSTDTA.CUST_MBR_MSTR (Oracle 10g, instance PRDCUS1)
+A.3  Issue date: 09 March 2011
+A.4  Issued by: the Records Custodian, Data Management
+A.5  Countersigned by: the Divisional Compliance Officer
+A.6  Review cycle: annual, or on any change to the extract schedule at Section E.
+
+SECTION B — SCOPE
+B.1  This excerpt covers the base member table only. Address history (CUST_ADDR_HIST), consignment linkage (CONS_MBR_XREF) and card scheme tables are dictionaried separately.
+B.2  Columns marked "R" at Section D are restricted and must not be surfaced in any report, screen or file outside the roles listed.
+
+SECTION C — COLUMN REGISTER
+
+COLUMN NAME          | TYPE          | NULL | OPERATIONAL NOTE
+---------------------+---------------+------+-----------------------------------
+MBR_ID               | NUMBER(12)    | N    | Surrogate key, sequence MBR_SEQ. Not reused on deletion.
+MBR_STATUS_CD        | CHAR(2)       | N    | AC/SU/CL/PD. Default 'PD' until depot verification.
+TITLE_CD             | CHAR(4)       | Y    | Lookup REF_TITLE. Free text prohibited since rev. 2.
+FORENAME_1           | VARCHAR2(40)  | Y    | R. Trimmed on load; no case normalisation.
+FORENAME_2           | VARCHAR2(40)  | Y    | R.
+SURNAME              | VARCHAR2(60)  | N    | R. Indexed (IX_MBR_SURN) for depot counter search only.
+DT_OF_BIRTH          | DATE          | Y    | R. Captured for age-restricted goods handling only.
+NAT_INS_NO           | CHAR(9)       | Y    | R. Legacy column, populated only for accounts migrated from the 1998 carrier system. Do not populate on new records.
+ADDR_LINE_1          | VARCHAR2(60)  | N    | R.
+ADDR_LINE_2          | VARCHAR2(60)  | Y    | R.
+ADDR_LINE_3          | VARCHAR2(60)  | Y    | R.
+POSTCODE             | VARCHAR2(8)   | N    | R. Outward code alone is unrestricted and is held at POSTCODE_OUT.
+POSTCODE_OUT         | VARCHAR2(4)   | Y    | Derived nightly. Used for route density reporting.
+HOME_TEL_NO          | VARCHAR2(20)  | Y    | R.
+MOBILE_TEL_NO        | VARCHAR2(20)  | Y    | R. Source for SMS delivery notification.
+EMAIL_ADDR_1         | VARCHAR2(120) | Y    | R.
+DELIV_INSTR_TXT      | VARCHAR2(255) | Y    | R. Free text. Known to contain names of neighbours and key-safe details; treat as restricted in full.
+MKTG_OPT_IN_FLG      | CHAR(1)       | N    | Y/N. Default 'N'. Any change writes to MBR_CONSENT_AUD.
+CONSENT_CAPTURE_DT   | DATE          | Y    | Must be present where MKTG_OPT_IN_FLG = 'Y'.
+LAST_AMEND_DT        | DATE          | N    | System-maintained.
+LAST_AMEND_USER_ID   | VARCHAR2(12)  | N    | Operator identifier, not the member.
+
+SECTION D — ACCESS RESTRICTION
+D.1  Restricted columns ("R") are exposed only through view V_MBR_CSR, which is granted to database roles RL_CSR_FULL and RL_DEPOT_COUNTER.
+D.2  Role RL_MI_ANALYST is granted V_MBR_ANON only. That view returns MBR_ID, MBR_STATUS_CD, POSTCODE_OUT and consent flags; all other restricted columns are excluded at view definition, not by masking.
+D.3  Direct SELECT on the base table is held by the DBA group and by the Records Custodian. Grants are reviewed quarterly and evidenced on Form AC-11.
+D.4  Ad-hoc query tools must connect via the reporting service account, which has no grant on the base table.
+
+SECTION E — RETENTION AND DOWNSTREAM EXTRACTS
+E.1  Records at MBR_STATUS_CD = 'CL' are purged 24 months after closure by job PRG_MBR_M24. NAT_INS_NO is nulled at 6 months regardless of status.
+E.2  Nightly extract EXT_MBR_DLV (fixed-width, to the depot handhelds) carries SURNAME, ADDR_LINE_1 to 3, POSTCODE and DELIV_INSTR_TXT. Handheld copies are wiped at shift end.
+E.3  Extract EXT_MBR_MI (weekly, to the Cognos warehouse) is sourced from V_MBR_ANON and carries no restricted column.
+E.4  No extract is permitted to third-party carriers without written instruction from the Divisional Compliance Officer.

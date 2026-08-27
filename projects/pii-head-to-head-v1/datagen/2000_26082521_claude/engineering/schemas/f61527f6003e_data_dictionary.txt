@@ -1,0 +1,120 @@
+MEMORANDUM
+
+TO:       Information Steering Committee
+CC:       Information Security Officer; Internal Audit
+FROM:     Records Custodian, Operations Support
+DATE:     19 October 2011
+SUBJECT:  Data Dictionary Excerpt — LOAN_APPLICANT (LNAP02), Annual Review
+STATUS:   Confidential — Restricted Distribution
+
+1.  SCOPE
+
+1.1 This excerpt records the applicant identity segment of the consumer
+    lending origination system as reviewed on the date above. It is issued
+    for the annual dictionary certification and is not a change request.
+
+2.  COLUMN DEFINITIONS
+
+2.1 APPL_ID
+      Type ......... NUMBER(12)
+      Nullable ..... No
+      Note ......... System-assigned at application creation. Stable across
+                     decisioning and booking; carried into the servicing
+                     system as the origination reference.
+
+2.2 APPL_LAST_NAME / APPL_FIRST_NAME
+      Type ......... VARCHAR2(40) / VARCHAR2(30)
+      Nullable ..... No / No
+      Note ......... Restricted. Captured at intake and not overwritten by
+                     later maintenance; the servicing system, not this table,
+                     is the record of current legal name.
+
+2.3 APPL_SSN
+      Type ......... CHAR(9)
+      Nullable ..... No
+      Note ......... Restricted, highest tier. Encrypted at rest. Required by
+                     the decisioning interface. Access is logged.
+
+2.4 APPL_DOB
+      Type ......... DATE
+      Nullable ..... No
+      Note ......... Restricted. Consumed by age-of-majority and ECOA
+                     monitoring routines.
+
+2.5 APPL_HOME_ADDR_1 / APPL_HOME_ADDR_2 / APPL_CITY / APPL_STATE / APPL_ZIP
+      Type ......... VARCHAR2(60) / VARCHAR2(60) / VARCHAR2(30) / CHAR(2) /
+                     CHAR(9)
+      Nullable ..... No / Yes / No / No / No
+      Note ......... Restricted. Address at time of application; feeds HMDA
+                     geocoding for reportable applications.
+
+2.6 APPL_YRS_AT_ADDR
+      Type ......... NUMBER(3,1)
+      Nullable ..... Yes
+      Note ......... Applicant-stated; not verified.
+
+2.7 APPL_HOME_PHONE / APPL_WORK_PHONE / APPL_MOBILE_PHONE
+      Type ......... CHAR(10) each
+      Nullable ..... Yes / Yes / Yes
+      Note ......... Restricted. At least one must be populated by
+                     application edit, though the constraint is not physical.
+
+2.8 APPL_EMAIL_ADDR
+      Type ......... VARCHAR2(80)
+      Nullable ..... Yes
+      Note ......... Restricted. Used for adverse action delivery only where
+                     electronic consent is recorded in E_CONSENT_FLG.
+
+2.9 APPL_EMPLOYER_NAME
+      Type ......... VARCHAR2(60)
+      Nullable ..... Yes
+      Note ......... Restricted by association. Free-text.
+
+2.10 CREDIT_SCORE_VAL / CREDIT_BUREAU_CD / BUREAU_PULL_DT
+      Type ......... NUMBER(4) / CHAR(2) / DATE
+      Nullable ..... Yes / Yes / Yes
+      Note ......... Restricted. Populated on bureau response; null where the
+                     application was withdrawn before pull.
+
+2.11 DECISION_CD / DECISION_DT / DECISION_USER
+      Type ......... CHAR(2) / DATE / CHAR(10)
+      Nullable ..... Yes / Yes / Yes
+      Note ......... DECISION_USER holds an operator profile, not an
+                     applicant.
+
+3.  ACCESS RESTRICTION
+
+3.1 Grants are held at role level: lending origination, lending quality
+    control, and compliance. The general reporting role has no authority on
+    this object.
+
+3.2 Non-production environments receive masked extracts only. Bureau-derived
+    columns are nulled rather than masked, on the vendor's contractual
+    instruction.
+
+4.  RETENTION
+
+4.1 Approved and booked applications: twenty-five months from the decision
+    date under Reg B, extended to seven years from payoff where booked.
+
+4.2 Denied and withdrawn applications: twenty-five months from the decision
+    date, then purged in the monthly cycle.
+
+4.3 HMDA-reportable applications are retained three years from the filing of
+    the loan application register.
+
+5.  DOWNSTREAM EXTRACTS
+
+5.1 HMDAX01 — annual register preparation. Geocoded address and demographic
+    monitoring columns.
+
+5.2 QCX04 — post-close quality control sampling. Monthly, ten per cent
+    sample, identity columns tokenised.
+
+5.3 ALLLX02 — allowance modelling. Score and decision columns only; no
+    identity columns are released.
+
+6.  CERTIFICATION
+
+6.1 The undersigned certifies that the definitions above agree with the
+    physical catalogue as of the review date. Exceptions: none noted.

@@ -1,0 +1,18 @@
+APPLICATION FOR SERVICE — FILE CIS.SERV_APPL
+Dictionary excerpt, Revision C. Custodian of record: the Records Custodian.
+
+- APPL_ID — CHAR(9) — NOT NULL — Assigned at keying; immutable thereafter.
+  > Retained twenty-four months from disposition, whether granted or denied.
+- APPL_NAME_LAST / APPL_NAME_FIRST — PIC X(25) / PIC X(15) — NOT NULL
+  > Update authority: the Service Order Clerk role only. Corrections require a signed correction memorandum retained in the paper jacket.
+- APPL_SSN_TXT — CHAR(9) — NULLABLE
+  > Restricted field. Suppressed from all reports save the Credit Evaluation Worksheet, which shall not leave the Credit Section. Excluded from EXT-MKT-07 and EXT-STAT-02 by field-level omission at the copybook level, not by masking.
+- APPL_DOB_DT — DATE — NULLABLE
+  > Century-qualified. Access restricted; no downstream propagation authorized.
+- APPL_PRIOR_ADDR_LINE_1 — PIC X(30) — NULLABLE
+  > Used solely for prior-obligation matching against CIS.ACCT_HIST.
+- APPL_TELE_NBR — CHAR(10) — NULLABLE
+- APPL_DISP_CD — CHAR(2) — NOT NULL — Domain at CIS.CD_DISP.
+- APPL_DISP_DT — DATE — NULLABLE — Null permitted only where APPL_DISP_CD denotes a pending state.
+
+The Records Custodian shall certify quarterly that no extract job has been added against this file absent written authorization, and that denied applications have been purged upon expiry of the retention interval.

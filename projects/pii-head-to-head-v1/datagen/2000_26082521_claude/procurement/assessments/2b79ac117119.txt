@@ -1,0 +1,126 @@
+VENDOR INFORMATION SECURITY ASSESSMENT — PROTECTED INFORMATION HANDLING
+Riverbend Municipal Water & Power Authority — Office of Information Governance
+Form IG-114 (Rev. 03/2011) — Return within twenty (20) business days of receipt
+
+This questionnaire is issued to suppliers who, under an existing or contemplated agreement, receive, generate, transmit, store or dispose of protected information belonging to Authority customers, ratepayers or employees. For purposes of this form, protected information means any data element or combination of data elements that identifies or can reasonably be used to identify a natural person, including but not limited to full name, residential or mailing address, telephone number, electronic mail address, date of birth, government-issued identification number, taxpayer identification number, financial account number, payment card number, utility account number, meter identifier, service address, and any credential permitting access to the foregoing. Responses must describe the supplier's practices as actually implemented on the date of signature and must not describe planned, aspirational or roadmap controls except where a question expressly invites such a description.
+
+Complete every numbered item in narrative form within the response box provided. Where a question is not applicable to the services rendered, state "not applicable" and explain in not fewer than two sentences why the exclusion is claimed; a bare assertion of inapplicability will be returned as non-responsive. The rightmost column indicates whether documentary evidence must accompany the response. Where evidence is required, attach the referenced artifact as a separate file and cite it by the supplier's own document control number and revision date in the body of the response. Screenshots are acceptable only where the questionnaire specifically permits them. The Authority reserves the right to request additional evidence, to conduct an onsite inspection on ten business days' notice, and to interview supplier personnel holding operational responsibility for the controls described.
+
+SECTION A — INVENTORY AND CLASSIFICATION
+
+1. Describe the full inventory of protected information elements the supplier receives from or generates on behalf of the Authority, organized by data element name, source system, and business purpose. State the retention period applied to each element and the authority under which that period was established.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — current data inventory or record of processing, signed by the supplier's Records Custodian.
+
+2. Identify every physical location and every logical environment (production, staging, development, analytics, backup) in which protected information resides or may transit. State for each whether the location is owned, leased, colocated, or operated by a subcontractor.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — facility list and subcontractor register.
+
+3. State whether protected information is commingled with data belonging to other clients of the supplier in any shared database, file share, message queue, or index. If commingling occurs, describe the logical separation mechanism and the control that prevents cross-client disclosure.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: No.
+
+SECTION B — ENCRYPTION AT REST
+
+4. Describe the encryption applied to protected information at rest, stating the algorithm, key length, mode of operation, and the layer at which encryption is applied (application field-level, database column, tablespace, file system, or full disk). Where encryption is not applied to a given store identified in item 2, state the compensating control relied upon.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — cryptographic standard or equivalent internal policy, current revision.
+
+5. Describe the key management lifecycle in narrative form, addressing generation, distribution, storage, rotation interval, escrow, and destruction. State the role title of the individual holding key custody and the role title of the individual authorizing key destruction, and confirm that these are not the same role. State whether keys are stored on the same host or within the same trust boundary as the data they protect.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — key management procedure and most recent rotation log excerpt with values obscured.
+
+6. State whether backup media, archive copies, and replicated instances receive encryption equivalent to that described in item 4. Where equivalence is not maintained, describe the gap and the compensating control.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: No.
+
+SECTION C — TRANSMISSION
+
+7. Describe every channel by which protected information is transmitted to, from, or within the supplier's environment, including scheduled file transfer, web services, electronic mail, portable media, facsimile, and postal carriage. For each channel, state the protocol and version, the cipher suites permitted, the method of endpoint authentication, and whether the channel traverses any public network.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — interface catalogue and current transport configuration extract.
+
+8. State whether protected information is ever transmitted as an attachment to, or within the body of, ordinary electronic mail. If so, describe the encryption or secure-messaging control applied and the mechanism by which the sending party verifies the recipient's identity prior to release.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes, where the answer is affirmative.
+
+9. Describe the controls governing removable media, including the approval required before protected information is written to such media, the encryption applied, the chain-of-custody record maintained during transport, and the disposition of the media upon completion of the transfer.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: No.
+
+SECTION D — DISPOSAL AND RETURN
+
+10. Describe the method by which protected information is destroyed at the expiry of the retention period stated in item 1, distinguishing between electronic media, paper records, and end-of-life hardware. State the standard to which overwriting, degaussing, or physical destruction is performed and the role title of the witness to destruction.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — destruction procedure and specimen certificate of destruction with identifying values obscured.
+
+11. Describe the process for locating and destroying protected information held in backup sets, archives, and offline copies where a deletion request or contract termination requires it. Where technical constraints prevent destruction within backup media, state the period after which the data is overwritten in the ordinary course and the controls applied in the interim.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: No.
+
+12. State the manner in which protected information will be returned to the Authority upon expiry or termination of the agreement, including the format, the transfer channel, the period within which return will be completed, and the attestation of destruction that will follow.
+
+RESPONSE: ________________________________________________________
+__________________________________________________________________
+
+EVIDENCE REQUIRED: Yes — draft attestation of return and destruction.
+
+CERTIFICATION
+
+The undersigned certifies that the responses recorded above are accurate and complete as of the date of signature, that the undersigned holds authority to bind the supplier, and that the Authority may rely upon these responses in determining whether to enter into or continue a contractual relationship. Material change to any practice described herein must be reported to the Office of Information Governance within thirty days of the change.
+
+Signature of Authorized Representative: ______________________________
+
+Role Title: ______________________________  Date: __________________
+
+Supplier Legal Name: ______________________________________________
+
+Authority Contract or Solicitation Reference: ________________________
+
+FOR AUTHORITY USE ONLY
+
+Received by (role title): _______________  Date received: ____________
+Assessment outcome: [ ] Accepted [ ] Accepted with conditions [ ] Deficient — resubmission required
+Conditions or deficiencies noted: ___________________________________
+Reviewer role title: ____________________  Review date: _____________

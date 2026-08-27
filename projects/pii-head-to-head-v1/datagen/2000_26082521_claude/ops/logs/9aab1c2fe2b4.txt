@@ -1,0 +1,21 @@
+VALIDATION EXCEPTION SUMMARY
+JOB J2011-0917-REGSTR-04    STEP 030 VALIDATE    2011-09-17 02:44:09 CDT
+INPUT 118,402 ROWS          PASSED 117,946       EXCEPTIONS 456
+
+ERR_CD   FIELD_LABEL          CONDITION              ROWS  SEV  DISPOSITION
+-------- -------------------- --------------------- ----- ---- ------------
+VE-1004  BIRTH_DT             not a valid date        112  ERR  quarantine
+VE-1011  PERM_ADDR_ZIP        length below minimum     87  WRN  load as null
+VE-1011  PERM_ADDR_STAT       not in code table        64  WRN  load as null
+VE-1020  CAMPUS_EMAIL         missing on active row    58  WRN  load as null
+VE-1033  FERPA_SUPPRESS_IND   null on required col     41  ERR  quarantine
+VE-1041  RESIDENCY_CD         not in code table        39  ERR  quarantine
+VE-1052  GPA_CUM              outside allowed range    27  ERR  quarantine
+VE-1060  ACAD_HOLD_CD         orphan reference         18  WRN  load as null
+VE-1077  STDNT_ID_UNIV        checkdigit mismatch      10  ERR  quarantine
+
+TOTAL EXCEPTIONS 456     QUARANTINED 208     LOADED WITH NULL 248
+
+Offending values are not written to the exception log. Quarantined rows
+are held in QRT.STDNT_CORE_20110917 and are keyed by surrogate only.
+Referred to the Records Custodian for correction at source.

@@ -1,0 +1,68 @@
+MEMORANDUM
+
+TO:      Interface Development, Reporting Services, Internal Audit Liaison
+FROM:    The Records Custodian, Hospital Billing Office
+DATE:    2 June 2021
+SUBJECT: Data Dictionary Excerpt and Handling Conditions — GUARANTOR_ACCT and Related Objects, Billing Schema Release 4.3
+
+1. PURPOSE
+
+1.1 This memorandum records the authoritative definitions for the guarantor account structures in the billing schema and states the access, retention and extract conditions attaching to each column. It is to be read together with the Release 4.2 excerpt for MBR_MASTER.
+
+1.2 Where this memorandum and any application-level documentation conflict, this memorandum governs.
+
+2. TABLE GUARANTOR_ACCT
+
+2.1 GUARANTOR_ACCT_ID — BIGINT — NOT NULL. Primary key, sequence generated at account creation. Stable for the life of the account and safe for use as the join key in all published extracts.
+
+2.2 ACCT_NBR_HASH — CHAR(64) — NOT NULL. One-way hash of the assigned account number. The cleartext account number is held only in the billing application of record and is not replicated into this schema. No reversal utility exists and none is to be built.
+
+2.3 GUAR_LAST_NAME — VARCHAR(40) — NOT NULL. Restricted. Read access is limited to the roles BILL_CSR_RO, BILL_SUPV and COLLECT_ANALYST. Display in any screenshot, ticket attachment or defect report is prohibited.
+
+2.4 GUAR_FIRST_NAME — VARCHAR(30) — NOT NULL. Restricted; conditions as at clause 2.3.
+
+2.5 GUAR_DOB — DATE — NULLABLE. Restricted. Populated only where the guarantor is also the patient of record. Excluded from every scheduled extract without exception.
+
+2.6 GUAR_SSN_TOKEN — CHAR(16) — NULLABLE. Vault reference only. Token resolution is performed by the payment services gateway and is logged to the security event store with the requesting role and purpose code.
+
+2.7 GUAR_ADDR_LINE_1 — VARCHAR(60) — NOT NULL. Restricted.
+
+2.8 GUAR_ADDR_LINE_2 — VARCHAR(60) — NULLABLE. Restricted.
+
+2.9 GUAR_CITY — VARCHAR(40) — NOT NULL. Restricted in combination with GUAR_POSTAL_CD.
+
+2.10 GUAR_POSTAL_CD — CHAR(10) — NOT NULL. Truncated to five positions on publication.
+
+2.11 GUAR_PHONE_MOBILE — VARCHAR(20) — NULLABLE. Restricted. Subject to the contact-preference suppression logic in MBR_CONTACT_PREF; the suppression flag must be evaluated before any outbound use.
+
+2.12 GUAR_EMAIL_ADDR — VARCHAR(120) — NULLABLE. Restricted; conditions as at clause 2.11.
+
+2.13 BALANCE_CURRENT — DECIMAL(12,2) — NOT NULL. Refreshed at close of each posting cycle.
+
+2.14 AGING_BUCKET_CD — CHAR(2) — NOT NULL. Derived; do not update directly.
+
+2.15 FIN_ASSIST_STATUS_CD — CHAR(3) — NULLABLE. Sensitive by policy though not by regulation; excluded from the collections extract.
+
+2.16 CREATED_TS — TIMESTAMP — NOT NULL. Set by trigger.
+
+2.17 UPDATED_TS — TIMESTAMP — NOT NULL. Set by trigger.
+
+3. RETENTION
+
+3.1 Guarantor rows are retained for ten years following the date of final settlement or write-off, whichever is later.
+
+3.2 On expiry of the retention period the columns at clauses 2.3 to 2.12 are overwritten with nulls by the quarterly purge job. Financial columns and the primary key are retained indefinitely to preserve the general ledger reconciliation trail.
+
+3.3 Accounts under legal hold are exempt from clause 3.2 until the hold is released by the Compliance Officer in writing.
+
+4. DOWNSTREAM EXTRACTS
+
+4.1 Three scheduled extracts consume this table: the nightly collections file, the weekly denials analysis file and the monthly finance reconciliation file.
+
+4.2 The collections file may carry the columns at clauses 2.1, 2.13 and 2.14 only. The analysis and reconciliation files are limited to aggregate measures keyed on GUARANTOR_ACCT_ID.
+
+4.3 Any new consumer must be registered with this office, with a stated purpose and a named accountable manager, no fewer than ten working days before first run.
+
+5. AMENDMENT
+
+5.1 Column additions, type changes and nullability changes are notified through the schema change board and reflected here within one cycle.

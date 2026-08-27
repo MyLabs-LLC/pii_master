@@ -1,0 +1,55 @@
+CONFIGURATION ARTIFACT — pmx-etl/conf/mapping_rules.d/010_patient_core.rules
+REVISION r14.2.1 · EFFECTIVE 2021-04-05T00:00:00Z
+CUSTODIAN OF RECORD: Office of the Records Custodian, Pharmacy Systems Governance
+LOAD EVENT: job PMX-ETL-PROD-0417 · parsed 2021-04-05T01:02:07.338Z · 214 rules admitted, 3 rules quarantined
+
+  1. SCOPE AND APPLICATION
+     1.1 This ruleset shall govern, exclusively and without exception, the transformation of records originating in the store-level dispensing platform (source system code PDX) and the central membership registry (source system code MBR) into the enterprise analytic schema rx_analytics.*, as that schema stands constituted on the effective date first written above.
+     1.2 Nothing herein shall be construed to authorize the persistence, in any target column, of any source value classified at sensitivity tier T1 (Directly Identifying) or tier T2 (Indirectly Identifying), save as expressly permitted under clause 4.3.
+     1.3 Where this ruleset and the masking configuration referenced at clause 4.1 are in conflict, the masking configuration shall control, and the conflicting rule shall be quarantined at parse time.
+
+  2. DEFINITIONS
+     2.1 "Disposition" means the mandatory treatment assigned to a mapped field, being one of: PASS, TOKENIZE, MASK, GENERALIZE, SUPPRESS, or DROP.
+     2.2 "Emitted form" means the literal representation written to the target column after the disposition has been applied.
+     2.3 "Vault reference" means the identifier of the keyring under which a surrogate is minted; no vault reference shall of itself be deemed an identifier of a natural person.
+
+  3. SOURCE-TO-TARGET FIELD MAPPING REGISTER
+     3.1 Identity and membership attributes
+         3.1.1  PT_FIRST_NM      → patient_first_name      · TOKENIZE   · vault pii-v2 · emitted <TKN>
+         3.1.2  PT_LAST_NM       → patient_last_name       · TOKENIZE   · vault pii-v2 · emitted <TKN>
+         3.1.3  PT_DOB           → patient_dob             · GENERALIZE · decade bucket · emitted <BUCKET>
+         3.1.4  PT_SSN           → ssn_full                · DROP       · column not provisioned in target
+         3.1.5  PT_SSN_L4        → ssn_last4               · SUPPRESS   · emitted [NULL-BY-POLICY]
+         3.1.6  MBR_ID           → member_id               → TOKENIZE   · vault mbr-v1 · emitted <TKN>
+         3.1.7  PT_GENDER_CD     → gender_code             · PASS       · tier T3, no restriction
+     3.2 Contact attributes (all dispositions herein are non-waivable)
+         3.2.1  ADDR_LN_1        → addr_line_1             · SUPPRESS   · emitted [NULL-BY-POLICY]
+         3.2.2  ADDR_LN_2        → addr_line_2             · SUPPRESS   · emitted [NULL-BY-POLICY]
+         3.2.3  CITY_NM          → city_name               · SUPPRESS   · emitted [NULL-BY-POLICY]
+         3.2.4  ST_CD            → state_code              · PASS       · retained for jurisdictional reporting
+         3.2.5  POSTAL_CD        → zip5                    · GENERALIZE · first three positions · emitted ###**
+         3.2.6  PHONE_HOME       → phone_home              · MASK       · emitted (***) ***-****
+         3.2.7  PHONE_MOBILE     → phone_mobile            · MASK       · emitted (***) ***-****
+         3.2.8  EMAIL_ADDR       → email_address           · MASK       · emitted ****@****.***
+     3.3 Dispensing and clinical attributes
+         3.3.1  RX_NBR           → rx_number               · TOKENIZE   · vault rx-v3 · emitted <TKN>
+         3.3.2  FILL_DT          → fill_date               · PASS
+         3.3.3  NDC_CD           → ndc_code                · PASS
+         3.3.4  PRESCRIBER_NPI   → prescriber_npi          · TOKENIZE   · vault npi-v1 · emitted <TKN>
+         3.3.5  DAYS_SUPPLY      → days_supply             · PASS
+     3.4 Financial and benefit attributes
+         3.4.1  CARD_PAN         → payment_card_pan        · DROP       · column not provisioned in target
+         3.4.2  CARD_EXP         → card_expiry             · DROP       · column not provisioned in target
+         3.4.3  BIN_NBR          → bin_number              · PASS
+         3.4.4  PCN_CD           → pcn_code                · PASS
+         3.4.5  GRP_NBR          → insurance_group_number  · MASK       · emitted ****
+         3.4.6  LOYALTY_ACCT     → loyalty_account_number  · TOKENIZE   · vault loy-v1 · emitted <TKN>
+
+  4. SUPPRESSION, DERIVATION AND OVERRIDE
+     4.1 The masking configuration of record is pmx-etl/conf/masking/policy_prod.yaml, revision 9.
+     4.2 No rule bearing disposition PASS shall be admitted for any field carrying the annotation @tier:T1; the parser shall quarantine such rule and emit code MAP-0042.
+     4.3 An override permitting retention of a T2 value shall be valid only upon written instruction of the Records Custodian, recorded in change ticket form, and shall expire ninety (90) days from issuance.
+
+  5. RECONCILIATION AND ATTESTATION
+     5.1 Each execution shall reconcile source row count to target row count and to suppressed-cell count, and shall fail closed upon variance exceeding 0.05 percent.
+     5.2 Parse of revision r14.2.1 completed 2021-04-05T01:02:09.117Z; quarantined rules MAP-0042 (×2), MAP-0071 (×1); attestation recorded against the office of the Records Custodian.

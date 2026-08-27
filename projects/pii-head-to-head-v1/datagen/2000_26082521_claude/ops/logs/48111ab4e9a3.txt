@@ -1,0 +1,54 @@
+# ==============================================================================
+# SIS -> ODS FIELD MAPPING RULES
+# OFFICE OF THE UNIVERSITY REGISTRAR / ADMINISTRATIVE DATA SERVICES
+# FILE ....... map_rules_stdnt_core.cfg          RELEASE .... 2011.02.14
+# SOURCE ..... SISPROD.SATURN                    TARGET ..... ODSPRD.STDNT_CORE
+# LOADED ..... 2011-09-12 04:02:17 CDT           CHECKSUM ... 0x5B12
+# OWNER ROLE . Records Custodian                 REVIEW ROLE  Data Steward
+# ==============================================================================
+# CLASS  R = restricted   C = confidential   D = directory   P = public-derived
+# XFORM  PASS = copy      TOKN = tokenize    MASK = partial  HASH = one-way
+#        DROP = not propagated to target
+# ==============================================================================
+
+RULE_ID SRC_FIELD            TGT_FIELD             DTYPE        NUL CLS XFORM
+------- -------------------- --------------------- ------------ --- --- -----
+R-0101  STDNT_PIDM           STDNT_SK              NUMBER(8)    N   C   HASH
+R-0102  STDNT_ID_SSN         -- omitted --         CHAR(9)      N   R   DROP
+R-0103  STDNT_ID_UNIV        STDNT_ALT_ID          VARCHAR2(9)  N   C   TOKN
+R-0104  NAME_LAST            NAME_LAST_TK          VARCHAR2(60) N   C   TOKN
+R-0105  NAME_FIRST           NAME_FIRST_TK         VARCHAR2(60) Y   C   TOKN
+R-0106  NAME_MIDDLE          NAME_MIDDLE_TK        VARCHAR2(60) Y   C   TOKN
+R-0107  BIRTH_DT             BIRTH_YR_ONLY         DATE         N   R   MASK
+R-0108  GENDER_CD            GENDER_CD             CHAR(1)      Y   C   PASS
+R-0109  ETHNICITY_CD         ETHNICITY_CD          CHAR(2)      Y   C   PASS
+R-0110  CITIZEN_STATUS_CD    CITIZEN_STATUS_CD     CHAR(2)      Y   C   PASS
+R-0111  PERM_ADDR_LINE1      -- omitted --         VARCHAR2(75) Y   R   DROP
+R-0112  PERM_ADDR_LINE2      -- omitted --         VARCHAR2(75) Y   R   DROP
+R-0113  PERM_ADDR_CITY       PERM_CITY             VARCHAR2(50) Y   D   PASS
+R-0114  PERM_ADDR_STAT       PERM_STATE            CHAR(2)      Y   D   PASS
+R-0115  PERM_ADDR_ZIP        PERM_ZIP3             VARCHAR2(10) Y   C   MASK
+R-0116  HOME_PHONE           -- omitted --         VARCHAR2(20) Y   R   DROP
+R-0117  MOBILE_PHONE         -- omitted --         VARCHAR2(20) Y   R   DROP
+R-0118  CAMPUS_EMAIL         EMAIL_TK              VARCHAR2(128) Y  C   TOKN
+R-0119  EMERG_CONTACT_NM     -- omitted --         VARCHAR2(60) Y   R   DROP
+R-0120  EMERG_CONTACT_PH     -- omitted --         VARCHAR2(20) Y   R   DROP
+R-0121  FERPA_SUPPRESS_IND   FERPA_SUPPRESS_IND    CHAR(1)      N   C   PASS
+R-0122  RESIDENCY_CD         RESIDENCY_CD          CHAR(2)      Y   C   PASS
+R-0123  VETERAN_STATUS_CD    VETERAN_STATUS_CD     CHAR(2)      Y   C   PASS
+R-0124  DISABILITY_SVC_IND   DISABILITY_SVC_IND    CHAR(1)      Y   R   MASK
+R-0125  GPA_CUM              GPA_CUM               NUMBER(4,3)  Y   C   PASS
+R-0126  ACAD_HOLD_CD         ACAD_HOLD_CD          VARCHAR2(4)  Y   C   PASS
+R-0127  FIN_AID_AWARD_AMT    FIN_AID_AWARD_BAND    NUMBER(9,2)  Y   R   MASK
+
+# NOTES
+# 1. R-0102 remains DROP per standing instruction of the Records Custodian.
+#    Any request to reinstate requires a written exception on file.
+# 2. R-0107 emits the four-digit year component only; day and month are
+#    discarded at the transformation stage and are not written to any
+#    intermediate work table.
+# 3. R-0115 retains the leading three positions of the postal field; the
+#    remaining positions are replaced with the fill character.
+# 4. R-0121 governs downstream release of all rows carrying CLS = D. Consumers
+#    must filter on this indicator before publishing directory extracts.
+# 5. Row counts for each rule are reported in the nightly reconciliation log.

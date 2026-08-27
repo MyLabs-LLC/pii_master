@@ -1,0 +1,66 @@
+RXW VALIDATION LOG — EXTRACT
+SPOOL: VALLOG.RXW0412.D1999039       PAGE 3 OF 11
+GENERATED 1999-02-09 03:52:07 CST
+
+  1999-02-09 01:16:02  RXW0412  INFO   validator start, ruleset rev 04
+                                       input rows queued 1,902,554
+  1999-02-09 01:16:03  RXW0412  INFO   masking profile warehouse_load loaded
+                                       classes 7, fields governed 34
+
+  1999-02-09 01:31:44  RXW0412  WARN   VE-0117 field length overflow
+                                       field   PAT_LAST_NM
+                                       source  PATMSTR.CPY pos 041
+                                       rows    112
+                                       action  truncate to 30, tokenize, continue
+
+  1999-02-09 01:44:19  RXW0412  ERROR  VE-0203 non-numeric in numeric picture
+                                       field   TPP_GROUP_NBR
+                                       rows    2,806
+                                       action  route to RXW0412.REJ
+
+  1999-02-09 01:44:19  RXW0412  ERROR  VE-0204 mandatory field absent
+                                       fields  TPP_CARDHOLDER_ID, TPP_PERSON_CD
+                                       rows    1,388
+                                       note    cash-transaction records, expected
+                                       action  route to RXW0412.REJ, no page
+
+  1999-02-09 02:02:55  RXW0412  ERROR  VE-0311 date fails century check
+                                       field   PAT_DOB
+                                       rows    41,097
+                                       detail  2-position year present in source
+                                       detail  century window disabled per rule 7.3
+                                       action  suspend row, write to VE0311.SUSP
+
+  1999-02-09 02:03:10  RXW0412  ERROR  VE-0311 date fails century check
+                                       field   ELIG_EFF_DT
+                                       rows    9,442
+                                       action  suspend row, write to VE0311.SUSP
+
+  1999-02-09 02:18:37  RXW0412  ERROR  VE-0402 unmapped field encountered
+                                       field   PAT_ALT_CONTACT_NM
+                                       detail  present in source, absent from
+                                               ETLMAP.RX.PATDIM.CFG rev 04
+                                       detail  on_unknown_field = ABORT
+                                       action  load halted at checkpoint 71
+                                       rows committed 1,775,000
+
+  1999-02-09 02:19:01  RXW0412  INFO   operator paged, duty operator acknowledged
+  1999-02-09 02:41:26  RXW0412  INFO   override applied by Data Administration
+                                       Group on-call, scope single run
+                                       PAT_ALT_CONTACT_NM -> action SUPPRESS
+                                       standing rule change deferred to the
+                                       Records Custodian, CR-99-0114 raised
+
+  1999-02-09 02:41:30  RXW0412  INFO   restart from checkpoint 71
+  1999-02-09 03:38:52  RXW0412  WARN   VE-0508 token service latency
+                                       endpoint TKNSVC.PROD:4471
+                                       mean 214 ms, threshold 150 ms
+                                       fields affected PAT_LAST_NM, PAT_FIRST_NM,
+                                       TPP_CARDHOLDER_ID, PRESCRIBER_DEA_NBR
+
+  1999-02-09 03:50:11  RXW0412  INFO   validator end
+                                       accepted 1,847,821
+                                       rejected 4,194
+                                       suspended 50,539
+                                       masked-field writes 12,441,308
+                                       raw-value writes 0

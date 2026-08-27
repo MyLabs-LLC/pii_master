@@ -1,0 +1,41 @@
+MEMORANDUM
+
+TO:      Manager, Information Services
+FROM:    Office of the Records Custodian
+DATE:    19 January 1999
+RE:      MEMBER SERVICES SUBSCRIBER FILE (MBRSUBS) — Dictionary Excerpt and
+         Conditions of Use
+
+ARTICLE I. SCOPE. This excerpt describes the subscriber file supporting the member services program and is limited to those columns bearing upon access restriction, retention, and downstream extraction. Columns of purely technical character (filler, reserved, and control-break fields) are omitted and are described in the copybook.
+
+ARTICLE II. COLUMNS OF RECORD.
+
+     (a) MBR_NBR, DECIMAL(9,0), not null. Primary key.
+     (b) MBR_STATUS_CD, CHAR(1), not null.
+     (c) ENROLL_DT, DATE, not null.
+     (d) TERM_DT, DATE, nullable.
+     (e) MBR_LAST_NAME, VARCHAR(40), not null.
+     (f) MBR_FIRST_NAME, VARCHAR(30), nullable.
+     (g) MBR_TAXPAYER_ID_NBR, CHAR(11), nullable.
+     (h) MBR_BIRTH_DT, DATE, nullable.
+     (i) MBR_RESIDENCE_ADDR_1, VARCHAR(35), nullable.
+     (j) MBR_RESIDENCE_ADDR_2, VARCHAR(35), nullable.
+     (k) MBR_RESIDENCE_CITY, VARCHAR(28), nullable.
+     (l) MBR_RESIDENCE_STATE_CD, CHAR(2), nullable.
+     (m) MBR_RESIDENCE_POSTAL_CD, CHAR(9), nullable.
+     (n) MBR_DAY_PHONE_NBR, CHAR(10), nullable.
+     (o) MBR_EVE_PHONE_NBR, CHAR(10), nullable.
+     (p) MBR_ELEC_MAIL_ADDR, VARCHAR(50), nullable.
+     (q) BILLING_ACCT_NBR, CHAR(16), nullable.
+     (r) PAYMENT_METHOD_CD, CHAR(2), nullable.
+     (s) RELATED_ESCROW_FILE_NBR, CHAR(12), nullable.
+     (t) RETENTION_CLASS_CD, CHAR(2), not null.
+     (u) PURGE_HOLD_IND, CHAR(1), not null, default 'N'.
+     (v) LAST_MAINT_USER_ID, CHAR(8), not null.
+     (w) LAST_MAINT_TS, TIMESTAMP, not null.
+
+ARTICLE III. ACCESS RESTRICTION. Columns (e) through (q) inclusive are restricted. Read access is granted only by written request of a department manager, is granted to a named user profile and never to a group profile, and lapses of its own force ninety (90) days from the date of grant unless renewed in writing. Update access to columns (g), (h), and (q) is confined to the member services supervisor on duty. All access to columns (g) and (q), whether read or update, is journaled and reviewed monthly.
+
+ARTICLE IV. RETENTION. Rows are retained for the period prescribed by Schedule R measured from TERM_DT, or, where TERM_DT is null, from the anniversary of ENROLL_DT then last occurring. No row bearing PURGE_HOLD_IND equal to 'Y' shall be purged, archived, or overlaid for any reason, and the hold shall be released only upon written notice from Corporate Counsel or from the undersigned.
+
+ARTICLE V. DOWNSTREAM EXTRACTS. Three extracts are authorized. The nightly statistical extract (job MB0210P) carries columns (a) through (d) and (t) only. The quarterly reconciliation extract (job MB0330P) additionally carries column (s) and is delivered to the accounting department by tape, which tape is to be returned or degaussed within thirty days. The annual actuarial extract (job MB0900P) carries no column enumerated in Article III. No fourth extract, and no ad hoc unload by whatever name, is permitted absent the prior written approval of this office.

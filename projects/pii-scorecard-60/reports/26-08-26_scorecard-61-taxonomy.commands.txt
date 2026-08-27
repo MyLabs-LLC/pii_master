@@ -1,0 +1,252 @@
+[2026-08-27T01:38:02Z] Exit: 0 | Context: record the approved plan for the 61-label taxonomy rebuild | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/approve60.py
+--- Output ---
+approval recorded and verified
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:38:56Z] Exit: 0 | Context: check scorecard tag coverage against the gold before building anything | Took: 11.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_scorecard_catalogue.py --check
+--- Output ---
+scorecard: Scorecard - GAIA Catalog(Rasool-PII-PCI-PHI).csv
+catalogue: 61 labels (dropped ['sensitive_pci_routing_number'], kept off-scorecard ['sensitive_pci_swift_code'])
+
+tags with no gold anywhere: 0
+sensitive tags in the gold but NOT on the scorecard: 1
+    sensitive_pci_routing_number                                    1   DROPPED from the catalogue
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:48:48Z] Exit: 0 | Context: build the 61-label scorecard catalogue and re-index the cached label gold | Took: 29.4s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_scorecard_catalogue.py --out projects/pii-scorecard-60/cache
+--- Output ---
+scorecard: Scorecard - GAIA Catalog(Rasool-PII-PCI-PHI).csv
+catalogue: 61 labels (dropped ['sensitive_pci_routing_number'], kept off-scorecard ['sensitive_pci_swift_code'])
+
+tags with no gold anywhere: 0
+sensitive tags in the gold but NOT on the scorecard: 1
+    sensitive_pci_routing_number                                    1   DROPPED from the catalogue
+
+-> projects/pii-scorecard-60/cache/catalogue.json
+  10360_betterdataai_ner_silver_eval_10.36k             10,360 rows     13,304 tag hits
+  10626_ai4privacy_pii_masking_eval_10.63k              10,626 rows     34,093 tag hits
+  148775_pii2_train_98.81k                             148,775 rows    430,945 tag hits
+  151708_openpii_pii_train_151.71k                     151,708 rows  1,666,344 tag hits
+  15986_datax-dualjudge-trainset-5.36k                  15,986 rows      6,716 tag hits
+  20000_pii_holdout_20.00k                              20,000 rows    158,554 tag hits
+  21743_nemotron_train_20.80k                           21,743 rows          0 tag hits
+  23693_govdocs2-dualjudge-train80-12.86k               23,693 rows     28,702 tag hits
+  30000_pii2_eval_25.15k                                30,000 rows     76,083 tag hits
+  38937_openpii_pii_eval_38.94k                         38,937 rows    435,341 tag hits
+  4000_datax-dualjudge-evalset-1.32k                     4,000 rows      1,663 tag hits
+  41429_betterdataai_ner_silver_train_41.43k            41,429 rows     52,967 tag hits
+  42504_ai4privacy_pii_masking_train_42.50k             42,504 rows    134,576 tag hits
+  5617_nemotron_eval_5.36k                               5,617 rows          0 tag hits
+  6589_govdocs2-dualjudge-eval20-3.53k                   6,589 rows      8,885 tag hits
+  85593_pii_trainset_85.59k                             85,593 rows    656,492 tag hits
+  counts_w1000                                         SKIPPED (no dataset dir)
+
+-> projects/pii-scorecard-60/cache  (16 cache files)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:51:33Z] Exit: 0 | Context: refit the cascade on the 61-label scorecard taxonomy and score it sealed | Took: 88.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_scorecard_rebuild.py
+--- Output ---
+catalogue: 61 labels from projects/pii-scorecard-60/cache
+loaded 531,431 training rows in 1s; fit 451,548 / calib 79,883
+gate: alpha=0.01 balance=equal (real 33,637 of 432,903 fit rows)
+refitting 61 heads (arm B hyperparameters, unchanged) ...
+  63s
+gate threshold 0.0620  (calibration real: P=0.9130 R=0.8106 sp=0.9331)
+selected 61 of 61 thresholds (0 below min support)
+
+the four restored tags, as selected on the training carve:
+  sensitive_pii_given_name                       thr=  -3.5077  support=  30966  P=0.6834 R=0.9812 F0.5=0.7276 [floor_met]
+  sensitive_pii_family_name                      thr=  -0.8918  support=  27812  P=0.6209 R=0.9872 F0.5=0.6706 [floor_met]
+  sensitive_pii_middle_name                      thr=   1.5607  support=  23177  P=0.7725 R=0.9701 F0.5=0.8053 [floor_met]
+  sensitive_pii_street_number_and_name           thr=   4.8877  support=  16498  P=0.6186 R=0.9801 F0.5=0.6679 [floor_met]
+
+-> projects/pii-scorecard-60/models/cascade_scorecard61  (61 enabled tags)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.9s
+  20000_pii_holdout_20.00k                          20,000 docs    2.2s
+  30000_pii2_eval_25.15k                            30,000 docs    2.6s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.8s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.2s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                               cascade_scorecard61
+macro_f05                                         0.6230
+macro_f2                                          0.6651
+micro_f1                                          0.7299
+priority_macro_f05                                0.7980
+equal_corpus_doc_recall                           0.7975
+equal_corpus_doc_precision                        0.8956
+equal_corpus_doc_specificity                      0.8792
+recall_macro_catalogue                            0.6773
+precision_macro_catalogue                         0.6244
+severity_recall_min                               0.6267
+prediction_rate                                   0.8181
+
+-> projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:52:13Z] Exit: 0 | Context: one-core p95 latency for the 61-label cascade | Took: 8.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/bench61.py
+--- Output ---
+200 documents of >= 10,000 characters, cpu_budget=1
+p50=3.2809 ms  p95=4.0290 ms  PASS against the 5 ms budget
+-> projects/pii-scorecard-60/evaluations/latency_scorecard61.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:53:12Z] Exit: 1 | Context: precision-led headline policy over the 61-label arm | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-scorecard-60/policy.yaml --arms projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json --suite projects/pii-scorecard-60/suite.yaml --out projects/pii-scorecard-60/decision/headline.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | macro_f05 | micro_f1 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6230 | 0.7299 | 0.6651 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-scorecard-60/decision/headline.json
+--------------
+
+[2026-08-27T01:53:13Z] Exit: 1 | Context: document-precision contra-view over the 61-label arm | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-scorecard-60/policy_precision_view.yaml --arms projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json --suite projects/pii-scorecard-60/suite.yaml --out projects/pii-scorecard-60/decision/precision_view.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | document-level precision >= 0.90 (conclusive) | document-level specificity >= 0.85 (conclusive) | document-level recall >= 0.85 (conclusive) | priority tag recall >= 0.75 (conclusive) | one-core p95 <= 5 ms | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | priority_macro_f05 | macro_f05 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 44/55 (0.02) | PASS | PASS | PASS | 0.7980 | 0.6230 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-scorecard-60/decision/precision_view.json
+--------------
+
+[2026-08-27T01:54:36Z] Exit: 1 | Context: re-decide under the micro-F1/precision-led ranking | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-scorecard-60/policy.yaml --arms projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json --suite projects/pii-scorecard-60/suite.yaml --out projects/pii-scorecard-60/decision/headline.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | micro_f1 | precision | macro_f05 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7299 | N/A | 0.6230 | 0.6651 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-scorecard-60/decision/headline.json
+--------------
+
+[2026-08-27T01:54:37Z] Exit: 1 | Context: re-decide under the micro-F1/precision-led ranking | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-scorecard-60/policy_precision_view.yaml --arms projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json --suite projects/pii-scorecard-60/suite.yaml --out projects/pii-scorecard-60/decision/precision_view.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | document-level precision >= 0.90 (conclusive) | document-level specificity >= 0.85 (conclusive) | document-level recall >= 0.85 (conclusive) | priority tag recall >= 0.75 (conclusive) | one-core p95 <= 5 ms | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | priority_macro_f05 | macro_f05 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 44/55 (0.02) | PASS | PASS | PASS | 0.7980 | 0.6230 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - cascade_scorecard61: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-scorecard-60/decision/precision_view.json
+--------------
+
+[2026-08-27T01:55:01Z] Exit: 1 | Context: headline decision, micro-F1 then micro-precision, on the 61-label arm | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-scorecard-60/policy.yaml --arms projects/pii-scorecard-60/evaluations/arm_cascade_scorecard61.json --suite projects/pii-scorecard-60/suite.yaml --out projects/pii-scorecard-60/decision/headline.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | micro_f1 | precision_micro | macro_f05 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7299 | 0.6360 | 0.6230 | 0.6651 | 4.0290 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-scorecard-60/decision/headline.json
+--------------
+
+[2026-08-27T01:58:02Z] Exit: 0 | Context: track the 61-label run in MLflow | Took: 4.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track60.py
+--- Output ---
+parent run: 3af36ac4957c4acda440b31a1896f1c2
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+2026/08/26 18:58:00 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/08/26 18:58:00 INFO mlflow.store.db.utils: Updating database tables
+2026/08/26 18:58:00 INFO mlflow.tracking.fluent: Experiment with name 'pii-scorecard-60' does not exist. Creating a new experiment.
+--------------
+

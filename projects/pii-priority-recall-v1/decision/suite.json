@@ -1,0 +1,166 @@
+{
+  "name": "pii-priority-recall",
+  "aggregation": "equal_corpus",
+  "corpora": [
+    {
+      "name": "4000_datax-dualjudge-evalset-1.32k",
+      "path": "evaluations/champion_1k/bootstrap/4000_datax-dualjudge-evalset-1.32k.json",
+      "role": "adversarial",
+      "gold": "positive_only",
+      "n": 4000,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "mixed",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "6589_govdocs2-dualjudge-eval20-3.53k",
+      "path": "evaluations/champion_1k/bootstrap/6589_govdocs2-dualjudge-eval20-3.53k.json",
+      "role": "adversarial",
+      "gold": "positive_only",
+      "n": 6589,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "real business documents",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "ai4privacy_pii_masking_eval_10k",
+      "path": "evaluations/champion_1k/bootstrap/ai4privacy_pii_masking_eval_10k.json",
+      "role": "external",
+      "gold": "complete",
+      "n": 10626,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "synthetic",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "betterdataai_ner_silver_eval_10k",
+      "path": "evaluations/champion_1k/bootstrap/betterdataai_ner_silver_eval_10k.json",
+      "role": "external",
+      "gold": "complete",
+      "n": 10360,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "synthetic",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "nemotron_eval_6k",
+      "path": "evaluations/champion_1k/bootstrap/nemotron_eval_6k.json",
+      "role": "external",
+      "gold": "positive_only",
+      "n": 5617,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "synthetic",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "openpii_pii_eval_38k",
+      "path": "evaluations/champion_1k/bootstrap/openpii_pii_eval_38k.json",
+      "role": "external",
+      "gold": "complete",
+      "n": 38937,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "mixed",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "pii2_eval_30k",
+      "path": "evaluations/champion_1k/bootstrap/pii2_eval_30k.json",
+      "role": "external",
+      "gold": "complete",
+      "n": 30000,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "mixed",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    },
+    {
+      "name": "pii_holdout_20k",
+      "path": "evaluations/champion_1k/bootstrap/pii_holdout_20k.json",
+      "role": "sealed",
+      "gold": "complete",
+      "n": 20000,
+      "sha256": null,
+      "data_quality": {
+        "leakage": 0,
+        "leakage_scanned": true,
+        "class_balance": null,
+        "missing_rate": null,
+        "duplicate_rate": null,
+        "label_noise": null,
+        "contamination_risk": "",
+        "real_synth_mix": "mixed",
+        "note": "carried forward from the 1,000-trial run's corpus review"
+      },
+      "note": ""
+    }
+  ]
+}

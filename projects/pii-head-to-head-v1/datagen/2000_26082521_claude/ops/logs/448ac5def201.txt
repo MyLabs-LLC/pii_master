@@ -1,0 +1,50 @@
+SOURCE-TO-TARGET MAPPING RULES
+FEED CONSIGNEE_DAILY_V3 -> DIM_PARTY / FCT_CONSIGNMENT
+DOC REF MAP-CDV3-011  ISSUE 4  DATED 2016-02-22  SUPERSEDES ISSUE 3
+
+SEQ  SOURCE_FIELD_LABEL        TARGET_COLUMN         XFORM         NULLABLE
+---  ------------------------  --------------------  ------------  --------
+001  CONSIGNMENT_REF           CONS_REF              TRIM/UPPER    N
+002  BOOKING_DATE              BOOKING_DT            DT_ISO        N
+003  CONSIGNEE_FULL_NAME       PARTY_NAME_TKN        MR-001        N
+004  CONSIGNEE_GIVEN_NAME      (not mapped)          MR-002        -
+005  CONSIGNEE_FAMILY_NAME     (not mapped)          MR-003        -
+006  CONSIGNEE_ADDR_LINE_1     (not mapped)          MR-004        -
+007  CONSIGNEE_ADDR_LINE_2     (not mapped)          MR-005        -
+008  CONSIGNEE_TOWN            DLV_TOWN              TRIM/UPPER    Y
+009  CONSIGNEE_POSTCODE        DLV_OUTCODE           MR-007        Y
+010  CONSIGNEE_TEL_MOBILE      CONTACT_TEL_MASK      MR-009        Y
+011  CONSIGNEE_TEL_LANDLINE    CONTACT_TEL2_MASK     MR-008        Y
+012  CONSIGNEE_EMAIL           CONTACT_EMAIL_MASK    MR-010        Y
+013  CONSIGNEE_DATE_OF_BIRTH   BIRTH_YEAR            MR-011        Y
+014  ACCOUNT_HOLDER_NAME       PAYER_NAME_TKN        MR-012        Y
+015  BANK_SORT_CODE            (not mapped)          MR-014        -
+016  BANK_ACCOUNT_NUMBER       (not mapped)          MR-013        -
+017  DRIVER_ID                 DRV_SK                LOOKUP_DIM    N
+018  DRIVER_LICENCE_NO         DRV_LICENCE_TKN       MR-016        Y
+019  DRIVER_DATE_OF_BIRTH      DRV_BIRTH_YEAR        MR-018        Y
+020  DRIVER_NOK_CONTACT_NAME   (not mapped)          MR-020        -
+021  SIGNATORY_NAME_POD        POD_SIGN_TKN          MR-022        Y
+022  SIGNATORY_IMAGE_POD       (not mapped)          MR-023        -
+023  RECIPIENT_ID_DOC_REF      (not mapped)          MR-024        -
+024  SERVICE_LEVEL_CODE        SVC_CODE              TRIM/UPPER    N
+025  PALLET_COUNT              PALLET_QTY            INT           N
+
+RULE NOTES
+  (a) Fields marked "(not mapped)" are read into STG for validation only
+      and are dropped at DIM load. STG partition purged T+02:00.
+  (b) All MR-nnn transforms resolve against masking_policy.cfg rev 6.2.
+      A missing rule reference aborts the stream (MASK-ERR-900).
+  (c) SEQ 003 and 014 share the deterministic seed so that payer/consignee
+      matching is preserved without exposing the underlying attribute.
+  (d) SEQ 018 and 021 produce vault tokens. Reversal is restricted to the
+      break-glass role and is logged for ten years.
+  (e) DLV_OUTCODE is the sole geographic attribute permitted downstream.
+      Full postcode requests must be raised as a policy exception.
+
+CHANGE HISTORY
+  ISSUE 4  2016-02-22  SEQ 023 added and suppressed at source request.
+  ISSUE 3  2015-11-09  SEQ 012 moved from PASSTHRU to MR-010.
+  ISSUE 2  2015-07-14  Vault tokenisation introduced for SEQ 018.
+
+APPROVED: HEAD OF DATA SERVICES / RECORDS CUSTODIAN

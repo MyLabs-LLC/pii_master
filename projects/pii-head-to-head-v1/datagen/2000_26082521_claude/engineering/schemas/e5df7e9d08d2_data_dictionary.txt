@@ -1,0 +1,35 @@
+DATA DICTIONARY EXCERPT — PLAN AND CARDHOLDER CROSS-REFERENCE
+File: MBRPLXR, library RXPRDDTA
+Owner: Third Party Billing
+Reviewed with: the Records Custodian
+
+A. Purpose
+    1. Holds the association between a member and each third-party plan under which that member may be adjudicated. One member may carry several rows; one plan carries many members.
+    2. The file is written by the plan enrollment program and by the nightly load from the plan sponsor tape. It is not maintained from the dispensing screen.
+
+B. Columns
+    1. XR_SEQ_NBR — DEC(9,0), NOT NULL. Row identifier, assigned by the file. No business meaning.
+    2. MBR_ID — CHAR(10), NOT NULL. Foreign key to the member master.
+    3. PLAN_BIN_CD — CHAR(6), NOT NULL. Routing code supplied by the sponsor.
+    4. PLAN_GRP_CD — CHAR(15), NULL ALLOWED. Blank where the sponsor does not group.
+    5. CARDHLDR_ID — CHAR(20), NOT NULL. The identifier the sponsor uses on its own file. Format varies by sponsor and is not edited beyond length.
+    6. CARDHLDR_LAST_NAM — CHAR(25), NOT NULL. Held because several sponsors match on name as well as identifier.
+    7. CARDHLDR_FIRST_NAM — CHAR(15), NOT NULL.
+    8. CARDHLDR_DOB — DATE, NULL ALLOWED. Required by sponsors that use date of birth as part of the match key.
+    9. DEPND_REL_CD — CHAR(2), NOT NULL. Relationship of the member to the cardholder.
+    10. EFF_DT — DATE, NOT NULL.
+    11. TERM_DT — DATE, NULL ALLOWED. Null means open coverage.
+
+C. Access restriction
+    1. The file carries authorization list RXTPBAL. Read is limited to Third Party Billing and to the two rebilling clerks at each regional office.
+    2. Store personnel have no direct read. Coverage questions at the counter are answered from the adjudication response, not from this file.
+    3. Columns B.6 through B.8 are excluded from the reporting shadow. Requests for them go to the Records Custodian in writing and are granted for a named study with a stated end date.
+
+D. Retention
+    1. A row with a populated TERM_DT is retained twenty-four months past that date to support retroactive rebilling, then deleted.
+    2. Rows for a sponsor that has ended its contract are deleted ninety days after final reconciliation, and the tape received from that sponsor is destroyed on the same schedule.
+
+E. Downstream extracts
+    1. TPBRECON — monthly, back to each sponsor. Carries only the columns that sponsor supplied, filtered to that sponsor's BIN.
+    2. TPBRJCT — daily, to the rebilling queue. Carries B.1 through B.5 and the reject reason. No name or date column is written to this extract.
+    3. No extract from this file is permitted to any marketing destination.

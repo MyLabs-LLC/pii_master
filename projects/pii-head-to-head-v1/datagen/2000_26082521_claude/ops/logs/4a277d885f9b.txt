@@ -1,0 +1,23 @@
+MEMORANDUM
+
+TO:       Manager, Enterprise Data Services
+FROM:     Batch Operations Duty Supervisor, Third Shift
+DATE:     2 June 2016
+RE:       Overnight completion report, cycle 2016-154
+
+The undersigned transmits herewith the completion record for the overnight cycle, the same having concluded at 2016-06-02T04:52:16-04:00 with an aggregate disposition of COMPLETED WITH EXCEPTIONS.
+
+  JOB ID                  START (EDT)   END (EDT)   READ       WRITTEN    REJECTED  RC
+  ----------------------  ------------  ----------  ---------  ---------  --------  --
+  CLM_STG_LOAD_0602       01:02:11      01:39:08    2,411,806  2,411,338       468   0
+  MBR_DIM_MERGE_0602      01:41:55      02:14:37      884,120    884,120         0   0
+  BILL_XREF_LOAD_0602     02:16:02      02:48:19      612,443    612,401        42   0
+  AGENT_HIER_REFRESH      02:50:40      02:57:12       19,884     19,884         0   0
+  PADMIN_EXTR_NIGHTLY     03:00:00      04:11:44    1,286,015  1,285,994        21   4
+  MASK_AUDIT_ROLLUP_0602  04:13:20      04:52:16    6,214,268  6,214,268         0   0
+
+Return code 4 against PADMIN_EXTR_NIGHTLY is attributable in its entirety to the tokenisation service having returned HTTP 503 on four (4) successive calls between 03:44:02 and 03:44:19, in consequence of which the affected rows were withheld rather than emitted, the configured failure action being ABORT_JOB at the row level. The attributes implicated in the withheld rows were SSN, MEMBER_ID and DRIVER_LICENSE_NBR; no value for any of the foregoing was written to any downstream target, to the standard output stream, or to the operator console, and the operator log records only the attribute names and the corresponding vault handle classes.
+
+The 468 rejections recorded against CLM_STG_LOAD_0602 are the subject of a separate register, transmitted under even date, and are not further described here.
+
+It is respectfully requested that this report be lodged with the cycle file and that no re-run be attempted in advance of confirmation from the platform group that the vault endpoint has been restored to service.

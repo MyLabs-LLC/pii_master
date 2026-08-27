@@ -1,0 +1,52 @@
+CHANGE ADVISORY BOARD — RECORD OF DECISION
+
+Change Reference:     CHG-4471
+Category:             Standard / Normal / **Emergency**
+Risk Rating:          High
+Requesting Function:  Payments Engineering
+Approving Authority:  Change Advisory Board, quorum met
+
+CHANGE DESCRIPTION
+
+Replacement of the certificate authority chain used by the settlement gateway. The incumbent intermediate certificate expires within the window, and the issuing authority has discontinued the product line under which it was issued. The change installs a new chain across all gateway nodes and updates the trust store on downstream consumers.
+
+JUSTIFICATION FOR EMERGENCY CLASSIFICATION
+
+Failure to complete the replacement before expiry results in total loss of settlement capability. Standard lead time cannot be met because the discontinuation notice was received inside the normal change window.
+
+IMPACT ASSESSMENT
+
+Affected services:    settlement gateway, reconciliation feed, partner API
+Expected downtime:    none if rolling; up to 40 minutes if rollback invoked
+Customer visibility:  none expected
+Data affected:        none — no records read, written, or migrated
+
+IMPLEMENTATION PLAN
+
+1. Stage new chain to node group A, drain traffic, restart, verify handshake against internal test client.
+2. Confirm reconciliation feed resumes within five minutes.
+3. Repeat for node groups B and C at thirty-minute intervals.
+4. Push updated trust store to partner-facing endpoints.
+5. Hold change window open for two hours post-completion.
+
+BACKOUT PLAN
+
+Restore prior chain from the sealed configuration archive; prior chain remains valid until expiry and can serve as fallback for the remainder of that period. Backout decision authority rests with the on-call Payments Engineering Lead without further board consultation.
+
+VERIFICATION CRITERIA
+
+- Handshake succeeds on all node groups with new chain presented
+- No increase in settlement error rate over baseline across two full cycles
+- Partner API health checks green for sixty minutes
+- Reconciliation feed shows no gap
+
+BOARD DISCUSSION
+
+The board questioned whether the two-hour post-completion window is sufficient given that settlement volume peaks outside it. The requesting function agreed to extend monitoring, though not the formal window, through the following peak cycle. The board noted that the certificate inventory has now produced two emergency changes in twelve months and directed that automated expiry monitoring be raised as a separate improvement item.
+
+DECISION
+
+Approved. Conditions: extended monitoring through next peak cycle; improvement item raised for certificate inventory automation within thirty days.
+
+Recorded by: Change Manager
+Board Chair endorsement: on file

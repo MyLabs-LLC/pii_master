@@ -1,0 +1,53 @@
+SPECIAL EDUCATION DATA — DICTIONARY EXCERPT
+OBJECT: SPED.SVC_ENROLL
+Rev 3.1 — 2016-10-03 — Owner: Director of Special Education; Data Custodian: Records Custodian, Student Data Services
+Classification: Tier 3 throughout. There is no Tier 0 column in this object.
+
+4.1 IDENTIFIERS
+    4.1.1 SVC_ENROLL_ID
+          type = BIGINT; null = NOT NULL; key = primary
+    4.1.2 STU_LOCAL_ID
+          type = CHAR(9); null = NOT NULL; key = FK, enforced
+          note = Join to SIS.STU_DEMO is permitted only inside the SPED schema. Cross-schema views are blocked by grant.
+    4.1.3 CASE_MGR_EMP_ID
+          type = VARCHAR(20); null = NOT NULL
+          note = Employee identifier of the assigned case manager. Reassignment updates in place; no history is kept in this object.
+
+4.2 ELIGIBILITY AND PLAN COLUMNS
+    4.2.1 PRIMARY_DISABILITY_CD
+          type = CHAR(2); null = NOT NULL
+          note = State-defined domain. Never displayed in any building roster, seating chart or substitute report.
+    4.2.2 SECONDARY_DISABILITY_CD
+          type = CHAR(2); null = permitted
+    4.2.3 IEP_EFF_DT, IEP_ANNUAL_REVIEW_DUE_DT, REEVAL_DUE_DT
+          type = DATE (all three); null = IEP_EFF_DT NOT NULL, remainder permitted pending initial plan
+          note = Compliance queues read these three columns. Nulls surface on the overdue exception report the following business day.
+    4.2.4 PLACEMENT_CD, LRE_PCT
+          type = CHAR(3), DECIMAL(5,2); null = NOT NULL for active plans
+          note = LRE_PCT must fall between 0 and 100. Rows failing the check are quarantined, not loaded.
+    4.2.5 PARENT_CONSENT_DT, PARENT_REVOKE_DT
+          type = DATE, DATE; null = both permitted
+          note = A populated revoke date ends service delivery immediately. Downstream jobs must filter on it, not on plan dates.
+
+4.3 SERVICE MINUTES
+    4.3.1 SVC_TYPE_CD — CHAR(3), NOT NULL
+    4.3.2 SVC_MINUTES_WK — SMALLINT, NOT NULL
+    4.3.3 SVC_PROVIDER_EMP_ID — VARCHAR(20), NULL permitted where the service is contracted
+    4.3.4 SVC_LOC_CD — CHAR(2), NOT NULL
+
+4.4 ACCESS RESTRICTION
+    4.4.1 Grants are individual, not role-based, and are re-approved each September by the Director of Special Education.
+    4.4.2 Building administrators receive a filtered view limited to students enrolled at their own site.
+    4.4.3 General education staff receive service minutes and accommodations through the plan portal, not through this object. Disability codes are not carried into the portal payload.
+    4.4.4 All read access is logged; the log is reviewed quarterly and retained 3 years.
+
+4.5 RETENTION
+    4.5.1 Records are retained for the duration of eligibility plus 5 years after exit, graduation or transfer, at which point destruction is scheduled.
+    4.5.2 Written notice of intended destruction is issued to the parent or adult student before the scheduled cycle runs; a request for a copy suspends destruction of the affected records until the request closes.
+    4.5.3 A permanent minimal record — name, dates of attendance, grade completed, year completed — is held outside this object and is not subject to 4.5.1.
+
+4.6 DOWNSTREAM EXTRACTS
+    4.6.1 State special education collection — full column set under the state agreement, delivered twice yearly by SFTP with delivery confirmation retained.
+    4.6.2 Medicaid reimbursement extract — service type, minutes, provider identifier, service date. No disability codes, no plan dates.
+    4.6.3 Reporting mart — a service-flag indicator only, derived at load. The underlying columns do not leave this schema.
+    4.6.4 Requests from outside the district are handled as records requests by the Records Custodian and are not fulfilled by extract.

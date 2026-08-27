@@ -1,0 +1,84 @@
+IRONWOOD VALLEY CREDIT UNION
+NIGHTLY EXTRACT - VALIDATION EXCEPTION REPORT
+REPORT ID: RPT-VAL-0227          PRINTED: 02/27/1999  04:12:55
+
+SECTION A - RUN IDENTIFICATION
+  Job Name ..................... ETLMBR03
+  Job Number ................... J-1999-0227-03
+  Step ......................... STEP040 VALIDATE
+  Started ...................... 02/27/1999  03:47:11
+  Ended ........................ 02/27/1999  04:09:38
+  Elapsed ...................... 00:22:27
+  Operator Console ............. OPS-CON-2
+  Return Code .................. 0004 (WARNING)
+
+SECTION B - VOLUME SUMMARY
+  Rows read from staging ....... 43,207
+  Rows passed validation ....... 42,655
+  Rows rejected ................ 419
+  Rows held pending review ..... 133
+  Rows written to DW.MEMBER_DIM  42,655
+  Rows written to REJECT.WORK .. 419
+
+SECTION C - REJECT COUNTS BY ERROR CODE
+  CODE   DESCRIPTION                                   COUNT
+  -----  --------------------------------------------  -----
+  E0102  Required column null                            147
+  E0104  Column length exceeds target definition          61
+  E0110  Non-numeric character in numeric column          38
+  E0121  Date column fails century window edit            52
+  E0140  Token not found in vault for supplied key        44
+  E0141  Token prefix does not match column rule          19
+  E0155  Masked value received where token required       33
+  E0160  Column populated but rule states SUPPRESS        25
+                                                        -----
+  TOTAL                                                   419
+
+SECTION D - REJECT COUNTS BY TARGET COLUMN
+  TARGET COLUMN         RULE   REJECTS   TOP CODE
+  --------------------  -----  -------   --------
+  TAX_ID_TOKEN          TKN         71   E0140
+  BIRTH_DT              MSK         58   E0121
+  MEMBER_KEY            TKN         49   E0140
+  PHONE_HOME            MSK         44   E0102
+  CARD_TOKEN            TKN         39   E0141
+  SHARE_ACCT_TOKEN      TKN         36   E0155
+  POSTAL_CD_TRUNC       MSK         31   E0104
+  SURNAME               SUP         25   E0160
+  GIVEN_NAME            SUP         21   E0160
+  LOAN_ACCT_TOKEN       TKN         18   E0140
+  STATE_CD              PASS        14   E0110
+  RELATIONSHIP_OPEN_DT  PASS        13   E0121
+
+SECTION E - EXCEPTION DETAIL (FIRST 10 OF 419)
+  SEQ    TARGET COLUMN       CODE   VALUE AS PRESENTED
+  -----  ------------------  -----  ---------------------
+  00014  TAX_ID_TOKEN        E0140  TKG7F2A0C41B9
+  00027  BIRTH_DT            E0121  XX/XX/XXXX
+  00033  PHONE_HOME          E0102  <null>
+  00058  CARD_TOKEN          E0141  TKS3D8E1A0742
+  00061  SURNAME             E0160  <length 12, not written>
+  00072  POSTAL_CD_TRUNC     E0104  XXXXX
+  00089  SHARE_ACCT_TOKEN    E0155  XXXXXXXXXXXX
+  00094  MEMBER_KEY          E0140  <null>
+  00101  STATE_CD            E0110  <non-alpha>
+  00118  BIRTH_DT            E0121  XX/XX/XXXX
+  Full listing spooled to REJECT.WORK. Print copies are suppressed
+  at the queue; retrieval is by the Records Custodian only.
+
+SECTION F - DISPOSITION
+  1. E0140 and E0141 rejects route to the tokenization queue for
+     re-keying. Do not resubmit with source values in place of
+     tokens.
+  2. E0121 rejects are the two-digit year edit. Apply the century
+     window in DATEEDT.CPY and rerun STEP040 for the held set.
+  3. E0160 rejects indicate an upstream program is populating a
+     column marked SUPPRESS. Open a change ticket against the
+     staging load before the next cycle.
+  4. The 133 held rows remain in REJECT.WORK for five business
+     days, then purge under retention schedule RET-04.
+
+SECTION G - SIGN-OFF
+  Reviewed by Batch Operator ......... ______________  Time ______
+  Cleared by Conversion Analyst ...... ______________  Time ______
+  Noted by Records Custodian ......... ______________  Date ______

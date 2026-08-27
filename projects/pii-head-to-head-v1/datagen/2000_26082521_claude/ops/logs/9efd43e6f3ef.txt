@@ -1,0 +1,50 @@
+* MASKCFG.TXT
+* PRODUCTION - DO NOT EDIT WITHOUT CHANGE TICKET
+* LAST WRITE 04/22/1999 16:08:12 BY ID: OPS-BATCH-SVC
+
+[GLOBAL]
+  FILL.CHAR            = X
+  PRESERVE.LENGTH      = YES
+  UNMASKED.LOG.OUTPUT  = DENY
+  ON.RULE.MISS         = ABORT
+  VAULT.NODE           = TKNSRV01
+  APPLIES.TO.JOBS      = ETLMBR03, ETLMBR04, CNVMAP01
+
+[FIELD.RULES]
+  TAX_ID              MASK.ALL      OUT=XXX-XX-XXXX
+  BIRTH_DT            MASK.ALL      OUT=XX/XX/XXXX
+  PHONE_HOME          MASK.ALL      OUT=(XXX) XXX-XXXX
+  PHONE_WORK          MASK.ALL      OUT=(XXX) XXX-XXXX
+  SURNAME             SUPPRESS      OUT=
+  GIVEN_NAME          SUPPRESS      OUT=
+  ADDR_LINE_1         SUPPRESS      OUT=
+  ADDR_LINE_2         SUPPRESS      OUT=
+  CITY_NM             SUPPRESS      OUT=
+  POSTAL_CD           TRUNCATE.3    OUT=XXX
+  EMAIL_ADDR          SUPPRESS      OUT=
+  AUTH_CHALLENGE      SUPPRESS      OUT=
+  GOVT_ID             TOKENIZE      PREFIX=TKG
+  SHARE_ACCT_NBR      TOKENIZE      PREFIX=TKS
+  LOAN_ACCT_NBR       TOKENIZE      PREFIX=TKL
+  CARD_NBR            TOKENIZE      PREFIX=TKC
+  STATE_CD            PASS
+  BRANCH_CD           PASS
+  PRODUCT_TYPE_CD     PASS
+
+[TOKEN.VAULT]
+  FORMAT        = PREFIX + 10 HEX
+  REVERSIBLE    = YES
+  REVERSE.ROLE  = RECORDS CUSTODIAN ONLY
+  REVERSE.LOG   = SYSLOG/VAULTAUD
+
+[EXCEPTIONS]
+  * Statement print extract carries masked placeholders only.
+  * Collections work file: PHONE_HOME unmask permitted under
+    ticket CHG-99-0331. Expires 06/30/1999.
+
+[CHANGE.CONTROL]
+  TICKET     = CHG-99-0412
+  REQUESTED  = Operations Supervisor
+  APPROVED   = Data Security Officer
+  EFFECTIVE  = 04/23/1999 00:00:01
+  ROWS.IN.SCOPE = 43,207

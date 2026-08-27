@@ -1,0 +1,130 @@
+{
+  "aggregate": {
+    "equal_corpus_macro_f2": 0.4931731543924182,
+    "equal_corpus_micro_f1": 0.4249105595117525,
+    "measurable_priority_gates": 55,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 55,
+    "worst_priority_recall": 0.9463276836158192
+  },
+  "arms": [
+    {
+      "artifact": "evaluations/perlabel_v4/4000_datax-dualjudge-evalset-1.32k.json",
+      "dataset": "4000_datax-dualjudge-evalset-1.32k",
+      "metrics": {
+        "docs_per_s": 3566.4368144805453,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 1,
+        "priority_point_passes": 1,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "98ea60e556b747ac9f089cfcef5c6d68",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/6589_govdocs2-dualjudge-eval20-3.53k.json",
+      "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+      "metrics": {
+        "docs_per_s": 4429.451790278901,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 2,
+        "priority_point_passes": 2,
+        "worst_priority_recall": 0.952099533437014
+      },
+      "mlflow_run_id": "658c91ec6d604761a088eb79980cf5b0",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/ai4privacy_pii_masking_eval_10k.json",
+      "dataset": "ai4privacy_pii_masking_eval_10k",
+      "metrics": {
+        "docs_per_s": 16502.347484450096,
+        "macro_f2": 0.5229377447284033,
+        "micro_f1": 0.4036307769951832,
+        "priority_measurable": 10,
+        "priority_point_passes": 10,
+        "worst_priority_recall": 0.9500454132606722
+      },
+      "mlflow_run_id": "51ddb1d6e0754ed69db62f09e7c75108",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/betterdataai_ner_silver_eval_10k.json",
+      "dataset": "betterdataai_ner_silver_eval_10k",
+      "metrics": {
+        "docs_per_s": 12281.335227265983,
+        "macro_f2": 0.23180963540947194,
+        "micro_f1": 0.2681843944832798,
+        "priority_measurable": 4,
+        "priority_point_passes": 4,
+        "worst_priority_recall": 0.98
+      },
+      "mlflow_run_id": "b94af5e8683b4d9dbf44c0563f8814be",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/nemotron_eval_6k.json",
+      "dataset": "nemotron_eval_6k",
+      "metrics": {
+        "docs_per_s": 6978.459915616007,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 0,
+        "priority_point_passes": 0,
+        "worst_priority_recall": null
+      },
+      "mlflow_run_id": "dd1eb6e9dcba46c8ac1acec6b21145f2",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/openpii_pii_eval_38k.json",
+      "dataset": "openpii_pii_eval_38k",
+      "metrics": {
+        "docs_per_s": 10123.785343710864,
+        "macro_f2": 0.6394953236006559,
+        "micro_f1": 0.6891550535974732,
+        "priority_measurable": 9,
+        "priority_point_passes": 9,
+        "worst_priority_recall": 0.9796205200281096
+      },
+      "mlflow_run_id": "ea50e8a8684a4ccf857ac6bfa8141073",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/pii2_eval_30k.json",
+      "dataset": "pii2_eval_30k",
+      "metrics": {
+        "docs_per_s": 4715.026600831448,
+        "macro_f2": 0.4980237712072972,
+        "micro_f1": 0.2489928942830843,
+        "priority_measurable": 15,
+        "priority_point_passes": 15,
+        "worst_priority_recall": 0.9819409778299809
+      },
+      "mlflow_run_id": "20eb6e846aa843b9af2f84a6ed259ee0",
+      "model": "perlabel_v4"
+    },
+    {
+      "artifact": "evaluations/perlabel_v4/pii_holdout_20k.json",
+      "dataset": "pii_holdout_20k",
+      "metrics": {
+        "docs_per_s": 5013.706521009928,
+        "macro_f2": 0.573599297016263,
+        "micro_f1": 0.514589678199742,
+        "priority_measurable": 14,
+        "priority_point_passes": 14,
+        "worst_priority_recall": 0.9463276836158192
+      },
+      "mlflow_run_id": "7cb6277008b34895874c8798f8c9eae2",
+      "model": "perlabel_v4"
+    }
+  ],
+  "model": "perlabel_v4",
+  "read_window_chars": 1000,
+  "workers": 8
+}

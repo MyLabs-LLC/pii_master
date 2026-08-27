@@ -1,0 +1,46 @@
+MASKING PROFILE — NON-PRODUCTION REFRESH
+Northfield Consolidated School District 214 / EDW Operations
+
+[PROFILE]
+profile_id:        MSK-NONPROD-0006
+version:           2.3
+applies_to:        EDW_TEST, EDW_TRAIN, VENDOR_SANDBOX
+effective:         2016-07-01
+review_due:        2017-01-01
+owner_role:        the Database Administrator of Record
+
+[RULES]
+student_key:            tokenize(vault=STU_V2_NONPROD, consistent=true)
+state_id_tok:           tokenize(vault=STU_V2_NONPROD, consistent=true)
+local_num_tok:          tokenize(vault=STU_V2_NONPROD, consistent=true)
+last_name:              nullify
+first_name:             nullify
+guardian_1_name:        nullify
+guardian_1_phone:       nullify
+guardian_1_email:       nullify
+street_address_1:       nullify
+birth_year:             shift(+/- 0)  # already generalised upstream
+postal_prefix:          retain
+frl_status_code:        shuffle(within=building_code)
+iep_ind:                shuffle(within=grade_level)
+sec504_ind:             shuffle(within=grade_level)
+staff_payroll_id:       tokenize(vault=STF_V1_NONPROD)
+staff_bank_account:     nullify
+staff_tax_id:           nullify
+
+[EXECUTION]
+job_id:            JOB-EDW-MSK-0044
+last_run:          2016-07-18T21:14:03-05:00
+duration:          00:38:12
+tables_processed:  27
+rows_masked:       612,904
+rows_nullified:    612,904
+rows_tokenised:    1,838,712
+rows_failed:       0
+exit_code:         0
+
+[CONTROLS]
+refresh_blocked_until_profile_applied: true
+vendor_sandbox_requires_signoff:       the Records Custodian
+detokenisation_in_nonprod:             disabled at vault
+audit_sink:                            AUDIT_MASK_RUN (retain 3 years)

@@ -1,0 +1,72 @@
+[2026-08-25T20:48:12Z] Exit: 0 | Context: feasibility
+Directory: .
+$ run.sh projects/pii-quiet-alarm/probe/precision_headroom.py
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: feasibility
+Directory: .
+$ run.sh projects/pii-quiet-alarm/probe/train_negatives.py
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: feasibility
+Directory: .
+$ run.sh projects/pii-quiet-alarm/probe/doc_baseline_corrected.py
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: feasibility
+Directory: .
+$ mp feasibility --metric doc_specificity --target 0.90 --agreement 0.9545
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: feasibility
+Directory: .
+$ mp feasibility --metric priority_macro_precision --target 0.90 --agreement 0.4582 --ceiling 0.5236
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: data
+Directory: .
+$ run.sh training/quiet_freeze.py freeze
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: data
+Directory: .
+$ run.sh training/quiet_cache.py 30
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: data
+Directory: .
+$ pytest tests/test_quiet_data.py -q
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/tune_quiet.py --family docgate --trials 300
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/tune_quiet.py --family tagcount --trials 250 --seed 23
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/quiet_rerank.py --family tagcount
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/tune_quiet.py --family tagcount --trials 120 --seed 47
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/quiet_merge_tagcount.py
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/tune_quiet.py --family tagdisc --trials 120 --seed 53
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: search
+Directory: .
+$ run.sh training/tune_quiet.py --family cascade --trials 183 --seed 61
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: ship
+Directory: .
+$ run.sh training/quiet_materialize.py --rank 0 --out artifacts/quiet-cascade
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: measure
+Directory: .
+$ run.sh training/quiet_score_eval.py --model quiet-cascade=... --model quiet-nogate=... --baseline --cpus 1
+
+[2026-08-25T20:48:12Z] Exit: 0 | Context: decide
+Directory: .
+$ mp decide --policy policy.yaml --arms evaluations/arms.json --suite suite.yaml
+

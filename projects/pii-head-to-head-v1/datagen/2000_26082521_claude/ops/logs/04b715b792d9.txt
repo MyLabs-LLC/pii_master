@@ -1,0 +1,51 @@
+=====================================================================
+  IVCU BATCH SCHEDULER - JOB OUTPUT LISTING
+  JOB ETLMBR04        JOB NBR J-1999-0301-04       CLASS B
+  SYSTEM PRODA        QUEUE NIGHTLY                PRTY 05
+=====================================================================
+
+RUN CONTROL
+  Cycle Date .......... 03/01/1999
+  Submitted ........... 03/01/1999 03:30:00 by OPS-BATCH-SVC
+  Ended ............... 03/01/1999 04:06:52
+  Max Return Code ..... 0000
+
+STEP LOG
+  03:30:02  STEP010 INIT      Config MASKCFG.TXT loaded, 19 rules
+  03:30:02  STEP010 INIT      Vault node TKNSRV01 handshake OK
+  03:31:44  STEP020 EXTRACT   MEMMAST read complete
+  03:31:44  STEP020 EXTRACT   Records read ................ 43,411
+  03:44:19  STEP030 TOKENIZE  Columns processed: MEMBER_KEY,
+                              TAX_ID_TOKEN, SHARE_ACCT_TOKEN,
+                              LOAN_ACCT_TOKEN, CARD_TOKEN,
+                              GOVT_ID_TOKEN
+  03:44:19  STEP030 TOKENIZE  Tokens issued ............... 41,004
+  03:44:19  STEP030 TOKENIZE  Tokens reused ...............  2,101
+  03:52:07  STEP035 MASK      Columns processed: BIRTH_DT,
+                              PHONE_HOME, PHONE_WORK,
+                              POSTAL_CD_TRUNC
+  03:52:07  STEP035 MASK      Placeholders written ........ 43,206
+  03:52:07  STEP035 MASK      Columns suppressed: SURNAME,
+                              GIVEN_NAME, MIDDLE_INITIAL,
+                              ADDR_LINE_1, ADDR_LINE_2, CITY_NM,
+                              EMAIL_ADDR, AUTH_CHALLENGE,
+                              EMPLOYER_NM
+  03:58:40  STEP040 VALIDATE  Rows passed ................. 43,102
+  03:58:40  STEP040 VALIDATE  Rows rejected ...............    309
+  04:05:11  STEP050 LOAD      DW.MEMBER_DIM rows inserted . 43,102
+  04:05:11  STEP050 LOAD      Rows updated ................  1,877
+  04:06:50  STEP060 CLEANUP   Staging work files scratched
+  04:06:52  STEP060 CLEANUP   Vault session closed
+
+BALANCING
+  Read 43,411 = Loaded 43,102 + Rejected 309              BALANCED
+
+NOTES FOR THE MORNING SHIFT
+  Reject file REJECT.WORK holds 309 rows. Route to the Conversion
+  Analyst before 10:00. Unmask requests go to the Records Custodian
+  on Form IS-207; the operator console is not authorized to display
+  vault contents.
+
+=====================================================================
+  END OF JOB ETLMBR04                      LINES PRINTED 000148
+=====================================================================

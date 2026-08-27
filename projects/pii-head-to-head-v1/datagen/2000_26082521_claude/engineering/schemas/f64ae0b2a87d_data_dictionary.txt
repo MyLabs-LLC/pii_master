@@ -1,0 +1,26 @@
+DATA DICTIONARY EXCERPT — PH_CORE.CLIENT_MASTER
+County Health Department, Health Information Systems Unit
+Revision 4, effective 2021-02-01. Maintained by the Records Custodian.
+
+1. Scope. This excerpt documents the identity block of PH_CORE.CLIENT_MASTER. Encounter, immunization and billing tables are documented under separate cover.
+
+2. Column inventory.
+   2.1 CLIENT_SK — BIGINT, NOT NULL. Sequence-generated surrogate key. No meaning outside the warehouse.
+   2.2 CLIENT_MRN — VARCHAR(12), NOT NULL. Assigned by the registration module; unique within the Department.
+   2.3 LAST_NAME_TXT — VARCHAR(60), NOT NULL. Free text as keyed at intake; not standardized.
+   2.4 FIRST_NAME_TXT — VARCHAR(40), NOT NULL.
+   2.5 MIDDLE_INIT_TXT — CHAR(1), NULL. Populated in roughly one third of rows.
+   2.6 BIRTH_DT — DATE, NOT NULL. Source of the derived age band; the raw column is not exported.
+   2.7 SSN_HASH — CHAR(64), NULL. Salted SHA-256 written by the intake service. Plaintext is not stored in any environment.
+   2.8 RESIDENCE_ADDR_LINE1_TXT — VARCHAR(80), NULL.
+   2.9 RESIDENCE_CITY_TXT — VARCHAR(40), NULL.
+   2.10 RESIDENCE_ZIP5_CD — CHAR(5), NULL. Geocoding input; the truncated ZIP3 derivative is used for reporting.
+   2.11 PRIMARY_PHONE_NBR — VARCHAR(15), NULL. Digits only after the 2020 cleanup job.
+   2.12 EMAIL_ADDR_TXT — VARCHAR(120), NULL.
+   2.13 REC_CREATE_TS, REC_UPDATE_TS — TIMESTAMP, NOT NULL. System-set; triggers reject manual updates.
+
+3. Access restriction. Columns 2.3 through 2.12 are classified Restricted. Direct SELECT is granted to the role PH_IDENT_READ only, which is provisioned by the Privacy Officer on written request and reviewed each quarter. All other consumers query the view V_CLIENT_DEIDENT, which exposes the surrogate key, age band, ZIP3 and program flags.
+
+4. Retention. Rows persist for seven years after the last recorded service date, after which the identity block is overwritten by the annual purge job and the surrogate key is retained for statistical continuity.
+
+5. Downstream extracts. The nightly extract to the state registry carries columns 2.2, 2.3, 2.4 and 2.6 over SFTP. The quarterly grant reporting extract carries no column from clause 2 other than 2.1. Any new extract touching this table requires a completed data use agreement on file with the Records Custodian.

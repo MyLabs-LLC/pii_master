@@ -1,0 +1,31 @@
+MEMORANDUM — VALIDATION SUMMARY
+
+TO:    the Escrow Operations Manager
+FROM:  Data Quality Control
+DATE:  19 January 2004
+RE:    Job VAL-ESC-0119, run 02 — rejects for review
+
+Run 02 started 06:02:11, ended 06:14:38. Rows read 130,982.
+Rows passed 130,840. Rows rejected 142. Reject file ESC0119.REJ.
+
+CODE     COLUMN                  RULE                     ROWS
+------   ---------------------   ----------------------   ----
+VE-101   PARTY_TIN               null not permitted         57
+VE-101   SELLER_TIN              null not permitted         22
+VE-114   PARTY_DOB               format not CCYYMMDD        19
+VE-114   CLOSING_DT              date precedes order date   14
+VE-122   PARTY_NAME_LAST         length exceeds 30           9
+VE-131   MAIL_ZIP                not numeric                 8
+VE-140   ESCROW_ACCT_NBR         check digit failed           7
+VE-152   PARTY_EMAIL_ADDR        no domain separator          6
+------   ---------------------   ----------------------   ----
+                                                  TOTAL   142
+
+Values are not carried in this memo or in the reject file; the
+reject file records the order number, the column name and the code
+only. Correction requires retrieval of the source record by the
+originating office.
+
+Please return dispositions by 26 January 2004. Uncorrected rows
+will be excluded from the January warehouse load and will not be
+carried forward.

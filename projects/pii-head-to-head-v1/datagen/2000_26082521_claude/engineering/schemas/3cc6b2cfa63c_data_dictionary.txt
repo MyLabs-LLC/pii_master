@@ -1,0 +1,51 @@
+DATA DICTIONARY EXCERPT — TRANSPORTATION RIDER FILE
+           ==================================================
+           Form TR-DD-08          Issued: September 2004
+           Table .................... RIDER_MASTER
+           Environment .............. IBM DB2 UDB, library TRNPROD
+           Maintained by ............ The Transportation Data Clerk
+           Reviewed by .............. The Records Custodian
+
+SECTION 1 — SCOPE
+   1.1  This sheet covers rider attributes only. Route, stop and vehicle
+        attributes appear on sheets TR-DD-09 and TR-DD-10.
+
+SECTION 2 — COLUMNS
+   2.1  RDR_KEY .............. INTEGER ......... NOT NULL ... surrogate key
+   2.2  RDR_STU_ID ........... INTEGER ......... NOT NULL ... join to SIS
+   2.3  RDR_NM_LAST .......... CHAR(30) ........ NOT NULL ... restricted
+   2.4  RDR_NM_FIRST ......... CHAR(20) ........ NOT NULL ... restricted
+   2.5  RDR_ADDR_PICKUP ...... CHAR(40) ........ NULL ....... restricted
+   2.6  RDR_ADDR_DROP ........ CHAR(40) ........ NULL ....... restricted
+   2.7  RDR_PHONE_CONTACT .... CHAR(14) ........ NULL ....... restricted
+   2.8  RDR_CD_STOP .......... CHAR(6) ......... NULL ....... code table
+   2.9  RDR_CD_ROUTE_AM ...... CHAR(5) ......... NULL ....... code table
+   2.10 RDR_CD_ROUTE_PM ...... CHAR(5) ......... NULL ....... code table
+   2.11 RDR_FL_SPEC_NEEDS .... CHAR(1) ......... NULL ....... restricted
+   2.12 RDR_DT_EFF ........... DATE ............ NOT NULL ... effective date
+   2.13 RDR_DT_END ........... DATE ............ NULL ....... open if null
+   2.14 RDR_USR_UPDATE ....... CHAR(8) ......... NOT NULL ... sign-on id
+
+SECTION 3 — ACCESS RESTRICTION
+   3.1  Columns marked restricted are readable by the Transportation Data
+        Clerk and dispatch supervisors only.
+   3.2  Driver manifests print stop code and first initial. No address,
+        contact number or needs flag is printed on any manifest.
+   3.3  Contractor personnel receive no direct database access.
+
+SECTION 4 — RETENTION
+   4.1  Rider rows are closed at the end of each school year and purged
+        after two subsequent years.
+   4.2  Address columns are cleared at purge; route history is retained in
+        aggregate for planning.
+
+SECTION 5 — DOWNSTREAM EXTRACTS
+   5.1  Route optimization file, annual, address columns supplied under a
+        written confidentiality undertaking, returned or destroyed on
+        completion.
+   5.2  Attendance reconciliation file, daily, keys and route codes only.
+
+SECTION 6 — CHANGE CONTROL
+   6.1  Column additions require a completed Form TR-DD-01.
+   6.2  This sheet is reissued each September or upon any change to
+        Section 3.

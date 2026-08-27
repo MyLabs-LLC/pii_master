@@ -1,0 +1,102 @@
+MEMORANDUM
+
+TO:      Application Support
+FROM:    Information Security, Data Protection
+DATE:    2 August 2021
+SUBJECT: Masking profile mask_member_v4 — configuration as promoted to production
+
+The configuration below was promoted to production on 30 July 2021 at 22:10 and is now the profile of record for all downstream extracts. It supersedes mask_member_v3. Please replace any local copy you are holding. Do not edit the file in place; changes go through the standard change window.
+
+# ---------------------------------------------------------------
+# mask_member_v4.conf
+# owner: Information Security, Data Protection
+# effective: 2021-07-30T22:10:00-05:00
+# supersedes: mask_member_v3 (retired 2021-07-30)
+# applies to: MBR_MASTER_LOAD, ACCT_POSTING_LOAD, STMT_RENDER_EXTRACT
+# ---------------------------------------------------------------
+
+[global]
+fail_mode              = hold_row
+log_values             = false
+log_field_names        = true
+unbound_field_action   = reject_job
+vault_endpoint         = tkv-prod-01
+vault_profile          = TKV-PROFILE-3
+
+[rule.SSN]
+method                 = tokenise
+token_format           = alnum_11
+reversible             = true
+authorised_roles       = records_custodian, lending_underwriter
+on_failure             = hold_row
+
+[rule.DOB]
+method                 = fixed_pattern
+pattern                = ****-**-**
+reversible             = false
+retain_year            = false
+
+[rule.MEMBER_NBR]
+method                 = tokenise
+token_format           = numeric_9
+reversible             = true
+authorised_roles       = records_custodian, branch_operations, collections_officer
+
+[rule.ACCT_NBR]
+method                 = partial
+retain                 = last_4
+fill_char              = *
+reversible             = false
+
+[rule.CARD_PAN]
+method                 = partial
+retain                 = last_4
+fill_char              = *
+reversible             = false
+pci_scope              = true
+
+[rule.PRIMARY_PHONE]
+method                 = fixed_pattern
+pattern                = ***-***-****
+
+[rule.MOBILE_PHONE]
+method                 = fixed_pattern
+pattern                = ***-***-****
+
+[rule.EMAIL_ADDR]
+method                 = suppress
+null_on_output         = true
+
+[rule.ADDR_LINE_1]
+method                 = suppress
+null_on_output         = true
+
+[rule.ADDR_LINE_2]
+method                 = suppress
+null_on_output         = true
+
+[rule.POSTAL_CODE]
+method                 = partial
+retain                 = first_3
+fill_char              = *
+note                   = retained for branch catchment reporting
+
+[rule.DRIVERS_LIC_NBR]
+method                 = suppress
+null_on_output         = true
+
+[rule.MOTHERS_MAIDEN_NAME]
+method                 = suppress
+null_on_output         = true
+
+[rule.EMPLOYER_NAME]
+method                 = passthrough
+note                   = not classified as personal data under policy DP-04
+
+[audit]
+emit_rule_counts       = true
+emit_field_inventory   = true
+emit_sample_values     = false
+retention_days         = 400
+
+Three changes from the prior version are worth calling out. MOTHERS_MAIDEN_NAME is now suppressed outright rather than tokenised; nothing downstream consumed the token. POSTAL_CODE moved from full suppression to first-three retention at the request of the branch analytics group. And unbound_field_action is now reject_job rather than warn, so a new personal-data column appearing in a source table will stop the load instead of flowing through unmasked. Expect that to bite the first time a source system adds a column without notice. If a job fails on that check, do not override it — open a ticket with this office and we will bind the field.

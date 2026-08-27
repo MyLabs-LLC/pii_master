@@ -1,0 +1,68 @@
+MERIDIAN FREIGHT SYSTEMS LTD
+DATA WAREHOUSE OPERATIONS
+VALIDATION EXCEPTION EXTRACT — JOB CDW1140 / STEP 040 (VALDATE)
+RUN DATE: 03-MAR-1998   RUN ID: 1140.0303.02
+EXTRACT PRODUCED: 03-MAR-1998 00:47:12 CST
+CLASSIFICATION: INTERNAL — OPERATIONS
+
+1. SUMMARY OF STEP 040
+
+1.1 Rows presented by step 030 ......... 412,886
+1.2 Rows passing all edits ............. 409,301
+1.3 Rows failing one or more edits .....   3,585
+1.4 Rows written to CDW.STG_CONSIGNEE .. 409,301
+1.5 Rows written to CDW.ERR_CONSIGNEE ..   3,585
+1.6 Elapsed time step 040 .............. 00:11:38
+1.7 Return code ........................ 0004 (WARN)
+
+2. EXCEPTION COUNTS BY EDIT
+
+   EDIT   COLUMN                        CONDITION                     COUNT
+   ----   --------------------------    --------------------------    ------
+   E101   CONTACT_SURNAME               token mint failed, class NAME     117
+   E102   CONTACT_GIVEN_NAME            source field low-values           842
+   E104   DELIVERY_POSTAL_CODE          length below KEEP threshold        63
+   E107   DELIVERY_ADDR_LINE_1          suppress flag absent on row       224
+   E110   SIGNATORY_BIRTH_DATE          non-numeric in CCYY positions     311
+   E111   SIGNATORY_BIRTH_DATE          century pivot ambiguous         1,006
+   E118   DRIVER_LICENCE_NO             surrogate collision detected        9
+   E120   CONTACT_TELEPHONE_NO          value present, expected NULL       58
+   E121   CONTACT_EMAIL_ADDRESS         value present, expected NULL       31
+   E130   NATIONAL_INS_NO               DENY column present in feed       934
+                                                              TOTAL     3,585
+
+3. LOG EXTRACT (SEVERITY W AND ABOVE)
+
+3.1  00:36:04 VALDATE I step 040 begin, ctl file MSKCTL.CFG rev 27FEB98
+3.2  00:36:04 VALDATE I edit table loaded, 41 edits active
+3.3  00:38:19 VALDATE W E111 threshold 500 exceeded, column
+              SIGNATORY_BIRTH_DATE, continuing under clause 5.2
+3.4  00:39:52 VALDATE W E130 raised, column NATIONAL_INS_NO detected in
+              input record area; column not defined in CDW-MAP-004 rev 7;
+              row diverted, no surrogate minted, work area cleared
+3.5  00:41:30 VALDATE E E118 surrogate collision, column
+              DRIVER_LICENCE_NO, TOKGEN return 0012, 9 occurrences,
+              rows diverted to CDW.ERR_CONSIGNEE
+3.6  00:44:57 VALDATE W E120/E121 cleartext detected in NULLIFY columns
+              CONTACT_TELEPHONE_NO and CONTACT_EMAIL_ADDRESS; MSKAPPLY
+              re-invoked, columns set NULL prior to divert
+3.7  00:47:11 VALDATE I SUPPWIPE complete, SORTWK01–04 released
+3.8  00:47:12 VALDATE I step 040 end, RC=0004
+
+4. DISPOSITION
+
+4.1 Rows in CDW.ERR_CONSIGNEE carry the failing column name and edit code
+    only. No column values are retained on the error table.
+
+4.2 E130 occurrences are reported to the Records Custodian on the daily
+    exception schedule. Source feed owner is to be advised that the DENY
+    column is being transmitted contrary to the interface agreement.
+
+4.3 E118 collisions require reversal-table reconciliation on RSTORE01
+    before the 04-MAR-1998 window. Owner: the Duty Operator, second shift.
+
+4.4 E111 volume is attributable to source records carrying two-digit year
+    in the birth-date field. Pivot remains fixed at 40 per clause 2.2 of
+    CDW-MAP-004. No manual override is authorised.
+
+END OF EXTRACT — RUN ID 1140.0303.02

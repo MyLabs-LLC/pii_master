@@ -1,0 +1,24 @@
+{
+  "candidate": "t0-c18",
+  "stage": "ship",
+  "proposal": "Package the 1,000-character fusion with a self-contained NumPy entry point, reports, integrity hashes, and a full holdout reproduction check through the packaged loader.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "source_commit": "d662a3a",
+  "decision": "accepted for research/internal delivery; not registry-promoted",
+  "evidence": {
+    "bundle": "dist/pii-priority-fusion-1k-v1.zip",
+    "bundle_sha256": "cd8462d346f9f3b9c095a08ffe2c7711a9ea49ec2e677d123df8bb72cd0fd192",
+    "package_predictions": 126129,
+    "package_read_errors": 11,
+    "predictions_exact_match": true,
+    "prediction_sha256": "3bfd3f776d8b7c09a7f11daafb8b5c4d2316571e724232506857be2f0168c194",
+    "expected_equal_corpus_macro_f2": 0.48345749382010117,
+    "measured_equal_corpus_macro_f2": 0.48345749382010117,
+    "verification_delta": 0.0,
+    "priority_conclusive_passes": 55,
+    "tests": "33 passed",
+    "ruff": "passed",
+    "zip_integrity": "passed",
+    "bundle_file_hashes": "passed"
+  }
+}

@@ -1,0 +1,45 @@
+CENTRAL VALLEY FEDERAL CREDIT UNION
+ETL CONTROL REPORT — NIGHTLY MEMBER LOAD
+BATCH DATE 2004-03-16   CYCLE 076   RUN ID 0000418   OPERATOR: NIGHT CONSOLE
+
+02.11.44 CUX0001I  WORKFLOW wf_mbr_ods_load INITIATED, PROFILE CVFCU-MASK-06
+02.11.46 CUX0004I  VAULT TKNVLT1 HANDSHAKE OK, LATENCY 41MS
+02.14.07 CUX0410I  SESSION s_m_MBR_STG_LOAD STARTED
+02.31.52 CUX0411I  SESSION s_m_MBR_STG_LOAD COMPLETE, RC=04
+02.31.55 CUX0420I  SESSION s_m_MBR_DIM_MERGE STARTED
+02.58.19 CUX0421I  SESSION s_m_MBR_DIM_MERGE COMPLETE, RC=04
+02.58.21 CUX0430W  FIELD MBR-SSN: 118 VAULT REFERENCES UNRESOLVED
+02.58.21 CUX0431W  FIELD MBR-BIRTH-DATE: 64 CONVERSIONS ABANDONED
+02.58.22 CUX0435E  FIELD MBR-MOTHER-MAIDEN-NM: SUPPRESS DIRECTIVE NOT APPLIED
+                   ON 12 ROWS, READER BUFFER PURGED, ROWS HELD
+02.58.40 CUX0450I  REJECT FILE CUEXT410.REJECT.D040316 CLOSED, 541 ROWS
+03.02.11 CUX0009I  WORKFLOW wf_mbr_ods_load ENDED, HIGHEST RC=08
+
+STEP SUMMARY
+
+JOB STEP        STEP NAME                  READ    INSERT    UPDATE   REJECT   ELAPSED
+--------------  ---------------------  --------  --------  --------  -------  --------
+STEP010         EXTR-MBR-MASTER         187,443         0         0        0  00.17.45
+STEP020         TOKENISE-SENSITIVE      187,443   186,902         0      541  00.09.12
+STEP030         MERGE-MBR-DIM           186,902   102,118    84,784        0  00.26.24
+STEP040         BUILD-ADDR-BRIDGE       186,902   186,902         0        0  00.03.51
+STEP050         REJECT-WRITEBACK            541         0         0      541  00.00.19
+--------------  ---------------------  --------  --------  --------  -------  --------
+TOTALS                                  749,231   475,922    84,784    1,082  00.57.31
+
+NOTES
+
+1.  Return code 08 is attributable solely to message CUX0435E. The affected 12
+    rows remain in the reject file and were not merged into ODS_MEMBER_DIM.
+
+2.  The reader was restarted once at 02.24.09 following a vault timeout. The
+    restart is included in the STEP020 elapsed figure.
+
+3.  Field labels only are written to this report. Session-level value tracing
+    remains disabled per maskcfg.ini clause 1.4 and was verified at initiation.
+
+4.  Row counts under READ are cumulative across steps and therefore exceed the
+    distinct member master population.
+
+5.  Referred to the Records Custodian for disposition before cycle 077. Reject
+    file retention is 30 days, after which rows are purged by CUPURG09.

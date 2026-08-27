@@ -1,0 +1,65 @@
+DATA DICTIONARY EXCERPT AND CONTROL INSTRUMENT
+FORM RM-207, SCHEDULE B ATTACHMENT
+OBJECT: CIS_PROD.MBR_ENROLL — Customer Assistance Program Enrollment
+CUSTODIAN OF RECORD: Office of the Records Custodian, Department of Municipal Utilities
+EFFECTIVE: Second quarter, calendar year 2016
+
+ARTICLE I — PURPOSE AND CONSTRUCTION
+
+1.01 This instrument enumerates the columns of the above-named object and prescribes, as to each, the datatype, the nullability, and the operational conditions attaching thereto.
+
+1.02 Where a provision of this instrument conflicts with the general provisions of the master dictionary, the more restrictive provision shall govern.
+
+1.03 The terms "restricted attribute" and "controlled attribute" bear the meanings assigned to them in the Department's information classification standard.
+
+ARTICLE II — COLUMN REGISTER
+
+2.01 MBR_ENROLL_ID. Datatype NUMBER(12). Nullability: NOT NULL. Primary key; assigned by sequence and not reused upon deletion.
+
+2.02 CUST_ID. Datatype NUMBER(12). Nullability: NOT NULL. Foreign key to CIS_PROD.CUST_MASTER; enforced by constraint, cascade prohibited.
+
+2.03 MBR_FIRST_NAME and MBR_LAST_NAME. Datatype VARCHAR2(60), each. Nullability: NOT NULL. Restricted attributes. Values are transformed to a surrogate token in every non-production environment, without exception and without waiver.
+
+2.04 MBR_DOB. Datatype DATE. Nullability: NULL permitted where eligibility is established by household composition rather than by age. Restricted attribute.
+
+2.05 MBR_TAX_ID_NUM. Datatype VARCHAR2(11). Nullability: NULL permitted. Controlled attribute of the highest sensitivity; stored under application-layer encryption; the plaintext column is not exposed by any view.
+
+2.06 MBR_MAIL_ADDR_LINE_1, MBR_MAIL_ADDR_LINE_2, MBR_MAIL_POSTAL_CD. Datatypes VARCHAR2(80), VARCHAR2(80), CHAR(9). Nullability: NOT NULL as to the first and third; NULL permitted as to the second.
+
+2.07 MBR_CONTACT_PHONE. Datatype CHAR(10). Nullability: NULL permitted. Populated only where the applicant has elected telephone notice.
+
+2.08 HH_SIZE_CNT and HH_INCOME_BAND_CD. Datatypes NUMBER(2) and CHAR(3). Nullability: NOT NULL. The band code, and not any stated figure, shall be the operative eligibility value.
+
+2.09 ENROLL_EFF_DT and ENROLL_EXP_DT. Datatype DATE. Nullability: NOT NULL as to the former; NULL permitted as to the latter pending termination.
+
+2.10 VERIF_DOC_IMG_REF. Datatype VARCHAR2(64). Nullability: NULL permitted. Pointer to the imaging repository; the image itself is not stored in this object.
+
+ARTICLE III — ACCESS RESTRICTION
+
+3.01 Access is granted by role and not by individual. The roles so authorized are ASSIST_INTAKE_CLERK, ASSIST_PROGRAM_ADMIN, and CIS_AUDIT_READ.
+
+3.02 The columns identified at 2.03, 2.04, and 2.05 require an additional column-level grant, requested in writing and approved by the Records Custodian.
+
+3.03 All read operations against 2.05 are written to the fine-grained audit trail, which is reviewed monthly by the Information Security Officer.
+
+ARTICLE IV — RETENTION AND DISPOSITION
+
+4.01 Enrollment rows shall be retained three (3) years following the date recorded in ENROLL_EXP_DT.
+
+4.02 Upon expiration of the retention period, the columns identified at 2.04 and 2.05 shall be overwritten irreversibly, the remaining columns being retained in de-identified form for program evaluation.
+
+ARTICLE V — DOWNSTREAM EXTRACTS
+
+5.01 A monthly extract is furnished to the State weatherization office. Permitted columns: CUST_ID, HH_SIZE_CNT, HH_INCOME_BAND_CD, ENROLL_EFF_DT, MBR_MAIL_POSTAL_CD. All other columns are withheld.
+
+5.02 A quarterly extract is furnished to the Council's finance staff in aggregate form only; no row-level column is transmitted.
+
+5.03 No extract of this object shall be delivered by unencrypted transport, and none shall be written to removable media.
+
+ARTICLE VI — EXECUTION
+
+Prepared by: Data Steward, Customer Programs Division
+Concurred: Information Security Officer
+Approved: Records Custodian
+
+Signature: ____________________________  Date: ______________

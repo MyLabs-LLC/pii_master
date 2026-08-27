@@ -1,0 +1,40 @@
+# masking-agent.properties
+# ruleset=DPS-MASK-0042 rev=7  loaded 2011-03-17 01:00:02
+# owner: Office of the Records Custodian
+
+# 1. engine
+agent.mode                        = FAIL_CLOSED
+agent.commit.requires.mask        = true
+agent.log.values                  = false
+agent.log.fieldlabels             = true
+
+# 2. vault
+vault.endpoint                    = TKV-PRD-01
+vault.timeout.ms                  = 4000
+vault.retry.count                 = 2
+vault.onfailure                   = ABORT_SESSION
+
+# 3. field bindings
+mask.BORROWER_FIRST_NAME          = TOKENIZE_FPE
+mask.BORROWER_LAST_NAME           = TOKENIZE_FPE
+mask.BORROWER_SSN                 = RETAIN_LAST_4
+mask.BORROWER_DOB                 = GENERALIZE_YEAR
+mask.BORROWER_HOME_PHONE          = FULL_SUPPRESS
+mask.BORROWER_EMAIL_ADDR          = HASH_SHA1_SALTED
+mask.PROPERTY_ADDR_LINE_1         = TOKENIZE_REF
+mask.PROPERTY_ADDR_LINE_2         = NULLIFY
+mask.PROPERTY_POSTAL_CODE         = TRUNCATE_POSTAL_3
+mask.ESCROW_ACCOUNT_NBR           = RETAIN_LAST_4
+mask.DISBURSEMENT_ACCT_NBR        = RETAIN_LAST_4
+mask.WIRE_ABA_RTN                 = FULL_SUPPRESS
+mask.SELLER_TIN                   = FULL_SUPPRESS
+mask.LENDER_LOAN_NBR              = TOKENIZE_FPE
+mask.NOTARY_COMMISSION_NBR        = FULL_SUPPRESS
+mask.default                      = FULL_SUPPRESS
+
+# 4. clauses
+# 4.01 An unbound field label resolves to mask.default and is suppressed.
+# 4.02 Fill character for partial rules is the asterisk and is not configurable
+#      at the agent level.
+# 4.03 Changes to this file are effective only after republication of the
+#      ruleset revision named in the header.

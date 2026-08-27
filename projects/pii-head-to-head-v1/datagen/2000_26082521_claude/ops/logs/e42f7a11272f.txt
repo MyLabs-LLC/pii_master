@@ -1,0 +1,99 @@
+MEMORANDUM
+
+TO:      Privacy Officer
+FROM:    Database Administrator, Information Systems Division
+DATE:    January 28, 2016
+SUBJECT: Masking profile in effect for the reporting extract — file mask_profile_dw.conf
+
+Attached below is the current contents of the masking configuration applied to all outbound extracts from the reporting warehouse. It was last modified 2016-01-26 and is under change control. Any addition of a column to a warehouse table requires a corresponding entry here before that table may be extracted.
+
+--- begin mask_profile_dw.conf ---
+
+[profile]
+name            = dw_outbound_default
+version         = 4
+effective       = 2016-01-26
+owner_role      = Database Administrator
+review_role     = Privacy Officer
+default_action  = deny
+# Columns with no rule below are not emitted. Do not change default_action.
+
+[actions]
+# suppress   emit the column header with an empty value
+# mask       emit a fixed placeholder, no derivation from source
+# token      emit a surrogate from the key service, no reversal in this profile
+# truncate   emit a shortened form as configured
+# pass       emit as stored
+
+[rules.direct_identifiers]
+PATIENT_LAST_NAME          = suppress
+PATIENT_FIRST_NAME         = suppress
+PATIENT_MIDDLE_INITIAL     = suppress
+GUARDIAN_LAST_NAME         = suppress
+GUARDIAN_FIRST_NAME        = suppress
+SSN                        = token(service=keysvc, keyref=vault:etl/ssn, out=fixed_len)
+SSN_LAST4                  = suppress
+MEDICAL_RECORD_NUMBER      = token(service=keysvc, keyref=vault:etl/mrn, out=fixed_len)
+MEDICAID_ID                = token(service=keysvc, keyref=vault:etl/medicaid, out=fixed_len)
+CASE_NUMBER                = token(service=keysvc, keyref=vault:etl/case, out=fixed_len)
+
+[rules.contact]
+RESIDENCE_STREET_1         = mask(placeholder=[MASK:ADDRESS])
+RESIDENCE_STREET_2         = mask(placeholder=[MASK:ADDRESS])
+RESIDENCE_CITY             = pass
+RESIDENCE_STATE            = pass
+RESIDENCE_ZIP              = truncate(len=3)
+MAILING_STREET_1           = mask(placeholder=[MASK:ADDRESS])
+MAILING_ZIP                = truncate(len=3)
+PHONE_HOME                 = mask(placeholder=[MASK:PHONE])
+PHONE_MOBILE               = mask(placeholder=[MASK:PHONE])
+EMAIL_PRIMARY              = mask(placeholder=[MASK:EMAIL])
+EMERGENCY_CONTACT_NAME     = suppress
+EMERGENCY_CONTACT_PHONE    = mask(placeholder=[MASK:PHONE])
+
+[rules.demographic]
+DATE_OF_BIRTH              = derive(target=AGE_YEARS, bucket=5, cap=89)
+DATE_OF_DEATH              = derive(target=DEATH_YEAR)
+SEX                        = pass
+RACE_CODE                  = pass
+ETHNICITY_CODE             = pass
+PREFERRED_LANGUAGE         = pass
+
+[rules.clinical]
+ENCOUNTER_DATE             = derive(target=ENCOUNTER_MONTH)
+DIAGNOSIS_CODE             = pass
+PROGRAM_ENROLLMENT_CODE    = pass
+PROVIDER_NPI               = pass
+FACILITY_CODE              = pass
+
+[rules.financial]
+INSURANCE_POLICY_NUMBER    = suppress
+BANK_ROUTING_NUMBER        = suppress
+BANK_ACCOUNT_NUMBER        = suppress
+PAYMENT_CARD_NUMBER        = suppress
+
+[logging]
+level                      = INFO
+emit_field_values          = false
+emit_field_names           = true
+emit_row_counts            = true
+# emit_field_values must remain false on all environments other than the
+# isolated build host. Setting it true on the scheduler writes source
+# contents to the operator log.
+
+[enforcement]
+fail_on_unmapped_column    = true
+fail_on_key_service_error  = true
+quarantine_table           = QTN_VITAL_HOLD
+
+--- end mask_profile_dw.conf ---
+
+Three items require your decision before the next quarterly review.
+
+First, RESIDENCE_ZIP is truncated to three characters. The Epidemiology Unit has asked for five for two low-population ZIP ranges. That request is outstanding and has not been implemented.
+
+Second, DATE_OF_BIRTH is currently converted to a five-year age bucket with a cap at 89. The cap is applied after bucketing, which produces a final bucket of unequal width. This is working as configured but may not be what was intended when the rule was written.
+
+Third, the profile contains no rule for the newly added column HOUSEHOLD_SIZE. Under default_action the column is simply not emitted, so no extract is currently at risk, but the Epidemiology Unit has noticed its absence and will raise a ticket.
+
+Please return a marked-up copy with your determinations by February 12.

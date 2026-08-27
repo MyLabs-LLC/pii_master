@@ -1,0 +1,55 @@
+MUNICIPAL UTILITIES DEPARTMENT
+DATA DICTIONARY EXCERPT — BILLING PARTY AND OCCUPANCY
+Document DD-BP-07 / Issued under the 2011 CIS Data Administration Manual
+
+1.0 OBJECT
+    1.1 Physical name ....... CISPRD.BILL_PARTY
+    1.2 Type ................ Table, range-partitioned on OCCUP_START_DT
+    1.3 Source .............. Customer Information System 7.4.2
+    1.4 Steward ............. the Records Custodian
+    1.5 Sensitivity ......... Restricted; contains identity attributes
+
+2.0 COLUMN DEFINITIONS
+
+  # | COLUMN NAME        | TYPE          | NULL | NOTE
+ ---|--------------------|---------------|------|---------------------------
+  1 | BILL_PARTY_ID      | NUMBER(12)    | N    | PK
+  2 | PREMISE_ID         | NUMBER(12)    | N    | FK PREMISE
+  3 | PARTY_LAST_NM      | VARCHAR2(40)  | N    | Indexed, function-based UPPER
+  4 | PARTY_FIRST_NM     | VARCHAR2(30)  | Y    |
+  5 | CO_APPLICANT_NM    | VARCHAR2(70)  | Y    | Single field; not parsed
+  6 | BIRTH_DT           | DATE          | Y    | Age-based rate qualification
+  7 | SSN_ENCR           | RAW(64)       | Y    | Encrypted; deposit scoring only
+  8 | ID_DOC_TYPE_CD     | CHAR(2)       | Y    | FK ID_DOC_REF
+  9 | ID_DOC_NBR_HASH    | CHAR(40)      | Y    | Hash only; no clear-text column
+ 10 | HOME_PHONE_NBR     | VARCHAR2(14)  | Y    |
+ 11 | WORK_PHONE_NBR     | VARCHAR2(14)  | Y    | Sparsely populated post-2008
+ 12 | EMAIL_ADDR_TXT     | VARCHAR2(60)  | Y    |
+ 13 | MAIL_ADDR_LN_1     | VARCHAR2(50)  | Y    |
+ 14 | MAIL_ADDR_LN_2     | VARCHAR2(50)  | Y    |
+ 15 | MAIL_POSTAL_CD     | CHAR(10)      | Y    |
+ 16 | EMPLOYER_NM        | VARCHAR2(60)  | Y    | Legacy credit field; deprecated
+ 17 | LANDLORD_AGREE_IND | CHAR(1)       | N    | Y/N
+ 18 | OCCUP_START_DT     | DATE          | N    | Partition key
+ 19 | OCCUP_END_DT       | DATE          | Y    |
+ 20 | SRC_SYS_CD         | CHAR(4)       | N    | CIS, WEB, CONV
+
+3.0 ACCESS RESTRICTION
+    3.1 Columns 6, 7 and 9 are readable only through package PKG_ID_VERIFY,
+        which logs caller, timestamp and business reason to ID_ACCESS_LOG.
+    3.2 Column 16 is excluded from all grants pending its removal in 7.5.
+    3.3 Developers hold no privileges in CISPRD. Defect analysis is performed
+        against the scrambled copy in CISDEV, refreshed on request.
+
+4.0 RETENTION
+    4.1 Base retention: six years past OCCUP_END_DT (schedule LG-4200).
+    4.2 Deposit-related identity columns: nulled 12 months after deposit refund
+        or application to final bill, whichever is earlier.
+    4.3 Partitions older than the retention horizon are dropped, not deleted.
+
+5.0 DOWNSTREAM EXTRACTS
+    5.1 EXT_DEPOSIT_SCORE — weekly to the credit bureau interface; carries
+        columns 3, 4, 6, 7, 13 through 15. Encrypted channel, vendor-held key.
+    5.2 EXT_LANDLORD_RVT — monthly reversion notices; columns 3, 4, 13, 14, 15.
+    5.3 EXT_DW_NIGHTLY — warehouse load; identity columns suppressed at source.
+    5.4 Any new extract requires a completed DA-31 and steward countersignature.

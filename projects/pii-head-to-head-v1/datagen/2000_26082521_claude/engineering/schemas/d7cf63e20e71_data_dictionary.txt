@@ -1,0 +1,55 @@
+DATA DICTIONARY EXCERPT — MEMBER SERVICES DATABASE (MEMBSVC)
+ORACLE 7.3.4, INSTANCE MSV1, SCHEMA MSVOWNER
+TABLE: MSV_MEMBER_MASTER
+REVISION 6, SUPERSEDING REVISION 5 OF 02 FEBRUARY 1998
+APPROVED: MANAGER, MEMBER SERVICES / RECORDS CUSTODIAN / DATA ADMINISTRATION
+
+1. Applicability. This excerpt applies to MSV_MEMBER_MASTER as installed in the production instance. Columns added after the revision date are not documented here and are to be treated as unclassified pending review by Data Administration.
+
+2. Column inventory.
+
+   COLUMN NAME          DATATYPE       NULL?     CLS   NOTE
+   ------------------------------------------------------------------
+   MEMBER_ID            NUMBER(9)      NOT NULL   D    PK, seq MSV_SEQ1
+   MEMBER_STATUS_CD     CHAR(2)        NOT NULL   D    domain tbl MSV_STAT
+   ENROLL_DT            DATE           NOT NULL   D    century expanded 10/97
+   TERM_DT              DATE           NULL       D    populated at cancel
+   MEMBER_LAST_NAME     VARCHAR2(35)   NOT NULL   B    see clause 4
+   MEMBER_FIRST_NAME    VARCHAR2(25)   NULL       B    see clause 4
+   MEMBER_MI            CHAR(1)        NULL       B
+   MEMBER_SUFFIX_CD     CHAR(4)        NULL       B
+   MEMBER_SSN           CHAR(9)        NULL       A    see clauses 5, 6
+   MEMBER_DOB           DATE           NULL       A    see clauses 5, 6
+   MEMBER_ADDR_1        VARCHAR2(40)   NOT NULL   B
+   MEMBER_ADDR_2        VARCHAR2(40)   NULL       B
+   MEMBER_CITY          VARCHAR2(30)   NOT NULL   B
+   MEMBER_STATE_CD      CHAR(2)        NOT NULL   D    USPS domain
+   MEMBER_ZIP           CHAR(9)        NOT NULL   C    ZIP+4, unhyphenated
+   MEMBER_DAY_PHONE     CHAR(10)       NULL       B    digits only
+   MEMBER_EVE_PHONE     CHAR(10)       NULL       B    digits only
+   MEMBER_FAX_NBR       CHAR(10)       NULL       C
+   MEMBER_EMAIL_ADDR    VARCHAR2(60)   NULL       B    added rev 6
+   SPOUSE_LAST_NAME     VARCHAR2(35)   NULL       B
+   SPOUSE_FIRST_NAME    VARCHAR2(25)   NULL       B
+   SPOUSE_SSN           CHAR(9)        NULL       A    see clauses 5, 6
+   PROPERTY_PARCEL_NBR  VARCHAR2(25)   NULL       C    county assigned
+   ESCROW_FILE_NBR      VARCHAR2(14)   NULL       C    FK to EAS file index
+   LAST_MAINT_USERID    CHAR(8)        NOT NULL   D    audit
+   LAST_MAINT_TS        DATE           NOT NULL   D    audit
+
+3. Classification legend. A — restricted. B — confidential. C — internal. D — unclassified.
+
+4. Name columns are stored as keyed. No parsing, standardization or householding is performed within the database. Any such processing is the responsibility of the receiving application.
+
+5. Class A columns are revoked from PUBLIC and from role MSV_USER. SELECT is granted to role MSV_COMPL only. Direct grants to individual accounts are prohibited. Requests for exception are logged by Data Administration and reviewed quarterly.
+
+6. Class A columns are masked in all views prefixed MSV_V_ and are omitted from the column list of every extract cursor. Where a downstream system requires a stable person-level key, MEMBER_ID is to be supplied in lieu of MEMBER_SSN.
+
+7. Downstream extracts of record:
+   a. MSVX100, nightly, to the escrow accounting interface. Carries clauses 2 columns of class C and D only.
+   b. MSVX250, monthly, to the outside fulfillment vendor for renewal mailings. Carries name, address and ZIP columns under the confidentiality rider on file. No class A column is carried.
+   c. MSVX900, annual, to the actuarial file. Age is carried as a derived integer computed at extract time; MEMBER_DOB is not carried.
+
+8. Retention. Rows are retained on line for thirty-six months following TERM_DT, thereafter archived to the offline member history file for a further four years. Class A columns are nulled at archive. Purge is executed by job MSVPRG99 with a control report to the Records Custodian.
+
+9. Any change to the columns named in clause 2, including widening, is a controlled change and requires an approved DA change request prior to migration.

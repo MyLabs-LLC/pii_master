@@ -1,0 +1,26 @@
+CUSTOMER MASTER FILE — DATA DICTIONARY EXCERPT
+System: Pharmacy Front End, Release 4.2
+Physical file: CUSTMST, library RXPRDDTA (DB2/400)
+Maintained by: Store Systems Group, under the Records Custodian
+
+    I. Control columns
+        A. CUST_KEY — CHAR(12), NOT NULL. Primary key. Assigned by the enrollment sequence generator at the point of first fill. Never reused, never reassigned on merge.
+        B. STORE_ORIG_NO — DEC(4,0), NOT NULL. Store of original enrollment. Used for district reporting only; does not follow the customer on transfer.
+        C. ENRL_DT — DATE, NOT NULL. Century-expanded in the March remediation pass. Any row still carrying the two-position form is trapped by the nightly edit job and written to CUSTERR.
+        D. REC_STAT_CD — CHAR(1), NOT NULL. A = active, I = inactive, D = deceased, M = merged-away. Rows at D or M are excluded from all outbound extracts without exception.
+
+    II. Identity columns
+        A. CUST_LAST_NAM — CHAR(25), NOT NULL.
+        B. CUST_FIRST_NAM — CHAR(15), NOT NULL.
+        C. CUST_MID_INIT — CHAR(1), NULL ALLOWED.
+        D. CUST_BIRTH_DT — DATE, NULL ALLOWED. Populated at the counter only when the plan requires age verification.
+        E. CUST_SSN — CHAR(9), NULL ALLOWED. Legacy column. No new writes are permitted; the entry field was removed from the enrollment screen in the prior release.
+
+    III. Access
+        A. Columns under II are governed by authorization list RXCUSTAL. Read access is granted by store role, not by user request.
+        B. CUST_SSN is masked in all inquiry displays and is readable only by the Records Custodian and the Third Party Billing supervisor.
+        C. Every read of CUST_SSN writes a row to the journal receiver RXAUD; receivers are retained eighteen months.
+
+    IV. Retention and extracts
+        A. Rows at REC_STAT_CD I for thirty-six months are purged in the January cycle.
+        B. The weekly extract CUSTEXT carries CUST_KEY and the columns under II only in the mailing-house variant, and CUST_KEY alone in the analytic variant.

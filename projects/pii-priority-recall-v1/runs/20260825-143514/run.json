@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-25",
+  "run_id": "20260825-143514",
+  "commands": [
+    {
+      "ts": "2026-08-25T14:35:14Z",
+      "command": "env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py",
+      "output": "Traceback (most recent call last):\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py\", line 67, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py\", line 52, in main\n    arms = bd.build_arms(suite)\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision/build_decision.py\", line 122, in build_arms\n    lat = latency_rows()\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py\", line 35, in latency_rows_with_candidate\n    rows = bd.latency_rows()\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py\", line 35, in latency_rows_with_candidate\n    rows = bd.latency_rows()\n  File \"/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py\", line 35, in latency_rows_with_candidate\n    rows = bd.latency_rows()\n  [Previous line repeated 994 more times]\nRecursionError: maximum recursion depth exceeded\n",
+      "exit_code": 1,
+      "context": "decide-r1",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 0.657
+    }
+  ],
+  "commands_source": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/runs/20260825-143514/events.jsonl"
+}

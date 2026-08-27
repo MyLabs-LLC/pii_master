@@ -1,0 +1,58 @@
+REGIONAL TRANSIT AUTHORITY — INFORMATION SERVICES DIVISION
+CUSTOMER DATA PLATFORM: FIELD MASKING CONFIGURATION SPECIFICATION
+Config set: cdp-masking-prod-v4.2.1
+Loaded by: etl-orchestrator node 03 at 2021-03-01T00:04:12-05:00
+Supersedes: cdp-masking-prod-v4.1.7 (retired 2021-02-28T23:59:59-05:00)
+
+1. SCOPE
+1.1 This configuration governs every extract, transform and load job executing under the job families FARE_CARD_REG, CONCESSION_ELIG, PARATRANSIT_BOOK and INCIDENT_INTAKE.
+1.2 The configuration is applied at the transform stage. No job may write to the analytics zone with this configuration disabled or partially loaded.
+1.3 Where a source column is not enumerated in Clause 3, the default action in Clause 4.4 applies.
+
+2. CLASSIFICATION TIERS
+2.1 Tier A — direct identifiers. Suppressed in full before any downstream write.
+2.2 Tier B — indirect identifiers. Generalised or tokenised, never passed through in clear.
+2.3 Tier C — operational attributes. Passed through unaltered.
+
+3. FIELD RULE TABLE
+
+  SOURCE COLUMN                TIER   TRANSFORM         OUTPUT FORM
+  --------------------------   ----   ---------------   ------------------
+  passenger_given_name          A     NULLIFY           <empty>
+  passenger_family_name         A     NULLIFY           <empty>
+  date_of_birth                 A     SUPPRESS          ****-**-**
+  residential_address_line_1    A     SUPPRESS          ***
+  residential_address_line_2    A     SUPPRESS          ***
+  residential_postcode          B     TRUNCATE(2)       **???
+  contact_mobile_number         A     SUPPRESS          ***-***-****
+  contact_email_address         A     SUPPRESS          ***@***
+  national_identity_number      A     SUPPRESS          [WITHHELD]
+  concession_card_number        B     FPE_TOKEN         tok_****************
+  fare_card_serial              B     FPE_TOKEN         tok_****************
+  payment_card_pan              A     SUPPRESS          ****-****-****-****
+  bank_account_identifier       A     SUPPRESS          [WITHHELD]
+  eligibility_evidence_type     C     PASSTHROUGH       as-supplied
+  concession_category_code      C     PASSTHROUGH       as-supplied
+  booking_origin_stop_id        C     PASSTHROUGH       as-supplied
+  booking_destination_stop_id   C     PASSTHROUGH       as-supplied
+  mobility_aid_flag             B     GENERALISE_BOOL   Y / N
+  carer_present_flag            B     GENERALISE_BOOL   Y / N
+
+4. TRANSFORM DEFINITIONS
+4.1 NULLIFY writes a zero-length string and clears the source buffer within the same transform step.
+4.2 FPE_TOKEN applies format-preserving encryption under key ring cdp-fpe-2021-Q1. Tokens are deterministic within a key epoch and are not reversible by any consumer of the analytics zone.
+4.3 GENERALISE_BOOL collapses a populated attribute to a presence indicator without retaining the underlying descriptor.
+4.4 Any column absent from Clause 3 is quarantined and excluded from the output set. The orchestrator raises WARN-CFG-118 and continues.
+
+5. KEY MANAGEMENT
+5.1 Key ring cdp-fpe-2021-Q1 rotates quarterly. Rotation is authorised by the Records Custodian and executed by the Platform Duty Engineer.
+5.2 Prior epochs remain available for re-linkage for 400 days, after which token continuity is broken by design.
+
+6. LOGGING OBLIGATIONS
+6.1 Job logs record column names, tier assignments, transform names and row counts only.
+6.2 No log sink, error message, stack trace or dead-letter payload may contain a Tier A or Tier B value in clear. Violations are logged as ERR-SEC-401 and halt the run.
+6.3 Sample rows emitted for operator inspection are rendered in the output forms given in Clause 3.
+
+7. REVIEW
+7.1 This configuration is reviewed each quarter, or on any change to the fields listed in Clause 3.
+7.2 Next scheduled review: 2021-06-01. Owner of record: the Records Custodian, Information Governance.

@@ -1,0 +1,40 @@
+INFORMATICA POWERCENTER 6.2 — SESSION LOG DIGEST
+FOLDER: REG_DW / WORKFLOW: wf_reg_stu_dim_ld / RUN ID: 20040315-0421
+SERVER: regetl01 (Sun Solaris 8) / REPOSITORY: RGREP_PROD
+
+* [02:00:04] Workflow wf_reg_stu_dim_ld initiated by scheduler event SCHED-NIGHTLY-A. Prior run 20040314-0418 closed status SUCCEEDED_WITH_ERRORS.
+* [02:00:07] Session s_m_STU_STAGE_EXTRACT started. Source: REGPROD.STU_MASTER (Oracle 9.2.0.4). Reader connection RG_PROD_RO established.
+* [02:00:07] Masking profile DMSK-0417 attached at reader. Rule bind count 19. Bind failures 0.
+* [02:11:52] Source qualifier SQ_STU_MASTER — rows read 48,213. Rows affected by filter STU_STATUS_CD IN ('A','L','P') — 47,006.
+* [02:11:52] Column mapping applied:
+    | SRC STU_UNIV_ID        -> TGT STU_KEY_HASH        | XFRM=HASH_MD5   |
+    | SRC STU_LAST_NAME      -> TGT STU_LAST_NAME_TKN   | XFRM=TOKENIZE   |
+    | SRC STU_FIRST_NAME     -> TGT STU_FIRST_NAME_TKN  | XFRM=TOKENIZE   |
+    | SRC STU_SSN            -> TGT (DROPPED)           | XFRM=SUPPRESS   |
+    | SRC STU_BIRTH_DT       -> TGT STU_BIRTH_YR        | XFRM=TRUNC_YYYY |
+    | SRC PERM_ADDR_LINE_1   -> TGT (DROPPED)           | XFRM=SUPPRESS   |
+    | SRC PERM_POSTAL_CD     -> TGT PERM_POSTAL_PFX     | XFRM=SUBSTR(3)  |
+    | SRC HOME_PHONE_NBR     -> TGT (DROPPED)           | XFRM=SUPPRESS   |
+    | SRC UNIV_EMAIL_ADDR    -> TGT UNIV_EMAIL_TKN      | XFRM=TOKENIZE   |
+    | SRC ADMIT_TERM_CD      -> TGT ADMIT_TERM_CD       | XFRM=PASSTHRU   |
+    | SRC PRIMARY_MAJOR_CD   -> TGT PRIMARY_MAJOR_CD    | XFRM=PASSTHRU   |
+    | SRC RESIDENCY_CD       -> TGT RESIDENCY_CD        | XFRM=PASSTHRU   |
+* [02:14:07] Session s_m_STU_STAGE_EXTRACT completed. Rows read 48,213 / rows written 47,006 / rows rejected 0. Elapsed 00:14:00.
+* [02:14:11] Session s_m_STU_DIM_LOAD started. Target: RGDW_STG.STU_DIM. Load type UPSERT on STU_KEY_HASH.
+* [02:26:33] Validation transformation EXP_VAL_STU raised 233 errors. Error classes as follows:
+    - TE_7002 NOT_NULL violation, column ADMIT_TERM_CD ......... 88 rows
+    - TE_7002 NOT_NULL violation, column PRIMARY_MAJOR_CD ...... 61 rows
+    - TE_7007 DOMAIN violation, column RESIDENCY_CD ............ 34 rows
+    - TE_7007 DOMAIN violation, column STU_STATUS_CD ........... 19 rows
+    - TE_7013 LENGTH violation, column PERM_POSTAL_PFX ......... 17 rows
+    - TE_7019 TOKEN_MISS, column UNIV_EMAIL_TKN ................ 11 rows
+    - TE_7019 TOKEN_MISS, column STU_LAST_NAME_TKN ............. 03 rows
+* [02:26:33] Reject file written: /u01/app/etl/rej/stu_dim_20040315.bad. Row count 233. Columns emitted: STU_KEY_HASH, ERROR_CD, ERROR_COL, LOAD_TS. Value columns not emitted per DMSK-0417.
+* [02:26:34] TOKEN_MISS entries queued to vault reconciliation job JOB-TKV-0088. Vault TKV_NAME sequence gap noted at block 41; vault TKV_ADDR sequence gap noted at block 12.
+* [02:31:48] Session s_m_STU_DIM_LOAD completed. Rows read 47,006 / inserted 6,140 / updated 40,633 / rejected 233. Elapsed 00:17:37.
+* [02:31:49] Post-session command executed: dwstats.sh STU_DIM. Table row count after load 214,882.
+* [02:31:55] Workflow wf_reg_stu_dim_ld ended. Status SUCCEEDED_WITH_ERRORS. Total elapsed 00:31:51.
+* Follow-up items assigned to the ETL Operations Lead:
+    - Route 149 NOT_NULL rejects to registrar source correction queue by 2004-03-17.
+    - Confirm RESIDENCY_CD domain table RG_RESID_XREF matches Banner 5.3 delivered values.
+    - Re-run vault reconciliation before next full load window.

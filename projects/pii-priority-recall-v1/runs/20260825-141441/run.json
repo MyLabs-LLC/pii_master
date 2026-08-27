@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-25",
+  "run_id": "20260825-141441",
+  "commands": [
+    {
+      "ts": "2026-08-25T14:15:05Z",
+      "command": "env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.evaluate_priority_model --project projects/pii-priority-recall-v1 --family perlabel_1k --workers 8",
+      "output": "{\"dataset\": \"4000_datax-dualjudge-evalset-1.32k\", \"docs_per_s\": 3531.44, \"errors\": 0, \"rows\": 4000}\n{\"dataset\": \"6589_govdocs2-dualjudge-eval20-3.53k\", \"docs_per_s\": 4441.19, \"errors\": 11, \"rows\": 6589}\n{\"dataset\": \"ai4privacy_pii_masking_eval_10k\", \"docs_per_s\": 16652.05, \"errors\": 0, \"rows\": 10626}\n{\"dataset\": \"betterdataai_ner_silver_eval_10k\", \"docs_per_s\": 12395.02, \"errors\": 0, \"rows\": 10360}\n{\"dataset\": \"nemotron_eval_6k\", \"docs_per_s\": 6997.19, \"errors\": 0, \"rows\": 5617}\n{\"dataset\": \"openpii_pii_eval_38k\", \"docs_per_s\": 10037.57, \"errors\": 0, \"rows\": 38937}\n{\"dataset\": \"pii2_eval_30k\", \"docs_per_s\": 4733.56, \"errors\": 0, \"rows\": 30000}\n{\"dataset\": \"pii_holdout_20k\", \"docs_per_s\": 5013.67, \"errors\": 0, \"rows\": 20000}\nTraceback (most recent call last):\n  File \"<frozen runpy>\", line 203, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/lence/workspace/pii_master/training/evaluate_priority_model.py\", line 226, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/lence/workspace/pii_master/training/evaluate_priority_model.py\", line 220, in main\n    result = run(args.project.resolve(), family=args.family, workers=args.workers)\n  File \"/home/lence/workspace/pii_master/training/evaluate_priority_model.py\", line 209, in run\n    run_record[\"artifacts\"].append(artifact)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'dict' object has no attribute 'append'\n",
+      "exit_code": 1,
+      "context": "validate-holdout",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 24.23
+    }
+  ],
+  "commands_source": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/runs/20260825-141441/events.jsonl"
+}

@@ -1,0 +1,29 @@
+MEMORANDUM
+
+TO:      Quality Assurance, Release 4.2
+FROM:    Database Administration
+DATE:    03 December 1998
+SUBJECT: MBRMST — nullable column changes for regression scripting
+
+Three columns in the Member Master change nullability at release 4.2. Please
+update the regression scripts accordingly before the January window.
+
+     MBR_EMAIL_ADR    VARCHAR(50)   was N, now Y
+          The refill notice pilot ended and the field is no longer collected at
+          enrollment. Existing content is retained. Excluded from all extracts.
+
+     MBR_WORK_PHON    CHAR(10)      was N, now Y
+          Front-end edit removed at the counter. Rows loaded before this release
+          may carry filler; treat filler as null in report logic.
+
+     MBR_HOH_ID       CHAR(11)      was Y, now N
+          Household link is now mandatory. Conversion job MBRC420 populates the
+          column with the member's own MBR_ID where no household exists.
+
+Unchanged and still marked restricted: MBR_SSN and MBR_CARD_NO. Neither appears
+in the read view MBRMSTV, and neither may be used as a test key or carried into
+the QA library. Test regions are to be loaded from generated content only.
+
+Retention rules are not affected by this release. The archive cycle continues to
+run monthly under MBRARC and remains subject to sign-off by the Records
+Custodian.

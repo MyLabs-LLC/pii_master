@@ -1,0 +1,18 @@
+{
+  "metric": "micro_f1",
+  "target": 0.7299,
+  "verdict": "unknown",
+  "supported_target": null,
+  "ceiling": null,
+  "ceiling_method": "",
+  "agreement": null,
+  "agreement_source": "",
+  "baseline": 0.7299,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "As-shipped ettin-68m, hand-mapped onto 32 of 61 tags, 1,200 training documents: macro F1 0.2287 over the 31 tags present in gold. Real contextual signal on exactly the tags a hashed-ngram bag is weakest at - email 0.9464, zip_code 0.8946, phone_number 0.7895, family_name 0.7559, given_name 0.7420, street_number_and_name 0.7124 - with NO fine-tuning and truncation at 1024 tokens against a 12,000-character read window.",
+    "It contributes nothing yet on the identifiers the ship gate is about: SSN, MRN, ITIN, CVV and health-plan number all score 0.0000. Those tags are present in our training gold, so fine-tuning is the thing that would have to fix them; the pretrained signal does not already cover them.",
+    "No ceiling is available for the FUSED micro F1. The probe establishes that signal exists, not how much of it survives model2vec distillation to a static token table - which is the step with no evidence behind it at all and the reason the chain is staged."
+  ]
+}

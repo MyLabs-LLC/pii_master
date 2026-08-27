@@ -1,0 +1,100 @@
+# ---------------------------------------------------------------------
+# fare_dw / etl / conf / field_mapping.conf
+# Owner:   Data Services Group
+# Revised: 2021-09-16 11:42:07
+# Applies: job family ETL_FARE_*, ETL_PARA_*, ETL_ELIG_*
+# ---------------------------------------------------------------------
+
+[source]
+system            = FCS_PROD
+schema            = fcs_rider
+extract_mode      = incremental
+watermark_column  = last_modified_ts
+watermark_value   = <suppressed at rest>
+
+# ---------------------------------------------------------------------
+# SECTION 1 - COLUMN MAPPING
+# source column                -> target column              transform
+# ---------------------------------------------------------------------
+[mapping.rider]
+rider_given_name               -> rdr_given_name             MASK_FULL
+rider_middle_initial           -> rdr_middle_initial         DROP
+rider_family_name              -> rdr_family_name            MASK_FULL
+date_of_birth                  -> rdr_birth_year             TRUNC_TO_YEAR
+national_id_number             -> rdr_natid_token            TOKENISE(vault=NATID)
+residential_street_line_1      -> rdr_addr_line_1            MASK_FULL
+residential_street_line_2      -> rdr_addr_line_2            MASK_FULL
+residential_city               -> rdr_city                   PASS
+postal_code                    -> rdr_postal_prefix          TRUNC(3)
+primary_contact_number         -> rdr_phone_token            TOKENISE(vault=TEL)
+alternate_contact_number       -> rdr_phone_alt_token        TOKENISE(vault=TEL)
+contact_email_address          -> rdr_email_token            TOKENISE(vault=EML)
+emergency_contact_name         -> -                          DROP
+emergency_contact_number       -> -                          DROP
+
+[mapping.account]
+account_open_date              -> acct_open_date             PASS
+eligibility_category           -> acct_elig_cat              PASS
+concession_type                -> acct_concession            PASS
+service_area_zone              -> acct_zone                  PASS
+payment_instrument_number      -> acct_pay_token             TOKENISE(vault=PAY)
+payment_instrument_expiry      -> -                          DROP
+autoload_bank_reference        -> acct_bank_token            TOKENISE(vault=BNK)
+
+[mapping.paratransit]
+registrant_surrogate_id        -> para_reg_sid               PASS
+mobility_aid_code              -> para_aid_code              PASS
+certification_expiry_date      -> para_cert_expiry           PASS
+medical_reviewer_note          -> -                          DROP
+guardian_family_name           -> para_guardian_name         MASK_FULL
+
+# ---------------------------------------------------------------------
+# SECTION 2 - MASKING BEHAVIOUR
+# ---------------------------------------------------------------------
+[masking]
+profile                  = MASK_PROF_07
+mask_literal             = [MASKED]
+mask_numeric_literal     = [MASKED-N]
+token_format             = TKN_<VAULT>_<32>
+preserve_length          = false
+preserve_last_n          = 0          # was 4 under MASK_PROF_05
+null_passthrough         = true
+on_vault_timeout         = fail_row
+on_unmapped_column       = quarantine
+
+[masking.exempt_roles]
+role_fare_reconciler     = acct_pay_token
+role_elig_reviewer       = rdr_natid_token
+# exemptions grant access to the token only, never to the source column
+
+# ---------------------------------------------------------------------
+# SECTION 3 - VALIDATION
+# ---------------------------------------------------------------------
+[validation]
+reject_on_missing        = registrant_surrogate_id, account_open_date
+warn_on_missing          = postal_code, service_area_zone
+max_reject_pct           = 2.0
+quarantine_table         = fare_dw.stg_quarantine
+retain_quarantine_days   = 30
+
+[validation.rules]
+R001 = rdr_birth_year BETWEEN 1900 AND current_year
+R002 = acct_open_date <= run_date
+R003 = rdr_postal_prefix MATCHES ^[A-Z0-9]{3}$
+R004 = acct_elig_cat IN (SENIOR, STUDENT, DISABILITY, GENERAL, EMPLOYEE)
+R005 = para_cert_expiry IS NOT NULL WHEN acct_elig_cat = DISABILITY
+R006 = acct_pay_token IS NOT NULL WHEN autoload_flag = Y
+R007 = rdr_natid_token LENGTH = 40
+
+# ---------------------------------------------------------------------
+# SECTION 4 - OUTPUT
+# ---------------------------------------------------------------------
+[output]
+target_schema     = fare_dw.dim_rider
+write_mode        = merge
+merge_key         = para_reg_sid
+audit_table       = fare_dw.etl_audit
+log_level         = INFO
+log_row_samples   = false
+
+# End of file

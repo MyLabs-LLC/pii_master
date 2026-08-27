@@ -1,0 +1,69 @@
+PATIENT FINANCIAL SERVICES — TECHNICAL DENIAL AND APPEAL CASE RECORD
+Workqueue: PFS-DEN-03 (Inpatient / Medical Necessity)
+Production batch: PROD-2011-114, item 06 of 41 — identifier fields withheld at extract
+
+    1.0  CASE IDENTIFICATION
+         1.1  Patient Name .......................... [SUPPRESSED]
+         1.2  Medical Record Number ................. XXXXXXXX
+         1.3  Patient Account Number ................ ████████████
+         1.4  Guarantor Name ........................ [SUPPRESSED]
+         1.5  Guarantor Mailing Address ............. ████████████████████████
+         1.6  Guarantor Home / Mobile Telephone ..... XXX-XXX-XXXX / XXX-XXX-XXXX
+         1.7  Date of Birth ......................... XX/XX/XXXX
+         1.8  Subscriber Identification Number ...... [SUPPRESSED]
+         1.9  Group Number .......................... ████████
+         1.10 Case Owner (Denial Analyst) ........... [SUPPRESSED]
+
+    2.0  ENCOUNTER DATA
+         2.1  Patient Type: Inpatient, acute
+         2.2  Admission Date: 02/07/2011      Discharge Date: 02/14/2011
+         2.3  Length of Stay: 7 days (GMLOS 4.1 days)
+         2.4  Point of Origin (FL 15): 1 — Non-Health Care Facility
+         2.5  Admission Type (FL 14): 1 — Emergency
+         2.6  Discharge Status (FL 17): 01 — Home / Self Care
+         2.7  Billed DRG: 871 — Septicemia w MCC
+         2.8  Principal Revenue Codes: 0120, 0250, 0300, 0450, 0710
+         2.9  Total Charges: $63,418.55
+         2.10 Attending Physician / NPI ............. [SUPPRESSED] / XXXXXXXXXX
+
+    3.0  ADJUDICATION HISTORY
+         3.1  Original claim (837I) released to clearinghouse 02/23/2011; batch
+              cycle 11-054-A, accepted at 277CA level 02/24/2011.
+         3.2  Remittance received 03/18/2011. Claim adjudicated to zero payment.
+              3.2.1  CARC CO-50 — non-covered, not deemed a medical necessity.
+              3.2.2  RARC N115 — determination based on local coverage
+                     determination applied at the payer's utilization desk.
+              3.2.3  Adjustment posted to transaction code 8410 (denial hold),
+                     not to contractual allowance, per policy PFS-4.11.
+         3.3  Payer telephone follow-up 03/24/2011: utilization file reflects no
+              concurrent review on record for days 3 through 7. Facility clinical
+              review log shows notification placed 02/09/2011 with reference
+              number recorded in the payer's own queue.
+
+    4.0  APPEAL SEQUENCE
+         4.1  Level 1 appeal filed 04/06/2011.
+              4.1.1  Enclosures: complete medical record, itemized statement,
+                     admitting orders, InterQual worksheet (Acute Adult, 2010
+                     criteria set, Subset: Infectious Disease).
+              4.1.2  Payer acknowledgment 04/14/2011; docket reference AP-2011-Q2.
+              4.1.3  Determination 05/09/2011 — denial upheld.
+         4.2  Level 2 appeal filed 05/26/2011, physician advisor attestation
+              attached; peer-to-peer offered and declined by payer 06/02/2011.
+              4.2.1  Determination 06/30/2011 — partial overturn. Payer
+                     reclassified encounter to observation, revenue code 0762.
+         4.3  Rebilling analysis 07/07/2011: condition code 44 not applicable
+              (determination post-discharge); Part B rebill evaluated under
+              policy PFS-4.19 and found permissible for ancillary charges only.
+
+    5.0  FINANCIAL POSITION AS OF 08/31/2011
+         5.1  Expected reimbursement, original DRG: $14,207.90
+         5.2  Reimbursement recognized on partial overturn: $3,962.14
+         5.3  Variance carried in denial reserve: $10,245.76
+         5.4  Aging bucket: 181–210 days from discharge
+
+    6.0  DISPOSITION
+         6.1  Recommendation: no further internal appeal; refer to external
+              review vendor under contract SVC-2009-31, tier 2 contingency.
+         6.2  Root cause coded UR-02 (concurrent review documentation gap);
+              routed to Utilization Management for trend reporting, cycle Q3.
+         6.3  Case status: OPEN — VENDOR PENDING. Next review 09/28/2011.

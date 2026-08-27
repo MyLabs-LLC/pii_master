@@ -1,0 +1,95 @@
+{
+  "best_config": {
+    "generic_target_index": 3,
+    "priority_target_index": 12,
+    "score_mode": "top3",
+    "threshold_multiplier": 0.85
+  },
+  "best_mlflow_run_id": "31ddf2df6cbf4dbba61d3fd4bc6e837d",
+  "best_trial": 188,
+  "exact_metrics": {
+    "equal_corpus_macro_f2": 0.4106814233868178,
+    "equal_corpus_micro_f1": 0.33502722525973805,
+    "measurable_priority_gates": 54,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.999230917131321
+  },
+  "family": "hash_sgd",
+  "fast_metrics": {
+    "equal_corpus_macro_f2": 0.4116154325331382,
+    "equal_corpus_micro_f1": 0.33502722525973805,
+    "measurable_priority_gates": 54,
+    "per_corpus": [
+      {
+        "dataset": "16000_datax-dualjudge-trainset-5.37k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "26095_govdocs2-dualjudge-train80-14.25k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "ai4privacy_pii_masking_train_42k",
+        "macro_f2": 0.5162713245801447,
+        "micro_f1": 0.34342093620033626
+      },
+      {
+        "dataset": "betterdataai_ner_silver_train_41k",
+        "macro_f2": 0.13076128048485966,
+        "micro_f1": 0.16623944646602254
+      },
+      {
+        "dataset": "nemotron_train_22k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "openpii_pii_train_155k",
+        "macro_f2": 0.6621484170784432,
+        "micro_f1": 0.6529323178155793
+      },
+      {
+        "dataset": "pii2_train_150k",
+        "macro_f2": 0.3005381141770368,
+        "micro_f1": 0.15252279426193524
+      },
+      {
+        "dataset": "pii_trainset_100k",
+        "macro_f2": 0.4483580263452067,
+        "micro_f1": 0.3600206315548169
+      }
+    ],
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.999230917131321
+  },
+  "fit_stats": {
+    "complete_rows": 422984,
+    "docs_per_s": 924.4296414504905,
+    "elapsed_s": 517.4174199450063,
+    "fit_rows": 478316,
+    "internal_validation_rows": 53110,
+    "partial_rows": 55332,
+    "read_errors": 5,
+    "skipped_eval_leakage": 22816,
+    "source_rows": {
+      "16000_datax-dualjudge-trainset-5.37k": 14411,
+      "26095_govdocs2-dualjudge-train80-14.25k": 21398,
+      "ai4privacy_pii_masking_train_42k": 38197,
+      "betterdataai_ner_silver_train_41k": 37218,
+      "nemotron_train_22k": 19523,
+      "openpii_pii_train_155k": 136547,
+      "pii2_train_150k": 133974,
+      "pii_trainset_100k": 77048
+    }
+  },
+  "model_dir": "models/hash_sgd",
+  "n_trials": 300,
+  "validation_read_errors": 0,
+  "validation_rows": 53110
+}

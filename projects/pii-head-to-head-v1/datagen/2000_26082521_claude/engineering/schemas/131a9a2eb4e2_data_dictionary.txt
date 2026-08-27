@@ -1,0 +1,42 @@
+FOOD AND NUTRITION SERVICES — DATA DICTIONARY EXCERPT
+OBJECT: NSLP.MEAL_ELIG
+REV 1.4, EFFECTIVE 2016-07-01. RESTRICTED — ACCESS TIER 3.
+
+A. COLUMNS
+    1. ELIG_ROW_ID — BIGINT, NOT NULL, surrogate key, sequence-generated
+    2. STU_LOCAL_ID — CHAR(9), NOT NULL, FK to SIS.STU_DEMO
+    3. APP_HOUSEHOLD_NO — CHAR(8), NULL permitted
+        a. Null where eligibility is direct-certified rather than application-based
+    4. ELIG_STATUS_CD — CHAR(1), NOT NULL
+        a. Domain: F, R, P, D (free, reduced, paid, denied)
+    5. ELIG_BASIS_CD — CHAR(2), NOT NULL
+        a. Domain includes application-income, direct-certification, categorical, homeless/migrant/runaway determination
+    6. DIRECT_CERT_MATCH_DT — DATE, NULL permitted
+        a. Populated by the monthly state match file only; not operator-editable
+    7. HOUSEHOLD_SIZE — SMALLINT, NULL permitted, application rows only
+    8. HOUSEHOLD_INCOME_AMT — DECIMAL(9,2), NULL permitted, application rows only
+        a. Column-encrypted at rest
+    9. INCOME_FREQ_CD — CHAR(1), NULL permitted, paired with column 8
+    10. DETERMINING_OFFICIAL_ID — VARCHAR(20), NOT NULL
+        a. Employee user ID of the determining official, not a name
+    11. EFF_DT / EXP_DT — DATE / DATE, EFF_DT NOT NULL
+        a. Carryover rule applies for the first 30 operating days of the school year
+    12. VERIFICATION_SEL_FLG — CHAR(1), NOT NULL, defaults N
+    13. VERIFICATION_OUTCOME_CD — CHAR(1), NULL permitted until verification closes
+
+B. ACCESS RESTRICTION
+    1. Individual eligibility status is disclosed only to officials whose duties require it. Disclosure beyond the permitted uses in 7 CFR 245.6(b) requires prior written consent from the household.
+    2. No column in this object may be joined into a general reporting view. Aggregate counts by site and status are published; row-level access is by named grant, reviewed each August.
+    3. Building-level staff see columns 2, 4 and 11 through the point-of-sale interface. Columns 7 through 9 are visible to Food and Nutrition Services central staff only.
+    4. Query logging is on for all sessions touching this object.
+
+C. RETENTION
+    1. Applications, direct-certification records and verification documentation: current year plus 3 prior years, per program requirement.
+    2. Rows outside that window are purged in the October cycle following claim reconciliation.
+    3. Columns 7 through 9 are nulled at current year plus 1.
+
+D. DOWNSTREAM EXTRACTS
+    1. Claim file to the state agency — aggregate meal counts by site and status. No student-level columns.
+    2. Poverty-indicator feed to the reporting mart — STU_LOCAL_ID and a derived two-value indicator only. ELIG_BASIS_CD is not carried; it is not to be used for any published metric.
+    3. Point-of-sale terminal sync — columns 2, 4, 11, hourly.
+    4. No extract to assessment, transportation or student information vendors.

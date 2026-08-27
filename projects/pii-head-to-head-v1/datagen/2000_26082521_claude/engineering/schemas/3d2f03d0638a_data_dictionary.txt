@@ -1,0 +1,68 @@
+MEMORANDUM
+
+TO:      Data Warehouse Team; Patient Access Systems
+FROM:    Records Custodian, Patient Financial Services
+DATE:    4 November 2021
+SUBJECT: Dictionary Excerpt — PT_STATEMENT_XREF and Staging View V_STMT_STAGE
+
+1. GENERAL
+
+1.1 This excerpt is issued in support of the statement vendor transition and covers the cross-reference table and its staging view. It takes effect on publication.
+
+1.2 The excerpt is limited to structure and handling. Volumetrics and load timings are held separately by the scheduling team.
+
+2. TABLE PT_STATEMENT_XREF
+
+2.1 STMT_XREF_ID, BIGINT, not null. Primary key.
+
+2.2 MBR_KEY, BIGINT, not null. Foreign key to MBR_MASTER.
+
+2.3 GUARANTOR_ACCT_ID, BIGINT, not null. Foreign key to GUARANTOR_ACCT.
+
+2.4 MRN, CHAR(9), not null. Carried for reconciliation against the clinical source. Restricted; excluded from the vendor file and from all warehouse marts.
+
+2.5 STMT_RECIPIENT_NAME, VARCHAR(70), not null. Restricted. Concatenated at load from the guarantor name columns and never keyed directly.
+
+2.6 STMT_ADDR_LINE_1, VARCHAR(60), not null. Restricted.
+
+2.7 STMT_ADDR_LINE_2, VARCHAR(60), nullable. Restricted.
+
+2.8 STMT_POSTAL_CD, CHAR(10), not null. Restricted at full length; five positions permitted for geographic reporting.
+
+2.9 STMT_EMAIL_ADDR, VARCHAR(120), nullable. Restricted. Present only where electronic delivery is elected.
+
+2.10 STMT_CYCLE_CD, CHAR(2), not null.
+
+2.11 STMT_AMOUNT_DUE, DECIMAL(12,2), not null.
+
+2.12 DELIVERY_METHOD_CD, CHAR(1), not null. P for print, E for electronic.
+
+2.13 RETURN_MAIL_FLG, CHAR(1), not null. Defaults to N; set by the returned mail interface.
+
+2.14 VENDOR_BATCH_ID, VARCHAR(24), nullable. Null until the batch is assembled.
+
+2.15 LOAD_TS, TIMESTAMP, not null.
+
+3. VIEW V_STMT_STAGE
+
+3.1 The view exposes clauses 2.1, 2.3, 2.10, 2.11, 2.12 and 2.14 only. The columns at clauses 2.4 to 2.9 are not exposed and are not to be added by any subsequent alteration.
+
+3.2 The view is the sole permitted source for warehouse ingestion. Direct table access from the warehouse service account has been revoked.
+
+4. ACCESS CONTROL
+
+4.1 Restricted columns are readable by the roles STMT_OPS and BILL_SUPV in production. Grants are reviewed quarterly and evidence of review is filed with Internal Audit.
+
+4.2 Extracts of restricted columns to a workstation, a shared drive or a ticketing system are prohibited without prior written authorisation from this office.
+
+5. RETENTION
+
+5.1 Cross-reference rows are retained for seven years from LOAD_TS.
+
+5.2 On expiry, the columns at clauses 2.4 to 2.9 are nulled and the remaining columns are moved to the archive schema. The archive is read-only and is not connected to any reporting tool.
+
+6. DOWNSTREAM
+
+6.1 The vendor print file carries STMT_RECIPIENT_NAME, STMT_ADDR_LINE_1, STMT_ADDR_LINE_2, STMT_POSTAL_CD and STMT_AMOUNT_DUE, transmitted over the managed file transfer channel and encrypted in transit and at rest.
+
+6.2 No other outbound consumer of restricted columns is authorised. Requests are to be routed to this office with the purpose, the retention period sought and the name of the accountable manager.

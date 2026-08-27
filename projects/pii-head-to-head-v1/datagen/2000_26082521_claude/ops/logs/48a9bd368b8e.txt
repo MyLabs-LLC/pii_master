@@ -1,0 +1,61 @@
+NORTHGATE STAFFING SERVICES LTD
+DATA QUALITY GATE -- VALIDATION EXCEPTION EXTRACT
+SOURCE ..: /var/log/adp/dq/ETL_CANDMSTR_NIGHTLY.2016-03-14.log
+LINES ...: 4412-4498 of 6103
+CUT AT ..: 2016-03-14T03:11:40Z
+RUN ID ..: 2016074-0037
+NOTE ....: value capture disabled at handler; field names only
+
+TIME          ROW      FIELD             CODE     SEV  DETAIL                                DISP
+------------  -------  ----------------  -------  ---  ------------------------------------  -------
+03:02:14.771  0004182  hr_last_name      DQ-1101   H   null in NOT NULL target column        REJECT
+03:02:14.803  0004182  hr_first_name     DQ-1101   H   null in NOT NULL target column        REJECT
+03:02:16.442  0004219  hr_birth_date     DQ-1120   H   date not ISO-8601; parse failed       REJECT
+03:02:19.118  0004266  hr_ni_number      DQ-1133   H   checksum digit invalid for format     REJECT
+03:02:21.007  0004301  hr_tax_id         DQ-1151   M   token unresolved in vault tv-prod-02  QUARANT
+03:02:23.560  0004344  hr_email_addr     DQ-1112   M   domain part missing separator         WARN
+03:02:23.561  0004344  hr_phone_mobile   DQ-1114   M   country prefix absent; E164 fail      WARN
+03:02:27.882  0004410  hr_postal_code    DQ-1118   M   postal format not matched by regex    WARN
+03:02:31.245  0004477  hr_last_name      DQ-1105   M   length 47 exceeds target width 40     TRUNC
+03:02:34.019  0004512  hr_addr_line_1    DQ-1142   H   value present in SUPPRESS field       SUPPR
+03:02:34.020  0004512  hr_addr_line_2    DQ-1142   H   value present in SUPPRESS field       SUPPR
+03:02:38.663  0004588  hr_emerg_name     DQ-1142   H   value present in SUPPRESS field       SUPPR
+03:02:38.664  0004588  hr_emerg_phone    DQ-1142   H   value present in SUPPRESS field       SUPPR
+03:02:41.900  0004631  hr_eeo_ethnic     DQ-1160   M   lookup key absent from LOOKUP_EEO     DEFAULT
+03:02:41.901  0004631  hr_eeo_gender     DQ-1160   M   lookup key absent from LOOKUP_SEX     DEFAULT
+03:02:45.337  0004702  hr_doc_expiry     DQ-1124   M   future date beyond permitted range    WARN
+03:02:45.338  0004702  hr_doc_expiry     DQ-1126   M   expiry precedes assignment start      REJECT
+03:02:49.114  0004770  hr_rtw_status     DQ-1163   H   code not in permitted value set       REJECT
+03:02:52.671  0004819  hr_sort_code      DQ-1131   H   non-numeric char in numeric field     REJECT
+03:02:55.208  0004866  hr_acct_number    DQ-1151   M   token unresolved in vault tv-prod-02  QUARANT
+03:02:58.774  0004910  hr_first_name     DQ-1107   L   leading/trailing whitespace only      REJECT
+03:03:02.116  0004988  hr_assign_id      DQ-1171   H   duplicate key in staging batch        REJECT
+03:03:05.449  0005033  hr_site_code      DQ-1174   H   referential parent row not found      REJECT
+03:03:08.902  0005101  hr_rate_hourly    DQ-1180   M   rate below configured floor           QUARANT
+03:03:11.337  0005166  hr_week_ending    DQ-1122   L   week ending not a Sunday              WARN
+03:03:14.005  0005208  (unmapped)        DQ-1190   L   unmapped source column dropped        DROP
+03:03:14.006  0005208  (unmapped)        DQ-1190   L   unmapped source column dropped        DROP
+03:03:17.441  0005277  hr_email_addr     DQ-1146   M   mask applied before length check      WARN
+03:03:20.889  0005340  hr_ni_number      DQ-1151   M   token unresolved in vault tv-prod-02  QUARANT
+03:03:24.113  0005402  hr_birth_date     DQ-1101   H   null in NOT NULL target column        REJECT
+
+EXCEPTION TOTALS BY CODE
+  DQ-1101   4     DQ-1105   1     DQ-1107   2     DQ-1112   9
+  DQ-1114  11     DQ-1118  17     DQ-1120   3     DQ-1122  24
+  DQ-1124   2     DQ-1126   1     DQ-1131   2     DQ-1133   3
+  DQ-1142   6     DQ-1146   8     DQ-1151  14     DQ-1160  19
+  DQ-1163   5     DQ-1171   2     DQ-1174   4     DQ-1180   6
+  DQ-1190  38
+
+  SEVERITY H .. 33      SEVERITY M .. 90      SEVERITY L .. 58
+  TOTAL EXCEPTIONS .... 181     DISTINCT ROWS AFFECTED .... 147
+
+STANDING ACTIONS
+  a. DQ-1142 raised on four fields carrying ACTION=SUPPRESS. Upstream feed
+     is still populating columns retired at revision 9 of the masking
+     policy. Raised with the source system owner, ticket CR-ADP-0884.
+  b. DQ-1151 count of 14 correlates with a vault latency window observed
+     03:02:00 to 03:03:30. Quarantined rows are held for re-drive; no
+     cleartext substitution occurred and fail_closed remained asserted.
+  c. DQ-1190 at 38 is within tolerance and requires no ticket.
+  d. Extract retained 90 days. Disposal certified by the Records Custodian.

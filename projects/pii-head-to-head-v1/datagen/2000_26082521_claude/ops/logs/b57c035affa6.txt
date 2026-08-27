@@ -1,0 +1,81 @@
+; ------------------------------------------------------------------
+; MASKING PROFILE CONFIGURATION
+; registrar_mask.ini            revision 7            2011-09-14
+; applies to: ODS staging, reporting sandbox, vendor test refresh
+; ------------------------------------------------------------------
+
+[global]
+enabled                  = true
+default_action           = deny
+fill_character           = *
+token_format             = TK############
+token_vault              = VLT_REG_01
+token_vault_mode         = deterministic
+preserve_length          = true
+preserve_format          = true
+log_source_values        = false
+log_target_values        = false
+reversal_requires_ticket = true
+approver_role            = Data Steward
+custodian_role           = Records Custodian
+last_review              = 2011-08-30
+next_review              = 2012-02-28
+
+[environments]
+PROD                     = passthrough
+STAGE                    = mask_all
+SANDBOX                  = mask_all
+VENDOR_TEST              = mask_all + suppress_restricted
+
+; ------------------------------------------------------------------
+; PROFILE ASSIGNMENTS
+; ------------------------------------------------------------------
+
+PROFILE   FIELD_LABEL          METHOD     RETAIN  OUTPUT_SHAPE   REVERSIBLE
+--------- -------------------- ---------- ------- -------------- ----------
+MP-01     STDNT_ID_SSN         suppress   0       (field absent) no
+MP-02     STDNT_ID_UNIV        tokenize   0       TK############ yes
+MP-03     NAME_LAST            tokenize   0       TK############ yes
+MP-04     NAME_FIRST           tokenize   0       TK############ yes
+MP-05     NAME_MIDDLE          tokenize   0       TK############ yes
+MP-06     PREFERRED_NAME       tokenize   0       TK############ yes
+MP-07     BIRTH_DT             truncate   year    YYYY           no
+MP-08     PERM_ADDR_LINE1      suppress   0       (field absent) no
+MP-09     PERM_ADDR_LINE2      suppress   0       (field absent) no
+MP-10     PERM_ADDR_ZIP        partial    first 3 ***-**         no
+MP-11     HOME_PHONE           suppress   0       (field absent) no
+MP-12     MOBILE_PHONE         suppress   0       (field absent) no
+MP-13     CAMPUS_EMAIL         tokenize   0       TK############ yes
+MP-14     EMERG_CONTACT_NM     suppress   0       (field absent) no
+MP-15     EMERG_CONTACT_PH     suppress   0       (field absent) no
+MP-16     DISABILITY_SVC_IND   generalize 0       Y / (blank)    no
+MP-17     FIN_AID_AWARD_AMT    band       0       band code 1-6  no
+MP-18     PARENT_GUARDIAN_NM   suppress   0       (field absent) no
+MP-19     PRIOR_INSTITUTION    passthru   all     as received    n/a
+MP-20     ACAD_PROGRAM_CD      passthru   all     as received    n/a
+
+; ------------------------------------------------------------------
+; ENFORCEMENT
+; ------------------------------------------------------------------
+; Any column arriving in a staging table without a matching profile
+; assignment is written to the quarantine schema and the load step is
+; marked FAILED. The unmatched column name is recorded; its contents
+; are not. Quarantine tables are purged on a fourteen-day cycle.
+;
+; Deterministic tokenization is required so that joins across the
+; enrollment, billing and housing extracts continue to resolve on the
+; token rather than on the underlying value. Vault rotation is annual
+; and breaks prior-year joins by design; extracts spanning a rotation
+; boundary must be regenerated in full rather than appended.
+;
+; Reversal of a token requires a service ticket referencing the
+; business purpose, the requesting office, and the approval of the
+; Data Steward. Reversal events are written to VLT_REG_01_AUDIT with
+; the requesting account, the ticket number and the count of tokens
+; resolved. Bulk reversal in excess of 50 tokens is refused by the
+; vault service and must be handled as a scheduled extract.
+;
+; Profiles MP-01, MP-08, MP-09, MP-11, MP-12, MP-14, MP-15 and MP-18
+; are locked. The configuration loader rejects the entire file if the
+; method value for any locked profile is altered.
+; ------------------------------------------------------------------

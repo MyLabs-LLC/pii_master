@@ -1,0 +1,28 @@
+2004-09-14 01:00:02 INFO  [RDRLOAD_0914] job start, config rev 11, operator console DS-04
+2004-09-14 01:00:02 INFO  [RDRLOAD_0914] value suppression ON for all appenders
+2004-09-14 01:00:07 INFO  [RDR_EXT_01] opening source RIDER_MASTER
+2004-09-14 01:00:09 INFO  [RDR_EXT_01] column set: RIDER_ID, RIDER_SURNAME, RIDER_GIVEN_NAME, DATE_OF_BIRTH, HOME_STREET_LINE1, HOME_STREET_LINE2, HOME_POSTAL_CODE, HOME_TELEPHONE, CONTACT_EMAIL, FARE_CARD_NUMBER, CONCESSION_TYPE_CD, CONCESSION_PROOF_REF, ENROLMENT_DATE, LAST_TAP_TIMESTAMP
+2004-09-14 01:00:11 INFO  [RDR_EXT_01] tokenise service TKNSVC v2.3 handshake ok, salt age 41 days
+2004-09-14 01:14:38 INFO  [RDR_EXT_01] 100000 rows read
+2004-09-14 01:29:52 INFO  [RDR_EXT_01] 200000 rows read
+2004-09-14 01:45:20 INFO  [RDR_EXT_01] 300000 rows read
+2004-09-14 02:01:03 INFO  [RDR_EXT_01] 400000 rows read
+2004-09-14 02:03:44 INFO  [RDR_EXT_01] extract complete, rows_read=418662, tokenised_fields=4
+2004-09-14 02:03:45 INFO  [RDR_XFM_02] transform start
+2004-09-14 02:03:45 INFO  [RDR_XFM_02] dropping columns: HOME_STREET_LINE1, HOME_STREET_LINE2, HOME_TELEPHONE, CONTACT_EMAIL, CONCESSION_PROOF_REF
+2004-09-14 02:03:46 WARN  [RDR_XFM_02] column EMERGENCY_CONTACT_NAME present in source but not in [drop] manifest hash; applying default mask ***
+2004-09-14 02:03:46 WARN  [RDR_XFM_02] column EMERGENCY_CONTACT_PHONE present in source but not in [drop] manifest hash; applying default mask ***
+2004-09-14 02:11:19 ERROR [RDR_XFM_02] V-101 DATE_OF_BIRTH century check failed, value=#### row_offset=12844
+2004-09-14 02:11:19 ERROR [RDR_XFM_02] V-104 HOME_POSTAL_CODE format check failed, value=*** row_offset=12844
+2004-09-14 02:26:55 ERROR [RDR_XFM_02] V-117 FARE_CARD_NUMBER check digit failed, value=TKN:################ row_offset=98207
+2004-09-14 02:41:02 ERROR [RDR_XFM_02] V-122 CONCESSION_TYPE_CD not found in reference table CONC_REF, value=*** row_offset=163559
+2004-09-14 02:58:17 ERROR [RDR_XFM_02] V-140 ENROLMENT_DATE outside permitted range, value=####-##-## row_offset=241880
+2004-09-14 03:09:41 INFO  [RDR_XFM_02] transform complete, rows_in=418662 rows_out=416109 rows_rejected=2553 reject_pct=0.61
+2004-09-14 03:09:42 INFO  [RDR_XFM_02] reject breakdown V-101=914 V-104=661 V-117=488 V-122=312 V-140=178
+2004-09-14 03:09:44 INFO  [RDR_LOD_03] load start, target RDS.DIM_RIDER
+2004-09-14 03:09:44 INFO  [RDR_LOD_03] target column set: RIDER_SK, RIDER_SURNAME_TKN, RIDER_GIVEN_NAME_TKN, BIRTH_YEAR_ONLY, POSTAL_SECTOR, FARE_CARD_TKN, CONCESSION_TYPE_CD, ENROLMENT_DATE, LAST_TAP_TIMESTAMP
+2004-09-14 03:22:10 INFO  [RDR_LOD_03] 200000 rows committed
+2004-09-14 03:38:51 INFO  [RDR_LOD_03] 400000 rows committed
+2004-09-14 03:44:06 INFO  [RDR_LOD_03] load complete, rows_written=416109 rows_failed=0
+2004-09-14 03:44:07 INFO  [RJQ.RDRLOAD] 2553 rows queued, purge scheduled 2004-10-14 by PURGE_RJQ_0914
+2004-09-14 03:47:12 INFO  [RDRLOAD_0914] job end, status SUCCESS_WITH_WARNINGS, elapsed 02:47:10

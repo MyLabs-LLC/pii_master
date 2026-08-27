@@ -1,0 +1,32 @@
+JOB OUTPUT — ETL_REG_SIS2ODS_0417
+Run sequence 00612 / node ersetl02 / operator SVC_ETLADM
+
+2011-04-18 02:15:07 INFO  Session s_reg_sis2ods started, workflow wf_reg_nightly
+2011-04-18 02:15:07 INFO  Masking profile REG_ODS_STUDENT v3.2 loaded, mode=ENFORCE
+2011-04-18 02:15:08 INFO  Sensitive field registry resolved: 13 labels mapped, 0 unmapped
+2011-04-18 02:15:09 INFO  Token vault TKNV-REG-01 handshake accepted
+2011-04-18 02:15:11 INFO  Reader SQ_SPRIDEN connected to SATURN
+2011-04-18 02:18:44 INFO  Reader SQ_SPRIDEN rows read 226,418
+2011-04-18 02:18:44 INFO  Reader SQ_SPBPERS rows read 226,418
+2011-04-18 02:19:02 INFO  Reader SQ_SPRADDR rows read 301,955
+2011-04-18 02:19:20 INFO  Reader SQ_SFRSTCR rows read 1,102,884
+2011-04-18 02:21:36 INFO  Transform TKN_NATIONAL_ID applied to SPBPERS_SSN, rows 226,412
+2011-04-18 02:21:36 WARN  Transform TKN_NATIONAL_ID input length check failed, field SPBPERS_SSN, rows 6, rule V-134
+2011-04-18 02:23:50 INFO  Transform MASK_ADDRESS applied to SPRADDR_STREET_LINE1, SPRADDR_STREET_LINE2, rows 301,955
+2011-04-18 02:24:11 INFO  Transform MASK_PHONE applied to SPRTELE_PHONE_AREA, SPRTELE_PHONE_NUMBER, rows 189,447
+2011-04-18 02:24:11 WARN  Transform MASK_PHONE encountered non-numeric input, field SPRTELE_PHONE_NUMBER, rows 74, rule V-112
+2011-04-18 02:25:03 INFO  Transform TRUNC_BIRTH_YEAR applied to SPBPERS_BIRTH_DATE, rows 226,180
+2011-04-18 02:25:03 WARN  Transform TRUNC_BIRTH_YEAR null input, field SPBPERS_BIRTH_DATE, rows 238, rule V-101
+2011-04-18 02:26:40 INFO  Transform SUPPRESS_NAME applied to SPRIDEN_LAST_NAME, SPRIDEN_FIRST_NAME, rows 226,418
+2011-04-18 02:28:15 INFO  Domain check V-STAT failures 141, V-LEVL failures 47
+2011-04-18 02:31:02 INFO  Writer TGT_D_PERSON inserted 3,116 updated 11,904 rejected 715
+2011-04-18 02:33:47 INFO  Writer TGT_D_PERSON_CONTACT inserted 4,802 updated 15,338 rejected 0
+2011-04-18 02:39:12 INFO  Writer TGT_F_ENROLLMENT inserted 27,559 updated 0 rejected 0
+2011-04-18 02:40:30 INFO  Reject file written, records 715, field values suppressed per audit.record.field.value=false
+2011-04-18 02:41:20 INFO  Audit rows written to ODS_REG.MASK_AUDIT: 1,584,926
+2011-04-18 02:41:51 INFO  Consumer view refresh REG_ODS_DIRECTORY completed
+2011-04-18 02:41:53 INFO  Session s_reg_sis2ods completed, status SUCCEEDED_WITH_WARNINGS, elapsed 00:26:46
+
+END OF JOB BLOCK
+Next scheduled run ......... 2011-04-19 02:15:00
+Escalation contact ......... on-call analyst, Enterprise Reporting Services

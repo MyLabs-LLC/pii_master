@@ -1,0 +1,49 @@
+ETL JOB OUTPUT — NIGHTLY TITLE/ESCROW MART LOAD
+Run stream: PROD.TITLE.ETL.NIGHTLY
+Business date 1998-11-03. Log written to /prod/log/etl/981103.log
+
+* 22:00:04 — JOBID ESC0441 START — stage: source availability check
+  - VSAM cluster ESCROW.MASTER — CLOSED, quiesced, readable
+  - Sybase 11 device TITLEDB01 — online, free 41%
+  - source clock skew vs. controller: 0.4 s (tolerance 5 s) — OK
+  - checklist: [x] all four sources present [x] prior night's flags cleared
+
+* 22:00:51 — JOBID ESC0442 START — stage: extract (COBOL copybook TEMASTR)
+  - records read from ESCROW.MASTER: 214,908
+  - records read from TITLE.ORDER.SEQ: 51,377
+  - records read from DISB.SUBLEDGER: 188,240
+  - short records rejected on RECFM check: 12
+  - checklist: [x] header/trailer counts agree [x] no EBCDIC translation errors
+
+* 22:39:12 — JOBID ESC0443 START — stage: masking overlay (profile MSK-TE-004)
+  - columns evaluated per row: 68
+  - FULLMASK applied: BORR_SSN, COBORR_SSN, SELLER_TIN, DISBURSE_ACCT_NO, WIRE_ABA
+  - SUPPRESS applied: BORR_DOB, PHONE_HM, PHONE_WK, PHONE_FAX, EMAIL_ADDR
+  - TOKENISE applied: GRANTOR_NAME, GRANTEE_NAME, PROP_ADDR_LINE1, PROP_ADDR_LINE2
+  - tokens minted this run: 9,114; tokens reused from vault: 205,794
+  - rows masked: 214,908 (100.0%)
+  - rows passed through unmasked: 0
+  - checklist: [x] zero rows with class-P column in clear [x] vault write journal flushed
+
+* 23:11:36 — JOBID ESC0444 START — stage: transform + conform
+  - rows in 214,908 / rows out 214,860
+  - dropped: 48 (duplicate FILE_NO on natural key, retained latest ORDER_SEQ)
+  - derived columns populated: ESCROW_STATUS_CD, CLOSE_MONTH, COUNTY_FIPS
+  - checklist: [x] surrogate key range not exhausted [x] no nulls in mart key columns
+
+* 23:44:02 — JOBID ESC0445 START — stage: load TITLEMART.F_ESCROW
+  - insert 214,860 / update 0 / delete 0
+  - commit interval 5,000; commits issued 43
+  - elapsed 00:26:19; log device peak 62%
+  - checklist: [x] target row count = staging row count [x] indexes rebuilt [x] stats updated
+
+* 00:10:21 — JOBID ESC0446 START — stage: post-load audit
+  - profile hash on MSKPROF.CFG matches promoted hash — OK
+  - sampled 500 rows across 5 partitions; masked-column pattern conformance 500/500
+  - orphan check F_ESCROW → D_PROPERTY: 0 orphans
+  - checklist: [x] audit extract written to /prod/audit/981103 [x] retention flag set 7Y
+
+* 00:14:58 — JOBID ESC0447 — stream COMPLETE, RC=0
+  - total wall clock 02:14:54
+  - notification queued to the Records Custodian and the duty operator
+  - open item: ESC0443 token mint rate up 31% over trailing 10-day mean; refer to the Data Steward

@@ -1,0 +1,22 @@
+RXDW NIGHTLY LOAD - WORKFLOW OUTPUT EXTRACT
+wf_RXDW_NIGHTLY_MASTER / run 20040414.01 / node ETLPRD02
+
+2004-04-14 01:00:04 CST  INFO   JOB J_RXDW_0410 STARTED  session s_m_STG_RX_FILL_LOAD
+2004-04-14 01:00:07 CST  INFO   masking_policy.cfg rev 11 loaded; 34 column bindings active
+2004-04-14 01:00:07 CST  INFO   token vault RXDW_PROD_PHI opened, consistency=CROSS_JOB
+2004-04-14 01:42:51 CST  INFO   SOURCE ROWS READ        4,118,662
+2004-04-14 01:42:51 CST  INFO   ROWS TOKENIZED  RX_NBR  4,118,662
+2004-04-14 01:42:51 CST  INFO   ROWS TOKENIZED  CARDHOLDER_ID_NBR  3,884,015
+2004-04-14 01:42:51 CST  INFO   ROWS MASKED     PAT_LAST_NM / PAT_FIRST_NM / PAT_DOB_DT  4,118,662
+2004-04-14 01:42:51 CST  INFO   ROWS SUPPRESSED SIG_TXT  4,118,662
+2004-04-14 01:42:52 CST  WARN   PAT_ZIP5_CD truncation applied to 4,101,338 rows; 17,324 rows null on input
+2004-04-14 01:42:53 CST  INFO   TARGET ROWS APPLIED     4,109,940
+2004-04-14 01:42:53 CST  INFO   ROWS REJECTED           8,722  -> rej/J_RXDW_0410.rej
+2004-04-14 01:42:55 CST  INFO   JOB J_RXDW_0410 COMPLETED rc=0 elapsed 00:42:51
+
+2004-04-14 01:43:10 CST  INFO   JOB J_RXDW_0420 STARTED  session s_m_STG_ELIG_MERGE
+2004-04-14 02:11:38 CST  ERROR  vault lookup latency exceeded threshold on MBR_ID_NBR; 3 retries
+2004-04-14 02:19:02 CST  INFO   SOURCE ROWS READ  1,006,441 / APPLIED 1,004,997 / REJECTED 1,444
+2004-04-14 02:19:04 CST  INFO   JOB J_RXDW_0420 COMPLETED rc=4 elapsed 00:35:54
+
+OPERATOR ANNOTATION, entered 2004-04-14 06:20 CST by the Second Shift Console Operator and endorsed the same morning by the Data Warehouse Duty Supervisor: the return code of four reported against job J_RXDW_0420 is attributable solely to the latency condition recorded at 02:11:38 and is not, in the judgment of the undersigned, indicative of any failure of the masking apparatus, inasmuch as the counts of tokenized and masked columns reconcile in full against the counts of rows read, and no column governed by the policy of record was written to the target schema in unaltered form. The rejected rows of both jobs have been routed to the exception register in masked condition, where they shall be retained for the period prescribed and thereafter destroyed, and no cleartext element has been staged, spooled, printed, or otherwise made available to any person outside the Data Warehouse Services group. Restart is not warranted; the register is referred to the Records Custodian for disposition in the ordinary course.

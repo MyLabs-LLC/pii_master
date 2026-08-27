@@ -1,0 +1,31 @@
+DATA DICTIONARY EXCERPT — CUSTOMER SUBJECT AREA
+Environment: production warehouse, stage layer
+Table: STG_PARTY_LOAD
+
+FIELD                  TYPE            NULL   NOTE
+LOAD_ID                NUMBER(10)      N      Batch identifier
+SRC_PARTY_ID           NUMBER(12)      N      Natural key from the escrow system
+PARTY_LAST_NAME        VARCHAR2(60)    Y      Hashed on load to the mart layer
+PARTY_FIRST_NAME       VARCHAR2(40)    Y      Hashed on load to the mart layer
+ENTITY_LEGAL_NAME      VARCHAR2(120)   Y      Retained in clear; commercial parties
+TIN_SSN_ENC            RAW(64)         Y      Passed through encrypted; never decrypted here
+DOB_DT                 DATE            Y      Dropped at the mart boundary
+MAIL_POSTAL_CD         VARCHAR2(10)    Y      Truncated to five characters in the mart
+MAIL_STATE_CD          CHAR(2)         Y      Retained
+EMAIL_ADDR             VARCHAR2(120)   Y      Hashed on load
+PHONE_MOBILE           VARCHAR2(20)    Y      Hashed on load
+FILE_NBR               VARCHAR2(18)    N      Grain control
+CLOSING_DT             DATE            Y      Drives the retention clock
+LOAD_TS                TIMESTAMP       N      Insert timestamp
+
+ACCESS RESTRICTION
+The stage layer is readable only by the ETL service account and the Data Warehouse Lead. No reporting tool connects to it. Any grant beyond these two is approved in writing by the Records Custodian and expires after thirty days.
+
+RETENTION
+Stage rows are truncated after the mart load confirms, and in no case held beyond fourteen days. The mart retains hashed party attributes for seven years from CLOSING_DT, matched to the file retention rule. The quarterly purge job removes DOB_DT-derived age bands at five years.
+
+DOWNSTREAM EXTRACTS
+Two extracts read from the mart, not from this table. The volume and cycle-time report carries no party attributes. The remittance reconciliation file carries FILE_NBR and ENTITY_LEGAL_NAME only. Requests for a new extract containing any hashed party column are logged and reviewed by the Compliance Officer before the job is scheduled.
+
+OPEN ITEM
+PHONE_MOBILE is still received in clear from one lender feed and hashed after landing. The Data Warehouse Lead is to move the hash upstream to the feed handler.

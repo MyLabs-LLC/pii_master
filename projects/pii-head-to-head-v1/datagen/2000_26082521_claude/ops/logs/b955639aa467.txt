@@ -1,0 +1,49 @@
+VALIDATION EXCEPTION REGISTER — WEEK ENDING 2021-04-23
+Source jobs: JOB_CIS_EXTRACT_NIGHTLY (7 runs), JOB_CIS_ARREARS_WKLY (1 run)
+Register maintained by the Records Custodian. Review cadence: weekly.
+
++ Total rows processed across period: 2,987,104
++ Total rows written: 2,975,617
++ Total rows rejected: 11,487 (0.38%)
++ Total rows quarantined: 1,904
+
+Open exceptions:
+
++ EXC-2021-0331 | VAL-211 | SVC_POSTCODE length ≠ 3 after partial mask
+    - First observed RUN-20210417-0203-CIS, recurring all 7 runs
+    - Aggregate rows 1,466
+    - Cause: source column holds trailing whitespace on legacy records
+    - Action: trim applied in conform stage from 2021-04-26; retrospective reprocess not required
+    - Status: fix pending release CIS-ETL-4.2.3
+
++ EXC-2021-0334 | VAL-221 | free-text scan hits on BILL_NOTE_TXT and CALL_LOG_TXT
+    - Aggregate rows 1,904, all quarantined, none written to DWH
+    - Scan detectors triggered: name-like token, phone-like token, address-like token
+    - Cause: operator free-text entry at counter; identifiers keyed into note fields
+    - Action: both columns removed from extract manifest effective 2021-04-26; counter staff guidance reissued
+    - Status: open, escalated to Customer Service Manager
+
++ EXC-2021-0336 | VAL-202 | PREMISE_ID token null
+    - Aggregate rows 91
+    - Cause: premises decommissioned in asset register but retained on billing account
+    - Action: refer to Asset Data team for orphan resolution
+    - Status: open, ref TCK-2021-1189
+
++ EXC-2021-0338 | MASK-114 | column present in source, absent from rule map
+    - Columns implicated: EMAIL_ADDR (locale variant), MOBILE_CONTACT_PREF
+    - Aggregate rows 3,318 and 1,207 respectively; fail-closed default applied in all cases
+    - No values emitted. Confirmed by output scan VAL-220, 0 hits across period.
+    - Action: rule map extension drafted, awaiting Information Governance endorsement
+    - Status: open, ref TCK-2021-1188
+
+Closed this period:
+
++ EXC-2021-0322 | VAL-214 | RATE_CLASS not in domain list — 68 rows, domain list refreshed 2021-04-19, closed.
++ EXC-2021-0327 | VAL-206 | tkn_party determinism check — no recurrence since vault cache purge 2021-04-16, closed.
+
+Controls confirmed for the period:
+
++ Unmasked-pattern scan (VAL-220) executed on every run. Zero hits.
++ Reject files contain token keys only; no source column values persisted. Verified by spot check on 3 of 8 runs.
++ Quarantine mount access list reviewed 2021-04-22. Two dormant accounts removed.
++ Vault key epoch unchanged. Scheduled rotation 2021-07-01 remains on register.

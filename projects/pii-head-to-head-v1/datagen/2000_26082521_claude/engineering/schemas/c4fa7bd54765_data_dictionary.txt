@@ -1,0 +1,50 @@
+MEMORANDUM
+
+TO:       Application Development — CRM; Enterprise Data Warehouse Team
+FROM:     Office of the Records Custodian
+DATE:     August 2, 2011
+SUBJECT:  Data Dictionary Excerpt and Handling Conditions, MEMBER_PROFILE and MEMBER_CONSENT
+
+1. AUTHORITY AND PURPOSE
+
+1.1  This memorandum is issued under the authority delegated to the Records Custodian by the Information Governance Charter, as amended. Its purpose is to document, for the benefit of persons designing extracts against the member subject area, the definition and handling condition of each column enumerated in Paragraph 2.
+
+1.2  Nothing herein shall be construed to enlarge any access right conferred elsewhere. Where this memorandum and a prior specification conflict, the more restrictive control shall govern.
+
+2. COLUMN INVENTORY
+
+2.1  MEMBER_PROFILE
+
+     MEMBER_KEY, NUMBER(12), NOT NULL. Primary key.
+     HOUSEHOLD_KEY, NUMBER(12), NULL permitted. Assigned by householding process; may be reassigned.
+     MEMBER_GIVEN_NAME, VARCHAR2(40), NOT NULL. Restricted class B.
+     MEMBER_SURNAME, VARCHAR2(40), NOT NULL. Restricted class B.
+     MEMBER_MIDDLE_INIT, CHAR(1), NULL permitted. Restricted class B.
+     BIRTH_DATE, DATE, NULL permitted. Restricted class A. Populated only where pharmacy linkage exists.
+     GENDER_CD, CHAR(1), NULL permitted. Self-reported; not validated.
+     STREET_ADDRESS_1, VARCHAR2(60), NULL permitted. Restricted class B.
+     STREET_ADDRESS_2, VARCHAR2(60), NULL permitted. Restricted class B.
+     CITY_NAME, VARCHAR2(40), NULL permitted. Restricted class B.
+     STATE_CD, CHAR(2), NULL permitted. Unrestricted.
+     ZIP_CD, VARCHAR2(10), NULL permitted. Truncated to five positions in all downstream extracts.
+     HOME_PHONE_NBR, VARCHAR2(20), NULL permitted. Restricted class A.
+     MOBILE_PHONE_NBR, VARCHAR2(20), NULL permitted. Restricted class A.
+     EMAIL_ADDRESS, VARCHAR2(120), NULL permitted. Restricted class A.
+     ENROLLMENT_DT, DATE, NOT NULL. Unrestricted.
+     PROFILE_STATUS_CD, CHAR(2), NOT NULL. Values maintained in CODE_XREF.
+
+2.2  MEMBER_CONSENT
+
+     MEMBER_KEY, NUMBER(12), NOT NULL. Foreign key.
+     CHANNEL_CD, CHAR(3), NOT NULL. MAI, EML, SMS, TEL.
+     CONSENT_IND, CHAR(1), NOT NULL. Absence of affirmative consent shall be treated as refusal.
+     CONSENT_SOURCE_CD, VARCHAR2(8), NOT NULL. Evidentiary basis for the consent state.
+     CONSENT_EFF_TS, TIMESTAMP, NOT NULL. Immutable once written.
+
+3. ACCESS, RETENTION, AND EXTRACT CONDITIONS
+
+3.1  Class A columns are readable only by the roles CRM_PII_READ and PHARM_OPS_READ, and only from within the store network. Class B columns are additionally readable by fulfillment operations.
+
+3.2  Rows in MEMBER_PROFILE are retained for seven (7) years from ENROLLMENT_DT or thirty-six (36) months from last recorded activity, whichever is later. MEMBER_CONSENT rows are retained not less than five (5) years following supersession.
+
+3.3  No extract to a non-production environment, and no extract to any party outside the enterprise, shall include a class A column absent the countersignature of the Privacy Officer.

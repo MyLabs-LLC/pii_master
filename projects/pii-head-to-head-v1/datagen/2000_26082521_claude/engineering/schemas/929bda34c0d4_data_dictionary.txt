@@ -1,0 +1,69 @@
+DEPARTMENT OF MUNICIPAL UTILITIES
+INFORMATION SERVICES DIVISION
+DATA DICTIONARY EXCERPT — FORM DD-114A (STAGING OBJECTS)
+
+I.  IDENTIFICATION
+    Object ................. CIS_STG.CUST_EXTRACT_STG
+    Object type ............ Staging table, truncate-and-load
+    Load frequency ......... Nightly, following the billing cycle close
+    Classification ......... Restricted — Category II, by inheritance from the
+                             source object CIS_PROD.CUST_MASTER
+
+II. COLUMN REGISTER
+
+    #   COLUMN NAME               TYPE            NULL  NOTE
+    01  STG_ROW_SEQ               NUMBER(12)      NO    (a)
+    02  SRC_CUST_ID               NUMBER(12)      NO    (a)
+    03  SRC_ACCT_NUM_HASH         CHAR(64)        NO    (b)
+    04  CUST_LEGAL_NAME           VARCHAR2(120)   NO    (c)(d)
+    05  CUST_DOB                  DATE            YES   (c)(d)(e)
+    06  CUST_TAXID_LAST4          CHAR(4)         YES   (c)(d)(e)
+    07  BILL_ADDR_LINE_1          VARCHAR2(80)    NO    (c)
+    08  BILL_ADDR_LINE_2          VARCHAR2(80)    YES   (c)
+    09  BILL_ADDR_POSTAL_CD       CHAR(9)         NO
+    10  BILL_EMAIL_ADDR           VARCHAR2(160)   YES   (c)(e)
+    11  BILL_PHONE_PRIMARY        CHAR(10)        YES   (c)
+    12  CURR_BAL_AMT              NUMBER(11,2)    NO
+    13  DAYS_PAST_DUE_CNT         NUMBER(4)       NO
+    14  LAST_PAY_DT               DATE            YES
+    15  DUNNING_STAGE_CD          CHAR(2)         NO
+    16  STG_LOAD_TS               TIMESTAMP       NO    (a)
+
+III. NOTE LEGEND
+    (a) Populated by the load process; not sourced from the production object.
+    (b) One-way hash. The cleartext account number is not staged, is not
+        indexed, and shall not be reconstructed by any downstream process.
+    (c) Restricted attribute. Replaced by surrogate values in every environment
+        other than production staging.
+    (d) Subject to the column-level grant provisions of Form DD-114, Section C.
+        No grant issued upon the production object is inherited here; a separate
+        grant is required and must be separately justified.
+    (e) Excluded from every outbound file described at Part V below.
+
+IV. ACCESS RESTRICTION
+    a. The schema CIS_STG is not accessible to interactive sessions. Access is
+       confined to the batch account ETL_LOAD_SVC and to the role CIS_ETL_ADMIN.
+    b. Ad hoc query privileges upon this object are prohibited. Requests for
+       investigative access are directed to the Records Custodian and are granted
+       for a fixed term not exceeding five business days.
+    c. Failed load attempts leave the prior contents in place; operators shall not
+       remedy a failure by manual update of restricted columns.
+
+V.  DOWNSTREAM EXTRACTS
+    a. Collections work queue, nightly. Columns 02, 04, 07, 08, 09, 11, 12, 13,
+       and 15. Delivered to the internal secure directory.
+    b. Print and mail vendor, cycle-based. Columns 04, 07, 08, 09, and 12,
+       delivered under the standing confidentiality agreement then in force.
+    c. Delinquency statistics, monthly. Columns 13 and 15 in aggregate; no
+       row-level attribute leaves the Division.
+
+VI. RETENTION
+    The object is truncated at the commencement of each load. Load audit rows in
+    CIS_STG.LOAD_CTL are retained eighteen (18) months. Outbound files described
+    at Part V are purged from the transfer directory after fourteen (14) days,
+    the purge being verified by the operations log.
+
+VII. APPROVALS
+    Data Steward, Billing Operations ............ ______________  Date: ________
+    ETL Administrator, Information Services ..... ______________  Date: ________
+    Records Custodian ........................... ______________  Date: ________

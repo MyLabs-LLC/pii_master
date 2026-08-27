@@ -1,0 +1,28 @@
+DATA DICTIONARY EXCERPT — MBRPROF (Shipper Program Member Profile)
+Prepared by Database Administration Group for the Records Custodian
+
+1.  MBR_NBR — CHAR(8), not null. Program membership key. Not the same value as CUST_ID and must not be substituted for it in any join.
+
+2.  MBR_LAST_NM — VARCHAR(30), not null. Restricted read.
+
+3.  MBR_FRST_NM — VARCHAR(20), not null. Restricted read.
+
+4.  MBR_HOME_PHON_NBR — CHAR(10), nullable. Restricted read. Collected on the enrolment card only; not maintained.
+
+5.  MBR_ADR_LN1 — VARCHAR(40), nullable. Restricted read. Statement mailing use only.
+
+6.  MBR_ADR_LN2 — VARCHAR(40), nullable. Restricted read.
+
+7.  MBR_POST_CD — CHAR(9), nullable. Released to the marketing extract at five characters truncated.
+
+8.  MBR_ENRL_DT — DATE, not null. Four-digit year.
+
+9.  MBR_TIER_CD — CHAR(1), not null. Recalculated by the month-end scoring job.
+
+10. MBR_LAST_SHIP_DT — DATE, nullable. Drives dormancy.
+
+11. MBR_PURGE_ELIG_DT — DATE, nullable. Enrolment plus three years of dormancy.
+
+12. MBR_MAIL_SUPR_FLG — CHAR(1), not null. Set on written request. Honoured by the marketing extract and by the tier statement mailing; not honoured by service advisories.
+
+Items 2 through 6 are held under the restricted plan. Extracts to the fulfilment house carry items 2, 5, 6 and 7 only, under the standing confidentiality schedule, and are transmitted on encrypted tape.

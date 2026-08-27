@@ -1,0 +1,49 @@
+NORTHGATE STAFFING SERVICES LTD
+APPLICANT DATA PLATFORM -- FIELD MAPPING RULESET
+FILE ....: /etc/adp/map/cand_master_to_hrstg.map
+REVISION : 4.2.1
+LOADED ..: 2016-03-14T01:58:22Z
+OWNER ...: Records Custodian, Compliance Desk
+BOUND JOB: ETL_CANDMSTR_NIGHTLY
+CLASSES .: PII=identifying  SPI=special category  FIN=financial  NON=operational
+
+RULE_ID  SOURCE_FIELD            TARGET_FIELD            DTYPE   LEN  NUL  CLS   TRANSFORM
+-------  ----------------------  ----------------------  ------  ---  ---  ----  ----------------
+R-0010   cand_surname            hr_last_name            CHAR     40   N   PII   TRIM|UPPER
+R-0020   cand_forename           hr_first_name           CHAR     40   N   PII   TRIM
+R-0030   cand_middle_init        hr_middle_init          CHAR      1   Y   PII   TRIM
+R-0040   cand_dob                hr_birth_date           DATE     10   N   SPI   DATE_ISO
+R-0050   cand_natl_ins_no        hr_ni_number            CHAR      9   N   SPI   TOKENISE
+R-0060   cand_tax_ref_no         hr_tax_id               CHAR     11   Y   SPI   TOKENISE
+R-0070   cand_email_addr         hr_email_addr           VARCHR  120   N   PII   LOWER|MASK
+R-0080   cand_mobile_no          hr_phone_mobile         CHAR     20   Y   PII   E164|MASK
+R-0090   cand_addr_line1         hr_addr_line_1          VARCHR   60   N   PII   TRIM|SUPPRESS
+R-0100   cand_addr_line2         hr_addr_line_2          VARCHR   60   Y   PII   TRIM|SUPPRESS
+R-0110   cand_post_town          hr_city                 CHAR     40   N   PII   TRIM|UPPER
+R-0120   cand_postcode           hr_postal_code          CHAR     10   N   PII   UPPER|NOSPACE
+R-0130   cand_bank_sort_cd       hr_sort_code            CHAR      6   Y   FIN   TOKENISE
+R-0140   cand_bank_acct_no       hr_acct_number          CHAR      8   Y   FIN   TOKENISE
+R-0150   cand_rtw_status         hr_rtw_status           CHAR     12   N   SPI   LOOKUP_RTW
+R-0160   cand_doc_number         hr_doc_number           CHAR     20   Y   SPI   TOKENISE
+R-0170   cand_doc_expiry         hr_doc_expiry           DATE     10   Y   SPI   DATE_ISO
+R-0180   cand_ethnic_cd          hr_eeo_ethnic           CHAR      4   Y   SPI   LOOKUP_EEO
+R-0190   cand_gender_cd          hr_eeo_gender           CHAR      1   Y   SPI   LOOKUP_SEX
+R-0200   cand_disab_flag         hr_eeo_disab            CHAR      1   Y   SPI   LOOKUP_YN
+R-0210   cand_emerg_name         hr_emerg_name           CHAR     60   Y   PII   SUPPRESS
+R-0220   cand_emerg_phone        hr_emerg_phone          CHAR     20   Y   PII   SUPPRESS
+R-0230   plc_assign_ref          hr_assign_id            CHAR     12   N   NON   PASSTHRU
+R-0240   plc_site_code           hr_site_code            CHAR      8   N   NON   PASSTHRU
+R-0250   plc_rate_hourly         hr_rate_hourly          DEC       9   N   FIN   ROUND_2
+R-0260   plc_week_ending         hr_week_ending          DATE     10   N   NON   DATE_ISO
+
+NOTES
+  1. Rules bearing CLS=SPI are read-locked at target; export requires dual
+     authorisation by the Records Custodian and the duty Data Steward.
+  2. TOKENISE resolves against vault tv-prod-02. Vault outage forces the
+     rule to SUPPRESS; the run is not permitted to substitute cleartext.
+  3. R-0090, R-0100, R-0210 and R-0220 carry no downstream consumer. Columns
+     are provisioned to preserve ordinal position only and remain empty.
+  4. Unmapped source columns are dropped at stage 2 and counted, not logged
+     by name, against DQ-1190.
+  5. Amendments require a change ticket against CR-ADP series. Editing this
+     file in place without an increment to REVISION will fail the loader.

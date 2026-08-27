@@ -1,0 +1,18 @@
+MEMBER CONTACT PREFERENCE TABLE — FIELD LIST
+Table: CRM.PARTY_PREF
+
+Column, type, nullability, note:
+
+PREF_ID, NUMBER(10), not null, surrogate key.
+PARTY_ID, NUMBER(12), not null, foreign key to PARTY_MASTER.
+CHANNEL_CD, CHAR(2), not null, EM, SM, PH, PM.
+OPT_IN_FLG, CHAR(1), not null, Y or N, defaults to N.
+OPT_IN_DT, DATE, nullable, must be present when OPT_IN_FLG is Y.
+OPT_OUT_DT, DATE, nullable, set by the unsubscribe handler.
+EMAIL_ADDR_HASH, RAW(32), nullable, hash only; the clear value stays in PARTY_MASTER.
+PHONE_MOBILE_HASH, RAW(32), nullable, used for suppression matching.
+DNC_SCRUB_DT, DATE, nullable, last do-not-call comparison.
+UPD_BY_ROLE, VARCHAR2(30), not null, role that last wrote the row.
+UPD_TS, TIMESTAMP, not null, system timestamp.
+
+Access: the marketing team receives this table through the campaign extract only; direct select is limited to the CRM Administrator. Retention: preference rows are held three years past the last file closing, then archived. Extracts: weekly campaign file to the email platform, suppression-list refresh to the print vendor monthly. Neither extract carries clear-text contact columns.

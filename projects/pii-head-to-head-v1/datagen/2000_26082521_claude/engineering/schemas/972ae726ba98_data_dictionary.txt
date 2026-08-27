@@ -1,0 +1,39 @@
+MEMORANDUM
+
+TO:      Data Governance Committee
+FROM:    Records Custodian, Operations Support
+DATE:    14 March 2011
+SUBJECT: Data Dictionary Excerpt — MEMBER_MASTER (MBR01), Core Host Release 2010.01
+CLASS:   Internal Use Only / Restricted Distribution
+
+1. Purpose. This excerpt documents the member identity segment of MEMBER_MASTER as it stands following the February maintenance window. It supersedes the excerpt circulated 09 November 2010.
+
+2. Column inventory. The following columns are within scope of this excerpt.
+
+   COLUMN NAME            TYPE           NULL  OPERATIONAL NOTE
+   MBR_SEQ_ID             NUMBER(12)     NO    Surrogate key; host-assigned, never reused.
+   MBR_NBR                CHAR(10)       NO    Natural key; restricted display.
+   MBR_LAST_NAME          VARCHAR2(40)   NO    Restricted column (see cl. 4).
+   MBR_FIRST_NAME         VARCHAR2(30)   NO    Restricted column.
+   MBR_MID_INIT           CHAR(1)        YES   Sparsely populated pre-1998 conversions.
+   MBR_SSN                CHAR(9)        YES   Restricted; encrypted at rest.
+   MBR_DOB                DATE           YES   Restricted; used by Red Flags scoring.
+   MBR_ADDR_LINE_1        VARCHAR2(60)   NO    Restricted; CASS-standardised nightly.
+   MBR_ADDR_LINE_2        VARCHAR2(60)   YES   Suite/unit designator only.
+   MBR_POSTAL_CD          CHAR(9)        NO    ZIP+4; hyphen not stored.
+   MBR_HOME_PHONE         CHAR(10)       YES   Restricted; NPA/NXX validated on entry.
+   MBR_EMAIL_ADDR         VARCHAR2(80)   YES   Restricted; verified flag held separately.
+   MBR_OPEN_DT            DATE           NO    Drives retention clock (cl. 5).
+   MBR_CLOSE_DT           DATE           YES   Null implies open relationship.
+   MBR_STATUS_CD          CHAR(2)        NO    Domain held in CODE_TABLE 'MSTAT'.
+   REC_LAST_MAINT_TS      TIMESTAMP      NO    Populated by host trigger; not editable.
+
+3. Nullability. Columns marked NO are enforced at the database level. Application-side "required" edits are broader than the physical constraints and must not be relied upon by extract developers.
+
+4. Access restriction. Columns annotated "Restricted" are granted by role, not by individual. Grants are held by the Records Custodian and reviewed quarterly under Part 748 Appendix A. Non-production refreshes must pass through the masking routine before any developer schema is opened; unmasked copies outside the production zone are prohibited without written waiver from the Information Security Officer.
+
+5. Retention. Records remain live for the duration of the relationship and for seven years after MBR_CLOSE_DT, consistent with Retention Schedule RS-4.2. BSA-relevant identity elements are retained five years from the date of the last covered transaction, whichever is later. Purge candidates are staged monthly and released only on Custodian sign-off.
+
+6. Downstream extracts. The following consume this segment: EXT_MCIF_001 (nightly, marketing datamart, restricted columns tokenised); EXT_STMT_PRINT (cycle-driven, name and address only, transmitted over managed file transfer); EXT_CRA_REPORT (monthly bureau furnishing); EXT_OFAC_SCAN (daily). No new extract may be scheduled against MEMBER_MASTER without a completed Data Release Request.
+
+7. Change control. Requests to alter type, length or nullability route through the Change Advisory Board. Direct DDL against production is reserved to the database administration group during an approved window.

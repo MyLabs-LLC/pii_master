@@ -1,0 +1,58 @@
+DATA DICTIONARY — EXCERPT
+SYSTEM: TitleWorks Settlement Platform (TWSP), production instance PRD01
+PLATFORM: SQL Server 2008 R2, Enterprise
+SCHEMA: dbo
+OBJECT: PTY_MASTER — Party / Member Master
+CLASSIFICATION: Restricted — Nonpublic Personal Information (GLBA Title V)
+DICTIONARY REVISION: 4.2
+EFFECTIVE: Q2 2016 release train
+OWNER: Data Governance Office. Countersignature of the Records Custodian required for any change to Sections C, D or E.
+
+SECTION A — OBJECT PROFILE
+A.1 Object type: base table, clustered index on PTY_ID.
+A.2 Source of record: escrow order intake queue; CIP capture at signing table; underwriter party feed.
+A.3 Row population is per party per file; parties are not deduplicated across branches.
+A.4 Object participates in nightly replication. See Section E.
+
+SECTION B — COLUMN INVENTORY
+COLUMN NAME | DATA TYPE | NULL | OPERATIONAL NOTE
+PTY_ID | bigint IDENTITY | NOT NULL | Surrogate key. Not exposed to front-end screens.
+FILE_NBR | varchar(20) | NOT NULL | FK to ESCRW.FILE_HDR. Branch prefix is significant.
+PTY_ROLE_CD | char(4) | NOT NULL | Domain: buyer, seller, borrower, lender, agent, other. See DOM_PTY_ROLE.
+PTY_LAST_NAME | varchar(60) | NOT NULL | Masked to role Clerk-II and below.
+PTY_FIRST_NAME | varchar(40) | NULL | Null permitted for entity parties.
+PTY_MIDDLE_NAME | varchar(40) | NULL |
+PTY_ENTITY_NAME | varchar(120) | NULL | Populated only when PTY_TYPE_CD = entity.
+PTY_TIN | char(9) | NULL | Column-level deny to all roles except Settlement Accounting and Tax Reporting. Written by 1099-S workflow only.
+PTY_SSN_ENC | varbinary(256) | NULL | Cell-encrypted. Decryption certificate held by the Records Custodian. Any read is written to AUD_KEY_USE.
+PTY_BIRTH_DATE | date | NULL | Collected for CIP/OFAC screening only. Excluded from all reporting views.
+PTY_DL_NBR_ENC | varbinary(256) | NULL | Identification captured at signing. See Section D.2 for purge rule.
+PTY_ADDR_LINE_1 | varchar(80) | NULL | Mailing address, not property address. Property address lives in ESCRW.PROP_HDR.
+PTY_ADDR_LINE_2 | varchar(80) | NULL |
+PTY_CITY | varchar(50) | NULL |
+PTY_STATE_CD | char(2) | NULL |
+PTY_POSTAL_CD | varchar(10) | NULL |
+PTY_HOME_PHONE | varchar(20) | NULL | Free-text. No format constraint enforced.
+PTY_MOBILE_PHONE | varchar(20) | NULL |
+PTY_EMAIL_ADDR | varchar(120) | NULL | Consumer-facing notification target. Do not use as a join key; duplicates exist.
+PTY_MBR_NBR | varchar(16) | NULL | Legacy member program identifier. Deprecated; retained for reconciliation.
+CREATED_BY_USER | varchar(30) | NOT NULL | Application login, not network login.
+CREATED_DTM | datetime | NOT NULL |
+LAST_UPD_DTM | datetime | NOT NULL | Trigger-maintained.
+PURGE_ELIG_DT | date | NULL | Calculated by nightly job. Null indicates hold.
+
+SECTION C — ACCESS RESTRICTION
+C.1 Base table select is denied to all interactive logins. Access is by view only.
+C.2 The columns PTY_TIN, PTY_SSN_ENC, PTY_BIRTH_DATE and PTY_DL_NBR_ENC are excluded from VW_PTY_STD. Requests for the unmasked view require a signed access request approved by the Records Custodian and the Compliance Officer.
+C.3 Ad hoc query access is not granted to branch personnel under any circumstance.
+
+SECTION D — RETENTION
+D.1 Party rows persist for the retention period of the parent escrow file.
+D.2 PTY_DL_NBR_ENC and PTY_BIRTH_DATE are overwritten to null on the sixtieth day following disbursement, irrespective of file retention.
+D.3 Legal hold suppresses all purge activity. Hold is applied at file level, not party level.
+
+SECTION E — DOWNSTREAM EXTRACTS
+E.1 Nightly extract to the marketing data mart. Restricted columns are not carried; the extract selects from VW_PTY_STD.
+E.2 Monthly 1099-S submission file. Carries PTY_TIN. Encrypted at rest, transmitted by managed file transfer, purged from the staging area on receipt acknowledgement.
+E.3 Underwriter remittance feed. Carries name and property reference only.
+E.4 No extract to any non-production environment is authorised. Refresh of QA and DEV is performed from the scrambler output set.

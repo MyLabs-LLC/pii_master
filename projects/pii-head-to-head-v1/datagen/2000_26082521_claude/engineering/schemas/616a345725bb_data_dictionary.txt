@@ -1,0 +1,46 @@
+DATA DICTIONARY EXCERPT — PROD_PORTAL.MBR_PORTAL_ACCOUNT
+Consumer and agent portal, member account subject area. Revision 2.6.
+
+1. General
+1.1 The table records one portal account per registered member. A member may be linked to multiple escrow files; linkage is held in MBR_FILE_XREF and is out of scope for this excerpt.
+1.2 The table is owned by the portal application schema. The escrow production schema holds no write privilege.
+
+2. Identification columns
+2.1 MBR_ID — NUMBER(12) — NOT NULL — surrogate key.
+2.2 MBR_LOGIN_ID — VARCHAR2(120) — NOT NULL — unique; the member's registered address is used as the login value, therefore this column is treated as a restricted column throughout.
+2.3 MBR_DISPLAY_NAME — VARCHAR2(80) — NULL — member-supplied; unvalidated free text.
+2.4 MBR_PARTY_ID — NUMBER(12) — NULL — resolved link to PROD_ESCROW.TBL_PARTY_MASTER; null until identity match completes.
+2.5 MBR_MOBILE_NBR — VARCHAR2(20) — NULL — used for one-time passcode delivery only.
+
+3. Credential columns
+3.1 PWD_HASH — RAW(64) — NOT NULL — salted hash; the algorithm identifier is carried in PWD_ALGO_CD.
+3.2 PWD_SALT — RAW(32) — NOT NULL.
+3.3 PWD_ALGO_CD — CHAR(4) — NOT NULL.
+3.4 PWD_LAST_CHG_TS — TIMESTAMP(6) — NOT NULL.
+3.5 FAILED_LOGIN_CNT — NUMBER(2) — NOT NULL — default zero; lockout at five.
+3.6 SECURITY_QSTN_1_CD, SECURITY_QSTN_2_CD — CHAR(3) — NULL — question codes only.
+3.7 SECURITY_ANS_1_HASH, SECURITY_ANS_2_HASH — RAW(64) — NULL.
+
+4. Status and audit columns
+4.1 ACCT_STATUS_CD — CHAR(1) — NOT NULL — R registered, A active, L locked, C closed.
+4.2 REGISTRATION_TS — TIMESTAMP(6) — NOT NULL.
+4.3 LAST_LOGIN_TS — TIMESTAMP(6) — NULL.
+4.4 LAST_LOGIN_IP — VARCHAR2(45) — NULL.
+4.5 CONSENT_ECOMM_IND — CHAR(1) — NOT NULL — electronic delivery consent; withdrawal sets N and stamps CONSENT_CHG_TS.
+4.6 CONSENT_CHG_TS — TIMESTAMP(6) — NULL.
+4.7 PURGE_ELIG_DT — DATE — NULL — computed; see clause 6.
+
+5. Access restriction
+5.1 Columns at clauses 2.2, 2.5 and 4.4 are restricted. Support staff resolve the table through VW_MBR_ACCOUNT_SUPPORT, which masks clause 2.2 to domain only and suppresses clauses 2.5 and 4.4.
+5.2 Columns at clause 3 are not exposed to any human-accessible view. Application service accounts hold execute privilege on PKG_MBR_AUTH and no select privilege on the table.
+5.3 Elevated access is time-boxed to eight hours and is logged. Standing elevated grants are prohibited.
+
+6. Retention
+6.1 Accounts in status C are purged eighteen months after status change, subject to clause 6.3.
+6.2 Accounts in status R that never transition to A are purged after ninety days.
+6.3 Purge is suspended for any member linked to a file under litigation hold. Hold flags are maintained outside this table.
+
+7. Downstream extracts
+7.1 The portal adoption metrics extract carries clauses 2.1, 4.1, 4.2, 4.3 and 4.5 only. No restricted column is permitted.
+7.2 The identity match reconciliation extract carries clauses 2.1 and 2.4 only and is written to the internal secure share.
+7.3 Any extract that would join clause 2.2 to escrow file data requires the written approval of the Records Custodian and the Compliance Officer.

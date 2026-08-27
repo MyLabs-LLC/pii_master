@@ -1,0 +1,46 @@
+VALIDATION ERROR EXTRACT — pmx-etl validator, channel prod
+SOURCE FILE: /var/log/pmx-etl/validate/PMX-ETL-PROD-0418.err
+WINDOW: 2021-04-06T02:00:00Z through 2021-04-06T02:44:59Z
+RUN: PMX-ETL-PROD-0418 · batch B-2021-0406-A · rules r14.2.1 · policy rev 9
+
+  I.  ADMISSION FAILURES (record rejected in whole; no partial load permitted)
+      A. 2021-04-06T02:04:11.442Z · VAL-0117 · severity BLOCKING · rows 1,284
+         i.   Assertion: column payment_card_pan present in inbound header manifest
+              for feed PDX_DAILY_FIN, contrary to clause 3.4.1 of the governing ruleset,
+              which provides that no such column shall be provisioned in the target.
+         ii.  Disposition applied: entire column stripped prior to staging; value neither
+              read into memory nor written to any durable medium; affected rows quarantined.
+         iii. Remediation owner: the Feed Steward, store systems.
+      B. 2021-04-06T02:07:53.019Z · VAL-0119 · severity BLOCKING · rows 96
+         i.   Assertion: field ssn_last4 shall be emitted as [NULL-BY-POLICY].
+         ii.  Observed: non-conforming emitted form of length four in staging column.
+         iii. Disposition: staging partition dropped; upstream extract job suspended
+              pending written instruction of the Records Custodian.
+
+  II. CONFORMANCE WARNINGS (record admitted; cell suppressed)
+      A. 2021-04-06T02:12:38.771Z · VAL-0204 · severity HIGH · rows 41,902
+         Field patient_dob failed decade-bucket derivation owing to an unparsable
+         source format; the cell was set to [NULL-BY-POLICY] in accordance with the
+         default disposition, and the record was admitted in reduced form.
+      B. 2021-04-06T02:19:02.556Z · VAL-0208 · severity MEDIUM · rows 7,315
+         Field zip5 arrived at a length inconsistent with the generalization mask
+         ###**; generalization applied to the leading three positions only, the
+         remainder being discarded and not retained in any audit structure.
+      C. 2021-04-06T02:26:44.310Z · VAL-0212 · severity MEDIUM · rows 512
+         Field email_address matched no recognized pattern; the configured mask
+         ****@****.*** was nonetheless applied, it being the intent of policy revision 9
+         that masking be unconditional and not contingent upon pattern recognition.
+
+ III. TOKENIZATION FAULTS
+      A. 2021-04-06T02:31:15.884Z · VAL-0301 · severity HIGH · rows 2,006
+         Vault npi-v1 returned a transient unavailability for field prescriber_npi;
+         the validator did not fall back to a plaintext write, such fallback being
+         prohibited; affected rows deferred to the retry partition.
+      B. 2021-04-06T02:38:59.127Z · VAL-0303 · severity LOW · rows 18
+         Field loyalty_account_number was absent from the inbound record; no surrogate
+         was minted and the target cell was left unpopulated.
+
+  IV. SUMMARY OF THE WINDOW
+      Rows examined 1,412,660 · rows admitted 1,411,280 · rows rejected 1,380
+      Cells suppressed 49,729 · cells masked 61,044 · surrogates minted 3,918,552
+      Values written to this log: none, the emit_values directive being set to false.

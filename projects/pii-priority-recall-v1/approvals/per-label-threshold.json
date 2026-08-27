@@ -1,0 +1,28 @@
+{
+  "approved_at": "2026-08-25T14:10:02.432872+00:00",
+  "approved_by": "user (\"once you find that out then make it happen\")",
+  "plan": {
+    "budget": {
+      "max_trials": 3,
+      "max_wallclock_s": 14400
+    },
+    "discipline": [
+      "selection on train_index.jsonl (held-in) ONLY",
+      "eval_index.jsonl scored once per candidate through training/priority_eval.py unchanged",
+      "weights, features, read window, scorer semantics and split membership all frozen"
+    ],
+    "editable_surfaces": [
+      "training/select_priority_thresholds.py (new)",
+      "projects/pii-priority-recall-v1/models/<candidate>/ (per-tag thresholds only)"
+    ],
+    "modules": [
+      "tune",
+      "eval"
+    ],
+    "operation": "loop-reopen-per-label-threshold",
+    "project": "projects/pii-priority-recall-v1",
+    "rationale": "All 16 priority tags route to source:recall because _thresholds_for_trial picks ONE shared priority_target_index for every priority tag. Tags at worst-recall 1.0000 run at the target the hardest tag needs, costing precision the gate never required. Implied macro precision 0.159.",
+    "target": "macro_f2 under the frozen policy, priority recall ci_lower >= 0.90 preserved"
+  },
+  "plan_sha256": "68459b34d7fe6b48994929964ced8a95f16e9089133e9d53ececd0bded37f2ba"
+}

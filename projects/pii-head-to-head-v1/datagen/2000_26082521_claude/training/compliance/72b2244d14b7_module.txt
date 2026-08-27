@@ -1,0 +1,46 @@
+MEMORANDUM
+
+TO: Branch Leadership and Delegated Records Handlers
+FROM: Office of Compliance and Records Governance
+DATE: 4 October 2021
+RE: Module 4 Handout — Field-Level Restrictions and Enforcement
+
+1. INSTRUCTION
+1.1 Retain this handout at the workstation. It supersedes the January edition.
+1.2 The table below is the authoritative list of restricted column names as they appear in the applicant tracking system and the payroll extract. Presence of a column name in any file, report, or message determines the handling rule; the file title does not.
+
+2. RESTRICTED COLUMN NAMES BY SOURCE
+
+    SOURCE                 COLUMN NAME                          TIER
+    Applicant Record       SSN                                  1
+    Applicant Record       DOB                                  1
+    Applicant Record       WORK_AUTH_DOC_NBR                    1
+    Applicant Record       LEGAL_NAME_LAST / LEGAL_NAME_FIRST   1
+    Payroll Extract        BANK_ROUTING_NBR                     2
+    Payroll Extract        DEPOSIT_ACCT_NBR                     2
+    Payroll Extract        GARNISH_ORDER_REF                    2
+    Screening Feed         DRUG_SCREEN_RESULT                   3
+    Screening Feed         WC_CLAIM_NBR                         3
+    Contact Table          HOME_ADDR_LINE1 / HOME_ADDR_LINE2    4
+    Contact Table          PERSONAL_MOBILE                      4
+    Contact Table          PERSONAL_EMAIL                       4
+    Contact Table          EMERG_CONTACT_NAME                   4
+    Background Feed        CONSUMER_REPORT_ID                   5
+    Background Feed        ADVERSE_ACTION_DATE                  5
+
+3. RULES OF HANDLING
+3.1 Tiers 1 and 2 shall not be exported, printed, or attached to a message without prior written approval of the Records Custodian.
+3.2 Tier 3 columns shall not be discussed with any client contact under any circumstance, including where the client asserts a safety interest.
+3.3 Tier 4 columns may be used for internal scheduling only, from the system of record, and shall not be copied into local files.
+3.4 Any file containing a Tier 1 or Tier 2 column shall reside only on the governed network share, which is retained and purged on the published schedule.
+
+4. ENFORCEMENT
+4.1 Quarterly scanning of branch drives and mailboxes is performed against the column names in Section 2.
+4.2 A positive match generates an incident record assigned to the Branch Manager, with a five-business-day response requirement.
+4.3 Sustained findings carry counseling, entitlement suspension, or termination, in the order set by the Disciplinary Panel, and are reportable to the affected client under the master services agreement.
+
+5. SCENARIO QUIZ
+5.1 A weekly report is titled "Headcount Summary" but carries DEPOSIT_ACCT_NBR. State the handling tier and the required disposition.
+5.2 A branch is asked to certify to a client that all assigned workers cleared screening, and proposes to attach the screening feed. State the compliant response.
+5.3 A supervisor exports the contact table to plan a holiday shift roster. State which columns must be removed before the export is permitted.
+5.4 Return completed answers to the Records Custodian within five business days.

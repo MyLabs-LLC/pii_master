@@ -1,0 +1,74 @@
+ENTERPRISE DATA DICTIONARY — EXCERPT
+SUBJECT AREA: MEMBER, GROUP, AND ELIGIBILITY
+ENVIRONMENT: PROD (DB2 for z/OS, schema MBRDW) | REVISION 2021.09
+CUSTODIAN OF RECORD: Records Custodian, Enterprise Data Management
+CLASSIFICATION SCALE: 1 Public | 2 Internal | 3 Confidential | 4 Restricted
+
+SECTION A — PARTY IDENTITY
+COLUMN                TYPE            NULL  CLS  NOTE
+--------------------  --------------  ----  ---  ---------------------------------
+PARTY_KEY             DECIMAL(15,0)   N     2    Warehouse key, non-reissued.
+MBR_ID                CHAR(12)        N     2    Enterprise member key.
+ALT_MBR_ID            CHAR(12)        Y     2    Prior key after a merge event.
+MEDCD_ID              CHAR(11)        Y     4    State program identifier. Present
+                                                 only on the managed lines.
+MEDCR_BENE_ID         CHAR(11)        Y     4    MBI. Replaced the HICN column,
+                                                 dropped 2020-01.
+SSN_TIN               CHAR(9)         Y     4    Encrypted at rest. Role-gated.
+NM_LAST               VARCHAR(40)     N     3
+NM_FIRST              VARCHAR(30)     N     3
+DOB_DT                DATE            N     4    Age derivation only downstream.
+DOD_DT                DATE            Y     4    Loaded from the quarterly death
+                                                 master reconciliation.
+
+SECTION B — CONTACT
+COLUMN                TYPE            NULL  CLS  NOTE
+--------------------  --------------  ----  ---  ---------------------------------
+ADDR_LN_1             VARCHAR(60)     Y     3    Standardized post-CASS.
+ADDR_LN_2             VARCHAR(60)     Y     3
+CITY_NM               VARCHAR(40)     Y     3
+ST_CD                 CHAR(2)         Y     2    Situs driver.
+ZIP_CD                CHAR(9)         Y     3    ZIP3 view is Class 1.
+CNTY_FIPS_CD          CHAR(5)         Y     1    Rating area assignment.
+PHN_MOBILE            CHAR(10)        Y     3    TCPA consent required for SMS.
+PHN_HOME              CHAR(10)        Y     3
+EMAIL_ADDR            VARCHAR(120)    Y     3
+PREF_LANG_CD          CHAR(3)         Y     2    ISO 639-2. Drives fulfillment.
+
+SECTION C — COVERAGE AND GROUP
+COLUMN                TYPE            NULL  CLS  NOTE
+--------------------  --------------  ----  ---  ---------------------------------
+GRP_NBR               CHAR(10)        N     2    FK to GRP_MASTER.
+DIV_NBR               CHAR(4)         Y     2
+PLAN_CD               CHAR(8)         N     2
+REL_TO_SUBSCR_CD      CHAR(2)         N     2    Domain in CD_RELATION.
+COV_EFF_DT            DATE            N     2
+COV_TERM_DT           DATE            Y     2    Null equals active.
+COBRA_IND             CHAR(1)         N     2    Y/N, default N.
+UNDW_RISK_SCORE       DECIMAL(5,2)    Y     4    Model output. Excluded from all
+                                                 servicing and vendor extracts.
+
+ACCESS RESTRICTION
+Base tables carry no interactive grants. Three consumption views exist:
+MBR_SERVICE_V (Sections A identity keys plus B, for the service center),
+MBR_ACTUARIAL_V (Sections A and C with DOB_DT replaced by AGE_BAND_CD and all
+Section B columns suppressed), and MBR_ZIP3_V (Class 1 only). Class 4 columns
+are readable exclusively through role R_PII_ELEV, which is time-boxed to a
+single business day per approval and recertified quarterly. All Class 4 SELECT
+activity is written to the database audit trail and reviewed monthly.
+
+RETENTION
+Operational retention is the coverage period plus seven years, measured from
+COV_TERM_DT. On expiry the annual purge nulls Class 3 and Class 4 columns and
+retains PARTY_KEY, GRP_NBR, PLAN_CD, and the coverage dates. Rows carrying a
+litigation or regulatory hold are excluded until the hold is released by the
+Records Custodian.
+
+DOWNSTREAM EXTRACTS
+Four recurring extracts read this area. The stop-loss carrier file carries no
+Section B columns and substitutes a hashed member key. The state all-payer
+submission carries DOB_DT and ZIP_CD under the filing exemption. The wellness
+vendor file carries name, email, and preferred language only, gated on the
+communication consent flag. The internal reporting mart carries Section C in
+full and no Class 4 column. Any new consumer requires a data-sharing review
+before the ETL request is scheduled.

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  mapping-rules-consign9.xml   rev 4.3   effective 2004-05-01
+  Each mapping below is authorised only to the extent that it carries a
+  protect attribute consistent with the classification assigned to the source
+  field in mask.policy.conf; a mapping which omits the attribute, or which
+  asserts a protection weaker than the policy provides, shall be treated by
+  the loader as malformed and the job shall not be permitted to start. The
+  Records Custodian alone may amend a protect attribute, and any such
+  amendment must bear a change reference.
+-->
+<mapping-set job="KFL-CONS-XFRM-07" policy-rev="1.7">
+  <map source="CONSIGNEE_NAME"           target="CNSGE_NM"      protect="MASK_FULL"/>
+  <map source="CONSIGNOR_SIGNATORY_NAME" target="SIGNTRY_NM"    protect="MASK_FULL"/>
+  <map source="DELIVERY_ADDR_LINE_1"     target="DLVY_ADR1"     protect="MASK_FULL"/>
+  <map source="DELIVERY_ADDR_LINE_2"     target="DLVY_ADR2"     protect="MASK_FULL"/>
+  <map source="DELIVERY_POSTCODE"        target="DLVY_PSTCD"    protect="TRUNCATE_TO_SECTOR"/>
+  <map source="CONTACT_TEL_DAY"          target="CNTC_TEL_D"    protect="MASK_FULL"/>
+  <map source="CONTACT_EMAIL_ADDR"       target="CNTC_EML"      protect="SUPPRESS_TO_NULL"/>
+  <map source="DRIVER_SURNAME"           target="DRVR_SNM_TK"   protect="TOKENISE"/>
+  <map source="DRIVER_LICENCE_NO"        target="DRVR_LIC_TK"   protect="TOKENISE"/>
+  <map source="DRIVER_DOB"               target="__DROP__"      protect="SUPPRESS_TO_NULL"/>
+  <map source="NI_NUMBER"                target="__DROP__"      protect="SUPPRESS_TO_NULL"/>
+  <map source="CONSIGNMENT_REF"          target="CNSGT_REF"     protect="NONE"/>
+  <map source="DEPOT_CODE"               target="DEPOT_CD"      protect="NONE"/>
+</mapping-set>

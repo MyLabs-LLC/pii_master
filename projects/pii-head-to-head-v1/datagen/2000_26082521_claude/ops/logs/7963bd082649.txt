@@ -1,0 +1,43 @@
+# masking.properties
+# Enterprise Reporting Services — masking profile for ETL_REG_SIS2ODS_0417
+# Last modified 2011-04-06 16:22:41 by role account SVC_ETLADM
+# Profile version 3.2 — do not edit outside change window CHG-2011-0884
+
+profile.name=REG_ODS_STUDENT
+profile.mode=ENFORCE
+profile.fail.on.unmapped.sensitive=true
+
+mask.char=X
+mask.numeric.char=9
+mask.preserve.length=true
+mask.preserve.null=true
+
+field.SPBPERS_SSN.action=TOKENIZE
+field.SPBPERS_SSN.vault=TKNV-REG-01
+field.SPBPERS_SSN.log.value=false
+
+field.SPRIDEN_ID.action=TOKENIZE
+field.SPRIDEN_ID.vault=TKNV-REG-01
+
+field.SPBPERS_BIRTH_DATE.action=TRUNCATE_TO_YEAR
+field.SPRADDR_STREET_LINE1.action=MASK_FULL
+field.SPRADDR_STREET_LINE2.action=MASK_FULL
+field.SPRADDR_ZIP.action=MASK_TRAILING
+field.SPRADDR_ZIP.retain=3
+
+field.SPRTELE_PHONE_AREA.action=MASK_FULL
+field.SPRTELE_PHONE_NUMBER.action=MASK_FULL
+field.GOREMAL_EMAIL_ADDRESS.action=MASK_LOCAL_PART
+field.SPRIDEN_LAST_NAME.action=SUPPRESS
+field.SPRIDEN_FIRST_NAME.action=SUPPRESS
+field.SPBPERS_CONFID_IND.action=PASS
+
+audit.enabled=true
+audit.table=ODS_REG.MASK_AUDIT
+audit.record.field.name=true
+audit.record.field.value=false
+audit.record.row.token=true
+
+reject.route=/opt/etl/reject/reg/
+reject.retain.days=45
+reject.contents=ROW_TOKEN,FIELD_LABEL,RULE_ID,MESSAGE_CODE

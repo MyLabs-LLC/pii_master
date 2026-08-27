@@ -1,0 +1,16 @@
+MASKING CONFIGURATION — REG_MASK.CFG — REVISION 7 — EFFECTIVE 2004-09-01
+PRE-DEPLOYMENT CHECKLIST — INITIAL EACH LINE
+
+* Verify header block: config_id=REG_MASK_V7; owner=Office of the Registrar; approver=the Data Steward; review_cycle=annual.
+* Verify vault reference: vault=VLT_REG_01; algorithm_class=one-way; key_custodian=the Information Security Officer. Keys are not held in this file.
+* Verify directive M-FULL assigned to: SSN, SSN_LAST_FOUR, TAX_ID, BANK_ROUTING, BANK_ACCT_NO, DRIVERS_LIC_NO, PASSPORT_NO, ALIEN_REG_NO.
+* Verify directive M-FULL assigned to: HOME_PHONE, CELL_PHONE, ADDR_LINE_1, ADDR_LINE_2, EMAIL_ADDR_PERSONAL, EMERGENCY_CONTACT_PHONE.
+* Verify directive M-PARTIAL assigned to: LAST_NAME, FIRST_NAME. Output form: first character retained, remainder replaced with asterisk fill.
+* Verify directive M-DERIVE assigned to: BIRTH_DATE. Output column: AGE_BAND. Source column dropped at target.
+* Verify directive M-NONE assigned to: STUDENT_LEVEL_CODE, COLLEGE_CODE, MAJOR_CODE, TERM_CODE, ENROLLMENT_STATUS, CREDIT_HOURS_ATTEMPTED, CREDIT_HOURS_EARNED.
+* Verify placeholder literal for masked character output is uniform across all directives. Current literal: asterisk.
+* Verify no directive line contains a literal value in the default field. Defaults must read NULL or TOKEN.
+* Verify audit flag audit_on_read=Y for every M-FULL column.
+* Verify exception list is empty. Standing exceptions require written authorization retained with this file.
+* Confirm revision 6 archived to REG_CFG_ARCHIVE before overwrite.
+* Confirm test load against STG_PERSON returned 0 unmasked rows across 47,903 rows sampled.

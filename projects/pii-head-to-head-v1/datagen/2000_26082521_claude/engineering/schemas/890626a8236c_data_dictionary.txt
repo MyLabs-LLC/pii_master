@@ -1,0 +1,31 @@
+DATA DICTIONARY EXCERPT — REDUCED FARE CERTIFICATION SUBSYSTEM
+Physical Table: RFCAPPL (VSAM KSDS shadow: RFC.APPL.KSDS)     Dictionary Version 2.6
+
+1. The following columns of RFCAPPL are carried forward without change from Version 2.5. Lengths are stated in the physical representation used by the DB2 tablespace; the corresponding COBOL picture clauses are held in copybook RFCAPP01 and are not restated here.
+
+   COLUMN                  TYPE            NULL   NOTE
+   APPL_CTL_NBR            DECIMAL(9,0)    N      Primary key; assigned at intake
+   PTRN_ID_NBR             DECIMAL(9,0)    Y      FK to RDRMAST; null until linked
+   APPL_LAST_NAM           VARCHAR(30)     N      Restricted; see clause 3
+   APPL_FRST_NAM           VARCHAR(20)     N      Restricted; see clause 3
+   DOB_DTE                 DATE            N      Restricted; eligibility computation
+   SSN_NBR                 CHAR(9)         Y      Restricted; duplicate detection only
+   MEDCR_CLM_NBR           CHAR(12)        Y      Restricted; senior certification path
+   RES_ADDR_LN_1           VARCHAR(40)     N      Restricted; service-district test
+   RES_ZIP_CDE             CHAR(9)         N      Five positions unrestricted
+   TEL_HOME_NBR            CHAR(10)        Y      Restricted
+   DISAB_CAT_CDE           CHAR(2)         N      Domain in RFCCODE, table 14
+   CERTIF_PROF_ID          CHAR(8)         Y      Certifying professional; restricted
+   CERT_EFF_DTE            DATE            Y      Null while status is pending
+   CERT_EXP_DTE            DATE            Y      Drives renewal notice cycle
+   APPL_STS_CDE            CHAR(1)         N      P pending, C certified, D denied, W withdrawn
+   PHOTO_IMG_KEY           CHAR(20)        Y      Pointer into optical platter store
+   LST_UPD_TS              TIMESTAMP       N      Trigger-maintained
+
+2. DOB_DTE is NOT NULL in this table although the corresponding column in RDRMAST permits nulls; intake screens will not accept an application without it, since the age test in module RFC0220 has no alternative source. Analysts querying across the two tables must not assume equivalence of null treatment.
+
+3. Columns marked restricted are readable only by RACF group RFC$CERT, comprising the certification clerks and their supervisor. All other access is through VW_RFCAPPL_STAT, which returns APPL_CTL_NBR, DISAB_CAT_CDE, APPL_STS_CDE, the certification dates, and the five-position ZIP, and which is the sole basis permitted for statistical reporting to the Board or to the federal grant administration.
+
+4. Applications in denied or withdrawn status are retained three years from APPL_STS_DTE; certified applications are retained three years beyond CERT_EXP_DTE. Optical images referenced by PHOTO_IMG_KEY are expired on the same schedule by the platter maintenance run, which must be sequenced after the row purge so that no live row is left pointing to a released image.
+
+5. One downstream extract exists. Weekly job RFCX030 supplies the renewal notice file to the print vendor, carrying name, mailing address, APPL_CTL_NBR, and CERT_EXP_DTE. No medical, disability-category, or identity column is present in that file, and the Records Custodian has directed that none be added.

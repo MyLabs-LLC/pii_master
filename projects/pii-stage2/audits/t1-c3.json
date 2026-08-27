@@ -1,0 +1,22 @@
+{
+  "iteration": 1,
+  "candidate_id": "t1-c3",
+  "harness_parent": "h1+t1-c1",
+  "targeted_mechanism": "zero-shot Kaggle F5 is recall-heavy (P 0.07) because cited authors are tagged as NAME_STUDENT; CE fine-tune on Kaggle D_in + Nemotron mix, then O-softmax scale",
+  "editable_surface": "training/finetune_kaggle.py, eval_student.predict(o_scale), eval/scripts/kaggle_f5.py",
+  "expected_effect": "Kaggle D_ho F5 up via precision; Nemotron 11-type non-regress",
+  "regression_risk": "frozen adversarial NONE docs become PHI; HEALTH_PLAN_ID/MRN fail-under",
+  "evaluator": "kaggle_f5 official micro-F5 D_ho + frozen --fail-under --deep + 11-type span_gate",
+  "metric": "kaggle_micro_f5",
+  "score_in_before": 0.569,
+  "score_in_after": 0.732,
+  "delta_in": 0.163,
+  "score_ho_before": 0.622,
+  "score_ho_after": 0.717,
+  "delta_ho": 0.095,
+  "acceptance_rule": "kaggle D_ho F5 > 0.622 AND frozen --fail-under deep green AND nemotron 11-type delta >= 0",
+  "decision": "reject_for_serving",
+  "action_taken": "weights kept at /home/lence/pii-stage2-runs/kaggle-ft (Kaggle profile only). Original student_m.onnx restored after frozen fail-under: doc_accuracy 1.00->0.974, none-011 NONE->PHI, HEALTH_PLAN_ID recall 1.00->0.50, MRN precision 1.00->0.67. Nemotron 5k 11-type macro_f2 actually rose 0.860->0.885 — the reject is the frozen HIPAA gate, not Nemotron.",
+  "mlflow_run_id": "",
+  "notes": "Best Kaggle D_ho F5 0.717 at o_scale=0.03 (or 0.729 at 0.01, selected 0.03 by D_in). 1st place private LB 0.974 (DeBERTa-large ensemble). Do not promote these weights to default serving. Script retained for a Kaggle-only profile."
+}

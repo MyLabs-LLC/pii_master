@@ -1,0 +1,50 @@
+SECTION 9 — PHARMACY PATIENT LINKAGE COLUMNS (RTL_CUST.MBR_RX_LINK)
+Data Governance Office. Issue 2.0, 09 JUN 2016.
+
+9.1 General
+
+9.1.1 This section defines the linkage between the loyalty member record and the pharmacy dispensing system. The table carries no clinical detail. Prescription, drug and prescriber attributes remain in the pharmacy system of record and are out of scope.
+
+9.1.2 The table is classified in its entirety as R3. There is no R1 subset. Column-level exemption is not available.
+
+9.2 Column definitions
+
+9.2.1 MBR_SK — NUMBER(12), NOT NULL. FK to MBR_MASTER. Cascade is not enabled; orphan detection runs weekly.
+
+9.2.2 RX_PATIENT_KEY — RAW(16), NOT NULL. Opaque key issued by the pharmacy system. Not derivable and not reversible outside that system.
+
+9.2.3 LINK_METHOD_CD — CHAR(2), NOT NULL. Domain REF_LINK_METHOD. Distinguishes assisted match at counter from batch probabilistic match.
+
+9.2.4 LINK_CONF_SCORE — NUMBER(5,4), NULL. Populated only for probabilistic matches. NULL for assisted matches and must not be defaulted to zero.
+
+9.2.5 LINK_ESTABLISHED_DT — DATE, NOT NULL.
+
+9.2.6 LINK_STATUS_CD — CHAR(1), NOT NULL. Domain REF_LINK_STATUS. Broken links are retained, not deleted.
+
+9.2.7 UNLINK_DT — DATE, NULL. Mandatory where LINK_STATUS_CD indicates termination.
+
+9.2.8 UNLINK_REASON_CD — VARCHAR2(4), NULL. Domain REF_UNLINK_REASON.
+
+9.2.9 AUTH_ON_FILE_FLG — CHAR(1), NOT NULL. Default N. Mirrors the pharmacy system authorisation state and is refreshed daily; it is not independently maintained here.
+
+9.2.10 ETL_LOAD_TS, ETL_UPDT_TS — TIMESTAMP(6), NOT NULL.
+
+9.3 Access
+
+9.3.1 Access is by role RL_RX_LINK only. Grants require joint approval by the Privacy Officer and the Director of Pharmacy Compliance, are time-boxed to 90 days, and are not renewable by exception.
+
+9.3.2 Ad hoc query is prohibited. All use is through registered reports or registered extracts.
+
+9.3.3 All statements against this table are logged, including failed and zero-row statements. Log retention is six years.
+
+9.4 Retention
+
+9.4.1 Rows are retained for the period required by the pharmacy record retention schedule of the state of the dispensing store, and are not governed by the 84-month loyalty rule at clause 6 of Section 4.
+
+9.4.2 The loyalty purge job must exclude any member holding an active row in this table. Failure of this exclusion is a reportable control incident.
+
+9.5 Downstream extracts
+
+9.5.1 One extract is registered: EXT-112 (clinical outreach). It carries RX_PATIENT_KEY and MBR_SK only, is delivered to the outreach platform over dedicated circuit, and is filtered on AUTH_ON_FILE_FLG and OPT_OUT_SHARE_FLG at source.
+
+9.5.2 No extract from this table may be delivered to a third party, to marketing, or to any non-production environment. Requests to the contrary are to be refused by the Records Custodian without escalation.

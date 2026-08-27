@@ -1,0 +1,37 @@
+DATA DICTIONARY EXCERPT
+Schema: MBR_CONTACT      Table: MEMBER_CONTACT_PREF      Revision: 2.9
+Effective: 2021-06-01    Steward: the Deposit Operations Manager
+Refresh: continuous (CDC), reconciled nightly against MBR_CORE.MEMBER_MASTER
+
+1.0  PURPOSE
+     1.1  Holds the contact channels and consent flags used by the notice engine, the collections dialer and the statement composer.
+     1.2  This table is the system of record for consent. Channel values sourced from any other table are advisory only.
+
+2.0  KEYS AND LINKAGE
+     2.1  CONTACT_PREF_SK
+          Type / Null: BIGINT / NOT NULL
+          Notes: Surrogate key. Identity-generated.
+     2.2  MEMBER_SK
+          Type / Null: BIGINT / NOT NULL
+          Notes: Foreign key to MEMBER_MASTER. Enforced. Cascade prohibited.
+
+3.0  CHANNEL COLUMNS
+     3.1  MOBILE_PHONE_NBR, HOME_PHONE_NBR, WORK_PHONE_NBR
+          Type / Null: VARCHAR(15) / nullable
+          Notes: Stored digits only, punctuation stripped on ingest. Country prefix separated into PHONE_CTRY_CD. Visible to roles MSR_FULL, COLLECTIONS_AGENT. Withheld from the marketing schema entirely.
+     3.2  PRIMARY_EMAIL_ADDR, ALTERNATE_EMAIL_ADDR
+          Type / Null: VARCHAR(254) / PRIMARY nullable, ALTERNATE nullable
+          Notes: Lower-cased at write. Domain portion is separately materialised as EMAIL_DOMAIN_NM for deliverability reporting; the local portion is never propagated.
+     3.3  MAILING_ADDR_LINE_1, MAILING_ADDR_LINE_2, MAILING_CITY_NM, MAILING_STATE_CD, MAILING_POSTAL_CD
+          Type / Null: VARCHAR, VARCHAR, VARCHAR, CHAR(2), CHAR(10) / LINE_2 nullable
+          Notes: Populated only where the mailing address differs from the residential address on file.
+
+4.0  CONSENT AND SUPPRESSION
+     4.1  SMS_CONSENT_IND, EMAIL_CONSENT_IND, CALL_CONSENT_IND — CHAR(1), NOT NULL, default denial.
+     4.2  CONSENT_CAPTURE_TS — TIMESTAMP, NOT NULL where any consent indicator is affirmative.
+     4.3  DO_NOT_CONTACT_IND — CHAR(1), NOT NULL. Overrides clause 4.1 in every consuming process without exception.
+
+5.0  RESTRICTION, RETENTION, EXTRACTS
+     5.1  Update rights limited to the branch servicing role and the contact-centre supervisor role. Bulk update requires a change ticket.
+     5.2  Superseded channel rows are retained twenty-four months in MEMBER_CONTACT_PREF_HIST, then aged out.
+     5.3  Extract CONTACT_EXT_07 to the statement vendor carries clause 3.3 and MEMBER_NBR (masked) under the executed confidentiality schedule. Clauses 3.1 and 3.2 are excluded from that extract.

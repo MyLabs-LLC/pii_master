@@ -1,0 +1,65 @@
+MEMORANDUM
+
+TO:      Reporting Services
+FROM:    Data Governance Analyst
+DATE:    8 December 2021
+SUBJECT: Statement delivery columns — dictionary entry and extract rules
+
+1. Entry. The columns below belong to STMT_RECIPIENT and are read by the statement print vendor feed.
+
+   Column        : RECIPIENT_SK
+   Type          : NUMBER(18)
+   Nullable      : No
+   Note          : Surrogate key.
+
+   Column        : ACCT_NO
+   Type          : VARCHAR2(16)
+   Nullable      : No
+   Note          : Restricted. Tokenised in the vendor feed;
+                   the token map is held by the interface team.
+
+   Column        : RECIPIENT_NAME
+   Type          : VARCHAR2(100)
+   Nullable      : No
+   Note          : Restricted. Formatted at load; no parsing
+                   into component parts is performed.
+
+   Column        : MAIL_ADDR_LINE_1 / MAIL_ADDR_LINE_2
+   Type          : VARCHAR2(80)
+   Nullable      : Line 1 no; line 2 yes
+   Note          : Restricted. Standardised against the postal
+                   reference file each Sunday.
+
+   Column        : MAIL_POSTAL_CD
+   Type          : VARCHAR2(10)
+   Nullable      : Yes
+   Note          : Restricted in full form. The reporting view
+                   exposes the leading three characters only.
+
+   Column        : EMAIL_ADDR
+   Type          : VARCHAR2(120)
+   Nullable      : Yes
+   Note          : Restricted. Required where DELIVERY_PREF_CD
+                   denotes electronic delivery.
+
+   Column        : DELIVERY_PREF_CD
+   Type          : CHAR(2)
+   Nullable      : No
+   Note          : Reference-coded.
+
+   Column        : RETURNED_MAIL_FLG
+   Type          : CHAR(1)
+   Nullable      : No
+   Note          : Set by the returned mail process; suppresses
+                   the next print cycle.
+
+   Column        : LAST_DELIVERY_TS
+   Type          : TIMESTAMP
+   Nullable      : Yes
+   Note          : Audit column.
+
+2. Access. Read access is granted to the billing office role group and to the interface service account. Reporting Services holds access to the reporting view only, which omits RECIPIENT_NAME, both mailing address lines and EMAIL_ADDR entirely.
+
+3. Retention. Rows are retained for three years from LAST_DELIVERY_TS, after which the restricted columns are overwritten in place and the delivery preference and flag columns are retained for print volume analysis.
+
+4. Extracts. The vendor feed is the only permitted downstream consumer. Ad hoc extracts against this table are not authorised and will be refused by the scheduling team. Requests for a recurring extract are made to the Records Custodian in writing and must state the business purpose, the column list and the proposed retention at the receiving system.

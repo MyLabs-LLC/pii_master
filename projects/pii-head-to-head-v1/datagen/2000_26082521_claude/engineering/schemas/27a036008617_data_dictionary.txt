@@ -1,0 +1,23 @@
+MERCY VALLEY HOSPITAL -- BUSINESS OFFICE
+FILE LAYOUT ADDENDUM 98-06 : MEMBER ELIGIBILITY EXTRACT (MBRELIG)
+VSAM KSDS / FIXED 320 / SUPERSEDES ADDENDUM 97-11
+
+FIELD NAME        PICTURE       POS  LEN  NUL  NOTE
+================  ============  ===  ===  ===  ==============================
+MBR-PLAN-KEY      X(10)         001  010  N    Key. Plan code plus sequence.
+MBR-SUBSCR-NBR    X(12)         011  012  N    Assigned by the carrier.
+MBR-LAST-NAME     X(25)         023  025  N    Left justified, space filled.
+MBR-FIRST-NAME    X(15)         048  015  N    Left justified, space filled.
+MBR-SSN           X(9)          063  009  Y    Masked to low order four on
+                                                all printed registers.
+MBR-DOB           X(8)          072  008  N    Expanded to CCYYMMDD 01/98.
+MBR-ADDR-LINE-1   X(30)         080  030  N    No post office boxes accepted.
+MBR-ZIP           X(9)          110  009  N    Numeric edited on load.
+MBR-COV-EFF-DT    X(8)          119  008  N    Eligibility begin.
+MBR-COV-TERM-DT   X(8)          127  008  Y    Spaces indicate active.
+FILLER            X(185)        135  185  --   Reserved for phase two.
+
+Handling: The extract is written to cartridge each Monday by the second shift operator and
+carried to the carrier liaison by the Records Custodian. No copy is retained on disk past
+the following Monday. Requests for off-cycle copies go through the Business Office Manager.
+Retention of the cartridge series is two years.

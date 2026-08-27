@@ -1,0 +1,44 @@
+RXPHARM DATA SERVICES - VALIDATION EXCEPTION LOG
+FILE: /edw/log/val/RXMBR_20040310_B0441.log
+JOB : ETL_RXMBR_STG_LOAD          BATCH: B0441          CYCLE: NIGHTLY
+WINDOW: 2004-03-10 01:00:00 CST THROUGH 2004-03-10 03:59:59 CST
+
+2004-03-10 01:04:11 INFO  VAL0001 validator started, profile RXMBR_STG rev 11
+2004-03-10 01:04:12 INFO  VAL0002 rules loaded from MAP_RXMBR_V7, 23 active
+2004-03-10 01:04:12 INFO  VAL0003 input file RXMBR.EXT.D040309, 1,284,776 rows
+2004-03-10 01:11:58 WARN  VAL0210 field MEMBER_MIDDLE_INITIAL length overflow,
+                                  value=<MASKED> action=TRUNCATE row=000148992
+2004-03-10 01:19:03 ERROR VAL0304 field MEMBER_BIRTH_YEAR failed GEN_YEAR parse,
+                                  value=<MASKED> action=REJECT row=000271455
+2004-03-10 01:33:47 ERROR VAL0311 field MEMBER_PLAN_ID token lookup miss,
+                                  vault=TOKEN_VAULT.RXMBR value=<MASKED>
+2004-03-10 01:52:20 ERROR VAL0402 unmapped field PTNT_ALT_PHN present in source
+                                  header position 27, on_unmapped=REJECT
+2004-03-10 02:07:39 WARN  VAL0225 field MEMBER_POSTAL_TRUNC below minimum length
+                                  after TRUNC_3, value=<MASKED> action=NULLIFY
+2004-03-10 02:44:02 ERROR VAL0508 field MEMBER_EMAIL_ADDRESS received non-empty
+                                  payload; DROP_COLUMN in force, value suppressed
+2004-03-10 03:12:55 INFO  VAL0090 exception threshold 2.00 pct not breached
+2004-03-10 03:13:01 INFO  VAL0099 validator complete, rc=0004
+
+EXCEPTION SUMMARY BY FIELD LABEL
+CODE     FIELD_LABEL              SEVERITY  ROWS      DISPOSITION
+-------  -----------------------  --------  --------  -------------------
+VAL0210  MEMBER_MIDDLE_INITIAL    WARN         4,118  TRUNCATED, LOADED
+VAL0304  MEMBER_BIRTH_YEAR        ERROR         2,907  REJECTED TO FILE
+VAL0311  MEMBER_PLAN_ID           ERROR         1,442  HELD FOR RETOKENIZE
+VAL0311  SUBSCRIBER_ID            ERROR           863  HELD FOR RETOKENIZE
+VAL0402  PTNT_ALT_PHN             ERROR        11,205  COLUMN DISCARDED
+VAL0225  MEMBER_POSTAL_TRUNC      WARN          6,340  NULLIFIED, LOADED
+VAL0508  MEMBER_EMAIL_ADDRESS     ERROR         9,771  COLUMN DISCARDED
+VAL0508  MEMBER_HOME_PHONE        ERROR         9,754  COLUMN DISCARDED
+VAL0512  MEMBER_TAX_ID            ERROR           618  COLUMN DISCARDED
+-------  -----------------------  --------  --------  -------------------
+                                  TOTAL       47,018
+
+ROWS READ 1,284,776 / ROWS PASSED 1,279,427 / ROWS REJECTED 5,349
+REJECT FILE /edw/reject/rxmbr_stg/B0441.rej (masked, 5,349 rows, 0 values)
+
+ACTION: source extract for PTNT_ALT_PHN was added by store systems release
+4.2.1 without a mapping rule. Raise CR against MAP_RXMBR_V7 or remove the
+field from the extract copybook. Held token rows requeue on batch B0442.

@@ -1,0 +1,41 @@
+INTEROFFICE MEMORANDUM
+================================================================
+TO:      Supervisor, Escrow Systems
+FROM:    Third Shift Computer Operations
+DATE:    14 February 2004
+RE:      Overnight stream NTL-CONV-0224 — completion notice
+CC:      the Records Custodian; the Data Processing Manager
+================================================================
+
+Stream ended 03:47 with warnings. No rerun required. Console
+extract retained per the retention schedule. Detail follows.
+
+[2004-02-14 01:12:07] JOB=NTL-CONV-0224 STEP=010 TASK=EXTR_ORDER_HDR BEGIN
+[2004-02-14 01:12:07] SRC=TIMSPROD.ORDER_HDR ROWS_READ=48213
+[2004-02-14 01:29:44] STEP=010 ROWS_WRITTEN=48213 REJECTS=0 ELAPSED=00:17:37
+[2004-02-14 01:29:45] STEP=020 TASK=EXTR_PARTY BEGIN
+[2004-02-14 01:29:45] SRC=TIMSPROD.PARTY ROWS_READ=131006
+[2004-02-14 01:41:02] MASK ENGINE ATTACH cfg=DMASK.CFG ver=4.1
+[2004-02-14 01:41:02] MASK APPLIED cols=PARTY_NAME_LAST,PARTY_NAME_FIRST,
+                      PARTY_TIN,PARTY_DOB,PARTY_DL_NBR,PARTY_PHONE_HOME,
+                      PARTY_EMAIL_ADDR
+[2004-02-14 01:52:18] STEP=020 ROWS_WRITTEN=130864 REJECTS=142
+[2004-02-14 01:52:19] STEP=030 TASK=EXTR_ESCROW_LEDGER BEGIN
+[2004-02-14 01:52:19] SRC=TIMSPROD.ESC_LEDGER ROWS_READ=402877
+[2004-02-14 02:38:51] MASK APPLIED cols=ESCROW_ACCT_NBR,DISB_PAYEE_NAME,
+                      DISB_ACCT_NBR,WIRE_ABA_NBR
+[2004-02-14 02:38:51] STEP=030 ROWS_WRITTEN=402877 REJECTS=0
+[2004-02-14 02:38:52] STEP=040 TASK=LOAD_WHSE BEGIN TGT=DWPROD.STG_TITLE
+[2004-02-14 03:44:10] STEP=040 ROWS_INSERTED=581954 ROWS_UPDATED=0
+[2004-02-14 03:44:11] WARN W-0221 col=PROP_ADDR_LINE_2 nulls=39114 (informational)
+[2004-02-14 03:44:11] WARN W-0233 col=BUYER_MIDDLE_INIT unmapped in cfg 4.1
+[2004-02-14 03:47:02] JOB=NTL-CONV-0224 RC=4 END
+
+Reject file NTL0224.REJ (142 rows) written to the operations
+volume and queued to the Monday validation review. Warning W-0233
+is referred to the Records Custodian for a configuration entry;
+until that entry is added the column loads suppressed and the
+downstream extract will show it empty.
+
+Operations requests confirmation by 20 February 2004 that RC=4 is
+acceptable for the February cycle.

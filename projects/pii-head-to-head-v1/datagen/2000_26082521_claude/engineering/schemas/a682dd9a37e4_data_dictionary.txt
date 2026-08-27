@@ -1,0 +1,41 @@
+DATA DICTIONARY EXCERPT — PHARMACY PROFILE LINKAGE
+Schema ......... LMP_BRIDGE
+Table .......... MBR_RX_LINK
+Revision ....... 2
+Effective ...... 2021-09-13
+Prepared by .... the Data Modeling Lead, Enterprise Data Management
+Approved by .... the Records Custodian; the Privacy Office designee
+
+PURPOSE
+Bridges the loyalty member record to the dispensing system patient profile. This table is the single governed crossing point between retail-side and pharmacy-side data. Its existence, not merely its content, is treated as sensitive: the presence of a row asserts that a member holds a pharmacy relationship.
+
+COLUMN INVENTORY
+COLUMN                 | TYPE          | NULL | NOTES
+MBR_SK                 | NUMBER(18)    | NO   | FK to LMP_CORE.MBR_MASTER.
+PAT_PROF_ID_TKN        | CHAR(32)      | NO   | Tokenized dispensing-system profile identifier. Detokenization restricted to service account SVC_RXBRIDGE.
+LINK_METH_CD           | VARCHAR2(8)   | NO   | ATTEST, DETMTCH, PROBMTCH, MANUAL.
+LINK_CONF_SCR          | NUMBER(5,4)   | YES  | Populated for PROBMTCH only; rows below 0.9200 require manual review.
+LINK_STAT_CD           | CHAR(1)       | NO   | A=active, P=pending review, R=revoked.
+LINK_EFF_TS            | TIMESTAMP(6)  | NO   | Start of linkage validity.
+LINK_END_TS            | TIMESTAMP(6)  | YES  | Null while active.
+HIPAA_AUTH_ID          | VARCHAR2(36)  | NO   | Pointer to the signed authorization on file. Rows without a resolvable pointer are quarantined nightly.
+AUTH_SCOPE_CD          | VARCHAR2(8)   | NO   | Governs which downstream uses are permitted.
+CAREGIVER_LINK_IND     | CHAR(1)       | NO   | Y where the member is authorized on another individual's profile; such rows are excluded from all analytics views without exception.
+REVIEW_DUE_DT          | DATE          | YES  | Set for LINK_STAT_CD = P.
+ETL_LOAD_TS            | TIMESTAMP(6)  | NO   | Loader-populated.
+ETL_UPD_TS             | TIMESTAMP(6)  | NO   | Watermark column.
+
+ACCESS RESTRICTION
+No human account holds standing SELECT on this table. Access is service-mediated. Break-glass access is provisioned through the privileged access workflow, expires in 8 hours, and generates a mandatory post-use review by the Records Custodian. Non-production environments receive a structurally identical but unpopulated copy; refresh-from-production is blocked at the tooling layer.
+
+RETENTION
+Rows are retained per the pharmacy records schedule applicable to the dispensing jurisdiction, minimum 10 years from LINK_END_TS. Revoked linkages (LINK_STAT_CD = R) remain queryable for audit but are filtered from every operational join by view predicate.
+
+DOWNSTREAM EXTRACTS
+No general-purpose extract is defined. Two controlled feeds exist:
+  EXT_RX_ADHERENCE_WKLY — de-identified per the expert determination on file; MBR_SK replaced with a per-extract pseudonym that does not persist across runs.
+  EXT_RX_AUDIT_MONTHLY — delivered to Compliance only; retains tokens, never cleartext.
+Requests for additional feeds are routed to the Privacy Office and require a documented minimum-necessary analysis.
+
+OPERATIONAL NOTES
+The nightly reconciliation job compares row counts against the dispensing system control total; variance beyond 0.05 percent raises a P2 incident. Orphaned rows resulting from member merges are resolved by the merge handler, not by manual DML.

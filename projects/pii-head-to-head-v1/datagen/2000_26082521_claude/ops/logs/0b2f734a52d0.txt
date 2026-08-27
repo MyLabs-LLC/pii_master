@@ -1,0 +1,75 @@
+SYS$OUTPUT LISTING — BATCH QUEUE ETL$NIGHT
+JOB NAME: ETL_VR_CONSOLIDATE          JOB ID: JOB03117
+RUN SEQUENCE: 0442                    CYCLE: NIGHTLY
+CONTROL MEMBER: [PROD.CTLLIB]VRCONS.PAR;9
+
+  16-FEB-1999 01:02:11  JOB03117  INIT
+      Queue entry accepted, priority 4, node HD-VAX2
+      Effective control file revision ....... 04
+      Mask engine handshake ................. OK (SCRUBEXEC 2.4C)
+      Token vault opened read/write ......... VAULT.IDX
+
+  16-FEB-1999 01:02:48  JOB03117  STEP 010 — EXTRACT
+      Source 1: VR.BIRTH_REGISTRY (Informix, gateway ODBC 2.5)
+          Rows read ......................... 14,802
+          Columns projected ................. 31
+          Bypassed by cursor filter ......... 217
+      Source 2: CD.CASE_REPORT_MASTER (VSAM, sequential)
+          Rows read ......................... 6,915
+          Short records rejected at read .... 4
+      Source 3: WIC.ENROLLMENT_HIST (AS/400 flat extract)
+          Rows read ......................... 22,431
+          Trailer count matched header ...... YES
+
+  16-FEB-1999 01:19:36  JOB03117  STEP 020 — CLASSIFY AND MASK
+      Fields evaluated per row .............. 31 / 24 / 18
+      Class A suppressed (columns) .......... 9
+          SUBJECT_LAST_NAME, SUBJECT_FIRST_NAME, RESIDENCE_STREET_1,
+          RESIDENCE_STREET_2, HOME_TELEPHONE, DAYTIME_TELEPHONE,
+          MOTHER_MAIDEN_NAME, EMERGENCY_CONTACT_NAME, ATTENDANT_NAME
+      Class B tokenised (columns) ........... 5
+          MEDICAL_RECORD_NBR ................ 44,148 substitutions
+          CASE_REGISTRY_ID .................. 6,911 substitutions
+          WIC_PARTICIPANT_NBR ............... 22,431 substitutions
+          IMMUNIZATION_CLIENT_KEY ........... 18,006 substitutions
+          BILLING_ACCOUNT_NBR ............... 3,772 substitutions
+      Vault entries created ................. 1,338
+      Vault entries reused .................. 93,730
+      Class C partial masks applied ......... 61,204
+      Unmapped column encountered ........... 1
+          Column .......................... GUARDIAN_TELEPHONE
+          Disposition ..................... ABORT_ROW per rule 1.5
+          Rows aborted .................... 38
+
+  16-FEB-1999 01:47:02  JOB03117  STEP 030 — VALIDATE
+      Rows submitted to validator ........... 44,072
+      Rows passing all edits ................ 43,486
+      Rows to reject file ................... 586
+      Reject file ........................... [PROD.RJCT]VRCONS0442.RJT;1
+      Top edit failures by count
+          E-114 DATE_OF_BIRTH not within century window .......... 231
+          E-207 RESIDENCE_ZIP fails 5-digit picture ............... 148
+          E-118 DATE_OF_DEATH precedes DATE_OF_BIRTH .............. 63
+          E-302 REPORTING_JURISDICTION_CD not in domain table ..... 59
+          E-441 MEDICAL_RECORD_NBR token length mismatch .......... 47
+          E-509 DISEASE_CONDITION_CD not valid ICD-9-CM ........... 38
+
+  16-FEB-1999 02:05:19  JOB03117  STEP 040 — LOAD
+      Target ................................ EPI_ANALYSIS_MART.FACT_ENCOUNTER
+      Load method ........................... direct path, commit each 5,000
+      Rows presented ........................ 43,486
+      Rows inserted ......................... 43,451
+      Rows failing referential edit ......... 35
+      Index rebuild ......................... 3 indexes, 00:06:44
+      Small-cell suppression applied ........ 12 aggregate cells
+
+  16-FEB-1999 02:14:07  JOB03117  STEP 050 — CLOSEOUT
+      Vault closed and checkpointed ......... OK
+      Audit records appended ................ 44,072
+      Extract media written ................. TAPE MKA500: label VRC0442
+      Class A columns present on media ...... 0
+      Elapsed ............................... 01:11:56
+      Completion code ....................... 0004 (WARNING)
+      Warning basis ......................... unmapped column, rule 1.5
+
+  16-FEB-1999 02:14:09  JOB03117  END OF JOB

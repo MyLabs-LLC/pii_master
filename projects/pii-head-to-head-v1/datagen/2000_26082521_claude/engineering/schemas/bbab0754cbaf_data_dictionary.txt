@@ -1,0 +1,23 @@
+CIS.MEDCERT — MEDICAL CERTIFICATION AND LIFE SUPPORT REGISTRY
+Dictionary excerpt. Restricted table. Reviewed by the Records Custodian and the Manager of Customer Service.
+
+* MEDCERT_ID | CHAR(10) | NOT NULL | Surrogate key.
+* CUST_ID | CHAR(10) | NOT NULL | Foreign key to the customer master.
+* PREM_ID | CHAR(10) | NOT NULL | Certification attaches to the premise as well as to the account.
+* PATIENT_NAME_LAST | PIC X(25) | NOT NULL | Restricted. Update authority limited to the Customer Service Supervisor role; entry from the counter is not permitted.
+* PATIENT_NAME_FIRST | PIC X(15) | NOT NULL | Restricted, as above.
+* PATIENT_REL_CD | CHAR(2) | NULLABLE | Relationship of the patient to the account holder; domain at CIS.CD_REL.
+* CERT_PHYS_NAME | PIC X(30) | NOT NULL | Name of the certifying practitioner. Restricted.
+* CERT_PHYS_TELE_NBR | CHAR(10) | NULLABLE | Used solely to verify a certification questioned by the Supervisor.
+* CERT_COND_CD | CHAR(3) | NULLABLE | Coded condition category. Free-text description of condition shall not be recorded in this table nor in any comment field of the customer master.
+* EQUIP_TYPE_CD | CHAR(3) | NULLABLE | Domain at CIS.CD_EQUIP.
+* CERT_EFF_DT | DATE | NOT NULL | Century-qualified.
+* CERT_EXPIR_DT | DATE | NOT NULL | Recertification required annually; the nightly job CIS730 sets DISC_HOLD_IND to 'N' upon expiry and generates a notice.
+* DISC_HOLD_IND | CHAR(1) | NOT NULL | Default 'N'. Where set, disconnection is barred and the account is bypassed by the dunning selection.
+
+Undertakings of the Custodian:
+
+* This table shall bear no extract job whatsoever. It shall not be read by the collections extract, the marketing extract, the statistical extract, or the outsourced print stream.
+* Query authority through the ad hoc reporting facility shall be revoked at the object level and shall not be restored except upon the written direction of the Manager of Customer Service.
+* Rows shall be retained for twelve (12) months beyond CERT_EXPIR_DT and thereafter purged, the purge to be logged as to date, volume of rows, and the identity of the operator by role.
+* Requests for disclosure from any party, whether public agency or private, shall be referred without response to the Utility Clerk for handling under the Public Records Ordinance and the exemptions asserted thereunder.

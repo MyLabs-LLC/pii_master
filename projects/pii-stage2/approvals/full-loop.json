@@ -1,0 +1,30 @@
+{
+  "approved_at": "2026-08-23T03:32:36.208741+00:00",
+  "approved_by": "user",
+  "plan": {
+    "budget": {
+      "max_trials": 30,
+      "max_wallclock_s": 28800,
+      "target": {
+        "macro_f2": 0.92,
+        "severity_recall_min": 0.9
+      }
+    },
+    "deploy": "none yet",
+    "editable_surfaces": [
+      "src/pii_master/",
+      "training/",
+      "eval/"
+    ],
+    "modules": [
+      "eval",
+      "tune",
+      "datagen"
+    ],
+    "operation": "full-loop",
+    "project": "projects/pii-stage2",
+    "target": "projects/pii-stage2",
+    "tracking": "file-store ./mlruns"
+  },
+  "plan_sha256": "7a29926ea73372616e02ac1fa54823dc0a6a7060383ed3ff9c94221232d71e06"
+}

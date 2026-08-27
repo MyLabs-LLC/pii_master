@@ -1,0 +1,28 @@
+RECONCILIATION CONTROL SHEET — TERM 202140 CENSUS LOAD
+Pipeline: ETL_SIS_ODS_NIGHTLY | Run identifier: RUN-2021-0911-0217
+Start 2021-09-11T02:17:06-05:00 | End 2021-09-11T03:04:38-05:00 | Elapsed 00:47:32 | Exit status 0
+
+(01) [PASS] Verified that the count of records read from the system of record equals the sum of records loaded, records rejected, and records suppressed by policy, no residual being permitted:
+           stg.person ............. read 91,204  loaded 90,988  rejected  216  suppressed     0
+           stg.address ............ read 104,772 loaded 104,772 rejected    0  suppressed     0
+           stg.contact_method ..... read  88,431 loaded  88,180 rejected  251  suppressed     0
+           stg.finaid_profile ..... read  27,619 loaded  27,619 rejected    0  suppressed 2,104
+           TOTAL .................. read 312,026 loaded 311,559 rejected  467  suppressed 2,104
+
+(02) [PASS] Confirmed that the 2,104 suppressions recorded against stg.finaid_profile arise solely from the operation of the policy rule governing bank_routing_number and bank_account_number, which columns are suppressed to null in the operational data store in every case and without exception, and that such suppression is by design and not indicative of extract failure.
+
+(03) [PASS] Confirmed that the columns ssn, national_id, and immigration_document_number were delivered to the target in tokenised form exclusively, the token vault being addressed by reference and the vault itself residing outside the scope of this pipeline.
+
+(04) [PASS] Confirmed by inspection of a sampled ten (10) target rows that the columns date_of_birth, personal_email_address, mobile_phone_number, and home_address_line_1 contain, respectively, a four-digit year generalisation, a hexadecimal digest, a suppressed value, and a suppressed value; and that no cell within the sample contains a legible identifier.
+
+(05) [PASS] Confirmed the following log entries, which are reproduced in full:
+           2021-09-11T02:17:06 INFO  orch.runner  run=RUN-2021-0911-0217 term=202140 mode=CENSUS policy_rev=14
+           2021-09-11T02:33:19 WARN  xform.rules  column=former_legal_name rule=SUPPRESS_NULL rows_affected=1,388
+           2021-09-11T02:51:44 ERROR val.engine   column=emergency_contact_phone code=ERR-2208 rows=251 action=QUARANTINE
+           2021-09-11T03:04:37 INFO  orch.runner  commit=OK rows_committed=311,559 checksum=verified
+
+(06) [FAIL] Determined that the reject threshold configured at 0.10 per centum was exceeded in respect of stg.contact_method (0.284 per centum), which condition would ordinarily require the run to be held; the override flag having been set at the direction of the Assistant Registrar for Enrollment Services in anticipation of the census deadline of 2021-09-13.
+
+(07) [PASS] Recorded that the said override is documented at change record REG-CHG-2021-0512 and expires upon the close of the census window, after which the threshold reverts without further action.
+
+(08) [OPEN] Referred the 467 quarantined rows to the Records Custodian for source-side correction, such correction to be effected prior to the state reporting extract of 2021-09-20.

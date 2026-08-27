@@ -1,0 +1,671 @@
+[2026-08-27T02:05:52Z] Exit: 0 | Context: feasibility: ettin as-shipped on training docs, mapped to our tags | Took: 15.3s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers model2vec[distill] bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/probe_ettin.py
+--- Output ---
+mapping covers 32 of 61 catalogue tags
+loaded kalyan-ks/ettin-68m-nemotron-pii on cuda
+1200 documents from 148775_pii2_train_98.81k
+inference 10s on cuda (8.5 ms/doc, GPU)
+
+tag                                                    gold       P       R      F1
+sensitive_pci_bank_account_number                        10  0.0256  0.3000  0.0472
+sensitive_pci_card_verification_value_cvv                 4  0.0000  0.0000  0.0000
+sensitive_pci_credit_card_number                          8  0.0067  1.0000  0.0132
+sensitive_pci_individual_taxpayer_identification_number_itin      4  0.0000  0.0000  0.0000
+sensitive_phi_health_plan_beneficiary_number              2  0.0000  0.0000  0.0000
+sensitive_phi_medical_record_number_mrn                   4  0.0000  0.0000  0.0000
+sensitive_pii_age                                        72  0.7500  0.0833  0.1500
+sensitive_pii_county                                     23  0.1771  0.7391  0.2857
+sensitive_pii_date_of_birth_dob                         150  0.0000  0.0000  0.0000
+sensitive_pii_educational_level                          39  0.2027  0.3846  0.2655
+sensitive_pii_email                                     264  0.9574  0.9356  0.9464
+sensitive_pii_employment_status                          50  0.1364  0.0600  0.0833
+sensitive_pii_ethnicity                                  18  0.0606  0.2222  0.0952
+sensitive_pii_family_name                               500  0.8134  0.7060  0.7559
+sensitive_pii_gender_and_sex                             44  0.0000  0.0000  0.0000
+sensitive_pii_geolocation                                14  0.0000  0.0000  0.0000
+sensitive_pii_given_name                                499  0.7682  0.7174  0.7420
+sensitive_pii_ipv4                                        5  0.2500  0.2000  0.2222
+sensitive_pii_ipv6                                        3  0.0000  0.0000  0.0000
+sensitive_pii_mac_address                                 3  0.0000  0.0000  0.0000
+sensitive_pii_password                                   10  0.3750  0.3000  0.3333
+sensitive_pii_personal_identification_number_pin          7  0.0185  0.1429  0.0328
+sensitive_pii_phone_number                              189  0.8824  0.7143  0.7895
+sensitive_pii_religion                                   13  0.0833  0.1538  0.1081
+sensitive_pii_sexual_identity_and_orientation            10  0.0000  0.0000  0.0000
+sensitive_pii_social_security_number                     12  0.0000  0.0000  0.0000
+sensitive_pii_state                                     202  0.4684  0.8812  0.6117
+sensitive_pii_street_number_and_name                    169  0.5689  0.9527  0.7124
+sensitive_pii_username                                   29  0.0000  0.0000  0.0000
+sensitive_pii_vehicle_identification_number_vin           6  0.0000  0.0000  0.0000
+sensitive_pii_zip_code                                  170  0.8674  0.9235  0.8946
+
+macro over the 31 mapped tags present in gold: P=0.2391 R=0.3038 F1=0.2287
+-> projects/pii-content-v5/probe/ettin_asis.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/120 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 120/120 [00:00<00:00, 5635.30it/s]
+--------------
+
+[2026-08-27T02:06:26Z] Exit: 0 | Context: feasibility verdict for the content-model chain | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp feasibility --metric micro_f1 --target 0.7299 --baseline 0.7299 --note As-shipped ettin-68m, hand-mapped onto 32 of 61 tags, 1,200 training documents: macro F1 0.2287 over the 31 tags present in gold. Real contextual signal on exactly the tags a hashed-ngram bag is weakest at - email 0.9464, zip_code 0.8946, phone_number 0.7895, family_name 0.7559, given_name 0.7420, street_number_and_name 0.7124 - with NO fine-tuning and truncation at 1024 tokens against a 12,000-character read window. --note It contributes nothing yet on the identifiers the ship gate is about: SSN, MRN, ITIN, CVV and health-plan number all score 0.0000. Those tags are present in our training gold, so fine-tuning is the thing that would have to fix them; the pretrained signal does not already cover them. --note No ceiling is available for the FUSED micro F1. The probe establishes that signal exists, not how much of it survives model2vec distillation to a static token table - which is the step with no evidence behind it at all and the reason the chain is staged. --out projects/pii-content-v5/feasibility.json
+--- Output ---
+| Evidence | Value |
+| --- | ---: |
+| target (micro_f1) | 0.7299 |
+| current baseline | 0.7299 |
+| **verdict** | **unknown** |
+
+> As-shipped ettin-68m, hand-mapped onto 32 of 61 tags, 1,200 training documents: macro F1 0.2287 over the 31 tags present in gold. Real contextual signal on exactly the tags a hashed-ngram bag is weakest at - email 0.9464, zip_code 0.8946, phone_number 0.7895, family_name 0.7559, given_name 0.7420, street_number_and_name 0.7124 - with NO fine-tuning and truncation at 1024 tokens against a 12,000-character read window.
+
+> It contributes nothing yet on the identifiers the ship gate is about: SSN, MRN, ITIN, CVV and health-plan number all score 0.0000. Those tags are present in our training gold, so fine-tuning is the thing that would have to fix them; the pretrained signal does not already cover them.
+
+> No ceiling is available for the FUSED micro F1. The probe establishes that signal exists, not how much of it survives model2vec distillation to a static token table - which is the step with no evidence behind it at all and the reason the chain is staged.
+
+target micro_f1 0.7299: **unknown**. No ceiling, agreement estimate or curve was available — the target is being approved without evidence it is reachable.
+
+[mp] wrote projects/pii-content-v5/feasibility.json
+--------------
+
+[2026-08-27T02:27:17Z] Exit: 0 | Context: record the approved plan for the v5 content chain | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/approve_v5.py
+--- Output ---
+approval recorded and verified
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T02:59:56Z] Exit: 0 | Context: early read: span head vs as-shipped on the span corpus calibration side | Took: 57.2s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/v5_eval_ft.py --span-head projects/pii-content-v5/models/v5a-ettin-ft/span_head --corpus 85593_pii_trainset_85.59k --n 1500 --batch 16 --out projects/pii-content-v5/probe/v5a_span_checkpoint.json
+--- Output ---
+1,500 calibration documents across 8 corpora
+fine-tuned inference 25s (span head)
+
+tag                                                    sup  as-is F1  ft F1@.5  ft best   delta
+sensitive_pci_credit_card                              291    0.0000    0.8150   0.8150  0.8150
+sensitive_pii_country_of_residence                     103    0.0000    0.6587   0.6587  0.6587
+sensitive_pii_area_code                                571    0.0000    0.0676   0.5517  0.5517
+sensitive_phi_medical_record_number_mrn                 27    0.3857    0.8966   0.8966  0.5108
+sensitive_pii_full_name                                508    0.0000    0.0000   0.5070  0.5070
+sensitive_pii_geolocation                               29    0.4058    0.9123   0.9123  0.5065
+sensitive_pii_middle_name                              454    0.0000    0.4732   0.4859  0.4859
+sensitive_pii_date_of_death                            353    0.0000    0.0000   0.3816  0.3816
+sensitive_pii_employment_date                          353    0.0000    0.0000   0.3816  0.3816
+sensitive_pci_credit_card_expiration_date              352    0.0000    0.0000   0.3807  0.3807
+sensitive_pii_date_of_birth_dob                        107    0.5568    0.9064   0.9064  0.3496
+sensitive_pii_address                                  313    0.0000    0.0000   0.3460  0.3460
+sensitive_pii_immigration_and_citizenship_status       305    0.0000    0.0000   0.3436  0.3436
+sensitive_pii_military_identification_number           305    0.0000    0.0000   0.3436  0.3436
+sensitive_pii_passport_number                          305    0.0000    0.0000   0.3436  0.3436
+sensitive_pii_visa_number                              305    0.0000    0.0000   0.3436  0.3436
+sensitive_pii_vehicle_identification_number_vin         18    0.5455    0.8889   0.8889  0.3434
+sensitive_pii_username                                  19    0.1366    0.4737   0.4737  0.3371
+sensitive_pci_financial_instrument_global_identifier_figi   189    0.0000    0.0000   0.2242  0.2242
+sensitive_pii_driver_s_license_number                  189    0.0000    0.0000   0.2242  0.2242
+sensitive_pci_last_four_credit_card_number_digits      177    0.0000    0.0000   0.2121  0.2121
+sensitive_phi_health_plan_beneficiary_number            27    0.4696    0.6462   0.6667  0.1971
+sensitive_pii_family_name                              609    0.7140    0.9078   0.9078  0.1938
+sensitive_pii_last_four_us_ssn_digits                  140    0.0000    0.0000   0.1739  0.1739
+sensitive_pii_given_name                               674    0.7367    0.8595   0.8595  0.1228
+sensitive_pii_street_number_and_name                   447    0.7625    0.8802   0.8802  0.1177
+sensitive_pci_bank_account_number                       54    0.5400    0.6457   0.6508  0.1108
+sensitive_pii_county                                    33    0.6593    0.7541   0.7541  0.0948
+sensitive_pii_age                                      427    0.5207    0.5863   0.5877  0.0670
+sensitive_pii_mac_address                               37    0.5172    0.5818   0.5818  0.0646
+sensitive_pii_social_security_number                   250    0.5730    0.6150   0.6154  0.0424
+sensitive_pii_password                                  34    0.6882    0.7241   0.7241  0.0360
+sensitive_phi_icd_code                                   1    0.0000    0.0000   0.0050  0.0050
+sensitive_pii_nationality                                3    0.0000    0.0000   0.0047  0.0047
+sensitive_pii_marital_status                             2    0.0000    0.0000   0.0030  0.0030
+sensitive_pii_country_of_origin                          1    0.0000    0.0000   0.0025  0.0025
+sensitive_phi_medical_condition                          1    0.0000    0.0000   0.0014  0.0014
+sensitive_pci_credit_card_number                       177    0.2112    0.0000   0.2121  0.0009
+sensitive_pii_ipv4                                      36    0.3284    0.3256   0.3256 -0.0028
+sensitive_pii_email                                    844    0.9486    0.9084   0.9091 -0.0395
+sensitive_pii_phone_number                             716    0.8377    0.7811   0.7846 -0.0532
+sensitive_pii_educational_level                         37    0.6857    0.5862   0.5862 -0.0995
+sensitive_pii_gender_and_sex                           244    0.5015    0.3974   0.3988 -0.1028
+sensitive_pii_employment_status                         45    0.5957    0.4127   0.4194 -0.1764
+sensitive_pii_ipv6                                      33    0.4444    0.1667   0.1667 -0.2778
+sensitive_pii_sexual_identity_and_orientation           11    0.3030    0.0000   0.0198 -0.2833
+sensitive_pii_state                                    401    0.7114    0.1803   0.4229 -0.2885
+sensitive_pci_individual_taxpayer_identification_number_itin   189    0.8698    0.5662   0.5662 -0.3036
+sensitive_pii_zip_code                                 615    0.8989    0.4837   0.5843 -0.3146
+sensitive_pii_personal_identification_number_pin        22    0.5250    0.0833   0.0952 -0.4298
+sensitive_pii_ethnicity                                 38    0.5588    0.0494   0.0588 -0.5000
+sensitive_pii_religion                                  24    0.8302    0.0800   0.1290 -0.7012
+sensitive_pci_card_verification_value_cvv               22    0.8780    0.0000   0.0581 -0.8199
+
+--- the five tags the gate depends on ---
+  sensitive_pii_social_security_number                 support=250    as-is 0.5730 -> ft best 0.6154
+  sensitive_phi_medical_record_number_mrn              support=27     as-is 0.3857 -> ft best 0.8966
+  sensitive_pci_individual_taxpayer_identification_number_itin support=189    as-is 0.8698 -> ft best 0.5662
+  sensitive_pci_card_verification_value_cvv            support=22     as-is 0.8780 -> ft best 0.0581
+  sensitive_phi_health_plan_beneficiary_number         support=27     as-is 0.4696 -> ft best 0.6667
+
+4 of 5 measurable gated tags cleared F1 0.30 after fine-tuning.
+-> projects/pii-content-v5/probe/v5a_span_checkpoint.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+
+Loading weights:   0%|          | 0/120 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 120/120 [00:00<00:00, 12335.28it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/120 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 120/120 [00:00<00:00, 10725.29it/s]
+--------------
+
+[2026-08-27T03:10:31Z] Exit: 0 | Context: can the content path fit in the ~1ms the cascade leaves? measured on one core before funding v5b | Took: 8.7s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/probe_latency.py
+--- Output ---
+tokenizer vocab 50,280; stand-in table 50,280 x 256
+200 documents, truncated to 12,000 characters
+
+n=1,000 on 1 core, tokens/doc median 1,024
+  tokenize             p50  2.826 ms   p95  3.967 ms   mean  2.933 ms
+  gather+pool+heads    p50  0.226 ms   p95  0.305 ms   mean  0.233 ms
+  TOTAL                p50  3.051 ms   p95  4.245 ms   mean  3.166 ms
+
+cascade p95             4.029 ms
+content p95             4.245 ms
+fused p95 (additive)    8.274 ms   budget 5.0 ms   FAIL
+headroom                0.971 ms available,  4.245 ms needed
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+--------------
+
+[2026-08-27T03:11:25Z] Exit: 0 | Context: what read window fits the content path into the cascade's leftover headroom | Took: 13.3s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/probe_window.py
+--- Output ---
+headroom 0.971 ms
+
+  chars  tokens   tok p95  total p95  fused p95  verdict
+ 12,000   1,024    3.949m     3.949      7.978  FAIL
+  8,000   1,024    2.389m     2.389      6.418  FAIL
+  6,000   1,024    2.320m     2.320      6.349  FAIL
+  4,000     975    1.919m     1.919      5.948  FAIL
+  3,000     703    1.393m     1.393      5.422  FAIL
+  2,000     478    0.982m     0.982      5.011  FAIL
+  1,500     363    0.774m     0.774      4.803  PASS
+  1,000     243    0.545m     0.545      4.574  PASS
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+--------------
+
+[2026-08-27T03:49:49Z] Exit: 0 | Context: real v5c serving path latency under the 10 ms budget | Took: 10.5s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers model2vec[distill] bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/probe_m2v_latency.py
+--- Output ---
+table 50,254 x 256; budget 10.0 ms; cascade 4.029 ms -> headroom 5.971 ms
+
+  chars   tokens   tok p95  total p95  fused p95  verdict
+ 12,000    1,024     6.946      6.946     10.975  FAIL
+  8,000    1,024     4.265      4.265      8.294  PASS
+  6,000    1,024     2.533      2.533      6.562  PASS
+  4,000      975     1.699      1.699      5.728  PASS
+  2,000      478     1.034      1.034      5.063  PASS
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T03:51:03Z] Exit: 0 | Context: re-record approval: 10 ms budget, 6,000-char content window | Took: 1.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/approve_v5.py
+--- Output ---
+approval recorded and verified
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T03:51:27Z] Exit: 0 | Context: re-record approval r2 with corrected probe evidence | Took: 2.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/approve_v5.py
+--- Output ---
+approval recorded and verified
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:31:57Z] Exit: 0 | Context: feasibility: is P>=0.80 and R>=0.70 per tag reachable by threshold alone | Took: 4.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/target_8070.py
+--- Output ---
+66,867 gate-admitted calibration rows
+
+tag                                                     sup  maxP@R>=.70  maxR@P>=.80  verdict
+pci_card_verification_value_cvv                         548       1.0000       0.9672  REACHABLE
+pci_credit_score                                        241       1.0000       0.9129  REACHABLE
+pci_iban                                                512       1.0000       0.9512  REACHABLE
+phi_icd_10                                              389       1.0000       0.9434  REACHABLE
+phi_icd_code                                            388       1.0000       0.9433  REACHABLE
+phi_medical_condition                                   472       1.0000       0.8750  REACHABLE
+phi_medical_record_number_mrn                           698       1.0000       0.9255  REACHABLE
+phi_medical_treatment                                   419       1.0000       0.9284  REACHABLE
+phi_medication                                          250       1.0000       0.8840  REACHABLE
+phi_patient_id_number                                   248       1.0000       0.8871  REACHABLE
+pii_mac_address                                         576       1.0000       0.9583  REACHABLE
+pii_marital_status                                      246       1.0000       0.8455  REACHABLE
+pci_last_four_credit_card_number_digits               6,886       0.9996       0.9959  REACHABLE
+pii_email                                            26,819       0.9985       0.9991  REACHABLE
+phi_health_plan_beneficiary_number                      623       0.9983       0.9583  REACHABLE
+pci_individual_taxpayer_identification_number_itin    6,136       0.9972       0.9793  REACHABLE
+pci_credit_card                                       7,997       0.9965       0.9965  REACHABLE
+pii_vehicle_identification_number_vin                   393       0.9965       0.9135  REACHABLE
+pci_credit_card_number                                7,022       0.9961       0.9954  REACHABLE
+pci_credit_card_expiration_date                      19,382       0.9952       0.9985  REACHABLE
+pii_date_of_death                                    19,185       0.9950       0.9978  REACHABLE
+pii_employment_date                                  19,418       0.9948       0.9970  REACHABLE
+pci_bank_account_number                               1,019       0.9945       0.9676  REACHABLE
+pii_personal_identification_number_pin                  443       0.9939       0.9120  REACHABLE
+pii_ipv4                                              1,482       0.9907       0.9750  REACHABLE
+pii_gender_and_sex                                    8,071       0.9894       0.9823  REACHABLE
+pii_street_number_and_name                           16,498       0.9878       0.9661  REACHABLE
+pii_phone_number                                     20,276       0.9860       0.9815  REACHABLE
+pii_area_code                                        15,155       0.9845       0.9816  REACHABLE
+pii_address                                          16,398       0.9842       0.9654  REACHABLE
+pii_age                                              12,820       0.9837       0.9580  REACHABLE
+pii_zip_code                                         17,477       0.9770       0.9669  REACHABLE
+pii_social_security_number                            7,539       0.9720       0.9703  REACHABLE
+pii_family_name                                      27,812       0.9679       0.9476  REACHABLE
+pii_geolocation                                         240       0.9655       0.7417  REACHABLE
+pii_passport_number                                  11,375       0.9639       0.9495  REACHABLE
+pii_immigration_and_citizenship_status               10,724       0.9618       0.9512  REACHABLE
+pii_visa_number                                      10,721       0.9612       0.9508  REACHABLE
+pii_middle_name                                      23,177       0.9606       0.9624  REACHABLE
+pii_full_name                                        36,836       0.9598       0.9868  REACHABLE
+pii_military_identification_number                   10,556       0.9594       0.9480  REACHABLE
+pii_last_four_us_ssn_digits                           5,046       0.9581       0.9800  REACHABLE
+pii_income                                              302       0.9509       0.7550  REACHABLE
+pii_given_name                                       30,966       0.9427       0.9426  REACHABLE
+pii_state                                             8,682       0.9393       0.8784  REACHABLE
+pii_ipv6                                                646       0.9340       0.8947  REACHABLE
+pii_driver_s_license_number                           7,343       0.9201       0.8303  REACHABLE
+pii_password                                          1,158       0.9186       0.8005  REACHABLE
+pci_financial_instrument_global_identifier_figi       6,519       0.9047       0.8156  REACHABLE
+pii_country_of_residence                              1,205       0.9036       0.8025  REACHABLE
+pii_educational_level                                   740       0.8876       0.7635  REACHABLE
+pii_date_of_birth_dob                                 3,457       0.8500       0.7249  REACHABLE
+pii_religion                                            246       0.8278       0.7073  REACHABLE
+pii_ethnicity                                           441       0.8196       0.7166  REACHABLE
+pii_username                                            545       0.7860       0.6936  needs a model
+pii_county                                            1,057       0.7385       0.5582  needs a model
+pii_country_of_origin                                   307       0.7143       0.6840  needs a model
+pii_employment_status                                   994       0.7080       0.6378  needs a model
+pii_nationality                                         359       0.6951       0.6630  needs a model
+pii_sexual_identity_and_orientation                     142       0.5952       0.5634  needs a model
+pci_swift_code                                           74       0.4417       0.5000  needs a model
+
+54 of 61 tags reach P>=0.8 and R>=0.7 by threshold alone
+7 need a better model or better gold
+0 have under 30 calibration positives
+-> projects/pii-content-v5/probe/target_80_70_feasibility.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:32:46Z] Exit: 0 | Context: feasibility at the declared 0.90 recall gate: P>=0.80 and R>=0.90 | Took: 4.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/target_8090.py
+--- Output ---
+66,867 gate-admitted calibration rows
+
+tag                                                     sup  maxP@R>=.70  maxR@P>=.80  verdict
+pci_credit_score                                        241       1.0000       0.9129  REACHABLE
+phi_icd_10                                              389       1.0000       0.9434  REACHABLE
+phi_icd_code                                            388       1.0000       0.9433  REACHABLE
+phi_medical_treatment                                   419       1.0000       0.9284  REACHABLE
+phi_health_plan_beneficiary_number                      623       0.9983       0.9583  REACHABLE
+pii_email                                            26,819       0.9961       0.9991  REACHABLE
+pci_card_verification_value_cvv                         548       0.9960       0.9672  REACHABLE
+pci_last_four_credit_card_number_digits               6,886       0.9944       0.9959  REACHABLE
+pci_credit_card_expiration_date                      19,382       0.9926       0.9985  REACHABLE
+pci_credit_card                                       7,997       0.9924       0.9965  REACHABLE
+pii_date_of_death                                    19,185       0.9918       0.9978  REACHABLE
+pii_employment_date                                  19,418       0.9912       0.9970  REACHABLE
+pci_credit_card_number                                7,022       0.9908       0.9954  REACHABLE
+pci_individual_taxpayer_identification_number_itin    6,136       0.9805       0.9793  REACHABLE
+pii_gender_and_sex                                    8,071       0.9802       0.9823  REACHABLE
+pci_bank_account_number                               1,019       0.9757       0.9676  REACHABLE
+pii_mac_address                                         576       0.9756       0.9583  REACHABLE
+pci_iban                                                512       0.9706       0.9512  REACHABLE
+pii_street_number_and_name                           16,498       0.9676       0.9661  REACHABLE
+pii_phone_number                                     20,276       0.9675       0.9815  REACHABLE
+pii_address                                          16,398       0.9630       0.9654  REACHABLE
+pii_area_code                                        15,155       0.9621       0.9816  REACHABLE
+pii_ipv4                                              1,482       0.9455       0.9750  REACHABLE
+pii_zip_code                                         17,477       0.9380       0.9669  REACHABLE
+pii_age                                              12,820       0.9343       0.9580  REACHABLE
+pii_social_security_number                            7,539       0.9287       0.9703  REACHABLE
+pii_full_name                                        36,836       0.9214       0.9868  REACHABLE
+pii_last_four_us_ssn_digits                           5,046       0.9170       0.9800  REACHABLE
+pii_middle_name                                      23,177       0.9015       0.9624  REACHABLE
+pii_vehicle_identification_number_vin                   393       0.8985       0.9135  REACHABLE
+pii_visa_number                                      10,721       0.8943       0.9508  REACHABLE
+pii_immigration_and_citizenship_status               10,724       0.8934       0.9512  REACHABLE
+pii_military_identification_number                   10,556       0.8916       0.9480  REACHABLE
+pii_passport_number                                  11,375       0.8910       0.9495  REACHABLE
+pii_family_name                                      27,812       0.8857       0.9476  REACHABLE
+pii_given_name                                       30,966       0.8643       0.9426  REACHABLE
+phi_medical_record_number_mrn                           698       0.8618       0.9255  REACHABLE
+pii_personal_identification_number_pin                  443       0.8544       0.9120  REACHABLE
+pii_ipv6                                                646       0.7844       0.8947  needs a model
+pii_state                                             8,682       0.7612       0.8784  needs a model
+pii_driver_s_license_number                           7,343       0.6488       0.8303  needs a model
+pci_financial_instrument_global_identifier_figi       6,519       0.6230       0.8156  needs a model
+phi_medication                                          250       0.6148       0.8840  needs a model
+phi_patient_id_number                                   248       0.6022       0.8871  needs a model
+phi_medical_condition                                   472       0.5498       0.8750  needs a model
+pii_country_of_residence                              1,205       0.4792       0.8025  needs a model
+pii_password                                          1,158       0.4638       0.8005  needs a model
+pii_date_of_birth_dob                                 3,457       0.4145       0.7249  needs a model
+pii_marital_status                                      246       0.2506       0.8455  needs a model
+pii_educational_level                                   740       0.2176       0.7635  needs a model
+pii_ethnicity                                           441       0.2168       0.7166  needs a model
+pii_employment_status                                   994       0.2054       0.6378  needs a model
+pii_county                                            1,057       0.1971       0.5582  needs a model
+pci_swift_code                                           74       0.1709       0.5000  needs a model
+pii_nationality                                         359       0.1319       0.6630  needs a model
+pii_religion                                            246       0.1300       0.7073  needs a model
+pii_income                                              302       0.0860       0.7550  needs a model
+pii_country_of_origin                                   307       0.0782       0.6840  needs a model
+pii_username                                            545       0.0671       0.6936  needs a model
+pii_geolocation                                         240       0.0308       0.7417  needs a model
+pii_sexual_identity_and_orientation                     142       0.0114       0.5634  needs a model
+
+38 of 61 tags reach P>=0.8 and R>=0.9 by threshold alone
+23 need a better model or better gold
+0 have under 30 calibration positives
+-> projects/pii-content-v5/probe/target_80_90_feasibility.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T05:52:45Z] Exit: 0 | Context: v5a checkpoint: fine-tuned doc head vs as-shipped, same calibration rows | Took: 41.4s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/v5_eval_ft.py --n 2400 --batch 32
+--- Output ---
+2,400 calibration documents across 8 corpora
+fine-tuned inference 13s (document head)
+
+tag                                                    sup  as-is F1  ft F1@.5  ft best   delta
+sensitive_pci_credit_card_expiration_date              297    0.0000    0.9687   0.9782  0.9782
+sensitive_pii_date_of_death                            291    0.0000    0.9682   0.9762  0.9762
+sensitive_pii_employment_date                          293    0.0000    0.9731   0.9732  0.9732
+sensitive_pci_last_four_credit_card_number_digits      108    0.0000    0.9259   0.9266  0.9266
+sensitive_pci_credit_score                               6    0.0000    0.9091   0.9091  0.9091
+sensitive_pii_middle_name                              362    0.0000    0.8961   0.9071  0.9071
+sensitive_pii_area_code                                269    0.0000    0.9040   0.9043  0.9043
+sensitive_pii_country_of_origin                          8    0.0000    0.6667   0.8571  0.8571
+sensitive_pii_visa_number                              173    0.0000    0.8367   0.8571  0.8571
+sensitive_pci_credit_card_number                       121    0.0961    0.9083   0.9417  0.8456
+sensitive_pii_immigration_and_citizenship_status       174    0.0000    0.8235   0.8427  0.8427
+sensitive_pii_military_identification_number           167    0.0000    0.8304   0.8427  0.8427
+sensitive_pci_credit_card                              150    0.0000    0.7922   0.8121  0.8121
+sensitive_pii_full_name                                965    0.0000    0.8028   0.8077  0.8077
+sensitive_pii_passport_number                          201    0.0000    0.7949   0.8074  0.8074
+sensitive_pii_address                                  363    0.0000    0.7596   0.7784  0.7784
+sensitive_pci_financial_instrument_global_identifier_figi   115    0.0000    0.7032   0.7407  0.7407
+sensitive_pii_driver_s_license_number                  152    0.0000    0.6437   0.7126  0.7126
+sensitive_pii_nationality                               12    0.0000    0.6667   0.7000  0.7000
+sensitive_phi_icd_10                                     2    0.0000    0.6667   0.6667  0.6667
+sensitive_phi_icd_code                                   2    0.0000    0.6667   0.6667  0.6667
+sensitive_phi_patient_id_number                          2    0.0000    0.6667   0.6667  0.6667
+sensitive_pii_last_four_us_ssn_digits                   84    0.0000    0.5333   0.6570  0.6570
+sensitive_pci_iban                                      14    0.0000    0.5263   0.6207  0.6207
+sensitive_pii_income                                     5    0.0000    0.5714   0.5714  0.5714
+sensitive_pii_marital_status                             5    0.0000    0.5714   0.5714  0.5714
+sensitive_pii_country_of_residence                      35    0.0000    0.2051   0.4857  0.4857
+sensitive_phi_health_plan_beneficiary_number             3    0.0667    0.5000   0.5000  0.4333
+sensitive_phi_medical_treatment                          4    0.0000    0.4000   0.4000  0.4000
+sensitive_phi_medication                                 4    0.0000    0.4000   0.4000  0.4000
+sensitive_pii_gender_and_sex                           129    0.3922    0.7100   0.7317  0.3396
+sensitive_phi_medical_condition                          5    0.0000    0.3333   0.3333  0.3333
+sensitive_pii_age                                      199    0.5128    0.8270   0.8315  0.3187
+sensitive_pii_family_name                              467    0.5341    0.7979   0.8142  0.2801
+sensitive_pii_given_name                               577    0.5625    0.7571   0.7650  0.2025
+sensitive_pii_social_security_number                   166    0.4219    0.5683   0.6130  0.1911
+sensitive_pii_street_number_and_name                   315    0.6295    0.8012   0.8195  0.1900
+sensitive_pii_username                                  10    0.0694    0.1818   0.2353  0.1659
+sensitive_pii_date_of_birth_dob                         85    0.2467    0.3226   0.4118  0.1651
+sensitive_pii_vehicle_identification_number_vin         11    0.3704    0.4286   0.5333  0.1630
+sensitive_pci_bank_account_number                       33    0.2205    0.2564   0.3800  0.1595
+sensitive_pii_ipv6                                      14    0.4898    0.1176   0.6471  0.1573
+sensitive_pci_swift_code                                 4    0.0435    0.0000   0.2000  0.1565
+sensitive_pii_educational_level                         11    0.1842    0.3077   0.3158  0.1316
+sensitive_phi_medical_record_number_mrn                 11    0.0419    0.1667   0.1667  0.1248
+sensitive_pii_state                                    292    0.5163    0.5914   0.6289  0.1126
+sensitive_pii_phone_number                             432    0.7271    0.8061   0.8271  0.1000
+sensitive_pii_ipv4                                      49    0.6061    0.3582   0.6346  0.0286
+sensitive_pii_email                                    561    0.8714    0.8921   0.8971  0.0257
+sensitive_pii_ethnicity                                 12    0.1202    0.0000   0.1429  0.0226
+sensitive_pii_zip_code                                 366    0.7462    0.7570   0.7602  0.0140
+sensitive_pii_employment_status                         21    0.1714    0.1739   0.1818  0.0104
+sensitive_pci_individual_taxpayer_identification_number_itin   102    0.7343    0.7209   0.7432  0.0089
+sensitive_pii_county                                    33    0.2949    0.0000   0.2432 -0.0516
+sensitive_pii_sexual_identity_and_orientation            5    0.0851    0.0000   0.0188 -0.0663
+sensitive_pii_religion                                   6    0.1600    0.0000   0.0909 -0.0691
+sensitive_pii_personal_identification_number_pin        17    0.2149    0.1111   0.1111 -0.1038
+sensitive_pii_geolocation                               10    0.1373    0.0000   0.0288 -0.1085
+sensitive_pci_card_verification_value_cvv               17    0.5854    0.4545   0.4545 -0.1308
+sensitive_pii_password                                  51    0.6331    0.1053   0.4412 -0.1919
+sensitive_pii_mac_address                               11    0.5000    0.1667   0.2500 -0.2500
+
+--- the five tags the gate depends on ---
+  sensitive_pii_social_security_number                 support=166    as-is 0.4219 -> ft best 0.6130
+  sensitive_phi_medical_record_number_mrn              support=11     as-is 0.0419 -> ft best 0.1667
+  sensitive_pci_individual_taxpayer_identification_number_itin support=102    as-is 0.7343 -> ft best 0.7432
+  sensitive_pci_card_verification_value_cvv            support=17     as-is 0.5854 -> ft best 0.4545
+  sensitive_phi_health_plan_beneficiary_number         support=3      as-is 0.0667 -> ft best 0.5000
+
+4 of 5 measurable gated tags cleared F1 0.30 after fine-tuning.
+-> projects/pii-content-v5/probe/v5a_checkpoint.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+
+Loading weights:   0%|          | 0/120 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 120/120 [00:00<00:00, 18083.44it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/120 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 120/120 [00:00<00:00, 10968.61it/s]
+--------------
+
+[2026-08-27T05:53:35Z] Exit: 0 | Context: v5b: distil the fine-tuned doc_head encoder into a static token table | Took: 11.5s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers model2vec[distill] bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/v5_distill.py --encoder projects/pii-content-v5/models/v5a-ettin-ft/doc_head --out projects/pii-content-v5/models/v5b-m2v --device cuda
+--- Output ---
+distilling projects/pii-content-v5/models/v5a-ettin-ft/doc_head on cuda
+vocab 50,254 x 256 dims  float16  27.29 MB  (7s)
+probe-token cosine: mean 0.0848  max 0.6416 over 26 tokens
+-> projects/pii-content-v5/models/v5b-m2v
+-> projects/pii-content-v5/probe/v5b_distill.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+
+Loading weights:   0%|          | 0/116 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 116/116 [00:00<00:00, 18204.04it/s]
+[1mModernBertModel LOAD REPORT[0m from: projects/pii-content-v5/models/v5a-ettin-ft/doc_head
+Key               | Status     |  | 
+------------------+------------+--+-
+head.norm.weight  | UNEXPECTED |  | 
+classifier.bias   | UNEXPECTED |  | 
+head.dense.weight | UNEXPECTED |  | 
+classifier.weight | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Adding missing added token '[UNK]' to the vocabulary.
+Adding missing added token '[CLS]' to the vocabulary.
+Adding missing added token '[SEP]' to the vocabulary.
+Adding missing added token '[PAD]' to the vocabulary.
+Adding missing added token '[MASK]' to the vocabulary.
+Adding missing added token '[unused0]' to the vocabulary.
+Adding missing added token '[unused1]' to the vocabulary.
+Adding missing added token '[unused2]' to the vocabulary.
+Adding missing added token '[unused3]' to the vocabulary.
+Adding missing added token '[unused4]' to the vocabulary.
+Adding missing added token '[unused5]' to the vocabulary.
+Adding missing added token '[unused6]' to the vocabulary.
+Adding missing added token '[unused7]' to the vocabulary.
+Adding missing added token '[unused8]' to the vocabulary.
+Adding missing added token '[unused9]' to the vocabulary.
+Adding missing added token '[unused10]' to the vocabulary.
+Adding missing added token '[unused11]' to the vocabulary.
+Adding missing added token '[unused12]' to the vocabulary.
+Adding missing added token '[unused13]' to the vocabulary.
+Adding missing added token '[unused14]' to the vocabulary.
+Adding missing added token '[unused15]' to the vocabulary.
+Adding missing added token '[unused16]' to the vocabulary.
+Adding missing added token '[unused17]' to the vocabulary.
+Adding missing added token '[unused18]' to the vocabulary.
+Adding missing added token '[unused19]' to the vocabulary.
+Adding missing added token '[unused20]' to the vocabulary.
+Adding missing added token '[unused21]' to the vocabulary.
+Adding missing added token '[unused22]' to the vocabulary.
+Adding missing added token '[unused23]' to the vocabulary.
+Adding missing added token '[unused24]' to the vocabulary.
+Adding missing added token '[unused25]' to the vocabulary.
+Adding missing added token '[unused26]' to the vocabulary.
+Adding missing added token '[unused27]' to the vocabulary.
+Adding missing added token '[unused28]' to the vocabulary.
+Adding missing added token '[unused29]' to the vocabulary.
+Adding missing added token '[unused30]' to the vocabulary.
+Adding missing added token '[unused31]' to the vocabulary.
+Adding missing added token '[unused32]' to the vocabulary.
+Adding missing added token '[unused33]' to the vocabulary.
+Adding missing added token '[unused34]' to the vocabulary.
+Adding missing added token '[unused35]' to the vocabulary.
+Adding missing added token '[unused36]' to the vocabulary.
+Adding missing added token '[unused37]' to the vocabulary.
+Adding missing added token '[unused38]' to the vocabulary.
+Adding missing added token '[unused39]' to the vocabulary.
+Adding missing added token '[unused40]' to the vocabulary.
+Adding missing added token '[unused41]' to the vocabulary.
+Adding missing added token '[unused42]' to the vocabulary.
+Adding missing added token '[unused43]' to the vocabulary.
+Adding missing added token '[unused44]' to the vocabulary.
+Adding missing added token '[unused45]' to the vocabulary.
+Adding missing added token '[unused46]' to the vocabulary.
+Adding missing added token '[unused47]' to the vocabulary.
+Adding missing added token '[unused48]' to the vocabulary.
+Adding missing added token '[unused49]' to the vocabulary.
+Adding missing added token '[unused50]' to the vocabulary.
+Adding missing added token '[unused51]' to the vocabulary.
+Adding missing added token '[unused52]' to the vocabulary.
+Adding missing added token '[unused53]' to the vocabulary.
+Adding missing added token '[unused54]' to the vocabulary.
+Adding missing added token '[unused55]' to the vocabulary.
+Adding missing added token '[unused56]' to the vocabulary.
+Adding missing added token '[unused57]' to the vocabulary.
+Adding missing added token '[unused58]' to the vocabulary.
+Adding missing added token '[unused59]' to the vocabulary.
+Adding missing added token '[unused60]' to the vocabulary.
+Adding missing added token '[unused61]' to the vocabulary.
+Adding missing added token '[unused62]' to the vocabulary.
+Adding missing added token '[unused63]' to the vocabulary.
+Adding missing added token '[unused64]' to the vocabulary.
+Adding missing added token '[unused65]' to the vocabulary.
+Adding missing added token '[unused66]' to the vocabulary.
+Adding missing added token '[unused67]' to the vocabulary.
+Adding missing added token '[unused68]' to the vocabulary.
+Adding missing added token '[unused69]' to the vocabulary.
+Adding missing added token '[unused70]' to the vocabulary.
+Adding missing added token '[unused71]' to the vocabulary.
+Adding missing added token '[unused72]' to the vocabulary.
+Adding missing added token '[unused73]' to the vocabulary.
+Adding missing added token '[unused74]' to the vocabulary.
+Adding missing added token '[unused75]' to the vocabulary.
+Adding missing added token '[unused76]' to the vocabulary.
+Adding missing added token '[unused77]' to the vocabulary.
+Adding missing added token '[unused78]' to the vocabulary.
+Adding missing added token '[unused79]' to the vocabulary.
+Adding missing added token '[unused80]' to the vocabulary.
+Adding missing added token '[unused81]' to the vocabulary.
+Adding missing added token '[unused82]' to the vocabulary.
+HuggingFace tokenizer defines an unk_token, but the Skeletoken model does not. Setting it to '[UNK]'.
+HuggingFace tokenizer defines a pad_token, but the Skeletoken model does not. Setting it to '[PAD]'.
+
+Encoding tokens:   0%|          | 0/50254 [00:00<?, ? tokens/s]
+Encoding tokens:   1%|          | 256/50254 [00:00<01:16, 649.85 tokens/s]
+Encoding tokens:   5%|▌         | 2560/50254 [00:00<00:07, 6562.18 tokens/s]
+Encoding tokens:  10%|█         | 5120/50254 [00:00<00:03, 11629.07 tokens/s]
+Encoding tokens:  16%|█▋        | 8192/50254 [00:00<00:02, 16578.03 tokens/s]
+Encoding tokens:  22%|██▏       | 11264/50254 [00:00<00:01, 20098.08 tokens/s]
+Encoding tokens:  29%|██▊       | 14336/50254 [00:00<00:01, 22603.89 tokens/s]
+Encoding tokens:  35%|███▍      | 17408/50254 [00:01<00:01, 24361.62 tokens/s]
+Encoding tokens:  41%|████      | 20480/50254 [00:01<00:01, 25580.67 tokens/s]
+Encoding tokens:  46%|████▋     | 23296/50254 [00:01<00:01, 26261.32 tokens/s]
+Encoding tokens:  52%|█████▏    | 26368/50254 [00:01<00:00, 26899.19 tokens/s]
+Encoding tokens:  59%|█████▊    | 29440/50254 [00:01<00:00, 27339.80 tokens/s]
+Encoding tokens:  64%|██████▍   | 32256/50254 [00:01<00:00, 27440.79 tokens/s]
+Encoding tokens:  70%|██████▉   | 35072/50254 [00:01<00:00, 27623.42 tokens/s]
+Encoding tokens:  76%|███████▌  | 38144/50254 [00:01<00:00, 27850.01 tokens/s]
+Encoding tokens:  82%|████████▏ | 41216/50254 [00:01<00:00, 27984.83 tokens/s]
+Encoding tokens:  88%|████████▊ | 44288/50254 [00:01<00:00, 28121.51 tokens/s]
+Encoding tokens:  94%|█████████▍| 47360/50254 [00:02<00:00, 28150.47 tokens/s]
+Encoding tokens: 100%|██████████| 50254/50254 [00:02<00:00, 28042.07 tokens/s]
+Encoding tokens: 100%|██████████| 50254/50254 [00:02<00:00, 21932.63 tokens/s]
+--------------
+
+[2026-08-27T06:58:49Z] Exit: 0 | Context: v5d: fuse v5c with cascade_scorecard61, measure fused latency, score sealed | Took: 35.0s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch transformers model2vec[distill] bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/v5_fuse.py
+--- Output ---
+choosing fusion on 79,883 calibration rows (8 corpora, joined by name)
+fusion chosen per tag: {'and': 37, 'cascade': 24}
+document gate fusion: cascade (F0.5 0.9812 on 76,626 answerable calibration rows)
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.7s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    1.0s
+  20000_pii_holdout_20.00k                          20,000 docs    2.3s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    5.1s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.5s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.8s
+
+fused one-core latency: p50 5.232  p95 6.279  p99 7.176 ms
+
+metric                                     v5d-fused
+micro_f1                                      0.7595
+precision_micro                               0.6926
+macro_f05                                     0.6282
+macro_f2                                      0.6496
+priority_macro_f05                            0.8020
+recall_macro_catalogue                        0.6367
+precision_macro_catalogue                     0.6365
+severity_recall_min                           0.5881
+prediction_rate                               0.8118
+equal_corpus_doc_recall                       0.7975
+equal_corpus_doc_precision                    0.8956
+equal_corpus_doc_specificity                  0.8792
+
+-> projects/pii-content-v5/evaluations/arm_v5d-fused.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T06:59:13Z] Exit: 1 | Context: decide v5d against the cascade baseline under the v5 policy | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-content-v5/policy.yaml --arms projects/pii-content-v5/evaluations/arm_baseline_scorecard61.json projects/pii-content-v5/evaluations/arm_v5d-fused.json --suite projects/pii-content-v5/suite.yaml --out projects/pii-content-v5/decision/headline.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 8 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | micro_f1 | precision_micro | macro_f05 | macro_f2 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| cascade_scorecard61 | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7299 | 0.6360 | 0.6230 | 0.6651 | 4.0290 |
+| v5d-fused | **blocked** | **FAIL** 22/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.7595 | 0.6926 | 0.6282 | 0.6496 | 6.2785 |
+
+NO FEASIBLE ARM
+  - cascade_scorecard61: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v5d-fused: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-content-v5/decision/headline.json
+--------------
+

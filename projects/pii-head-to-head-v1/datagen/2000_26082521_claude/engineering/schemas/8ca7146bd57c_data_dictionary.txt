@@ -1,0 +1,23 @@
+MBRMAST — MEMBER MASTER FILE, DICTIONARY EXCERPT, PAGE 3 OF 11
+Library PRODLIB / physical file MBRMAST / journaled to MBRJRN
+
+- MBR_ID — PACKED(9,0) — NOT NULL — assigned by intake program MB100R; primary key; approved for use on branch pick lists and assignment tickets.
+- SSN_NBR — CHAR(9) — NOT NULL — natural key carried forward from the 1994 conversion. Read authority limited to the Payroll group profile and the Records Custodian. Branch inquiry screen MB201D displays the last four positions only.
+- LAST_NAME — CHAR(25) — NOT NULL
+- FIRST_NAME — CHAR(15) — NOT NULL
+- MID_INIT — CHAR(1) — NULL allowed
+- DOB_DT — DATE — NULL allowed — must be populated before an assignment can be confirmed; suppressed from all branch-level reporting.
+- HOME_PHONE — CHAR(10) — NULL allowed — digits only, no punctuation or extension stored.
+- ADDR_LINE_1 — CHAR(30) — NOT NULL
+- ADDR_LINE_2 — CHAR(30) — NULL allowed
+- CITY — CHAR(20) — NOT NULL
+- STATE_CD — CHAR(2) — NOT NULL — postal abbreviation, upper case, edited against table STCODE.
+- ZIP_CD — CHAR(9) — NOT NULL — stored unhyphenated, right-blank-filled where the plus-four is unknown.
+
+Operational notes:
+
+- Object authority on MBRMAST is *EXCLUDE for *PUBLIC. Access is granted through group profiles PAYGRP, RECGRP and BRNGRP only, and only RECGRP holds update authority to the identifier and demographic columns.
+- Retention is seven years from TERM_DT. Purge job MBPURG selects eligible records the first Sunday in January and writes them to archive tape before deletion.
+- Nightly extract MBEXT01 to the payroll service bureau carries MBR_ID, SSN_NBR, LAST_NAME, FIRST_NAME, MID_INIT and the pay columns. No address or telephone columns are included.
+- Weekly extract MBEXT04 to the branch scheduling package carries MBR_ID, SKILL_CD, AVAIL_CD, CITY, STATE_CD and ZIP_CD only.
+- Extract tapes are logged out and back in by the Records Custodian on form RC-12; the log is retained for three years.

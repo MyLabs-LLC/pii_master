@@ -1,0 +1,184 @@
+# pii-quiet-alarm -- the evaluation suite.
+#
+# `gold` here describes the TAGGING question (which of the 61 tags does this
+# document carry). The DOCUMENT-level question -- does this document contain
+# sensitive PII at all -- has a different and, on two corpora, better gold, so
+# each corpus's `note` says what it can measure for that question.
+#
+# The correction that made this run possible: the prior lineage took its
+# dual-judge document gold from the manifest's `label` field, which is the
+# judges' document-TYPE verdict, not a PII-presence verdict. Cross-tabulated
+# they are orthogonal -- on govdocs2 eval, 1,501 `label=positive` documents
+# carry no PII entity and 1,220 `label=negative` documents do. The fields that
+# answer the question are `pii_entities` / `pii_classes` / `pii_sensitivity`,
+# which are mutually consistent on every row of all four dual-judge
+# directories: empty entities and classes occur if and only if
+# `pii_sensitivity == "none"`.
+#
+# leakage figures are carried from the audited record at
+# projects/pii-priority-recall-v1/data/data_quality.json (exact normalized
+# read-window hash audit, training-side exclusions applied). They are re-run
+# in this lineage because the corrected loader admits 20,714 training rows the
+# prior audit's exclusion list never saw.
+name: pii-steady-aim
+aggregation: equal_corpus
+
+corpora:
+  # ---------------------------------------------------------- doc-level gold
+  # The three corpora holding genuine document-level negatives -- 10,003 of
+  # them, and the only place the customer-facing precision claim can be made.
+  - name: 30000_pii2_eval_25.15k
+    path: /home/lence/workspace/data/2-eval/30000_pii2_eval_25.15k
+    role: sealed
+    gold: complete
+    n: 30000
+    note: >-
+      Document-level gold is COMPLETE: 4,851 labelled-clean documents
+      (prevalence 0.838). Measures the tagging question and the document
+      question in full. 15 priority tags clear 30-instance support.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0001
+      missing_rate: 0.0
+      real_synth_mix: synthetic
+      contamination_risk: >-
+        shared upstream generators with pii_trainset_100k; exact cross-split
+        hash audit found 0 surviving overlaps after training-side exclusion
+
+  - name: 4000_datax-dualjudge-evalset-1.32k
+    path: /home/lence/workspace/data/2-eval/4000_datax-dualjudge-evalset-1.32k
+    role: adversarial
+    gold: positive_only
+    n: 4000
+    note: >-
+      TAGGING gold is positive-only -- an unlisted tag is unknown, not absent,
+      so no precision-bearing tag metric is measurable here. DOCUMENT-level
+      gold is complete: 2,087 judge-asserted PII-free real business documents
+      (prevalence 0.478). judge_labels.json additionally carries both judges'
+      per-document entity lists over 946 documents, which is where the 0.9545
+      raw agreement / 0.9080 Cohen kappa ceiling comes from.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0
+      missing_rate: 0.0
+      real_synth_mix: real documents, machine-judged labels
+      contamination_risk: >-
+        dual-judge (gemini + sonnet) labels; 1,203 documents the judges
+        disputed are excluded from the document-level headline
+
+  - name: 6589_govdocs2-dualjudge-eval20-3.53k
+    path: /home/lence/workspace/data/2-eval/6589_govdocs2-dualjudge-eval20-3.53k
+    role: adversarial
+    gold: positive_only
+    n: 6589
+    note: >-
+      TAGGING gold is positive-only. DOCUMENT-level gold is complete: 3,065
+      judge-asserted PII-free real-world web/office documents (prevalence
+      0.532). The nearest thing in the suite to the customer's own corpus --
+      heterogeneous real files, mostly mundane, mostly clean.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0030
+      missing_rate: 0.0017
+      real_synth_mix: real documents, machine-judged labels
+      contamination_risk: >-
+        dual-judge (gemini + opus) labels; 11 documents unreadable and
+        excluded; 643 disputed documents reported as their own slice
+
+  # ------------------------------------------------- tagging gold, no negatives
+  # Prevalence 1.0: every document contains PII, so these cannot measure a
+  # document-level false alarm at all. They carry the tagging question only,
+  # and the doc-level constraints are NOT_MEASURABLE on them by construction.
+  - name: 20000_pii_holdout_20.00k
+    path: /home/lence/workspace/data/2-eval/20000_pii_holdout_20.00k
+    role: sealed
+    gold: complete
+    n: 20000
+    note: >-
+      Prevalence 1.0 -- no document-level negatives, so doc precision and
+      specificity are NOT_MEASURABLE here, never 0. 14 priority tags clear
+      30-instance support. Carries span gold (spans.jsonl) unused by this
+      document-level task.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0188
+      missing_rate: 0.0
+      real_synth_mix: synthetic
+      contamination_risk: >-
+        1,642-document overlap with pii_trainset_100k was removed from
+        TRAINING, never from evaluation; 0 surviving overlaps
+
+  - name: 38937_openpii_pii_eval_38.94k
+    path: /home/lence/workspace/data/2-eval/38937_openpii_pii_eval_38.94k
+    role: external
+    gold: complete
+    n: 38937
+    note: >-
+      Prevalence 1.0 -- no document-level negatives. The most flattering
+      corpus in the prior lineage (macro F2 0.6297 against an equal-corpus
+      0.4835); never quote it as general performance. 9 priority tags clear
+      30-instance support.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0
+      missing_rate: 0.0
+      real_synth_mix: synthetic
+      contamination_risk: public dataset; model may have seen upstream text
+
+  - name: 10626_ai4privacy_pii_masking_eval_10.63k
+    path: /home/lence/workspace/data/2-eval/10626_ai4privacy_pii_masking_eval_10.63k
+    role: external
+    gold: complete
+    n: 10626
+    note: >-
+      Prevalence 1.0 -- no document-level negatives. 10 priority tags clear
+      30-instance support. Licensing is NonCommercial; see the spec.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0
+      missing_rate: 0.0
+      real_synth_mix: synthetic
+      contamination_risk: public dataset; NonCommercial licence
+
+  - name: 10360_betterdataai_ner_silver_eval_10.36k
+    path: /home/lence/workspace/data/2-eval/10360_betterdataai_ner_silver_eval_10.36k
+    role: external
+    gold: complete
+    n: 10360
+    note: >-
+      Prevalence 1.0 -- no document-level negatives. Silver (model-generated)
+      labels and the weakest corpus in the prior lineage (macro F2 0.2313).
+      Only 4 priority tags clear 30-instance support.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0
+      missing_rate: 0.0
+      label_noise: 0.0
+      real_synth_mix: synthetic, silver labels
+      contamination_risk: >-
+        silver labels are themselves model output; label noise is real but
+        not directly measurable, so this corpus never decides a gate alone
+
+  - name: 5617_nemotron_eval_5.36k
+    path: /home/lence/workspace/data/2-eval/5617_nemotron_eval_5.36k
+    role: external
+    gold: partial
+    n: 5617
+    note: >-
+      Coarse/native gold only -- the loader recovers no sensitive-tag
+      positives at all (0 of 22,468 rows on the training side). Reports
+      nothing a gate reads; retained as a drift and prediction-rate slice.
+    data_quality:
+      leakage: 0
+      leakage_scanned: true
+      duplicate_rate: 0.0
+      missing_rate: 0.0
+      real_synth_mix: synthetic
+      contamination_risk: native document-type labels, not a PII catalogue

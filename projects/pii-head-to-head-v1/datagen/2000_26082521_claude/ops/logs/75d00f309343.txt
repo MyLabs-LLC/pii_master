@@ -1,0 +1,80 @@
+FIELD MAPPING RULESET — STUDENT INFORMATION SYSTEM TO ENTERPRISE DATA WAREHOUSE
+Northfield Consolidated School District 214 — Office of Data Governance
+
+[HEADER]
+ruleset_id            = MAP-SIS-EDW-0417
+ruleset_version       = 4.2.1
+effective_date        = 2016-08-15
+supersedes            = 4.1.6 (retired 2016-08-14)
+owner_role            = the Records Custodian
+approver_role         = the Assistant Superintendent for Technology
+change_ticket         = DGOV-2214
+classification        = INTERNAL / RESTRICTED — FERPA DIRECTORY EXCLUSION APPLIES
+
+[SOURCE]
+system                = eSchoolPlus 3.10.4
+extract_object        = VW_STU_DEMOGRAPHIC_CUR
+extract_mode          = INCREMENTAL (CHANGE_TS > LAST_HIGH_WATER)
+schedule_cron         = 0 3 * * 1-5
+last_high_water       = 2016-09-11T03:00:00-05:00
+expected_row_band     = 41000..47500
+
+[TARGET]
+system                = EDW_PROD
+schema                = edw_stg
+table                 = stg_student_demographic
+load_strategy         = TRUNCATE_INSERT
+grain                 = one row per enrolled student per school year
+
+[MAPPING.STUDENT_DEMOGRAPHIC]
+# source_column               -> target_column             | rule
+STUDENT_ID                    -> student_key               | TOKENIZE(vault=STU_V2, fmt=preserve_len)
+STATE_TESTING_ID              -> state_id_tok              | TOKENIZE(vault=STU_V2)
+LOCAL_STUDENT_NUMBER          -> local_num_tok             | TOKENIZE(vault=STU_V2)
+LAST_NAME                     -> —                         | SUPPRESS (not loaded)
+FIRST_NAME                    -> —                         | SUPPRESS (not loaded)
+MIDDLE_INITIAL                -> —                         | SUPPRESS (not loaded)
+DATE_OF_BIRTH                 -> birth_year                | GENERALIZE(precision=year)
+DATE_OF_BIRTH                 -> age_band                  | BUCKET(width=2y)
+GENDER_CODE                   -> gender_code               | PASSTHROUGH (code set only)
+RACE_ETHNICITY_CODE           -> race_ethnicity_code       | PASSTHROUGH (code set only)
+HOME_LANGUAGE_CODE            -> home_language_code        | PASSTHROUGH
+STREET_ADDRESS_1              -> —                         | SUPPRESS (not loaded)
+STREET_ADDRESS_2              -> —                         | SUPPRESS (not loaded)
+CITY                          -> —                         | SUPPRESS (not loaded)
+POSTAL_CODE                   -> postal_prefix             | TRUNCATE(len=3)
+GUARDIAN_1_NAME               -> —                         | SUPPRESS (not loaded)
+GUARDIAN_1_PHONE              -> guardian_contact_flag     | DERIVE_PRESENCE(boolean)
+GUARDIAN_1_EMAIL              -> —                         | SUPPRESS (not loaded)
+SSN                           -> —                         | BLOCK (column not selected in extract view)
+MEDICAID_ID                   -> —                         | BLOCK (column not selected in extract view)
+FREE_REDUCED_LUNCH_STATUS     -> frl_status_code           | PASSTHROUGH (restricted column set)
+IEP_INDICATOR                 -> iep_ind                   | PASSTHROUGH (restricted column set)
+SECTION_504_INDICATOR         -> sec504_ind                | PASSTHROUGH (restricted column set)
+ENROLLMENT_ENTRY_DATE         -> entry_date                | PASSTHROUGH
+ENROLLMENT_EXIT_DATE          -> exit_date                 | PASSTHROUGH
+BUILDING_CODE                 -> building_code             | PASSTHROUGH
+GRADE_LEVEL                   -> grade_level               | PASSTHROUGH
+
+[RESTRICTED_COLUMN_SET]
+columns               = frl_status_code, iep_ind, sec504_ind, home_language_code
+grant_to              = ROLE_EDW_PROGRAM_ANALYST
+deny_to               = ROLE_EDW_GENERAL, ROLE_VENDOR_READ
+minimum_cell_size     = 10 (suppress aggregate below threshold)
+
+[TOKENIZATION]
+vault_name            = STU_V2
+vault_host            = tokvault01.int.d214
+key_rotation_interval = 180d
+last_rotation         = 2016-06-30
+detokenize_grant      = ROLE_SIS_STEWARD only; all calls written to AUDIT_TOKEN_ACCESS
+collision_policy      = REJECT_AND_ALERT
+
+[VALIDATION_GATES]
+gate_01               = row_count within expected_row_band else WARN
+gate_02               = null rate on student_key = 0.0000 else FAIL
+gate_03               = suppressed columns absent from target DDL else FAIL
+gate_04               = postal_prefix length = 3 else FAIL
+
+[RUN_NOTE]
+2016-09-12T03:41:07-05:00 — ruleset loaded by job JOB-EDW-STG-0091, run 20160912-0034, 44,318 rows mapped, 0 rules unresolved.

@@ -1,0 +1,22 @@
+MEMORANDUM OF RECORD — DATA DICTIONARY, MEMBER ENROLLMENT SUBJECT AREA
+To: Data Governance Committee
+From: The Records Custodian, Health Information Management
+Re: Column definitions and handling conditions, WIC_MEMBER_ENROLL, revision 2.1 (September 2016)
+
+The columns set out below are hereby entered into the Department's dictionary of record and supersede all prior definitions circulated in draft. Each definition is to be read together with the operational note appended to it, and no note may be waived except by written determination of the Privacy Officer. Data types are stated as implemented in the production instance; where a type is widened in a subsequent release, this memorandum shall be amended before the release is promoted.
+
+MEMBER_ENROLL_ID_SK — NUMBER(10) — NOT NULL. System-assigned. Unique across all program years. Permitted in extracts without restriction, provided that no accompanying column permits re-identification.
+
+HOUSEHOLD_ID_SK — NUMBER(10) — NOT NULL. Groups enrolled members within a single certification unit. Because household composition is itself sensitive where a domestic violence advisory is present, this column is masked for all roles other than CHS_ROLE_WIC_CERT when SAFETY_ADVISORY_IND is affirmative.
+
+MEMBER_LAST_NAME_TXT, MEMBER_FIRST_NAME_TXT — VARCHAR2(60), VARCHAR2(40) — NOT NULL. Restricted to certification and clinic staff. Not transmitted in any file leaving the Department except the State agency reconciliation file governed by the interagency agreement then in force.
+
+MEMBER_DOB_DT — DATE — NOT NULL. Drives categorical eligibility and the retention calculation described below. Analytic consumers shall use the derived AGE_MONTHS_AT_CERT_NBR rather than this column.
+
+GUARDIAN_NAME_TXT, GUARDIAN_PHONE_NBR — VARCHAR2(80), VARCHAR2(15) — NULL. Populated only for members below the age of majority. Subject to the same contact-consent evaluation as all other telephone columns.
+
+RESIDENCE_ADDR_LINE1_TXT, RESIDENCE_ZIP5_TXT — VARCHAR2(80), VARCHAR2(5) — NULL, NOT NULL respectively. The residence address is required for jurisdictional eligibility and is not to be used for mailing; MAILING_ADDR_LINE1_TXT governs correspondence.
+
+INCOME_VERIFICATION_DOC_CD, IMMIGRATION_STATUS_CD — VARCHAR2(4) — NULL. Category I. The latter column is not to be extracted, reported, aggregated, or referenced in any communication with an agency other than the State agency administering the program, consistent with the Department's standing determination on the point.
+
+Retention of each row is seven years following CERT_PERIOD_END_DT. Upon expiration, the annual disposition process removes the name, guardian, address, and telephone columns and preserves the remainder for the caseload series. Two recurring extracts read this table: the monthly caseload submission to the State agency, which includes the identity columns, and the semiannual local evaluation file, which includes neither the identity nor the residence columns and is delivered only to the Epidemiology Unit under the internal use agreement of record.

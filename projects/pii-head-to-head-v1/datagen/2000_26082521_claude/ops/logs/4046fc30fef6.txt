@@ -1,0 +1,57 @@
+INTERNAL MEMORANDUM
+
+TO:      Integration Working Group; the Records Custodian
+FROM:    Applications Support, Data Services
+DATE:    14 March 2011
+REF:     DS-MAP-2011-042
+SUBJECT: Consignment interface mapping rules, release 4.2 — field treatment schedule
+
+1. PURPOSE
+
+This memo records the agreed field treatment schedule for the consignment interface between the depot handling system (SRC_DEPOT) and the central shipment warehouse (TGT_SHIPWH). It supersedes DS-MAP-2010-117 in full. No further changes are to be applied to the mapping without a signed change note countersigned by the Records Custodian.
+
+2. CLASSIFICATION KEY
+
+  C1 = operational, no restriction
+  C2 = restricted, internal use, masked on extract
+  C3 = personal data, tokenised at ingest, never persisted in clear
+  C4 = personal data, suppressed at source, not carried forward
+
+3. MAPPING SCHEDULE (release 4.2)
+
+  SOURCE FIELD              TARGET FIELD              CLASS  TREATMENT
+  ------------------------  ------------------------  -----  -------------------
+  CONSIGNMENT_REF           SHP_CONSIGN_REF           C1     pass through
+  BOOKING_DTM               SHP_BOOKING_TS            C1     convert to UTC
+  CONSIGNEE_FORENAME        SHP_RCPT_FORENAME         C3     token, vault A
+  CONSIGNEE_SURNAME         SHP_RCPT_SURNAME          C3     token, vault A
+  CONSIGNEE_ADDR_LINE_1     SHP_RCPT_ADDR_1           C3     token, vault A
+  CONSIGNEE_ADDR_LINE_2     SHP_RCPT_ADDR_2           C3     token, vault A
+  CONSIGNEE_POSTCODE_OUT    SHP_RCPT_PC_SECTOR        C2     truncate to sector
+  CONSIGNEE_POSTCODE_IN     (not mapped)              C4     suppress
+  CONSIGNEE_CONTACT_TEL     SHP_RCPT_TEL              C3     token, vault B
+  CONSIGNEE_CONTACT_EMAIL   SHP_RCPT_EMAIL            C3     token, vault B
+  SIGNATORY_NAME            SHP_POD_SIGNATORY         C3     token, vault A
+  SIGNATORY_DOB             (not mapped)              C4     suppress at source
+  DRIVER_PAYROLL_NUMBER     SHP_DRIVER_KEY            C3     token, vault C
+  DRIVER_LICENCE_NUMBER     (not mapped)              C4     suppress at source
+  DRIVER_NI_NUMBER          (not mapped)              C4     suppress at source
+  VEHICLE_REG               SHP_VEHICLE_REG           C2     mask, retain last 3
+  PALLET_COUNT              SHP_PALLET_COUNT          C1     pass through
+  GROSS_WEIGHT_KG           SHP_GROSS_KG              C1     pass through
+
+4. NOTES ON TREATMENT
+
+4.1 Tokenisation is applied by the ingest stage before any row is written to the staging tables. The staging tables hold token references only, in the form TKN-<vault>-<sequence>. Detokenisation is available to the depot claims desk on request through the vault console and is logged.
+
+4.2 CONSIGNEE_POSTCODE_IN is suppressed because the outward code alone is sufficient for the route density reporting the warehouse supports. The full postcode is not to be reinstated for reporting convenience.
+
+4.3 Four fields carried in the legacy 3.9 feed — SIGNATORY_DOB, DRIVER_LICENCE_NUMBER, DRIVER_NI_NUMBER and CONSIGNEE_BANK_SORT — are now suppressed at source. The depot extract writer was amended on 28 February 2011 to stop emitting these columns. Any file received after that date containing populated values in those positions is to be quarantined and reported, not processed.
+
+5. ACTIONS
+
+5.1 Depot systems team to confirm in writing by 25 March 2011 that all seven depot extract writers are on the 4.2 column list.
+
+5.2 Data Services to re-run the column census (job DQ_CENSUS_M) against the March file set and circulate the count of non-conforming columns.
+
+5.3 The Records Custodian to record release 4.2 in the processing register.

@@ -1,0 +1,42 @@
+HEALTH SERVICES DATA DICTIONARY — EXCERPT
+Application: school health office module, SQL Server, database HLTH_PROD
+Prepared for the Health Services Coordinator and the Records Custodian
+Effective 2021-10
+
+- Table dbo.HLTH_STUDENT_PROFILE
+    Grain: one row per student with an open health record.
+    STU_ID_LOCAL — int — NOT NULL — foreign key to the student information system; no separate health identifier is issued.
+    PRIMARY_PROVIDER_NAME — nvarchar(60) — NULL — free text as reported by the guardian; not validated.
+    INSURANCE_CARRIER_NAME — nvarchar(60) — NULL — carrier name only; no policy or subscriber column exists in this schema by design.
+    MEDICAID_ELIGIBLE_FLG — bit — NOT NULL — default 0; drives inclusion in the reimbursement claim file.
+    CHRONIC_CONDITION_CD — varchar(6) — NULL — repeating group held in child table HLTH_CONDITION.
+    ACTION_PLAN_ON_FILE_FLG — bit — NOT NULL — asthma, seizure, or anaphylaxis plan.
+    LAST_REVIEW_DT — date — NULL — set at annual nurse review.
+
+- Table dbo.HLTH_IMMUNIZATION
+    Grain: one row per student per vaccine per dose.
+    VACCINE_CD — varchar(8) — NOT NULL — mapped to the state registry code set.
+    DOSE_SEQ — tinyint — NOT NULL.
+    ADMIN_DT — date — NULL — null where compliance is established by exemption rather than administration.
+    EXEMPTION_TYPE_CD — char(1) — NULL — medical or religious; mutually exclusive with ADMIN_DT by check constraint.
+    COMPLIANCE_STATUS_CD — char(1) — NOT NULL — computed nightly against the state schedule table.
+
+- Table dbo.HLTH_CASE_LOG
+    Added for the 2020-21 year and retained in production.
+    CASE_STATUS_CD — char(2) — NOT NULL — confirmed, probable, close contact, cleared.
+    REPORT_DT, EXCLUSION_START_DT, RETURN_DT — date — NOT NULL, NULL, NULL respectively.
+    BUILDING_CD, COHORT_CD — varchar(6) — NOT NULL — used for building-level aggregate reporting to the county health department.
+
+- Access restriction
+    The health schema is physically separate from the student information system and is not included in the analytics replica.
+    Read and write access is limited to licensed nursing staff and the Health Services Coordinator. Building administrators receive aggregate counts only, through the reporting views prefixed VW_AGG_.
+    Records originating from outside providers are treated as education records under the district's FERPA determination; the HIPAA carve-out memorandum of 2021-03 is filed with the Records Custodian.
+
+- Retention
+    Immunization and profile rows: enrollment plus seven years, then destruction by the annual purge job.
+    Case log rows: three years from REPORT_DT.
+
+- Downstream extracts
+    Monthly Medicaid reimbursement file, service rows only, transmitted through the state billing portal.
+    Immunization reconciliation to the state registry, bidirectional, weekly.
+    No health element is included in any vendor rostering feed.

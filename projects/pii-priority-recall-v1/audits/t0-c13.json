@@ -1,0 +1,25 @@
+{
+  "candidate": "t0-c13",
+  "stage": "propose",
+  "proposal": "Complete the final 100-trial allocation with per-label boolean fusions. Lock all 16 priority tags to the recall-max head; calibrate generic source/OR/AND/majority rankings on 20% of internal validation and select on the disjoint 80%.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "fae2a26",
+  "commit": "79e462f",
+  "decision": "accepted; full 100-trial allocation completed and trial 63 selected",
+  "evidence": {
+    "tests": "3 fusion tests passed; 9 related tests passed",
+    "ruff": "passed",
+    "allocated_trials": 100,
+    "completed_trials": 100,
+    "selected_trial": 63,
+    "selected_read_depth_chars": 1000,
+    "equal_corpus_macro_f2": 0.48345749382010117,
+    "equal_corpus_micro_f1": 0.38118396080534256,
+    "measurable_priority_gates": 55,
+    "priority_point_passes": 55,
+    "priority_conclusive_passes": 55,
+    "worst_priority_recall": 0.9887766554433222,
+    "priority_strategy": "source:recall locked",
+    "generic_components": ["hash_sgd_f2", "tfidf_linear", "embeddingbag_asl"]
+  }
+}

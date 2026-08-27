@@ -1,0 +1,79 @@
+DATA DICTIONARY EXCERPT — MEMBER RELATIONSHIP TABLES
+SUBJECT AREA: MEMBERSHIP           REV 2.4           PAGES 6-9 OF 14
+FILES: MBRJOIN (JOINT OWNERS / SIGNATORIES), MBRXREF (CROSS REFERENCE)
+CUSTODIAN: RECORDS CUSTODIAN, OPERATIONS SERVICES
+
+SECTION A — MBRJOIN
+
+COLUMN NAME         TYPE         NULL  CLASS  OPERATIONAL NOTES
+------------------  -----------  ----  -----  --------------------------
+JNT_MBR_NBR         CHAR(10)     N     I      FK to MBRMAST. First half
+                                              of the composite key.
+JNT_SEQ_NBR         SMALLINT     N     I      Second half. 01-16.
+JNT_ROLE_CD         CHAR(2)      N     I      JT=joint owner BE=beneficiary
+                                              AS=authorized signer
+                                              CU=custodian PA=power of
+                                              attorney.
+JNT_LAST_NAME       CHAR(25)     N     II     Free-form entry; no hygiene
+                                              routine applies to this file.
+JNT_FIRST_NAME      CHAR(15)     N     II
+JNT_MIDDLE_INIT     CHAR(1)      Y     II
+JNT_TIN             CHAR(9)      Y     III    Required for JT and CU roles
+                                              only. Edit is advisory, not
+                                              enforced; 11 percent null as
+                                              of the last profile run.
+JNT_BIRTH_DT        DATE         Y     III    Required for CU role.
+JNT_ADDR_LINE_1     CHAR(30)     Y     II     Null implies same as primary.
+JNT_CITY            CHAR(20)     Y     II
+JNT_STATE_CD        CHAR(2)      Y     I
+JNT_ZIP             CHAR(9)      Y     I
+JNT_PHONE           CHAR(10)     Y     II
+JNT_ADD_DT          DATE         N     I
+JNT_REMOVE_DT       DATE         Y     I      Set on removal; row is not
+                                              deleted.
+JNT_DOC_REF         CHAR(12)     Y     I      Microfilm cartridge and frame
+                                              locator for the signature
+                                              card. Not member data.
+
+SECTION B — MBRXREF
+
+COLUMN NAME         TYPE         NULL  CLASS  OPERATIONAL NOTES
+------------------  -----------  ----  -----  --------------------------
+XRF_TIN_HASH        CHAR(8)      N     III    Derived key over MBR_TIN.
+                                              Supports duplicate detection
+                                              without exposing the source
+                                              column to the inquiry path.
+XRF_MBR_NBR         CHAR(10)     N     I
+XRF_MATCH_TYPE_CD   CHAR(1)      N     I      T=tax id N=name and address
+                                              M=manual link.
+XRF_CONF_SCORE      SMALLINT     Y     I      0-100, populated by the
+                                              householding job only.
+XRF_REVIEW_FLG      CHAR(1)      N     I      Y routes to the exception
+                                              queue for clerical review.
+
+ACCESS RESTRICTION
+Both files inherit authorization list MBRSEC3. Class III columns are excluded
+from every logical view available to branch and call center group profiles.
+MBRXREF carries an additional constraint: no group profile holds *READ on the
+base physical file, and access is mediated solely through service program
+XRFSRV01, which logs each lookup to the security journal. Journal receivers
+are retained on line for 90 days and on tape for one year. Ad hoc query
+tooling is not authorized against either file; report requests are queued
+through the Records Custodian and satisfied from the reporting library copy,
+which is created with Class III columns dropped.
+
+RETENTION
+MBRJOIN rows are retained six years past JNT_REMOVE_DT to align with the
+signature card retention schedule and the applicable statute of limitations
+on deposit contracts. MBRXREF is fully rebuilt each quarter from current
+MBRMAST content; prior generations are not archived. Rows for members whose
+MBR_STAT_CD is D are excluded from rebuild after the estate closing code is
+posted.
+
+DOWNSTREAM EXTRACTS
+MBRJOIN supplies name fields to the year-end tax reporting job for JT and CU
+roles, and supplies role and document locator fields to the account services
+audit report. Neither extract carries JNT_TIN outside the tax reporting
+transmission path. MBRXREF is not extracted; its output is limited to the
+householding counts written to the monthly management summary, which are
+aggregate only.

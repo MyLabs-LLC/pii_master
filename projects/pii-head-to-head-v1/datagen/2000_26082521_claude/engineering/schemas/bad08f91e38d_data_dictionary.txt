@@ -1,0 +1,24 @@
+INTERNAL MEMORANDUM
+
+TO:      Data Stewardship Committee
+FROM:    Database Administration Group
+DATE:    22 January 1999
+SUBJECT: CUSTCTC and CUSTCTC_HIST — dictionary excerpt and extract lineage
+
+This memo documents the contact detail tables that were separated from CUSTMAST during the Release 4.2 restructure. The separation was undertaken so that the personal-data columns could be placed under a single restricted plan rather than being scattered across the master row, and so that the retention clock could be run independently of the account record.
+
+CUSTCTC holds one row per named contact per account. The key is CUST_ID plus CTC_SEQ_NBR, both CHAR(9) and SMALLINT respectively and neither nullable. The descriptive columns are CTC_LAST_NM VARCHAR(30) not null, CTC_FRST_NM VARCHAR(20) not null, CTC_TITL_CD CHAR(4) nullable, CTC_ROLE_CD CHAR(2) not null, CTC_PHON_NBR CHAR(10) nullable, CTC_PHON_EXT CHAR(5) nullable, CTC_FAX_NBR CHAR(10) nullable, CTC_EMAIL_ADR VARCHAR(50) nullable, and CTC_PREF_MTHD_CD CHAR(1) not null. Two control columns follow: CTC_ACTV_FLG CHAR(1) not null and CTC_UPDT_TS TIMESTAMP not null, the latter maintained by trigger.
+
+CUSTCTC_HIST carries the same descriptive columns with the addition of HIST_SEQ_NBR, HIST_EFF_DT and HIST_END_DT. Rows are written by the update trigger and are never amended in place.
+
+Operational points requiring the Committee's attention:
+
+  - The restricted plan CUSTCTC0P is the only bind that reads CTC_PHON_NBR, CTC_FAX_NBR and CTC_EMAIL_ADR. Three batch jobs currently bind through it. A fourth request, from Sales Reporting, is pending and the DBA Group recommends refusal on the grounds that role-level aggregates would serve the stated purpose.
+
+  - Retention on CUSTCTC_HIST is presently open-ended. The Group proposes a two-year limit measured from HIST_END_DT, on the basis that superseded contact details serve no operational purpose beyond dispute resolution. A purge utility can be scheduled for the quarterly window on approval.
+
+  - CTC_EMAIL_ADR is populated inconsistently. Branch offices have been entering the address of the branch rather than the contact where the contact has none. This defeats the suppression logic, since EXTR_SUPR_FLG is held on the account row and not on the contact row. Until corrected, the marketing extract must continue to be filtered by hand against the suppression register held by the Records Custodian.
+
+  - Contact columns are not passed to the carrier partner file. Where a partner requires a point of contact, the operations desk supplies it by telephone against a logged request.
+
+No changes to the physical design are proposed in this memo. The DBA Group asks the Committee to rule on the retention proposal and on the Sales Reporting request at the February sitting.

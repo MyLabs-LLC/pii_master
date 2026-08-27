@@ -1,0 +1,53 @@
+VALIDATION EXCEPTION REGISTER
+Reporting period: 2021-06-01 to 2021-06-30
+Pipelines in scope: FARE_CARD_REG, CONCESSION_ELIG, PARATRANSIT_BOOK
+Register compiled: 2021-07-02T09:15:00-05:00
+
+1) PURPOSE
+   1.1) To record validation exceptions raised at the transform stage, the fields
+        implicated, and the disposition of each affected row batch.
+   1.2) Exceptions are recorded by column name and error code. Field values are
+        held only in the dead-letter store in the forms defined by the masking
+        specification.
+
+2) EXCEPTION SUMMARY BY CODE
+
+   CODE          COLUMN                        RUNS   ROWS      DISPOSITION
+   -----------   ---------------------------   ----   -------   ------------
+   ERR-VAL-207   residential_postcode            14     9,884   corrected
+   ERR-VAL-211   date_of_birth                    9     3,102   quarantined
+   ERR-VAL-214   contact_mobile_number           22    17,455   dropped
+   ERR-VAL-218   contact_email_address           22    12,090   dropped
+   ERR-VAL-233   concession_card_number           6     1,477   held
+   ERR-VAL-240   national_identity_number         3       288   escalated
+   WARN-CFG-118  guardian_family_name             4     2,344   quarantined
+   WARN-CFG-118  emergency_contact_name           4     2,344   quarantined
+
+3) NOTES ON INDIVIDUAL CODES
+   3.1) ERR-VAL-207 arises where the postcode field fails the length rule before
+        truncation. Rows were repaired at source and reloaded under job id
+        ETL-FC-0311, run id RUN-20210609-0400, rows_written 9,884.
+   3.2) ERR-VAL-211 arises where the date-of-birth column is populated with a
+        placeholder rather than a parseable date. The transform suppresses the
+        column in all cases; the exception is raised for source-quality tracking
+        only and does not indicate a disclosure.
+   3.3) ERR-VAL-214 and ERR-VAL-218 arise where the contact columns are populated
+        in a free-text field intended for operational notes. Both columns are
+        Tier A and were suppressed before the exception was written.
+   3.4) ERR-VAL-233 indicates a tokenisation collision check failure on the
+        concession card column. Affected rows are held pending key epoch review.
+   3.5) ERR-VAL-240 is raised whenever the national identity column is present in
+        an extract that is not authorised to carry it. Three occurrences were
+        escalated to the Records Custodian on 2021-06-11, 2021-06-17 and
+        2021-06-24.
+
+4) TOTALS
+   4.1) Total exception rows for the period: 48,884.
+   4.2) Total rows processed across pipelines in scope: 37,412,905.
+   4.3) Exception rate: 0.131 per cent.
+
+5) CARRY-FORWARD
+   5.1) The two columns recorded under WARN-CFG-118 remain unmapped at the close
+        of the period and continue to be quarantined at every run.
+   5.2) A tier assignment for both columns is scheduled for the change board of
+        2021-07-14.

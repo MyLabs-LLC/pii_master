@@ -1,0 +1,16 @@
+{
+  "metric": "macro_f2",
+  "target": 0.9,
+  "verdict": "unlikely",
+  "supported_target": 0.5892,
+  "ceiling": 0.5892,
+  "ceiling_method": "optimistic: 95% corpus-bootstrap CI upper of the selected 1k fusion champion (point 0.4835); best of 5 model families over 1,000 trials was 0.4871",
+  "agreement": null,
+  "agreement_source": "",
+  "baseline": 0.0985,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "Read-depth ladder is flat: 20x more input (1k->20k chars) moves macro F2 by 0.0037 (0.4835->0.4798), so more text is not the missing ingredient. All 55/55 priority recall gates and the latency gate already pass; the miss is precision, not recall."
+  ]
+}

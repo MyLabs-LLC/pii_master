@@ -1,0 +1,34 @@
+REGISTRAR DATA DICTIONARY — ADDENDUM A
+TABLE: STUDENT.MEMBER_CONTACT_HIST
+
+PURPOSE
+Row-versioned history of contact columns. One row per change; no updates in
+place.
+
+COLUMNS
+HIST_KEY            | NUMBER(12)    | NO  | Sequence-populated.
+MEMBER_KEY          | NUMBER(10)    | NO  | Foreign key to MEMBER_MASTER.
+ADDR_TYPE_CODE      | VARCHAR2(4)   | NO  | PERM, MAIL, BILL, EMER.
+ADDR_LINE1          | VARCHAR2(75)  | YES | Tier 2.
+ADDR_LINE2          | VARCHAR2(75)  | YES | Tier 2.
+CITY                | VARCHAR2(50)  | YES | Tier 2.
+STATE_PROV_CODE     | CHAR(2)       | YES | Null for international rows.
+POSTAL_CODE         | VARCHAR2(10)  | YES | Feeds the residency determination.
+COUNTRY_CODE        | CHAR(3)       | YES |
+PHONE_NUMBER        | VARCHAR2(20)  | YES | Tier 2.
+EMAIL_ADDRESS       | VARCHAR2(128) | YES | Tier 2.
+EFFECTIVE_FROM_DATE | DATE          | NO  |
+EFFECTIVE_TO_DATE   | DATE          | YES | Null indicates the current row.
+CHANGED_BY_ROLE     | VARCHAR2(30)  | NO  | Role title, not operator identity.
+
+ACCESS
+Read access is limited to the registrar staff role and to Internal Audit on
+request. The table is not exposed to the reporting layer.
+
+RETENTION
+History rows are kept three years past the closing of the record. Emergency
+contact rows (ADDR_TYPE_CODE = 'EMER') are purged at separation.
+
+EXTRACTS
+None scheduled. Point-in-time pulls for address disputes are performed by the
+Records Custodian and logged on the data request form.

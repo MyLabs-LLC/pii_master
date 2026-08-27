@@ -1,0 +1,39 @@
+OFFICE OF THE UNIVERSITY REGISTRAR — DATA STEWARDSHIP UNIT
+CONTROL CHECKLIST CL-DM-0417 (rev. 3) — DE-IDENTIFICATION POLICY REVIEW
+Artifact under review: /etc/dataops/conf/sis_masking_policy.yaml, revision 11
+Governing job: ETL_SIS_ODS_NIGHTLY | Run identifier: RUN-2021-0417-0223
+Review opened 2021-04-18T09:12:44-05:00; review closed 2021-04-18T11:47:02-05:00
+Reviewing officer of record: the Records Custodian, acting under delegated authority per Data Governance Council minute 2021-04-06
+
+[X] Verified that every column enumerated in the Restricted Attribute Register (RAR-2019-002) and materially present in the nightly source extract carries an explicit, non-inherited transformation rule, it being insufficient for the purposes of this control that such a column merely fall within the scope of a wildcard default. Columns confirmed as explicitly enumerated: ssn, national_id, date_of_birth, student_last_name, student_first_name, student_middle_initial, former_legal_name, home_address_line_1, home_address_line_2, home_postal_code, mailing_address_line_1, personal_email_address, mobile_phone_number, emergency_contact_name, emergency_contact_phone, bank_routing_number, bank_account_number, immigration_document_number, veteran_status_code.
+
+[X] Confirmed that the transformation directives resolve to a terminal, non-reversible or key-separated operation for each such column, in the form recorded at lines 44-91 of the artifact, namely:
+      - column: ssn
+        rule: FPE_TOKENIZE
+        key_ref: kms://registrar/fpe-2021-q2
+        emit_format: "###-##-####"
+      - column: date_of_birth
+        rule: GENERALIZE_TO_YEAR
+        emit_format: "YYYY"
+      - column: personal_email_address
+        rule: HASH_SHA256_SALTED
+        emit_format: "<64-hex>"
+      - column: home_address_line_1
+        rule: SUPPRESS_NULL
+        emit_format: null
+
+[X] Established that no rule of type PASSTHROUGH, PARTIAL_LAST4, or NO_OP is present in the artifact as applied to any Restricted attribute, the prior instance of PARTIAL_LAST4 upon bank_account_number having been withdrawn under change record REG-CHG-2021-0388 on 2021-04-09.
+
+[X] Ascertained that the masking library is invoked before, and not after, the write to the staging schema, such that ods_stage.stu_demographic receives only transformed values; the pre-transformation buffer is memory-resident and is not spooled to the job's working directory.
+
+[ ] Outstanding: obtain written concurrence of the FERPA Compliance Officer with respect to the treatment of former_legal_name, which is presently suppressed to null rather than tokenised, and which suppression may impair lawful matching against the National Student Clearinghouse return file. Item carried forward to CL-DM-0424.
+
+[X] Reconciled the run manifest against the policy artifact and found no unmapped Restricted column. Manifest excerpt, verbatim:
+      2021-04-17T22:04:11 INFO  policy.loader  loaded sis_masking_policy.yaml rev=11 rules=37 wildcards=2
+      2021-04-17T22:04:11 INFO  policy.loader  restricted_columns_declared=19 restricted_columns_bound=19 unbound=0
+      2021-04-17T22:41:52 INFO  mask.engine    rows_in=62481 rows_masked=62481 cells_transformed=1187139 cells_suppressed=62481
+      2021-04-17T22:41:52 WARN  mask.engine    column=veteran_status_code cardinality=4 k_anon_min=3 threshold=5 action=GENERALIZE_APPLIED
+
+[X] Noted, for the record, that the warning at 22:41:52 was remediated in-flight by generalisation and did not cause the run to abort; no manual intervention was required and no exception request is pending.
+
+[X] Confirmed retention of this checklist, together with the reviewed artifact revision, for a period of not less than five (5) years from the close of the fiscal year in which the review was conducted.

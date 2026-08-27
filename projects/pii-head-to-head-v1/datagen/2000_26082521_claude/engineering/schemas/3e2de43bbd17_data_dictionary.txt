@@ -1,0 +1,13 @@
+INTERNAL MEMORANDUM
+TO: the Data Warehouse Program Manager
+FROM: the Records Custodian
+SUBJECT: CUSTDIM column notes for inclusion in the dictionary, cycle 2004-04
+DATE: 09 NOV 2004
+
+The following notes are furnished for the customer dimension CUSTDIM as it stands after the fourth quarter load and are to be transcribed into the dictionary without amendment.
+
+The surrogate key CUST_DIM_KEY, INTEGER, NOT NULL, is warehouse-assigned and bears no relationship to the operational key; the natural key column SRC_CUST_KEY_ID, DECIMAL(11,0), NOT NULL, carries the master reference and is indexed but not published. CURR_ROW_IND, CHAR(1), NOT NULL, and EFF_FROM_DT and EFF_THRU_DT, both DATE and both NOT NULL, implement the slowly changing treatment agreed in the design review; the high date convention applies to open rows.
+
+Descriptive columns are CUST_LAST_NAM VARCHAR(30), CUST_FRST_NAM VARCHAR(20), ADDR_LN_1_TXT VARCHAR(40), CITY_NAM VARCHAR(28), STATE_CD CHAR(2) and POSTAL_CD CHAR(9), all nullable in the dimension because history rows predate the operational not-null constraints. CUST_BIRTH_YR_NBR, SMALLINT, NULL permitted, replaces the full birth date and is derived at load; the full date is not to be carried into the warehouse under any circumstance, and the load program is to abend rather than default the year where the source is null. AGE_BAND_CD, CHAR(2), NULL permitted, is derived from the year column and is the preferred column for all analysis. No pharmacy identifier, social security column, telephone column or electronic mail column is present in this dimension and none is to be added; requests to that effect have been logged and closed.
+
+Access is granted at the view level only. The view VCUSTDIM_MKT omits all name and street columns and is the default grant for the marketing analyst group; the base table is reachable by the warehouse operations identity alone. Retention is five years of history rows, expired by the annual job WHPURG05 each February. Downstream extracts from this dimension are limited to the aggregate store-level files, which carry no columns from the descriptive set enumerated above.

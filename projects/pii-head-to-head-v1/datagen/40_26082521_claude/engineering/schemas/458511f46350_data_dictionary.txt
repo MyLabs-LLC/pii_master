@@ -1,0 +1,63 @@
+MEMORANDUM
+
+TO:      Revenue Cycle Systems Group; Data Governance Committee
+FROM:    Office of the Records Custodian
+DATE:    11 February 2021
+SUBJECT: Data Dictionary Excerpt — MBR_MASTER (Patient Accounting, Release 9.4)
+CLASS:   Internal — Restricted Handling
+
+1. Purpose. This excerpt records the authoritative definitions for the columns of MBR_MASTER retained under the Release 9.4 schema. It supersedes the entry circulated with the Release 9.2 upgrade notes.
+
+2. Authority. Column-level access grants are issued by the Records Custodian on the recommendation of the Billing Office Supervisor. No grant survives a change of role assignment.
+
+3. Column register.
+
+COLUMN NAME            TYPE            NULL  OPERATIONAL NOTE
+--------------------------------------------------------------------------------
+MBR_SK                 NUMBER(18)      N     Surrogate key; system-generated.
+MRN_ID                 VARCHAR2(20)    N     Restricted. Masked in all reporting
+                                             views except RPT_CLINICAL_SECURE.
+GUARANTOR_ACCT_NO      VARCHAR2(16)    N     Restricted. Never emitted to the
+                                             collections extract in clear form;
+                                             tokenised at the view layer.
+MBR_LAST_NAME          VARCHAR2(60)    N     Restricted. Direct identifier.
+MBR_FIRST_NAME         VARCHAR2(40)    N     Restricted. Direct identifier.
+MBR_MIDDLE_INIT        CHAR(1)         Y     Restricted.
+MBR_DOB_DT             DATE            N     Restricted. Age band derived at
+                                             query time for analytics use;
+                                             raw column not exposed.
+MBR_SSN_LAST4          CHAR(4)         Y     Restricted — highest tier. Grants
+                                             logged individually and reviewed
+                                             quarterly. Excluded from every
+                                             downstream extract without
+                                             exception.
+ADDR_LINE_1            VARCHAR2(80)    Y     Restricted. Populated from the
+                                             registration interface.
+ADDR_LINE_2            VARCHAR2(80)    Y     Restricted.
+ADDR_CITY              VARCHAR2(40)    Y     Restricted.
+ADDR_STATE_CD          CHAR(2)         Y     Reference-coded.
+ADDR_POSTAL_CD         VARCHAR2(10)    Y     Restricted. Truncated to three
+                                             characters in the geographic
+                                             analysis extract.
+HOME_PHONE_NO          VARCHAR2(15)    Y     Restricted.
+MOBILE_PHONE_NO        VARCHAR2(15)    Y     Restricted. Consent flag governs
+                                             use by the outbound reminder job.
+EMAIL_ADDR             VARCHAR2(120)   Y     Restricted. Statement delivery
+                                             preference must be validated
+                                             before population.
+PRIMARY_PAYER_CD       VARCHAR2(8)     Y     Reference-coded; joins to PAYER_DIM.
+COVERAGE_STATUS_CD     CHAR(2)         N     Reference-coded.
+ACCT_BALANCE_AMT       NUMBER(12,2)    N     Refreshed nightly from the ledger.
+LAST_STMT_SENT_DT      DATE            Y     Drives the dunning cycle.
+FINANCIAL_ASSIST_FLG   CHAR(1)         N     Default 'N'.
+CREATED_BY_USER_ID     VARCHAR2(30)    N     Operator identifier; audit only.
+CREATED_TS             TIMESTAMP       N     Audit column.
+UPDATED_BY_USER_ID     VARCHAR2(30)    N     Audit column.
+UPDATED_TS             TIMESTAMP       N     Audit column.
+PURGE_ELIGIBLE_DT      DATE            Y     Computed by the retention job.
+
+4. Retention. Rows remain active for seven years from the date recorded in LAST_ACTIVITY_DT on the associated account. On expiry, the retention job populates PURGE_ELIGIBLE_DT; identifier columns named in clause 3 as Restricted are overwritten in place ninety days thereafter, and the remaining financial columns are retained for statistical reporting.
+
+5. Downstream extracts. Three extracts draw from this table: the collections file, the payer reconciliation file, and the quality reporting file. Column lists for each are fixed in the extract control table and may not be widened by the scheduling team. Any request to add a column carried in clause 3 as Restricted must be presented in writing to the Records Custodian and, where the request concerns MBR_SSN_LAST4, to the Privacy Officer as well.
+
+6. Review. This entry is reviewed on the anniversary of the release date or upon any change to the registration interface, whichever occurs first.

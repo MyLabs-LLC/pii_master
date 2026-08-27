@@ -1,0 +1,44 @@
+SOURCE-TO-TARGET MAPPING RULES
+Map: dph_elr_map | Version 4.2 | Approved 2021-09-27 | Applies to job family ELR_NIGHTLY
+
+* Section 1 — Scope
+    - Applies to electronic laboratory result files received on the inbound SFTP drop.
+    - Target schema: reporting.elr_result_fact and its conformed dimensions.
+    - Every source column must appear in Section 2 or Section 4. Columns appearing in neither are quarantined.
+
+* Section 2 — Identifier columns
+    - PT_LNAME        -> patient_last_name         | transform: trim            | mask class: DIRECT
+    - PT_FNAME        -> patient_first_name        | transform: trim            | mask class: DIRECT
+    - PT_MNAME        -> patient_middle_initial    | transform: first char      | mask class: DIRECT
+    - PT_DOB          -> date_of_birth             | transform: parse ISO 8601  | mask class: DIRECT
+    - PT_MRN          -> medical_record_number     | transform: strip leading zeros | mask class: TOKEN (ns mrn)
+    - PT_PLAN_ID      -> member_id                 | transform: upper           | mask class: TOKEN (ns plan)
+    - PT_PHONE        -> primary_phone             | transform: digits only     | mask class: DIRECT
+    - PT_EMAIL        -> email_address             | transform: lower           | mask class: DIRECT
+    - PT_ADDR1        -> street_address_line_1      | transform: trim            | mask class: DIRECT
+    - PT_ADDR2        -> street_address_line_2      | transform: trim            | mask class: DIRECT
+    - PT_ZIP          -> postal_code                | transform: digits only     | mask class: TRUNCATE
+    - Note: no column in this section reaches the reporting schema in readable form. The masking policy is applied downstream and is not overridable inside the map.
+
+* Section 3 — Clinical and event columns
+    - SPEC_ACC        -> specimen_accession_token  | transform: hash then tokenize | mask class: TOKEN (ns specimen)
+    - SPEC_COLL_DT    -> specimen_collection_date  | transform: parse ISO 8601, no shift
+    - SPEC_RECV_DT    -> specimen_received_date    | transform: parse ISO 8601
+    - TEST_LOINC      -> test_loinc_code           | transform: none
+    - RESULT_SNOMED   -> result_snomed_code        | transform: none
+    - RESULT_TXT      -> result_text               | transform: trim, length cap 240
+    - ORD_NPI         -> ordering_provider_npi     | transform: digits only, checksum rule V-009
+    - LAB_CLIA        -> performing_lab_clia       | transform: upper
+
+* Section 4 — Geography and demographics retained for analysis
+    - PT_COUNTY       -> county_fips               | lookup against county reference table
+    - PT_TRACT        -> census_tract              | derived from geocoder output
+    - PT_SEX          -> sex_at_birth              | code set rule V-031
+    - PT_RACE         -> race_code                 | code set: OMB categories
+    - PT_ETHN         -> ethnicity_code            | code set: OMB categories
+
+* Section 5 — Change control
+    - Requests are logged in the data governance queue and reviewed weekly.
+    - A version increment is required for any change to Section 2, including the addition of a source alias.
+    - The Records Custodian confirms mask class assignment before a version is promoted to the production map directory.
+    - Superseded versions remain readable for seven years and are never deleted from the map directory.

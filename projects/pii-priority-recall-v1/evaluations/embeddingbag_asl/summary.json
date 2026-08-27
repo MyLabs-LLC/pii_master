@@ -1,0 +1,130 @@
+{
+  "aggregate": {
+    "equal_corpus_macro_f2": 0.46470780659224076,
+    "equal_corpus_micro_f1": 0.46908276470013677,
+    "measurable_priority_gates": 55,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 5,
+    "priority_point_passes": 50,
+    "worst_priority_recall": 0.42
+  },
+  "arms": [
+    {
+      "artifact": "evaluations/embeddingbag_asl/4000_datax-dualjudge-evalset-1.32k.json",
+      "dataset": "4000_datax-dualjudge-evalset-1.32k",
+      "metrics": {
+        "docs_per_s": 3269.995386566326,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 1,
+        "priority_point_passes": 0,
+        "worst_priority_recall": 0.8742857142857143
+      },
+      "mlflow_run_id": "b320efc281bd4ef9b5862be591f0f55a",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/6589_govdocs2-dualjudge-eval20-3.53k.json",
+      "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+      "metrics": {
+        "docs_per_s": 2617.8636075583877,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 2,
+        "priority_point_passes": 2,
+        "worst_priority_recall": 0.9113355780022446
+      },
+      "mlflow_run_id": "6713e220d9d44eedabe1ce16df929081",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/ai4privacy_pii_masking_eval_10k.json",
+      "dataset": "ai4privacy_pii_masking_eval_10k",
+      "metrics": {
+        "docs_per_s": 92401.67126651191,
+        "macro_f2": 0.4733181263162617,
+        "micro_f1": 0.3854189688959613,
+        "priority_measurable": 10,
+        "priority_point_passes": 9,
+        "worst_priority_recall": 0.896167383652718
+      },
+      "mlflow_run_id": "b2bc3f39abfc4889a49d5cdf0fdbc4ef",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/betterdataai_ner_silver_eval_10k.json",
+      "dataset": "betterdataai_ner_silver_eval_10k",
+      "metrics": {
+        "docs_per_s": 69265.97812946518,
+        "macro_f2": 0.18500112244367223,
+        "micro_f1": 0.3234955814279703,
+        "priority_measurable": 4,
+        "priority_point_passes": 2,
+        "worst_priority_recall": 0.42
+      },
+      "mlflow_run_id": "23c1ff240c3e4176864a6e3e3b6959c6",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/nemotron_eval_6k.json",
+      "dataset": "nemotron_eval_6k",
+      "metrics": {
+        "docs_per_s": 34984.14200497227,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 0,
+        "priority_point_passes": 0,
+        "worst_priority_recall": null
+      },
+      "mlflow_run_id": "509f4b568cf44c079fb3b023dc9d15a8",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/openpii_pii_eval_38k.json",
+      "dataset": "openpii_pii_eval_38k",
+      "metrics": {
+        "docs_per_s": 67067.11425422892,
+        "macro_f2": 0.6003032272468823,
+        "micro_f1": 0.6628003857081003,
+        "priority_measurable": 9,
+        "priority_point_passes": 8,
+        "worst_priority_recall": 0.8955896243551551
+      },
+      "mlflow_run_id": "7cbf01241a06490e995473cbe4444b63",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/pii2_eval_30k.json",
+      "dataset": "pii2_eval_30k",
+      "metrics": {
+        "docs_per_s": 7105.771328809177,
+        "macro_f2": 0.48931792635690835,
+        "micro_f1": 0.3424173481194503,
+        "priority_measurable": 15,
+        "priority_point_passes": 15,
+        "worst_priority_recall": 0.9623971797884842
+      },
+      "mlflow_run_id": "07e76927da77491aa4d99acaf3eea70c",
+      "model": "embeddingbag_asl"
+    },
+    {
+      "artifact": "evaluations/embeddingbag_asl/pii_holdout_20k.json",
+      "dataset": "pii_holdout_20k",
+      "metrics": {
+        "docs_per_s": 8135.909419847241,
+        "macro_f2": 0.5755986305974792,
+        "micro_f1": 0.6312815393492018,
+        "priority_measurable": 14,
+        "priority_point_passes": 14,
+        "worst_priority_recall": 0.9124293785310734
+      },
+      "mlflow_run_id": "cb5d635f6fc34c2fa783e4abfa79fc99",
+      "model": "embeddingbag_asl"
+    }
+  ],
+  "model": "embeddingbag_asl",
+  "read_window_chars": 20000,
+  "workers": 32
+}

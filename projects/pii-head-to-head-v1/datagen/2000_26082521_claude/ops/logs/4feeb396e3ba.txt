@@ -1,0 +1,57 @@
+INTEROFFICE MEMORANDUM
+
+TO:      the Conversion Project Coordinator
+FROM:    Applications Development
+DATE:    8 April 2004
+RE:      Mapping rules, escrow subledger conversion — release 2
+REF:     Job stream ESC-MIG-0408; supersedes rules dated 12 Jan 2004
+
+Release 2 of the mapping rules is set out below and takes effect
+with the run of 12 April 2004. Transform codes are as defined in
+the conversion handbook; masking is applied downstream of the
+transform under DMASK.CFG 4.2 and is not repeated here.
+
+SOURCE COLUMN (TIMSPROD)   TARGET COLUMN (ESCDW)      TRANSFORM
+------------------------   ------------------------   ---------
+ORD_NBR                    ORDER_NBR                  DIRECT
+FILE_NO                    FILE_NBR                   TRIM/UPPER
+PTY_LNAME                  PARTY_NAME_LAST            MASK/SUB
+PTY_FNAME                  PARTY_NAME_FIRST           MASK/SUB
+PTY_MI                     PARTY_MIDDLE_INIT          MASK/SUB
+PTY_SSN                    PARTY_TIN                  TOKENIZE
+PTY_BIRTH                  PARTY_DOB                  SUPPRESS
+PTY_PHONE1                 PARTY_PHONE_HOME           SUPPRESS
+PTY_EMAIL                  PARTY_EMAIL_ADDR           SUPPRESS
+SUBJ_ADDR1                 PROP_ADDR_LINE_1           SUPPRESS
+SUBJ_CITY                  PROP_CITY                  DIRECT
+SUBJ_ST                    PROP_STATE                 LOOKUP-ST
+SUBJ_APN                   APN_NBR                    DIRECT
+ESC_ACCT                   ESCROW_ACCT_NBR            TOKENIZE
+ESC_SUB                    TRUST_SUBACCT_NBR          TOKENIZE
+LNDR_LOAN                  LENDER_LOAN_NBR            TOKENIZE
+DISB_PAYEE                 DISB_PAYEE_NAME            MASK/SUB
+DISB_ACCT                  DISB_ACCT_NBR              TOKENIZE
+DISB_AMT                   DISB_AMT                   DIRECT
+CLOSE_DT                   CLOSING_DT                 CCYYMMDD
+VEST_TXT                   VESTING_TEXT               SUPPRESS
+
+Four notes for the record.
+
+1. PTY_SSN and ESC_ACCT tokenise against vault TVLT01. The same
+   input yields the same token within a run and across runs.
+   Reversal is available to the Records Custodian only.
+
+2. VEST_TXT is free-form and is suppressed in whole. Requests to
+   parse it for party names were declined on 24 February 2004.
+
+3. Source columns PTY_MAIDEN, PTY_EMPLOYER and PTY_DL have no
+   target and are dropped at the extract. Under DMASK.CFG 4.2 an
+   unmapped column aborts the job, so all three are listed
+   explicitly in the drop stanza of the job control.
+
+4. Trial run of 6 April 2004: rows read 402,877; rows written
+   402,730; rejects 147; elapsed 01:22:16; RC=4. Reject detail is
+   with Data Quality Control.
+
+Sign-off is requested from the Records Custodian and from Escrow
+Accounting before the 12 April run.

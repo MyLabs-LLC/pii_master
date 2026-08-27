@@ -1,0 +1,26 @@
+OFFICE OF THE REGISTRAR — STUDENT INFORMATION SYSTEMS
+NIGHTLY LOAD VERIFICATION CHECKLIST
+JOB: REG_ETL_NIGHTLY_0442 | RUN DATE: 2004-10-14 | SHIFT: 2 | CONSOLE: OPS-3
+
+- 02:00:04 CDT — Scheduler SCHED_REG_02 released job REG_ETL_NIGHTLY_0442. Verify prior run 0441 closed with status COMPLETE before proceeding. Confirmed.
+- 02:00:11 CDT — Source extract opened against SIS instance PROD_SIS_01, table SPRIDEN. Rows read: 48,117. Rows rejected at read: 0.
+- 02:04:52 CDT — Extract of SPBPERS complete. Rows read: 48,117. Columns in manifest: PIDM, LAST_NAME, FIRST_NAME, MIDDLE_INITIAL, BIRTH_DATE, SSN, GENDER_CODE, ETHNIC_CODE, CITIZEN_IND.
+- 02:04:53 CDT — Confirm column SSN carries mask directive M-FULL prior to staging. Directive present. No cleartext write permitted to STG_PERSON.
+- 02:07:19 CDT — Extract of SPRADDR complete. Rows read: 61,440. Columns in manifest: PIDM, ADDR_TYPE, ADDR_LINE_1, ADDR_LINE_2, CITY, STATE_CODE, ZIP, PHONE_AREA, PHONE_NUMBER.
+- 02:07:20 CDT — Confirm ADDR_LINE_1, ADDR_LINE_2, PHONE_NUMBER carry mask directive M-FULL; CITY, STATE_CODE carry directive M-NONE for IPEDS aggregation. Confirmed.
+- 02:11:38 CDT — Mapping rule set MAP_REG_V7 applied. Rules executed: 214. Rules bypassed: 3 (see below).
+  - Rule 088 bypassed. Target column EMAIL_ADDR_UNIV not present in this release of STG_PERSON.
+  - Rule 141 bypassed. Source column PRIOR_LAST_NAME null-suppressed at source; no map required.
+  - Rule 190 bypassed. Target column DRIVERS_LIC_NO retired by memorandum of 2004-08-30. Do not restore without Data Steward authorization.
+- 02:19:07 CDT — Tokenization pass TOK_A executed against SSN. Rows tokenised: 47,903. Rows with null source: 214. Token format: alphanumeric, 12 char, non-reversible outside vault VLT_REG_01.
+- 02:19:09 CDT — Verify no row in STG_PERSON carries an SSN value outside token form. Query returned 0 rows. Log this count on the shift sheet.
+- 02:26:41 CDT — Transformation of BIRTH_DATE to derived column AGE_BAND complete. Rows transformed: 47,671. BIRTH_DATE dropped from target per rule 012. Rows carrying BIRTH_DATE into STG_PERSON: 0.
+- 02:31:55 CDT — Validation pass 1 complete. Rows passed: 47,388. Rows to error queue ERRQ_0442: 729. Error queue is retained 30 days then purged; confirm purge job PRG_ERRQ scheduled.
+- 02:34:02 CDT — Load to warehouse target DW_REG.D_PERSON begun. Insert count: 47,388. Update count: 6,204. Delete count: 0.
+- 02:48:16 CDT — Load complete. Reconciliation: source 48,117 = loaded 47,388 + errored 729. Balanced. Initial and file.
+- 02:48:20 CDT — Masking audit report AUD_0442 written to spool REG_SPOOL_OCT. Columns audited: SSN, BIRTH_DATE, ADDR_LINE_1, ADDR_LINE_2, PHONE_NUMBER, PARENT_GUARDIAN_NAME, EMERGENCY_CONTACT_NAME.
+- 02:48:22 CDT — Job REG_ETL_NIGHTLY_0442 status COMPLETE WITH ERRORS. Notify the Records Custodian at start of business.
+- Pending items for shift 1:
+  - Clear ERRQ_0442 to under 200 rows before run 0443.
+  - Obtain Data Steward initials on rule 190 bypass.
+  - File this checklist in binder REG-ETL-2004-Q4.

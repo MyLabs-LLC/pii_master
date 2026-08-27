@@ -1,0 +1,16 @@
+{
+  "metric": "macro_f2",
+  "target": 0.9,
+  "verdict": "unlikely",
+  "supported_target": 0.5138,
+  "ceiling": 0.5892,
+  "ceiling_method": "optimistic: champion's 95% corpus-bootstrap CI upper bound",
+  "agreement": 0.5138,
+  "agreement_source": "two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686)",
+  "baseline": 0.4932,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "Model-independent. Collapsing the name taxonomy (judges agree F1 0.992 on name PRESENCE, 0.018-0.40 on which name tag) and street-address raises the ceiling to macro 0.6354 / weighted 0.7879 - the largest single lever available."
+  ]
+}

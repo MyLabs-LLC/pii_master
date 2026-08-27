@@ -1,0 +1,45 @@
+PHRX ETL — NIGHTLY PATIENT/CLAIM CONSOLIDATION
+JOB PHRX0420   RUN 1998-11-09.01.00.12 THRU 1998-11-09.03.47.55   CYCLE 313   OPERATOR SHIFT: THIRD
+
+1. PRE-EXECUTION
+   * Source extract PHMEXT/RX199811090100 received via Connect:Direct at 1998-11-09.00.51.33; trailer count matched header count.
+   * Second source PHMEXT/MBR199811090100 received at 1998-11-09.00.54.09; one-cycle lag flagged, accepted under standing tolerance of 24 hours.
+   * Masking profile MSKPRF03 bound at step 0020; bind stamp 1998-11-09.01.00.19.
+   * Token vault PHMTKN/VLT01 opened read/write; generation 04 confirmed current.
+   * Target staging tables PHSTG.RX_FILL_STG and PHSTG.PATIENT_STG truncated at 1998-11-09.01.01.02.
+
+2. VOLUMES
+   * Rows read, RX source: 4,812,663.
+   * Rows read, member source: 1,338,904.
+   * Rows written to PHSTG.RX_FILL_STG: 4,798,215.
+   * Rows written to PHSTG.PATIENT_STG: 1,336,481.
+   * Rows rejected to PHERR.REJ_199811090: 16,871.
+   * Rows suppressed by masking policy (no output row generated): 0.
+   * Distinct STORE_NBR values represented: 2,214 of 2,231 expected; 17 stores absent, see item 5.
+
+3. VALIDATION ERRORS BY RULE
+   * VR-101 PAT_LAST_NM required, value absent — 4,402 rows. Rejected.
+   * VR-102 PAT_FIRST_NM required, value absent — 4,388 rows. Rejected.
+   * VR-114 PAT_DOB not a valid date after century expansion — 2,109 rows. Rejected. Predominant cause: source field carries spaces in positions 1-6.
+   * VR-118 PAT_DOB later than FILL_DT — 87 rows. Rejected.
+   * VR-131 PAT_SSN wrong length; expected 9 numeric positions, found alphanumeric content — 1,266 rows. Rejected before masking, so no token was minted.
+   * VR-132 PAT_SSN present but PAT_SSN_CONSENT_FLG absent — 3,010 rows. Written with PAT_SSN forced to placeholder; not rejected.
+   * VR-140 PAT_ZIP5 non-numeric — 944 rows. Rejected.
+   * VR-141 PAT_ST not in state code table — 612 rows. Rejected.
+   * VR-155 PAT_HOME_PHN and PAT_WORK_PHN both absent and PAT_ADDR_LINE_1 absent — 1,533 rows. Warning only; rows written.
+   * VR-207 MBR_ID present on claim but no matching row in member source — 2,063 rows. Rejected; suspected to be the member-source lag noted in item 1.
+   * VR-208 CARDHOLDER_ID length mismatch against PLAN_CD rule set — 402 rows. Rejected.
+   * VR-311 PRESCRIBER_DEA_NBR fails check-digit routine — 1,188 rows. Warning only; rows written with the field at placeholder.
+   * VR-402 NDC_CD not present in PHREF.NDC_MASTER as of 1998-11-01 — 566 rows. Written to PHSTG.RX_FILL_STG with NDC_UNMATCHED_FLG set.
+
+4. MASKING AUDIT
+   * Columns inspected post-write: PAT_LAST_NM, PAT_FIRST_NM, PAT_MID_INIT, PAT_DOB, PAT_SSN, PAT_ADDR_LINE_1, PAT_ADDR_LINE_2, PAT_CITY, PAT_ZIP5, PAT_ZIP4, PAT_HOME_PHN, PAT_WORK_PHN, MBR_ID, CARDHOLDER_ID, PERSON_CD, PRESCRIBER_LAST_NM, PRESCRIBER_FIRST_NM, PRESCRIBER_DEA_NBR, PRESCRIBER_UPIN.
+   * Positions carrying non-placeholder content in the above set: 0 of 91,166,085 sampled positions.
+   * Tokens minted this cycle: 11,904. Tokens reused from prior cycles: 1,324,577.
+   * Token collisions: 0.
+
+5. FOLLOW-UP
+   * Chase the 17 absent stores with regional operations before cycle 314; store list held in PHOPS.MISSING_STORE_199811090.
+   * Re-drive VR-207 rejects after the member source catches up; do not re-drive VR-101/VR-102 rejects, which require source correction at the store.
+   * Rejection rate 0.35 percent, within the 0.50 percent threshold; no escalation raised.
+   * Job ended CC=0004 (warning). Next cycle scheduled 1998-11-10.01.00.00.

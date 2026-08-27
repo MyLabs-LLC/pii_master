@@ -1,0 +1,51 @@
+SABLEWOOD COUNTY HEALTH DEPARTMENT
+Division of Health Information Management
+
+PERSONAL INFORMATION HANDLING STANDARD HIM-07
+Issued 22 June 2021. Approved: Health Officer. Custodian of record: the Records Custodian.
+
+§1  DEFINITIONS AND STRUCTURE
+    (a)  "Category" means a grouping of data elements sharing a common sensitivity classification and handling rule.
+    (b)  Every category carries a two-character code used in the master index and on all disposition certificates.
+    (c)  Data elements are enumerated by field label only. No element value appears in this standard or in any register derived from it.
+
+§2  MASTER INDEX COLUMN NAMES
+    (a)  The master index maintained by the Records Custodian carries the following columns, and no others:
+         (1)  RECORD_SERIES_CODE
+         (2)  CATEGORY_CODE
+         (3)  SYSTEM_OF_RECORD
+         (4)  CUSTODIAN_ROLE
+         (5)  LAWFUL_BASIS
+         (6)  RETENTION_TRIGGER
+         (7)  RETENTION_PERIOD
+         (8)  DISPOSITION_METHOD
+         (9)  HOLD_FLAG
+        (10)  LAST_REVIEW_DATE
+    (b)  The master index is itself a public record and is disclosable in full.
+
+§3  CATEGORIES
+    (a)  ID — Identity elements: Legal Name; Alias; Date of Birth; Place of Birth; Sex; Gender Identity; Race; Ethnicity.
+    (b)  GN — Government identifiers: Social Security Number; State Identification Number; Alien Registration Number; Vital Record Certificate Number.
+    (c)  LC — Locator elements: Residence Address; Mailing Address; Telephone Number; Electronic Mail Address; Employer Name.
+    (d)  PH — Health elements: Chief Complaint; Diagnosis; Laboratory Result; Medication; Encounter Date; Referring Provider.
+    (e)  FN — Financial elements: Household Income; Payer; Account Balance; Bank Account Number; Payment Card Number.
+    (f)  SN — Elevated-sensitivity elements: HIV Status; STI Test Result; Tuberculosis Case Data; Substance Use Treatment Data; Behavioural Health Note; Minor Consent Indicator.
+    (g)  WF — Workforce elements: Employee Number; Position; Compensation; Licence Number; Screening Result.
+
+§4  ACCESS CONTROL
+    (a)  Assignment of a category code to a role is made only by the Health Information Manager, on written request of a Division Director, and only where the requesting role's duties require the category in full.
+    (b)  SN is not aggregated with any other category in any report, extract, or dashboard.
+    (c)  External disclosure of any category requires either a valid authorisation, a court order, or a statutory reporting mandate recorded in the disclosure accounting log.
+    (d)  The disclosure accounting log is retained for six years and is available to the subject on request.
+
+§5  RETENTION AND DISPOSITION
+    (a)  Retention runs from the RETENTION_TRIGGER stated in the master index, not from record creation.
+         (1)  ID, LC, PH — ten years from last encounter; minors to age twenty-two.
+         (2)  GN — coterminous with the parent clinical or eligibility series.
+         (3)  FN — seven years from fiscal year close.
+         (4)  SN — twenty-five years from case closure.
+         (5)  WF — seven years from separation; exposure records thirty years.
+    (b)  Disposition proceeds only after the HOLD_FLAG is cleared by the County Attorney's designee.
+    (c)  Approved methods: cross-cut shredding; pulping; degaussing; disintegration; cryptographic erase with verified key destruction.
+    (d)  Vendor destruction is witnessed by departmental staff or performed under continuous video record retained one year.
+    (e)  Certificates of destruction record series code, category codes, volume, method, and date only.

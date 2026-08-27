@@ -1,0 +1,22 @@
+MEMORANDUM
+
+TO:       Data Services Group; Fare Systems Operations
+FROM:     the Records Custodian, Information Governance Office
+DATE:     14 September 2021
+SUBJECT:  Deployment of masking profile MASK_PROF_07 to the fare data warehouse
+
+Effective 20 September 2021 at 02:00, masking profile MASK_PROF_07 replaces MASK_PROF_05 on all extracts leaving the fare collection database. The change was requested by the Deputy General Manager for Administration following the annual controls walkthrough.
+
+What changes:
+
+The profile applies column-level suppression to the following fields at read time: rider_given_name, rider_family_name, date_of_birth, national_id_number, residential_street_line_1, residential_street_line_2, postal_code, primary_contact_number, contact_email_address, and payment_instrument_number. Under MASK_PROF_05 the last four characters of payment_instrument_number were retained for reconciliation. Under MASK_PROF_07 the full field is replaced with a surrogate token drawn from the vault (format TKN_PAY_<32>), and reconciliation is performed on the token rather than on the underlying value.
+
+The fields eligibility_category, concession_type, service_area_zone, and account_open_date are not masked and remain available for reporting.
+
+Action required:
+
+1. Report owners must re-point any query that filters on payment_instrument_number to payment_instrument_token by 18 September. Queries not converted will return an empty result set rather than an error.
+2. The Paratransit Registration team must confirm in writing that the eligibility review workbook no longer joins on national_id_number. The replacement join key is registrant_surrogate_id.
+3. Extract requests submitted through the Data Request Register must state the business purpose for each unmasked field. Requests naming a masked field without a stated purpose will be returned.
+
+Questions to the Information Governance Office through the standard ticket queue. A follow-up notice will issue after the first full nightly cycle completes.

@@ -1,0 +1,25 @@
+DATA DICTIONARY EXCERPT — PROD_ESCROW.TBL_PARTY_MASTER
+Document control DD-ESC-014, Rev. 4.2. Supersedes Rev. 4.1.
+
+1. Scope. This clause set governs TBL_PARTY_MASTER only. Party-to-order linkage is carried in DD-ESC-017 and is not restated here.
+
+2. Column register.
+2.1 PARTY_ID — NUMBER(12) — NOT NULL — surrogate primary key, sequence-assigned, not reused on purge.
+2.2 PARTY_TYPE_CD — CHAR(2) — NOT NULL — domain BY, SL, BR, LN, TR, ES.
+2.3 PARTY_LAST_NAME — VARCHAR2(60) — NOT NULL — carries full entity name where PARTY_TYPE_CD indicates a non-natural person.
+2.4 PARTY_FIRST_NAME — VARCHAR2(40) — NULL permitted for entity parties only.
+2.5 PARTY_MIDDLE_INIT — CHAR(1) — NULL.
+2.6 PARTY_TIN_ENC — RAW(128) — NULL — column-level encryption; decryption only through package ESC_TIN_UNWRAP.
+2.7 PARTY_TIN_LAST4 — CHAR(4) — NULL — clear text; permitted on operational screens and closing worksheets.
+2.8 PARTY_DOB — DATE — NULL — populated only where CIP verification method requires date confirmation.
+2.9 PARTY_EMAIL_ADDR — VARCHAR2(120) — NULL — single value; secondary addresses belong in TBL_PARTY_CONTACT.
+2.10 CIP_VERIF_METHOD_CD — CHAR(3) — NULL.
+2.11 OFAC_SCREEN_DT — DATE — NULL — set by nightly screening job; manual update prohibited.
+2.12 REC_STATUS_CD — CHAR(1) — NOT NULL — A active, I inactive, P purge-pending.
+2.13 UPDATED_TS — TIMESTAMP(6) — NOT NULL — trigger-maintained.
+
+3. Access restriction. Clauses 2.6, 2.8 and 2.9 are readable only under role ESC_PARTY_FULL. All other application roles resolve the table through VW_PARTY_MASKED, which substitutes clause 2.7 for clause 2.6 and nulls clause 2.8. Role grants are issued by the Records Custodian and recertified each quarter.
+
+4. Retention. Rows are retained for the greater of seven years from final disbursement of the associated file or the retention period imposed by the state of the escrow office of record. PURGE_ELIG_DT is recomputed nightly; no manual override.
+
+5. Downstream extracts. No extract, report or vendor feed may carry clause 2.6 or 2.8 in clear text. Extract requests are submitted to the Records Custodian, who records the approval, the column list and the expiry date in the extract register.

@@ -1,0 +1,77 @@
+# masking_policy.conf
+# Applied by the transformation service to every job in the CONS, POD and DRIVER
+# families. Loaded once at service start; a reload requires a restart of the
+# worker pool. Last edited 2021-04-22 by the Records Custodian under change note
+# CHG-2021-0177.
+#
+# The policy exists because the warehouse tier is accessible to analysts who have
+# no operational reason to see identifying detail. Every field listed below is
+# therefore either suppressed, replaced with a masked placeholder, or replaced
+# with a stable token so that joins remain possible without the underlying value
+# being present. Fields not listed here are passed through unchanged, which means
+# any new personal-data column added to a source feed must be added to this file
+# before that feed is promoted. The promotion checklist enforces this and the
+# pipeline will refuse to start if a source column matches the sensitive-name
+# pattern list and has no entry here.
+
+[policy]
+default_action        = passthrough
+unlisted_sensitive    = fail_closed
+placeholder_literal   = [MASKED]
+token_prefix          = tok
+null_literal          = <null>
+
+# Suppression. The field is written as the null literal. Used where the value has
+# no analytical purpose at all and where retaining a token would still create an
+# avoidable linkage risk.
+[suppress]
+recipient_contact_number
+alternate_contact_number
+recipient_email
+signatory_name
+gate_access_instruction
+special_delivery_note
+
+# Masking. The field is written as the placeholder literal. Used where analysts
+# need to know that a value was present and populated, but not what it was. The
+# presence flag is preserved because completeness reporting depends on it.
+[mask]
+consignee_full_name
+consignee_given_name
+consignee_family_name
+delivery_address_line_1
+delivery_address_line_2
+delivery_postcode
+collection_address_line_1
+collection_postcode
+proof_of_delivery_signature_image
+
+# Tokenisation. The field is replaced with a deterministic token so that the same
+# input yields the same token across runs and across the CONS and POD families.
+# Tokens are not reversible by the transformation service; reversal requires the
+# separate vault service and is logged. Note that customer_account_ref is
+# tokenised rather than masked only because reconciliation against the billing
+# extract would otherwise be impossible.
+[tokenise]
+customer_account_ref
+driver_licence_number
+driver_staff_number
+vehicle_assignment_ref
+consignee_reference
+
+# Date generalisation. Full dates are reduced to year and month. This applies to
+# driver_date_of_birth, which is retained solely to support the age-related
+# licence category check, and to nothing else. If the licence check is retired,
+# this stanza and the field should be removed together.
+[generalise_date]
+driver_date_of_birth = yyyy-MM
+
+# Logging. The transformation service must never write a pre-masking value to any
+# log at any level. Debug logging of row content is disabled here and cannot be
+# enabled per-job; a developer needing to inspect a transformation must use the
+# offline fixture harness. Row identifiers and counts remain loggable.
+[logging]
+log_row_content       = false
+log_field_names       = true
+log_masked_output     = true
+max_sample_rows       = 0

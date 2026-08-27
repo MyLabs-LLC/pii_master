@@ -1,0 +1,67 @@
+NORTHGATE UNIFIED SCHOOL DISTRICT
+OFFICE OF STUDENT DATA SERVICES — DATA DICTIONARY, PARTIAL
+OBJECT: SIS.STU_DEMO (student demographic master)
+SOURCE OF RECORD: Infinite Campus 2016 SP1; replicated to ODS nightly at 02:15
+REVISION 4.2 — EFFECTIVE 2016-08-15 — CUSTODIAN: Records Custodian, Student Data Services
+
+1. KEY AND CONTROL COLUMNS
+    1.1 STU_LOCAL_ID
+        Type: CHAR(9), fixed, zero-padded
+        Null: NOT NULL — primary key
+        Notes: District-assigned. Never reissued. Safe for internal joins; not for external release.
+    1.2 STU_STATE_ID
+        Type: CHAR(10)
+        Null: NULL permitted for pre-enrollment rows only
+        Notes: Assigned by state ID service at first enrollment record. Required before any state collection window closes.
+    1.3 ROW_EFF_DT / ROW_END_DT
+        Type: DATE / DATE
+        Null: ROW_EFF_DT NOT NULL; ROW_END_DT NULL on current row
+        Notes: Type-2 history. Queries omitting the open-row predicate will multiply counts.
+    1.4 SRC_LOAD_TS
+        Type: TIMESTAMP(6)
+        Null: NOT NULL
+        Notes: ODS load stamp, not a business date. Do not report from this column.
+
+2. RESTRICTED IDENTITY COLUMNS — ACCESS TIER 2
+    2.1 LAST_NAME_LEGAL, FIRST_NAME_LEGAL, MIDDLE_NAME_LEGAL
+        Type: VARCHAR(40) / VARCHAR(40) / VARCHAR(40)
+        Null: last and first NOT NULL; middle NULL permitted
+        Notes: Legal name as documented at registration. Preferred-name handling is out of scope for this object; see SIS.STU_NAME_PREF.
+    2.2 DOB
+        Type: DATE
+        Null: NOT NULL
+        Notes: Tier 2. Age-at-date derivations are permitted in views; the raw column may not be exposed in any report layer.
+    2.3 SSN_LAST4
+        Type: CHAR(4)
+        Null: NULL permitted; populated only where furnished voluntarily at registration
+        Notes: Tier 2, column-masked by default. Collection is optional and refusal may not bar enrollment. Not used as a key.
+    2.4 HOME_ADDR_LINE_1, HOME_ADDR_LINE_2, HOME_CITY, HOME_STATE, HOME_ZIP5
+        Type: VARCHAR(60), VARCHAR(60), VARCHAR(40), CHAR(2), CHAR(5)
+        Null: line 2 NULL permitted; remainder NOT NULL for enrolled rows
+        Notes: Drives attendance-area assignment and transportation routing. Suppress in full for students flagged under 3.3.
+    2.5 HOME_PHONE, MOBILE_PHONE, GUARDIAN_EMAIL_PRIMARY
+        Type: CHAR(10), CHAR(10), VARCHAR(120)
+        Null: all NULL permitted; at least one contact channel required by registration business rule
+        Notes: Tier 2. Mass-messaging vendor consumes hashed forms only.
+
+3. DIRECTORY-CLASSIFIED AND FLAG COLUMNS — ACCESS TIER 0/1
+    3.1 GRADE_LVL_CD, SCHOOL_OF_ENROLL_CD, ENROLL_STATUS_CD
+        Type: CHAR(2), CHAR(4), CHAR(1) — all NOT NULL
+    3.2 DIRECTORY_OPT_OUT_FLG
+        Type: CHAR(1) Y/N, NOT NULL, defaults N
+        Notes: Set from the annual notice response. When Y, all Tier 0 release is barred for the full school year.
+    3.3 CONFIDENTIAL_ADDR_FLG
+        Type: CHAR(1) Y/N, NOT NULL, defaults N
+        Notes: Court order or address-confidentiality program. Overrides 3.2. Address and phone columns are nulled in every downstream view without exception.
+
+4. RETENTION
+    4.1 Active rows retained for the duration of enrollment.
+    4.2 On exit, demographic master is retained 5 years, then reduced to the permanent record set (name, dates of attendance, grades, school attended) per the state records retention schedule; the permanent set is retained indefinitely.
+    4.3 SSN_LAST4 is purged at exit + 1 year regardless of 4.2.
+    4.4 ODS history partitions older than 36 months are dropped quarterly by scheduled job.
+
+5. DOWNSTREAM EXTRACTS
+    5.1 State collection extract — Tier 2 columns permitted under the state data-sharing agreement; delivered by SFTP, weekly during collection windows.
+    5.2 Assessment vendor extract — name, state ID, grade, school only. No 2.3, 2.4, 2.5.
+    5.3 Warehouse reporting mart — Tier 0/1 only; Tier 2 arrives masked at load.
+    5.4 Any extract not enumerated above requires a signed data request approved by the Records Custodian before the job is scheduled.

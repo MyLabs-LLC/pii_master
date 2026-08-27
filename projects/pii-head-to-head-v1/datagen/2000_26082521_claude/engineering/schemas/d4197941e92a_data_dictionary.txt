@@ -1,0 +1,50 @@
+CUSTOMER INFORMATION SYSTEM (CIS) — DATA DICTIONARY EXCERPT
+Segment 4.2 — Table CIS.CUST_MSTR (Customer Master; physical file CUSTMST)
+Platform: IBM AS/400 / DB2 for OS/400. Object authority administered by group profile.
+Maintained by the Records Custodian with the concurrence of the Information Security Coordinator.
+
+The reviewing party shall verify each of the following items prior to certifying this segment:
+
+[ ] CUST_ID — CHAR(10) — NOT NULL — System-assigned surrogate key drawn from control file CTLSEQ. Shall not be reissued following account closure, notwithstanding the purge of dependent rows.
+
+[ ] ACCT_NBR — CHAR(12) — NOT NULL — Check-digit bearing; imprinted upon bill stock. Update authority limited to the Billing Clerk role and above; read authority extended to the Customer Service Representative role.
+
+[ ] NAME_LAST — PIC X(25) — NOT NULL — Uppercase, left-justified, blank-filled. Diacriticals are unsupported by the collating sequence presently in effect; transliteration is performed at point of entry pursuant to the Clerk's Manual, Section 9.
+
+[ ] NAME_FIRST — PIC X(15) — NOT NULL — As above.
+
+[ ] NAME_MIDDLE_INIT — PIC X(01) — NULLABLE — Blank permitted; period not to be keyed.
+
+[ ] NAME_SUFFIX_CD — CHAR(3) — NULLABLE — Domain enumerated at CIS.CD_SUFFIX; free-form entry disallowed.
+
+[ ] SVC_ADDR_LINE_1 — PIC X(30) — NOT NULL — Validated against the Master Street Address Guide upon insert and upon any subsequent update.
+
+[ ] SVC_ADDR_LINE_2 — PIC X(30) — NULLABLE.
+
+[ ] MAIL_ADDR_LINE_1 — PIC X(30) — NULLABLE — Where null, the service address governs for billing purposes.
+
+[ ] SSN_TXT — CHAR(9) — NULLABLE — Collected under the authority of the Deposit and Credit Ordinance for the sole purposes of identity verification and credit evaluation. Object-level authority restricted to the Credit Supervisor role. Display suppressed to the trailing four positions upon all display panels save panel CS410. Propagation prohibited to any downstream extract excepting the Credit Bureau Reporting Extract (EXT-CBR-01), transmitted under the Bureau Services Agreement then in force. Retention: purge at twenty-four (24) months following rendition of final bill, provided no collection matter remains open.
+
+[ ] DOB_DT — DATE — NULLABLE — Captured only where an applicant elects age-qualified rate treatment. Century-qualified pursuant to the Year 2000 Remediation Plan, Item 14. Access restricted to the Rate Analyst and Credit Supervisor roles.
+
+[ ] DL_STATE_CD — CHAR(2) — NULLABLE — Populated only in conjunction with DL_NBR.
+
+[ ] DL_NBR — PIC X(20) — NULLABLE — Recorded at counter transactions in lieu of deposit waiver documentation. Excluded from all extracts without exception. Retention: eighteen (18) months from date of capture.
+
+[ ] TELE_HOME_NBR — CHAR(10) — NULLABLE — Area code mandatory following the split of 1997.
+
+[ ] TELE_WORK_NBR — CHAR(10) — NULLABLE.
+
+[ ] EMAIL_ADDR — VARCHAR(60) — NULLABLE — Introduced at Release 6.1; populated solely at the customer's election and revocable upon written request to the Records Custodian.
+
+[ ] EMPLR_NAME — PIC X(30) — NULLABLE — Retained for deposit-waiver adjudication only; suppressed from the Collections Placement Extract (EXT-COL-03).
+
+[ ] LIFE_SUPPORT_IND — CHAR(1) — NOT NULL — Default 'N'. Any value other than default shall be recertified annually and shall bar disconnection pending review.
+
+[ ] LANG_PREF_CD — CHAR(2) — NULLABLE — Governs selection of notice stock.
+
+[ ] DEPOSIT_AMT — DECIMAL(9,2) — NOT NULL — Default zero.
+
+[ ] Confirm that the extract register enumerates every job reading this table.
+
+[ ] Confirm that tape volumes bearing this table are logged and vaulted per Schedule R-12.

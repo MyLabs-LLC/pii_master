@@ -1,0 +1,110 @@
+CREDIT UNION OPERATIONS — DATA ADMINISTRATION
+DATA DICTIONARY EXCERPT
+
+Subject Area .......... Member Demography and Contact
+Physical Object ....... MBRSHIP.MEMBER_DEMOG (DB2 for i, library MBRPRD)
+Excerpt Prepared By ... Data Administration, on request of the Compliance Officer
+Excerpt Date .......... 22 August 2011
+Review Cycle .......... Semi-annual
+Handling .............. Confidential — Restricted
+
+--------------------------------------------------------------------------
+1. COLUMN DEFINITIONS
+--------------------------------------------------------------------------
+
+COLUMN NAME          TYPE            NULL   DEFINITION / OPERATIONAL NOTE
+------------------   -------------   ----   -----------------------------
+DEMOG_ID             INTEGER         NOT    Identity column, generated always.
+MEMBER_NBR           CHAR(10)        NOT    Foreign key to MEMBER_MASTER.
+                                            Masked to last four in teller UI.
+LEGAL_LAST_NAME      VARCHAR(40)     NOT    Restricted. Mixed case since the
+                                            2007 conversion; upper case in
+                                            pre-conversion rows.
+LEGAL_FIRST_NAME     VARCHAR(30)     NOT    Restricted.
+LEGAL_MIDDLE_NAME    VARCHAR(30)     NULL   Restricted. Free-text; initials
+                                            and full names both present.
+FORMER_NAME          VARCHAR(40)     NULL   Restricted. Retained for lien and
+                                            title research.
+TAX_ID_NBR           CHAR(9)         NULL   Restricted — highest tier. Column
+                                            level encryption; audit trigger on
+                                            every SELECT.
+TAX_ID_TYPE_CD       CHAR(1)         NULL   Domain: S, E, I. Null where the
+                                            identifier itself is null.
+BIRTH_DT             DATE            NULL   Restricted. Populated for natural
+                                            persons only; organisational
+                                            memberships carry null.
+DRIVERS_LIC_NBR      VARCHAR(20)     NULL   Restricted. Captured under the CIP
+                                            programme; not indexed.
+DRIVERS_LIC_ST       CHAR(2)         NULL   Issuing jurisdiction.
+MAILING_ADDR_1       VARCHAR(60)     NOT    Restricted. Overwritten by the
+                                            address-hygiene job; prior values
+                                            in MEMBER_ADDR_HIST.
+MAILING_ADDR_2       VARCHAR(60)     NULL   Restricted.
+MAILING_CITY         VARCHAR(30)     NOT    Restricted.
+MAILING_STATE        CHAR(2)         NOT    Restricted.
+MAILING_ZIP          CHAR(9)         NOT    Restricted.
+PRIMARY_PHONE        CHAR(10)        NULL   Restricted. Digits only.
+MOBILE_PHONE         CHAR(10)        NULL   Restricted. Feeds the SMS alert
+                                            platform where opt-in is set.
+EMAIL_ADDR           VARCHAR(80)     NULL   Restricted. Uniqueness is not
+                                            enforced; joint members frequently
+                                            share a value.
+PAPERLESS_FLG        CHAR(1)         NOT    Y/N. Governs statement suppression.
+OPT_OUT_SHARE_FLG    CHAR(1)         NOT    Y/N. Reg P affiliate sharing.
+OPT_OUT_EFF_DT       DATE            NULL   Null where the flag is N.
+LAST_UPDT_USER       CHAR(10)        NOT    Operator profile, not member.
+LAST_UPDT_TS         TIMESTAMP       NOT    Set by trigger MBRDEMOG_U1.
+
+--------------------------------------------------------------------------
+2. ACCESS RESTRICTION
+--------------------------------------------------------------------------
+
+2.1 Columns marked Restricted are exposed only through views. Base table
+    authority is limited to the database administration profile and the
+    nightly batch profile.
+
+2.2 TAX_ID_NBR carries an additional control: reads are logged to the
+    security journal and reconciled weekly by the Records Custodian. Any
+    read outside a documented business process is reported to the
+    Information Security Officer within one business day.
+
+2.3 Test and training environments receive masked copies only. The masking
+    routine substitutes format-preserving values for all Restricted columns
+    and nulls DRIVERS_LIC_NBR entirely.
+
+--------------------------------------------------------------------------
+3. RETENTION
+--------------------------------------------------------------------------
+
+3.1 Rows persist while the underlying membership is open.
+
+3.2 On closure, the row is retained seven years from the closure date, then
+    archived to offline media for a further three years before destruction.
+
+3.3 FORMER_NAME and DRIVERS_LIC_NBR are purged at closure plus five years,
+    ahead of the parent row, per the Compliance Officer's standing
+    instruction of 11 January 2011.
+
+3.4 Litigation holds suspend all purge activity for the affected rows. Holds
+    are recorded in the hold register maintained by the General Counsel's
+    office.
+
+--------------------------------------------------------------------------
+4. DOWNSTREAM EXTRACTS
+--------------------------------------------------------------------------
+
+4.1 STMTX01 — statement print and mail vendor. Name and mailing columns.
+    Cycle-driven. Encrypted transmission, key rotated annually.
+
+4.2 MCIFX03 — marketing datamart load. Nightly. Restricted identifiers are
+    replaced with a surrogate token before the file leaves the host.
+
+4.3 CRAX02 — consumer reporting furnishing. Monthly. Includes identity
+    columns as required by the Metro 2 layout.
+
+4.4 CIPX07 — identity verification vendor. Event-driven at account opening.
+
+4.5 No extract may be added, altered or redirected without a Data Release
+    Request approved by both the Records Custodian and the Compliance
+    Officer. Ad hoc query output containing Restricted columns is treated as
+    an extract for this purpose.

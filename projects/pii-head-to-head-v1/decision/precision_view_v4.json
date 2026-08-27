@@ -1,0 +1,3956 @@
+{
+  "spec": {
+    "name": "pii-head-to-head-precision-view",
+    "constraints": [
+      {
+        "name": "document-level precision >= 0.90 (conclusive)",
+        "metric": "doc_precision",
+        "op": ">=",
+        "threshold": 0.9,
+        "scope": "doc@*",
+        "across": "each",
+        "basis": "ci_lower",
+        "min_support": 30,
+        "severity": "hard",
+        "relative_to": null
+      },
+      {
+        "name": "document-level specificity >= 0.85 (conclusive)",
+        "metric": "doc_specificity",
+        "op": ">=",
+        "threshold": 0.85,
+        "scope": "doc@*",
+        "across": "each",
+        "basis": "ci_lower",
+        "min_support": 30,
+        "severity": "hard",
+        "relative_to": null
+      },
+      {
+        "name": "document-level recall >= 0.85 (conclusive)",
+        "metric": "doc_recall",
+        "op": ">=",
+        "threshold": 0.85,
+        "scope": "doc@*",
+        "across": "each",
+        "basis": "ci_lower",
+        "min_support": 30,
+        "severity": "hard",
+        "relative_to": null
+      },
+      {
+        "name": "priority tag recall >= 0.75 (conclusive)",
+        "metric": "recall",
+        "op": ">=",
+        "threshold": 0.75,
+        "scope": "*@*",
+        "across": "each",
+        "basis": "ci_lower",
+        "min_support": 30,
+        "severity": "hard",
+        "relative_to": null
+      },
+      {
+        "name": "one-core p95 <= 5 ms",
+        "metric": "p95_latency_ms",
+        "op": "<=",
+        "threshold": 5.0,
+        "scope": "",
+        "across": "each",
+        "basis": "point",
+        "min_support": 0,
+        "severity": "hard",
+        "relative_to": null
+      },
+      {
+        "name": "prediction rate",
+        "metric": "prediction_rate",
+        "op": ">=",
+        "threshold": 0.0,
+        "scope": "",
+        "across": "each",
+        "basis": "point",
+        "min_support": 0,
+        "severity": "advisory",
+        "relative_to": null
+      },
+      {
+        "name": "worst measurable priority recall",
+        "metric": "severity_recall_min",
+        "op": ">=",
+        "threshold": 0.0,
+        "scope": "",
+        "across": "each",
+        "basis": "point",
+        "min_support": 0,
+        "severity": "advisory",
+        "relative_to": null
+      }
+    ],
+    "preferences": [
+      {
+        "metric": "priority_macro_f05",
+        "scope": "",
+        "greater_is_better": null,
+        "min_relative_change": 0.0
+      },
+      {
+        "metric": "macro_f05",
+        "scope": "",
+        "greater_is_better": null,
+        "min_relative_change": 0.0
+      },
+      {
+        "metric": "p95_latency_ms",
+        "scope": "",
+        "greater_is_better": false,
+        "min_relative_change": 0.0
+      }
+    ]
+  },
+  "selected": null,
+  "reason": [
+    "v2_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v2_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v2_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v2_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k",
+    "v3_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v3_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v3_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v3_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k",
+    "v4_corrected_cap: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v4_corrected_cap: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v4_corrected_cap: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+    "v4_corrected_cap: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k"
+  ],
+  "feasible": [],
+  "arms": [
+    {
+      "arm": "v2_bundle",
+      "feasible": false,
+      "n_hard_failed": 4,
+      "n_hard_unmeasured": 0,
+      "constraints": [
+        {
+          "constraint": {
+            "name": "document-level precision >= 0.90 (conclusive)",
+            "metric": "doc_precision",
+            "op": ">=",
+            "threshold": 0.9,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9785552582835975,
+              "compared": 0.9767860770225525,
+              "support": 24295,
+              "reason": "0.976786 >= 0.9"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.8601485148514851,
+              "compared": 0.8435969352722168,
+              "support": 1616,
+              "reason": "0.843597 >= 0.9"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.847972972972973,
+              "compared": 0.8353273868560791,
+              "support": 2960,
+              "reason": "0.835327 >= 0.9"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level specificity >= 0.85 (conclusive)",
+            "metric": "doc_specificity",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 2,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "2/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8925994640280355,
+              "compared": 0.8842799663543701,
+              "support": 4851,
+              "reason": "0.88428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "pass",
+              "value": 0.8917105893627216,
+              "compared": 0.8795345425605774,
+              "support": 2087,
+              "reason": "0.879535 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.8531810766721044,
+              "compared": 0.8398122191429138,
+              "support": 3065,
+              "reason": "0.839812 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level recall >= 0.85 (conclusive)",
+            "metric": "doc_recall",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9453258578869935,
+              "compared": 0.9424282908439636,
+              "support": 25149,
+              "reason": "0.942428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.7266074228959749,
+              "compared": 0.7063423991203308,
+              "support": 1913,
+              "reason": "0.706342 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.7204362801377727,
+              "compared": 0.7050929665565491,
+              "support": 3484,
+              "reason": "0.705093 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "priority tag recall >= 0.75 (conclusive)",
+            "metric": "recall",
+            "op": ">=",
+            "threshold": 0.75,
+            "scope": "*@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 45,
+          "n_measurable": 55,
+          "n_scopes": 128,
+          "reason": "45/55 measurable scope(s) passed of 128",
+          "scopes": [
+            {
+              "scope": "sensitive_pci_bank_account_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 5,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8757061958312988,
+              "compared": 0.8455743789672852,
+              "support": 531,
+              "reason": "0.845574 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9238578677177429,
+              "compared": 0.9018612504005432,
+              "support": 591,
+              "reason": "0.901861 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9810126423835754,
+              "compared": 0.9651898741722107,
+              "support": 316,
+              "reason": "0.96519 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 3,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9618320465087891,
+              "compared": 0.9427480697631836,
+              "support": 524,
+              "reason": "0.942748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9677018523216248,
+              "compared": 0.9606625437736511,
+              "support": 2415,
+              "reason": "0.960663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9630669355392456,
+              "compared": 0.9591378569602966,
+              "support": 8908,
+              "reason": "0.959138 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9373549818992615,
+              "compared": 0.9141531586647034,
+              "support": 431,
+              "reason": "0.914153 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9082290530204773,
+              "compared": 0.8964732885360718,
+              "support": 2637,
+              "reason": "0.896473 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 234,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8567517995834351,
+              "compared": 0.8486672043800354,
+              "support": 7672,
+              "reason": "0.848667 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9632768630981445,
+              "compared": 0.9435028433799744,
+              "support": 354,
+              "reason": "0.943503 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9981343150138855,
+              "compared": 0.9944030046463013,
+              "support": 536,
+              "reason": "0.994403 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.6423841118812561,
+              "compared": 0.5693708658218384,
+              "support": 151,
+              "reason": "0.569371 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9880383014678955,
+              "compared": 0.9760765433311462,
+              "support": 418,
+              "reason": "0.976077 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 535,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 28,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9938650131225586,
+              "compared": 0.9846625924110413,
+              "support": 326,
+              "reason": "0.984663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.712598443031311,
+              "compared": 0.6574802994728088,
+              "support": 254,
+              "reason": "0.65748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9786477088928223,
+              "compared": 0.9727165102958679,
+              "support": 2529,
+              "reason": "0.972717 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9602497816085815,
+              "compared": 0.955680787563324,
+              "support": 6566,
+              "reason": "0.955681 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8373811841011047,
+              "compared": 0.8233016729354858,
+              "support": 2841,
+              "reason": "0.823302 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9950219392776489,
+              "compared": 0.9939067959785461,
+              "support": 15267,
+              "reason": "0.993907 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.691428542137146,
+              "compared": 0.6428571343421936,
+              "support": 350,
+              "reason": "0.642857 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6127946376800537,
+              "compared": 0.5813692212104797,
+              "support": 891,
+              "reason": "0.581369 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.7929155230522156,
+              "compared": 0.769300639629364,
+              "support": 1101,
+              "reason": "0.769301 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.81339031457901,
+              "compared": 0.7995014190673828,
+              "support": 2808,
+              "reason": "0.799501 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 219,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "fail",
+              "value": 0.7144530415534973,
+              "compared": 0.7051973342895508,
+              "support": 8538,
+              "reason": "0.705197 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "pass",
+              "value": 0.9259776473045349,
+              "compared": 0.9206238389015198,
+              "support": 8592,
+              "reason": "0.920624 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7468007206916809,
+              "compared": 0.7351005673408508,
+              "support": 5470,
+              "reason": "0.735101 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8812996745109558,
+              "compared": 0.8755349516868591,
+              "support": 11449,
+              "reason": "0.875535 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.843606173992157,
+              "compared": 0.8365018963813782,
+              "support": 9994,
+              "reason": "0.836502 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9280462265014648,
+              "compared": 0.9252223968505859,
+              "support": 30464,
+              "reason": "0.925222 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6152410507202148,
+              "compared": 0.5984448194503784,
+              "support": 3215,
+              "reason": "0.598445 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 4327,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@30000_pii2_eval_25.15k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9994913935661316,
+              "compared": 0.9990554451942444,
+              "support": 13763,
+              "reason": "0.999055 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8103448152542114,
+              "compared": 0.7885662317276001,
+              "support": 1102,
+              "reason": "0.788566 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8932285904884338,
+              "compared": 0.8842096328735352,
+              "support": 4327,
+              "reason": "0.88421 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.837753415107727,
+              "compared": 0.8312104940414429,
+              "support": 13763,
+              "reason": "0.83121 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.6800000071525574,
+              "compared": 0.5600000023841858,
+              "support": 50,
+              "reason": "0.56 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9855421781539917,
+              "compared": 0.9783132672309875,
+              "support": 1245,
+              "reason": "0.978313 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9741379022598267,
+              "compared": 0.9525862336158752,
+              "support": 232,
+              "reason": "0.952586 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9642857313156128,
+              "compared": 0.9336734414100647,
+              "support": 196,
+              "reason": "0.933673 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 12,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 9,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7655172348022461,
+              "compared": 0.6896551847457886,
+              "support": 145,
+              "reason": "0.689655 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9020978808403015,
+              "compared": 0.867132842540741,
+              "support": 286,
+              "reason": "0.867133 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 182,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7429166436195374,
+              "compared": 0.7250000238418579,
+              "support": 2400,
+              "reason": "0.725 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8818698525428772,
+              "compared": 0.8714466094970703,
+              "support": 3166,
+              "reason": "0.871447 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9915611743927002,
+              "compared": 0.9789029359817505,
+              "support": 237,
+              "reason": "0.978903 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8692945837974548,
+              "compared": 0.8611440658569336,
+              "support": 6748,
+              "reason": "0.861144 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 4,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8398428559303284,
+              "compared": 0.829211950302124,
+              "support": 4327,
+              "reason": "0.829212 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.7771561145782471,
+              "compared": 0.7701791524887085,
+              "support": 13763,
+              "reason": "0.770179 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "one-core p95 <= 5 ms",
+            "metric": "p95_latency_ms",
+            "op": "<=",
+            "threshold": 5.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 3.916393668623641,
+              "compared": 3.916393668623641,
+              "support": null,
+              "reason": "3.91639 <= 5"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "prediction rate",
+            "metric": "prediction_rate",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.8192338568416169,
+              "compared": 0.8192338568416169,
+              "support": null,
+              "reason": "0.819234 >= 0"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "worst measurable priority recall",
+            "metric": "severity_recall_min",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.7221069250788007,
+              "compared": 0.7221069250788007,
+              "support": null,
+              "reason": "0.722107 >= 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "arm": "v3_bundle",
+      "feasible": false,
+      "n_hard_failed": 4,
+      "n_hard_unmeasured": 0,
+      "constraints": [
+        {
+          "constraint": {
+            "name": "document-level precision >= 0.90 (conclusive)",
+            "metric": "doc_precision",
+            "op": ">=",
+            "threshold": 0.9,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9785552582835975,
+              "compared": 0.9767860770225525,
+              "support": 24295,
+              "reason": "0.976786 >= 0.9"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.8601485148514851,
+              "compared": 0.8435969352722168,
+              "support": 1616,
+              "reason": "0.843597 >= 0.9"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.847972972972973,
+              "compared": 0.8353273868560791,
+              "support": 2960,
+              "reason": "0.835327 >= 0.9"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level specificity >= 0.85 (conclusive)",
+            "metric": "doc_specificity",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 2,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "2/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8925994640280355,
+              "compared": 0.8842799663543701,
+              "support": 4851,
+              "reason": "0.88428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "pass",
+              "value": 0.8917105893627216,
+              "compared": 0.8795345425605774,
+              "support": 2087,
+              "reason": "0.879535 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.8531810766721044,
+              "compared": 0.8398122191429138,
+              "support": 3065,
+              "reason": "0.839812 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level recall >= 0.85 (conclusive)",
+            "metric": "doc_recall",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9453258578869935,
+              "compared": 0.9424282908439636,
+              "support": 25149,
+              "reason": "0.942428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.7266074228959749,
+              "compared": 0.7063423991203308,
+              "support": 1913,
+              "reason": "0.706342 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.7204362801377727,
+              "compared": 0.7050929665565491,
+              "support": 3484,
+              "reason": "0.705093 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "priority tag recall >= 0.75 (conclusive)",
+            "metric": "recall",
+            "op": ">=",
+            "threshold": 0.75,
+            "scope": "*@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 45,
+          "n_measurable": 55,
+          "n_scopes": 128,
+          "reason": "45/55 measurable scope(s) passed of 128",
+          "scopes": [
+            {
+              "scope": "sensitive_pci_bank_account_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 5,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8757061958312988,
+              "compared": 0.8455743789672852,
+              "support": 531,
+              "reason": "0.845574 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9238578677177429,
+              "compared": 0.9018612504005432,
+              "support": 591,
+              "reason": "0.901861 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9810126423835754,
+              "compared": 0.9651898741722107,
+              "support": 316,
+              "reason": "0.96519 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 3,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9618320465087891,
+              "compared": 0.9427480697631836,
+              "support": 524,
+              "reason": "0.942748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9677018523216248,
+              "compared": 0.9606625437736511,
+              "support": 2415,
+              "reason": "0.960663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9630669355392456,
+              "compared": 0.9591378569602966,
+              "support": 8908,
+              "reason": "0.959138 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9373549818992615,
+              "compared": 0.9141531586647034,
+              "support": 431,
+              "reason": "0.914153 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9082290530204773,
+              "compared": 0.8964732885360718,
+              "support": 2637,
+              "reason": "0.896473 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 234,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8567517995834351,
+              "compared": 0.8486672043800354,
+              "support": 7672,
+              "reason": "0.848667 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9632768630981445,
+              "compared": 0.9435028433799744,
+              "support": 354,
+              "reason": "0.943503 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9981343150138855,
+              "compared": 0.9944030046463013,
+              "support": 536,
+              "reason": "0.994403 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.6423841118812561,
+              "compared": 0.5693708658218384,
+              "support": 151,
+              "reason": "0.569371 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9880383014678955,
+              "compared": 0.9760765433311462,
+              "support": 418,
+              "reason": "0.976077 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 535,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 28,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9938650131225586,
+              "compared": 0.9846625924110413,
+              "support": 326,
+              "reason": "0.984663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.712598443031311,
+              "compared": 0.6574802994728088,
+              "support": 254,
+              "reason": "0.65748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9786477088928223,
+              "compared": 0.9727165102958679,
+              "support": 2529,
+              "reason": "0.972717 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9602497816085815,
+              "compared": 0.955680787563324,
+              "support": 6566,
+              "reason": "0.955681 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8373811841011047,
+              "compared": 0.8233016729354858,
+              "support": 2841,
+              "reason": "0.823302 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9950219392776489,
+              "compared": 0.9939067959785461,
+              "support": 15267,
+              "reason": "0.993907 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.691428542137146,
+              "compared": 0.6428571343421936,
+              "support": 350,
+              "reason": "0.642857 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6127946376800537,
+              "compared": 0.5813692212104797,
+              "support": 891,
+              "reason": "0.581369 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.7929155230522156,
+              "compared": 0.769300639629364,
+              "support": 1101,
+              "reason": "0.769301 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.81339031457901,
+              "compared": 0.7995014190673828,
+              "support": 2808,
+              "reason": "0.799501 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 219,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "fail",
+              "value": 0.7144530415534973,
+              "compared": 0.7051973342895508,
+              "support": 8538,
+              "reason": "0.705197 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "pass",
+              "value": 0.9259776473045349,
+              "compared": 0.9206238389015198,
+              "support": 8592,
+              "reason": "0.920624 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7468007206916809,
+              "compared": 0.7351005673408508,
+              "support": 5470,
+              "reason": "0.735101 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8812996745109558,
+              "compared": 0.8755349516868591,
+              "support": 11449,
+              "reason": "0.875535 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.843606173992157,
+              "compared": 0.8365018963813782,
+              "support": 9994,
+              "reason": "0.836502 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9280462265014648,
+              "compared": 0.9252223968505859,
+              "support": 30464,
+              "reason": "0.925222 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6152410507202148,
+              "compared": 0.5984448194503784,
+              "support": 3215,
+              "reason": "0.598445 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9609429240226746,
+              "compared": 0.9551652669906616,
+              "support": 4327,
+              "reason": "0.955165 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@30000_pii2_eval_25.15k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9372230172157288,
+              "compared": 0.933007001876831,
+              "support": 13763,
+              "reason": "0.933007 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8103448152542114,
+              "compared": 0.7885662317276001,
+              "support": 1102,
+              "reason": "0.788566 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8932285904884338,
+              "compared": 0.8842096328735352,
+              "support": 4327,
+              "reason": "0.88421 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.837753415107727,
+              "compared": 0.8312104940414429,
+              "support": 13763,
+              "reason": "0.83121 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.6800000071525574,
+              "compared": 0.5600000023841858,
+              "support": 50,
+              "reason": "0.56 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9855421781539917,
+              "compared": 0.9783132672309875,
+              "support": 1245,
+              "reason": "0.978313 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9741379022598267,
+              "compared": 0.9525862336158752,
+              "support": 232,
+              "reason": "0.952586 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9642857313156128,
+              "compared": 0.9336734414100647,
+              "support": 196,
+              "reason": "0.933673 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 12,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 9,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7655172348022461,
+              "compared": 0.6896551847457886,
+              "support": 145,
+              "reason": "0.689655 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9020978808403015,
+              "compared": 0.867132842540741,
+              "support": 286,
+              "reason": "0.867133 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 182,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7429166436195374,
+              "compared": 0.7250000238418579,
+              "support": 2400,
+              "reason": "0.725 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8818698525428772,
+              "compared": 0.8714466094970703,
+              "support": 3166,
+              "reason": "0.871447 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9915611743927002,
+              "compared": 0.9789029359817505,
+              "support": 237,
+              "reason": "0.978903 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8692945837974548,
+              "compared": 0.8611440658569336,
+              "support": 6748,
+              "reason": "0.861144 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 4,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8398428559303284,
+              "compared": 0.829211950302124,
+              "support": 4327,
+              "reason": "0.829212 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.7771561145782471,
+              "compared": 0.7701791524887085,
+              "support": 13763,
+              "reason": "0.770179 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "one-core p95 <= 5 ms",
+            "metric": "p95_latency_ms",
+            "op": "<=",
+            "threshold": 5.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 3.916393668623641,
+              "compared": 3.916393668623641,
+              "support": null,
+              "reason": "3.91639 <= 5"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "prediction rate",
+            "metric": "prediction_rate",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.818059456422597,
+              "compared": 0.818059456422597,
+              "support": null,
+              "reason": "0.818059 >= 0"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "worst measurable priority recall",
+            "metric": "severity_recall_min",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.7221069250788007,
+              "compared": 0.7221069250788007,
+              "support": null,
+              "reason": "0.722107 >= 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "arm": "v4_corrected_cap",
+      "feasible": false,
+      "n_hard_failed": 4,
+      "n_hard_unmeasured": 0,
+      "constraints": [
+        {
+          "constraint": {
+            "name": "document-level precision >= 0.90 (conclusive)",
+            "metric": "doc_precision",
+            "op": ">=",
+            "threshold": 0.9,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9785552582835975,
+              "compared": 0.9767860770225525,
+              "support": 24295,
+              "reason": "0.976786 >= 0.9"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.8601485148514851,
+              "compared": 0.8435969352722168,
+              "support": 1616,
+              "reason": "0.843597 >= 0.9"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.847972972972973,
+              "compared": 0.8353273868560791,
+              "support": 2960,
+              "reason": "0.835327 >= 0.9"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level specificity >= 0.85 (conclusive)",
+            "metric": "doc_specificity",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 2,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "2/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8925994640280355,
+              "compared": 0.8842799663543701,
+              "support": 4851,
+              "reason": "0.88428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "pass",
+              "value": 0.8917105893627216,
+              "compared": 0.8795345425605774,
+              "support": 2087,
+              "reason": "0.879535 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.8531810766721044,
+              "compared": 0.8398122191429138,
+              "support": 3065,
+              "reason": "0.839812 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "document-level recall >= 0.85 (conclusive)",
+            "metric": "doc_recall",
+            "op": ">=",
+            "threshold": 0.85,
+            "scope": "doc@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 1,
+          "n_measurable": 3,
+          "n_scopes": 3,
+          "reason": "1/3 measurable scope(s) passed of 3",
+          "scopes": [
+            {
+              "scope": "doc@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9453258578869935,
+              "compared": 0.9424282908439636,
+              "support": 25149,
+              "reason": "0.942428 >= 0.85"
+            },
+            {
+              "scope": "doc@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.7266074228959749,
+              "compared": 0.7063423991203308,
+              "support": 1913,
+              "reason": "0.706342 >= 0.85"
+            },
+            {
+              "scope": "doc@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.7204362801377727,
+              "compared": 0.7050929665565491,
+              "support": 3484,
+              "reason": "0.705093 >= 0.85"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "priority tag recall >= 0.75 (conclusive)",
+            "metric": "recall",
+            "op": ">=",
+            "threshold": 0.75,
+            "scope": "*@*",
+            "across": "each",
+            "basis": "ci_lower",
+            "min_support": 30,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "fail",
+          "n_pass": 44,
+          "n_measurable": 55,
+          "n_scopes": 128,
+          "reason": "44/55 measurable scope(s) passed of 128",
+          "scopes": [
+            {
+              "scope": "sensitive_pci_bank_account_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 5,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8757061958312988,
+              "compared": 0.8455743789672852,
+              "support": 531,
+              "reason": "0.845574 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9238578677177429,
+              "compared": 0.9018612504005432,
+              "support": 591,
+              "reason": "0.901861 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9810126423835754,
+              "compared": 0.9651898741722107,
+              "support": 316,
+              "reason": "0.96519 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 3,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9618320465087891,
+              "compared": 0.9427480697631836,
+              "support": 524,
+              "reason": "0.942748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9677018523216248,
+              "compared": 0.9606625437736511,
+              "support": 2415,
+              "reason": "0.960663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9631791710853577,
+              "compared": 0.9593595862388611,
+              "support": 8908,
+              "reason": "0.95936 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9373549818992615,
+              "compared": 0.9141531586647034,
+              "support": 431,
+              "reason": "0.914153 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 309,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_iban@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9082290530204773,
+              "compared": 0.8964732885360718,
+              "support": 2637,
+              "reason": "0.896473 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 234,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.856621503829956,
+              "compared": 0.8485368490219116,
+              "support": 7672,
+              "reason": "0.848537 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9632768630981445,
+              "compared": 0.9435028433799744,
+              "support": 354,
+              "reason": "0.943503 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9981343150138855,
+              "compared": 0.9944030046463013,
+              "support": 536,
+              "reason": "0.994403 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_health_plan_beneficiary_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 2,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.6423841118812561,
+              "compared": 0.5693708658218384,
+              "support": 151,
+              "reason": "0.569371 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9880383014678955,
+              "compared": 0.9760765433311462,
+              "support": 418,
+              "reason": "0.976077 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 535,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_medical_record_number_mrn@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 28,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@20000_pii_holdout_20.00k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9938650131225586,
+              "compared": 0.9846625924110413,
+              "support": 326,
+              "reason": "0.984663 >= 0.75"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_phi_patient_id_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.712598443031311,
+              "compared": 0.6574802994728088,
+              "support": 254,
+              "reason": "0.65748 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.9786477088928223,
+              "compared": 0.9727165102958679,
+              "support": 2529,
+              "reason": "0.972717 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9602497816085815,
+              "compared": 0.955680787563324,
+              "support": 6566,
+              "reason": "0.955681 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.8373811841011047,
+              "compared": 0.8233016729354858,
+              "support": 2841,
+              "reason": "0.823302 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9950219392776489,
+              "compared": 0.9939067959785461,
+              "support": 15267,
+              "reason": "0.993907 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "fail",
+              "value": 0.691428542137146,
+              "compared": 0.6428571343421936,
+              "support": 350,
+              "reason": "0.642857 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_address@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_address@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6127946376800537,
+              "compared": 0.5813692212104797,
+              "support": 891,
+              "reason": "0.581369 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.7929155230522156,
+              "compared": 0.769300639629364,
+              "support": 1101,
+              "reason": "0.769301 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.81339031457901,
+              "compared": 0.7995014190673828,
+              "support": 2808,
+              "reason": "0.799501 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 219,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "fail",
+              "value": 0.7144530415534973,
+              "compared": 0.7051973342895508,
+              "support": 8538,
+              "reason": "0.705197 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_driver_s_license_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "pass",
+              "value": 0.9259776473045349,
+              "compared": 0.9206238389015198,
+              "support": 8592,
+              "reason": "0.920624 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.747349202632904,
+              "compared": 0.7360054850578308,
+              "support": 5470,
+              "reason": "0.736005 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8812996745109558,
+              "compared": 0.8755349516868591,
+              "support": 11449,
+              "reason": "0.875535 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.843606173992157,
+              "compared": 0.8365018963813782,
+              "support": 9994,
+              "reason": "0.836502 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.9280462265014648,
+              "compared": 0.9252223968505859,
+              "support": 30464,
+              "reason": "0.925222 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_full_name@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_full_name@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "fail",
+              "value": 0.6152410507202148,
+              "compared": 0.5984448194503784,
+              "support": 3215,
+              "reason": "0.598445 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8342962861061096,
+              "compared": 0.8229662775993347,
+              "support": 4327,
+              "reason": "0.822966 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@30000_pii2_eval_25.15k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.7701082825660706,
+              "compared": 0.7628387808799744,
+              "support": 13763,
+              "reason": "0.762839 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_military_identification_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "pass",
+              "value": 0.8103448152542114,
+              "compared": 0.7885662317276001,
+              "support": 1102,
+              "reason": "0.788566 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8932285904884338,
+              "compared": 0.8842096328735352,
+              "support": 4327,
+              "reason": "0.88421 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8378260731697083,
+              "compared": 0.8312849998474121,
+              "support": 13763,
+              "reason": "0.831285 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_passport_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "fail",
+              "value": 0.10000000149011612,
+              "compared": 0.019999999552965164,
+              "support": 50,
+              "reason": "0.02 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7172690629959106,
+              "compared": 0.6915662884712219,
+              "support": 1245,
+              "reason": "0.691566 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8793103694915771,
+              "compared": 0.8362069129943848,
+              "support": 232,
+              "reason": "0.836207 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9591836929321289,
+              "compared": 0.9285714030265808,
+              "support": 196,
+              "reason": "0.928571 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_password@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 12,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_password@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 9,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7655172348022461,
+              "compared": 0.6896551847457886,
+              "support": 145,
+              "reason": "0.689655 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.9020978808403015,
+              "compared": 0.867132842540741,
+              "support": 286,
+              "reason": "0.867133 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 182,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@38937_openpii_pii_eval_38.94k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_personal_identification_number_pin@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 1,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "fail",
+              "value": 0.7429166436195374,
+              "compared": 0.7250000238418579,
+              "support": 2400,
+              "reason": "0.725 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8818698525428772,
+              "compared": 0.8714466094970703,
+              "support": 3166,
+              "reason": "0.871447 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 0.9915611743927002,
+              "compared": 0.9789029359817505,
+              "support": 237,
+              "reason": "0.978903 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.8692945837974548,
+              "compared": 0.8611440658569336,
+              "support": 6748,
+              "reason": "0.861144 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_social_security_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 4,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10360_betterdataai_ner_silver_eval_10.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@10626_ai4privacy_pii_masking_eval_10.63k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@20000_pii_holdout_20.00k",
+              "verdict": "pass",
+              "value": 0.8386873006820679,
+              "compared": 0.8282874822616577,
+              "support": 4327,
+              "reason": "0.828287 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@30000_pii2_eval_25.15k",
+              "verdict": "pass",
+              "value": 1.0,
+              "compared": 1.0,
+              "support": 227,
+              "reason": "1 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@38937_openpii_pii_eval_38.94k",
+              "verdict": "pass",
+              "value": 0.7754849791526794,
+              "compared": 0.7687222957611084,
+              "support": 13763,
+              "reason": "0.768722 >= 0.75"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@4000_datax-dualjudge-evalset-1.32k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@5617_nemotron_eval_5.36k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            },
+            {
+              "scope": "sensitive_pii_visa_number@6589_govdocs2-dualjudge-eval20-3.53k",
+              "verdict": "not_measurable",
+              "value": null,
+              "compared": null,
+              "support": 0,
+              "reason": "not measured on this corpus"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "one-core p95 <= 5 ms",
+            "metric": "p95_latency_ms",
+            "op": "<=",
+            "threshold": 5.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "hard",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 3.9695755345746875,
+              "compared": 3.9695755345746875,
+              "support": null,
+              "reason": "3.96958 <= 5"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "prediction rate",
+            "metric": "prediction_rate",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.8167885992435471,
+              "compared": 0.8167885992435471,
+              "support": null,
+              "reason": "0.816789 >= 0"
+            }
+          ]
+        },
+        {
+          "constraint": {
+            "name": "worst measurable priority recall",
+            "metric": "severity_recall_min",
+            "op": ">=",
+            "threshold": 0.0,
+            "scope": "",
+            "across": "each",
+            "basis": "point",
+            "min_support": 0,
+            "severity": "advisory",
+            "relative_to": null
+          },
+          "verdict": "pass",
+          "n_pass": 1,
+          "n_measurable": 1,
+          "n_scopes": 1,
+          "reason": "1/1 measurable scope(s) passed of 1",
+          "scopes": [
+            {
+              "scope": "",
+              "verdict": "pass",
+              "value": 0.6409595406481198,
+              "compared": 0.6409595406481198,
+              "support": null,
+              "reason": "0.64096 >= 0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_metrics": {},
+  "excluded_scopes": []
+}

@@ -1,0 +1,992 @@
+{
+ "sensitive_pci_bank_account_number": {
+  "label": 0,
+  "support": 1043.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.062654972076416,
+  "cap_estimable": true,
+  "precision": 0.20466010088878211,
+  "recall": 0.8168744007670182,
+  "f": 0.24074597343882448,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 5,
+    "tail_events": 1.2219999999999998
+   }
+  ],
+  "n_fired_calib": 4163
+ },
+ "sensitive_pci_card_verification_value_cvv": {
+  "label": 1,
+  "support": 555.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.1389448493719101,
+  "cap_estimable": true,
+  "precision": 0.08355886332882273,
+  "recall": 0.8900900900900901,
+  "f": 0.10205346444655622,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 5912
+ },
+ "sensitive_pci_credit_card": {
+  "label": 2,
+  "support": 8017.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.0497980117797852,
+  "cap_estimable": true,
+  "precision": 0.6023892390179664,
+  "recall": 0.7988025445927405,
+  "f": 0.6335450426386499,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 2,
+    "tail_events": 0.4887999999999999
+   }
+  ],
+  "n_fired_calib": 10631
+ },
+ "sensitive_pci_credit_card_expiration_date": {
+  "label": 3,
+  "support": 19405.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.16880500316619873,
+  "cap_estimable": true,
+  "precision": 0.7857049294852203,
+  "recall": 0.9273383148673022,
+  "f": 0.8104614608573463,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 22903
+ },
+ "sensitive_pci_credit_card_number": {
+  "label": 4,
+  "support": 7038.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.065769910812378,
+  "cap_estimable": true,
+  "precision": 0.6044294063365119,
+  "recall": 0.8375959079283888,
+  "f": 0.6400651465798045,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 2,
+    "tail_events": 0.4887999999999999
+   }
+  ],
+  "n_fired_calib": 9753
+ },
+ "sensitive_pci_credit_score": {
+  "label": 5,
+  "support": 246.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 9.734378814697266,
+  "cap_estimable": true,
+  "precision": 0.9540816326530612,
+  "recall": 0.7601626016260162,
+  "f": 0.9077669902912621,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 196
+ },
+ "sensitive_pci_financial_instrument_global_identifier_figi": {
+  "label": 6,
+  "support": 6528.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.8756788969039917,
+  "cap_estimable": true,
+  "precision": 0.43113975576662145,
+  "recall": 0.7787990196078431,
+  "f": 0.47340584028605487,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 0,
+    "positives": 17,
+    "tail_events": 4.154799999999999
+   }
+  ],
+  "n_fired_calib": 11792
+ },
+ "sensitive_pci_iban": {
+  "label": 7,
+  "support": 524.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 2.759451150894165,
+  "cap_estimable": true,
+  "precision": 0.4466950959488273,
+  "recall": 0.799618320610687,
+  "f": 0.48994387277829743,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 2,
+    "positives": 1,
+    "tail_events": 0.24439999999999995
+   }
+  ],
+  "n_fired_calib": 938
+ },
+ "sensitive_pci_individual_taxpayer_identification_number_itin": {
+  "label": 8,
+  "support": 6147.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.0014606714248657,
+  "cap_estimable": true,
+  "precision": 0.45572941976868503,
+  "recall": 0.7628111273792094,
+  "f": 0.49563452635139427,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 10289
+ },
+ "sensitive_pci_last_four_credit_card_number_digits": {
+  "label": 9,
+  "support": 6897.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.2350926399230957,
+  "cap_estimable": true,
+  "precision": 0.43760021378941744,
+  "recall": 0.949688270262433,
+  "f": 0.49049708697149874,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 14968
+ },
+ "sensitive_pci_swift_code": {
+  "label": 10,
+  "support": 74.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -2.536630630493164,
+  "cap_estimable": true,
+  "precision": 0.06133625410733844,
+  "recall": 0.7567567567567568,
+  "f": 0.07514761137949544,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 913
+ },
+ "sensitive_phi_health_plan_beneficiary_number": {
+  "label": 11,
+  "support": 630.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.47887122631073,
+  "cap_estimable": true,
+  "precision": 0.2782564622402433,
+  "recall": 0.8714285714285714,
+  "f": 0.3221074865055152,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 1,
+    "tail_events": 0.24439999999999995
+   }
+  ],
+  "n_fired_calib": 1973
+ },
+ "sensitive_phi_icd_10": {
+  "label": 12,
+  "support": 406.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 6.0960307121276855,
+  "cap_estimable": true,
+  "precision": 0.8923512747875354,
+  "recall": 0.7758620689655172,
+  "f": 0.8663366336633662,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 353
+ },
+ "sensitive_phi_icd_code": {
+  "label": 13,
+  "support": 399.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 6.4596052169799805,
+  "cap_estimable": true,
+  "precision": 0.9131736526946108,
+  "recall": 0.7644110275689223,
+  "f": 0.8789625360230547,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 1,
+    "tail_events": 0.24439999999999995
+   }
+  ],
+  "n_fired_calib": 334
+ },
+ "sensitive_phi_medical_condition": {
+  "label": 14,
+  "support": 523.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 2.955122947692871,
+  "cap_estimable": true,
+  "precision": 0.3489399293286219,
+  "recall": 0.7552581261950286,
+  "f": 0.3910116808552762,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 22,
+    "tail_events": 5.376799999999999
+   }
+  ],
+  "n_fired_calib": 1132
+ },
+ "sensitive_phi_medical_record_number_mrn": {
+  "label": 15,
+  "support": 708.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.6684138774871826,
+  "cap_estimable": true,
+  "precision": 0.308648111332008,
+  "recall": 0.8771186440677966,
+  "f": 0.3546139789858383,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 2012
+ },
+ "sensitive_phi_medical_treatment": {
+  "label": 16,
+  "support": 432.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 5.488414287567139,
+  "cap_estimable": true,
+  "precision": 0.818639798488665,
+  "recall": 0.7523148148148148,
+  "f": 0.8044554455445545,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 12,
+    "tail_events": 2.9327999999999994
+   }
+  ],
+  "n_fired_calib": 397
+ },
+ "sensitive_phi_medication": {
+  "label": 17,
+  "support": 269.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 4.747208118438721,
+  "cap_estimable": true,
+  "precision": 0.4646924829157175,
+  "recall": 0.758364312267658,
+  "f": 0.5037037037037037,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 1,
+    "tail_events": 0.24439999999999995
+   }
+  ],
+  "n_fired_calib": 439
+ },
+ "sensitive_phi_patient_id_number": {
+  "label": 18,
+  "support": 256.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 5.7977166175842285,
+  "cap_estimable": true,
+  "precision": 0.6107594936708861,
+  "recall": 0.75390625,
+  "f": 0.6348684210526316,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 20,
+    "tail_events": 4.887999999999999
+   },
+   {
+    "group": 7,
+    "positives": 2,
+    "tail_events": 0.4887999999999999
+   }
+  ],
+  "n_fired_calib": 316
+ },
+ "sensitive_pii_address": {
+  "label": 19,
+  "support": 16814.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -2.7281558513641357,
+  "cap_estimable": true,
+  "precision": 0.2619066399533042,
+  "recall": 0.9873914594980373,
+  "f": 0.30702370825165515,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 63389
+ },
+ "sensitive_pii_age": {
+  "label": 20,
+  "support": 13086.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.11162783205509186,
+  "cap_estimable": true,
+  "precision": 0.5126977421020513,
+  "recall": 0.8346324316062969,
+  "f": 0.5555555555555555,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 21303
+ },
+ "sensitive_pii_area_code": {
+  "label": 21,
+  "support": 15186.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.36267727613449097,
+  "cap_estimable": true,
+  "precision": 0.6203775038520801,
+  "recall": 0.8484130119847227,
+  "f": 0.6556209163630442,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 20768
+ },
+ "sensitive_pii_country_of_origin": {
+  "label": 22,
+  "support": 375.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.2234985828399658,
+  "cap_estimable": true,
+  "precision": 0.07777164920022063,
+  "recall": 0.752,
+  "f": 0.09476443309362188,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 8,
+    "tail_events": 1.9551999999999996
+   }
+  ],
+  "n_fired_calib": 3626
+ },
+ "sensitive_pii_country_of_residence": {
+  "label": 23,
+  "support": 1299.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.33321091532707214,
+  "cap_estimable": true,
+  "precision": 0.12208718920726948,
+  "recall": 0.8429561200923787,
+  "f": 0.1472763954270343,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 8969
+ },
+ "sensitive_pii_county": {
+  "label": 24,
+  "support": 1127.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.19208979606628418,
+  "cap_estimable": true,
+  "precision": 0.05123578302712161,
+  "recall": 0.831410825199645,
+  "f": 0.06307300852192409,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 18288
+ },
+ "sensitive_pii_date_of_birth_dob": {
+  "label": 25,
+  "support": 3834.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.23875577747821808,
+  "cap_estimable": true,
+  "precision": 0.1642536704730832,
+  "recall": 0.8403755868544601,
+  "f": 0.19575202313543466,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 19616
+ },
+ "sensitive_pii_date_of_death": {
+  "label": 26,
+  "support": 19208.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -4.306271076202393,
+  "cap_estimable": true,
+  "precision": 0.37420751809297154,
+  "recall": 0.9986984589754269,
+  "f": 0.4276955319718184,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 51263
+ },
+ "sensitive_pii_driver_s_license_number": {
+  "label": 27,
+  "support": 7384.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.2332565784454346,
+  "cap_estimable": true,
+  "precision": 0.2451719508416813,
+  "recall": 0.9645178764897074,
+  "f": 0.28815342288396184,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 29049
+ },
+ "sensitive_pii_educational_level": {
+  "label": 28,
+  "support": 838.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.6184595823287964,
+  "cap_estimable": true,
+  "precision": 0.08615707906488049,
+  "recall": 0.7828162291169452,
+  "f": 0.10481242410685755,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 7614
+ },
+ "sensitive_pii_email": {
+  "label": 29,
+  "support": 27447.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -2.0303966999053955,
+  "cap_estimable": true,
+  "precision": 0.5545499628068435,
+  "recall": 0.9778117827084928,
+  "f": 0.6071094099922636,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 48396
+ },
+ "sensitive_pii_employment_date": {
+  "label": 30,
+  "support": 19461.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.8932868242263794,
+  "cap_estimable": true,
+  "precision": 0.601012152072725,
+  "recall": 0.9885925697548944,
+  "f": 0.6521473848344123,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 32011
+ },
+ "sensitive_pii_employment_status": {
+  "label": 31,
+  "support": 1126.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.1454334557056427,
+  "cap_estimable": true,
+  "precision": 0.06583604700552173,
+  "recall": 0.8259325044404974,
+  "f": 0.08068714211348256,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 14126
+ },
+ "sensitive_pii_ethnicity": {
+  "label": 32,
+  "support": 529.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.6187301874160767,
+  "cap_estimable": true,
+  "precision": 0.05207435676474209,
+  "recall": 0.7996219281663516,
+  "f": 0.06405014990460617,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 8123
+ },
+ "sensitive_pii_family_name": {
+  "label": 33,
+  "support": 29101.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -5.368307590484619,
+  "cap_estimable": true,
+  "precision": 0.371861998335787,
+  "recall": 0.9981787567437546,
+  "f": 0.42522419128647587,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 78115
+ },
+ "sensitive_pii_full_name": {
+  "label": 34,
+  "support": 38521.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.9619035124778748,
+  "cap_estimable": true,
+  "precision": 0.6621755276466307,
+  "recall": 0.9211598868149841,
+  "f": 0.701628115743725,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 53587
+ },
+ "sensitive_pii_gender_and_sex": {
+  "label": 35,
+  "support": 8253.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.5488345623016357,
+  "cap_estimable": true,
+  "precision": 0.2385079801542232,
+  "recall": 0.9669211195928753,
+  "f": 0.28081782031882324,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 33458
+ },
+ "sensitive_pii_geolocation": {
+  "label": 36,
+  "support": 294.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.7175891399383545,
+  "cap_estimable": true,
+  "precision": 0.016845924582091488,
+  "recall": 0.8843537414965986,
+  "f": 0.020957601160728683,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 15434
+ },
+ "sensitive_pii_given_name": {
+  "label": 37,
+  "support": 32270.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -3.005052089691162,
+  "cap_estimable": true,
+  "precision": 0.43333152953272547,
+  "recall": 0.992593740316083,
+  "f": 0.4883637960371041,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 73918
+ },
+ "sensitive_pii_immigration_and_citizenship_status": {
+  "label": 38,
+  "support": 10745.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.0935053825378418,
+  "cap_estimable": true,
+  "precision": 0.6216863861015426,
+  "recall": 0.7726384364820847,
+  "f": 0.6469662255887533,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 13354
+ },
+ "sensitive_pii_income": {
+  "label": 39,
+  "support": 359.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.916324257850647,
+  "cap_estimable": true,
+  "precision": 0.10321100917431193,
+  "recall": 0.7520891364902507,
+  "f": 0.12473436200683731,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 7,
+    "tail_events": 1.7107999999999997
+   }
+  ],
+  "n_fired_calib": 2616
+ },
+ "sensitive_pii_ipv4": {
+  "label": 40,
+  "support": 1517.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.8920875787734985,
+  "cap_estimable": true,
+  "precision": 0.3966033966033966,
+  "recall": 0.7851021753460777,
+  "f": 0.44016557025648606,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 3003
+ },
+ "sensitive_pii_ipv6": {
+  "label": 41,
+  "support": 659.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 3.0921859741210938,
+  "cap_estimable": true,
+  "precision": 0.42417061611374407,
+  "recall": 0.8148710166919575,
+  "f": 0.46915953171413594,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 1266
+ },
+ "sensitive_pii_last_four_us_ssn_digits": {
+  "label": 42,
+  "support": 5058.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.8060466051101685,
+  "cap_estimable": true,
+  "precision": 0.3358183376178235,
+  "recall": 0.7748121787267694,
+  "f": 0.3787351656422745,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 0,
+    "positives": 26,
+    "tail_events": 6.354399999999998
+   }
+  ],
+  "n_fired_calib": 11670
+ },
+ "sensitive_pii_mac_address": {
+  "label": 43,
+  "support": 589.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.29410654306411743,
+  "cap_estimable": true,
+  "precision": 0.07743045597935187,
+  "recall": 0.9168081494057725,
+  "f": 0.0947867298578199,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 6974
+ },
+ "sensitive_pii_marital_status": {
+  "label": 44,
+  "support": 284.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 3.1956019401550293,
+  "cap_estimable": true,
+  "precision": 0.22397476340694006,
+  "recall": 0.75,
+  "f": 0.26051859099804303,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 9,
+    "tail_events": 2.1995999999999993
+   }
+  ],
+  "n_fired_calib": 951
+ },
+ "sensitive_pii_middle_name": {
+  "label": 45,
+  "support": 23306.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.9734686613082886,
+  "cap_estimable": true,
+  "precision": 0.5464788058558989,
+  "recall": 0.9802196859177894,
+  "f": 0.5995370613367486,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 18,
+    "tail_events": 4.399199999999999
+   }
+  ],
+  "n_fired_calib": 41804
+ },
+ "sensitive_pii_military_identification_number": {
+  "label": 46,
+  "support": 10572.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -3.5794589519500732,
+  "cap_estimable": true,
+  "precision": 0.21163840674224943,
+  "recall": 0.997635262958759,
+  "f": 0.2512243225732688,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 49835
+ },
+ "sensitive_pii_nationality": {
+  "label": 47,
+  "support": 455.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.8715893030166626,
+  "cap_estimable": true,
+  "precision": 0.13050075872534142,
+  "recall": 0.756043956043956,
+  "f": 0.15637785253204836,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 7,
+    "positives": 19,
+    "tail_events": 4.643599999999999
+   }
+  ],
+  "n_fired_calib": 2636
+ },
+ "sensitive_pii_passport_number": {
+  "label": 48,
+  "support": 11394.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.5547496676445007,
+  "cap_estimable": true,
+  "precision": 0.4489992867033105,
+  "recall": 0.9391785150078988,
+  "f": 0.5013305099038659,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 23833
+ },
+ "sensitive_pii_password": {
+  "label": 49,
+  "support": 1187.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -2.239218235015869,
+  "cap_estimable": true,
+  "precision": 0.02990230196169412,
+  "recall": 0.9772535804549284,
+  "f": 0.03709412313969775,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 2,
+    "positives": 9,
+    "tail_events": 2.1995999999999993
+   },
+   {
+    "group": 4,
+    "positives": 2,
+    "tail_events": 0.4887999999999999
+   }
+  ],
+  "n_fired_calib": 38793
+ },
+ "sensitive_pii_personal_identification_number_pin": {
+  "label": 50,
+  "support": 458.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.13433969020843506,
+  "cap_estimable": true,
+  "precision": 0.038116803472025666,
+  "recall": 0.8820960698689956,
+  "f": 0.047136790031268964,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 10599
+ },
+ "sensitive_pii_phone_number": {
+  "label": 51,
+  "support": 20736.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.6923078298568726,
+  "cap_estimable": true,
+  "precision": 0.5137999080907198,
+  "recall": 0.9166184413580247,
+  "f": 0.5633105721127628,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 38,
+    "tail_events": 9.287199999999999
+   }
+  ],
+  "n_fired_calib": 36993
+ },
+ "sensitive_pii_religion": {
+  "label": 52,
+  "support": 283.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.6657354235649109,
+  "cap_estimable": true,
+  "precision": 0.030414620840152756,
+  "recall": 0.7879858657243817,
+  "f": 0.03765492553442978,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 7332
+ },
+ "sensitive_pii_sexual_identity_and_orientation": {
+  "label": 53,
+  "support": 162.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.5758443474769592,
+  "cap_estimable": true,
+  "precision": 0.01714364717268077,
+  "recall": 0.7654320987654321,
+  "f": 0.021310235787447587,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 7233
+ },
+ "sensitive_pii_social_security_number": {
+  "label": 54,
+  "support": 7601.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.028822898864746,
+  "cap_estimable": true,
+  "precision": 0.23218929591935017,
+  "recall": 0.9514537560847257,
+  "f": 0.2735477233355272,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 4,
+    "positives": 1,
+    "tail_events": 0.24439999999999995
+   }
+  ],
+  "n_fired_calib": 31147
+ },
+ "sensitive_pii_state": {
+  "label": 55,
+  "support": 9319.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -0.7887548804283142,
+  "cap_estimable": true,
+  "precision": 0.2521731495302485,
+  "recall": 0.9245627213220302,
+  "f": 0.29509476871228263,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 34167
+ },
+ "sensitive_pii_street_number_and_name": {
+  "label": 56,
+  "support": 16800.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -3.020944833755493,
+  "cap_estimable": true,
+  "precision": 0.2536276063894647,
+  "recall": 0.9904761904761905,
+  "f": 0.29796011918404763,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 65608
+ },
+ "sensitive_pii_username": {
+  "label": 57,
+  "support": 635.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.4778235852718353,
+  "cap_estimable": true,
+  "precision": 0.053425996307959606,
+  "recall": 0.7748031496062993,
+  "f": 0.06565076992874491,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 9209
+ },
+ "sensitive_pii_vehicle_identification_number_vin": {
+  "label": 58,
+  "support": 404.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 0.44960376620292664,
+  "cap_estimable": true,
+  "precision": 0.10906389301634473,
+  "recall": 0.9084158415841584,
+  "f": 0.13235718407386038,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 3365
+ },
+ "sensitive_pii_visa_number": {
+  "label": 59,
+  "support": 10743.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": 1.1041057109832764,
+  "cap_estimable": true,
+  "precision": 0.6229335737902014,
+  "recall": 0.7716652704086382,
+  "f": 0.6479093395857757,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [],
+  "n_fired_calib": 13308
+ },
+ "sensitive_pii_zip_code": {
+  "label": 60,
+  "support": 17878.0,
+  "disabled": false,
+  "floor_met": true,
+  "cap": -1.0519481897354126,
+  "cap_estimable": true,
+  "precision": 0.3768619662363456,
+  "recall": 0.9339970913972481,
+  "f": 0.4279124596381529,
+  "branch": "floor_met",
+  "groups_skipped_for_cap": [
+   {
+    "group": 5,
+    "positives": 24,
+    "tail_events": 5.865599999999999
+   }
+  ],
+  "n_fired_calib": 44308
+ }
+}

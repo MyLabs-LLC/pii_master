@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-25",
+  "run_id": "20260825-175733",
+  "commands": [
+    {
+      "ts": "2026-08-25T17:57:33Z",
+      "command": "env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.doc_level_eval",
+      "output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 203, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/lence/workspace/pii_master/training/doc_level_eval.py\", line 239, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/lence/workspace/pii_master/training/doc_level_eval.py\", line 211, in main\n    report = run(args.project, args.families)\n  File \"/home/lence/workspace/pii_master/training/doc_level_eval.py\", line 151, in run\n    \"judge_ceiling\": judge_ceiling(),\n                     ~~~~~~~~~~~~~^^\n  File \"/home/lence/workspace/pii_master/training/doc_level_eval.py\", line 115, in judge_ceiling\n    a = load_judge(DATAX / JUDGE_A)\n  File \"/home/lence/workspace/pii_master/training/label_agreement_probe.py\", line 60, in load_judge\n    with path.open(encoding=\"utf-8\") as stream:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/home/lence/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/home/lence/workspace/data/datax/data/manifest_gemini_5k_v4.jsonl'\n",
+      "exit_code": 1,
+      "context": "doc-level-eval",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 0.833
+    }
+  ],
+  "commands_source": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/runs/20260825-175733/events.jsonl"
+}

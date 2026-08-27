@@ -1,0 +1,71 @@
+################################################################
+# rdrload.cfg — Rider Registry ETL, masking and mapping rules
+# Environment: PROD
+# Config revision: 11
+# Last modified: 2004-09-14 00:41:07
+# Owner: ETL Operations
+################################################################
+
+[job]
+job_id                  = RDRLOAD_0914
+schedule                = DAILY 01:00
+source_system           = RIDER_MASTER
+target_system           = RDS
+abort_on_reject_pct     = 2.0
+commit_interval_rows    = 5000
+
+[stages]
+stage.1                 = RDR_EXT_01
+stage.2                 = RDR_XFM_02
+stage.3                 = RDR_LOD_03
+
+[tokenise]
+# fields listed here are replaced before staging write
+field.RIDER_ID          = HASH_SHA1_SALTED
+field.RIDER_SURNAME     = HASH_SHA1_SALTED
+field.RIDER_GIVEN_NAME  = HASH_SHA1_SALTED
+field.FARE_CARD_NUMBER  = HASH_SHA1_SALTED
+salt_store              = /opt/tknsvc/keys/rdr.salt
+salt_rotation_days      = 90
+
+[mask]
+# display forms used in logs, reject listings and operator consoles
+mask.RIDER_SURNAME      = TKN:################
+mask.RIDER_GIVEN_NAME   = TKN:################
+mask.FARE_CARD_NUMBER   = TKN:################
+mask.DATE_OF_BIRTH      = ####-##-##
+mask.HOME_TELEPHONE     = ###-###-####
+mask.CONTACT_EMAIL      = ****@****
+mask.HOME_STREET_LINE1  = ***
+mask.HOME_POSTAL_CODE   = ***
+mask.CONCESSION_PROOF_REF = ***
+mask.default            = ***
+
+[drop]
+# columns excluded from all target structures
+column                  = HOME_STREET_LINE1
+column                  = HOME_STREET_LINE2
+column                  = HOME_TELEPHONE
+column                  = CONTACT_EMAIL
+column                  = CONCESSION_PROOF_REF
+column                  = EMERGENCY_CONTACT_NAME
+column                  = EMERGENCY_CONTACT_PHONE
+
+[truncate]
+DATE_OF_BIRTH           = YEAR
+HOME_POSTAL_CODE        = SECTOR
+
+[validate]
+rule.V-101              = DATE_OF_BIRTH      CENTURY_CHECK
+rule.V-104              = HOME_POSTAL_CODE   FORMAT_CHECK
+rule.V-117              = FARE_CARD_NUMBER   CHECKDIGIT
+rule.V-122              = CONCESSION_TYPE_CD REF_TABLE_LOOKUP
+rule.V-140              = ENROLMENT_DATE     RANGE_CHECK
+reject_target           = RJQ.RDRLOAD
+reject_retention_days   = 30
+
+[log]
+level                   = INFO
+suppress_values         = YES
+path                    = /var/log/etl/rdrload
+rotate_mb               = 20

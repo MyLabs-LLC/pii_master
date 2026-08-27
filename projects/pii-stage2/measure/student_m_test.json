@@ -1,0 +1,1093 @@
+{
+  "documents": 100000,
+  "buckets": {
+    "rules": {
+      "unmodelled_overlap": 15422,
+      "mapped_mismatch": 8991,
+      "spurious": 1104
+    },
+    "student": {
+      "mapped_mismatch": 16622,
+      "unmodelled_overlap": 3401,
+      "spurious": 2438
+    },
+    "fusion_rules_first": {
+      "unmodelled_overlap": 17237,
+      "mapped_mismatch": 14878,
+      "spurious": 2696
+    },
+    "fusion_checksum_first": {
+      "unmodelled_overlap": 17366,
+      "spurious": 2714,
+      "mapped_mismatch": 8484
+    },
+    "fusion_longest_wins": {
+      "unmodelled_overlap": 17238,
+      "mapped_mismatch": 12598,
+      "spurious": 2696
+    }
+  },
+  "partial_micro": {
+    "rules": {
+      "p": 0.872760329440914,
+      "r": 0.7485672682910032,
+      "f": 0.8059072288614259
+    },
+    "student": {
+      "p": 0.9455640317155214,
+      "r": 0.9292513392659495,
+      "f": 0.9373367174532762
+    },
+    "fusion_rules_first": {
+      "p": 0.8662014733724483,
+      "r": 0.9092595052217844,
+      "f": 0.8872083730329204
+    },
+    "fusion_checksum_first": {
+      "p": 0.8875095814092617,
+      "r": 0.9341066395124039,
+      "f": 0.9102121326146406
+    },
+    "fusion_longest_wins": {
+      "p": 0.866193981939257,
+      "r": 0.9092644244722874,
+      "f": 0.8872067851605812
+    }
+  },
+  "native_micro": {
+    "p": 0.7839926876857711,
+    "r": 0.8089634734341558,
+    "f": 0.7962823626374899
+  },
+  "native": {
+    "first_name": {
+      "gold": 84043,
+      "tp": 77339,
+      "fp": 20341,
+      "fn": 6704,
+      "precision": 0.7918,
+      "recall": 0.9202,
+      "f1": 0.8512
+    },
+    "country": {
+      "gold": 23475,
+      "tp": 21788,
+      "fp": 2114,
+      "fn": 1687,
+      "precision": 0.9116,
+      "recall": 0.9281,
+      "f1": 0.9198
+    },
+    "county": {
+      "gold": 8465,
+      "tp": 6748,
+      "fp": 2426,
+      "fn": 1717,
+      "precision": 0.7356,
+      "recall": 0.7972,
+      "f1": 0.7651
+    },
+    "street_address": {
+      "gold": 16879,
+      "tp": 13731,
+      "fp": 5369,
+      "fn": 3148,
+      "precision": 0.7189,
+      "recall": 0.8135,
+      "f1": 0.7633
+    },
+    "bank_routing_number": {
+      "gold": 8354,
+      "tp": 8002,
+      "fp": 243,
+      "fn": 352,
+      "precision": 0.9705,
+      "recall": 0.9579,
+      "f1": 0.9642
+    },
+    "credit_debit_card": {
+      "gold": 12867,
+      "tp": 12607,
+      "fp": 869,
+      "fn": 260,
+      "precision": 0.9355,
+      "recall": 0.9798,
+      "f1": 0.9571
+    },
+    "date_of_birth": {
+      "gold": 18079,
+      "tp": 17647,
+      "fp": 667,
+      "fn": 432,
+      "precision": 0.9636,
+      "recall": 0.9761,
+      "f1": 0.9698
+    },
+    "account_number": {
+      "gold": 16693,
+      "tp": 15346,
+      "fp": 4164,
+      "fn": 1347,
+      "precision": 0.7866,
+      "recall": 0.9193,
+      "f1": 0.8478
+    },
+    "user_name": {
+      "gold": 15800,
+      "tp": 11363,
+      "fp": 6544,
+      "fn": 4437,
+      "precision": 0.6346,
+      "recall": 0.7192,
+      "f1": 0.6742
+    },
+    "race_ethnicity": {
+      "gold": 9248,
+      "tp": 6399,
+      "fp": 6470,
+      "fn": 2849,
+      "precision": 0.4972,
+      "recall": 0.6919,
+      "f1": 0.5786
+    },
+    "health_plan_beneficiary_number": {
+      "gold": 10558,
+      "tp": 10005,
+      "fp": 538,
+      "fn": 553,
+      "precision": 0.949,
+      "recall": 0.9476,
+      "f1": 0.9483
+    },
+    "last_name": {
+      "gold": 59596,
+      "tp": 49067,
+      "fp": 12283,
+      "fn": 10529,
+      "precision": 0.7998,
+      "recall": 0.8233,
+      "f1": 0.8114
+    },
+    "license_plate": {
+      "gold": 4078,
+      "tp": 2762,
+      "fp": 2495,
+      "fn": 1316,
+      "precision": 0.5254,
+      "recall": 0.6773,
+      "f1": 0.5918
+    },
+    "email": {
+      "gold": 53930,
+      "tp": 51646,
+      "fp": 3771,
+      "fn": 2284,
+      "precision": 0.932,
+      "recall": 0.9576,
+      "f1": 0.9446
+    },
+    "mac_address": {
+      "gold": 4250,
+      "tp": 4072,
+      "fp": 272,
+      "fn": 178,
+      "precision": 0.9374,
+      "recall": 0.9581,
+      "f1": 0.9476
+    },
+    "time": {
+      "gold": 24506,
+      "tp": 17076,
+      "fp": 4825,
+      "fn": 7430,
+      "precision": 0.7797,
+      "recall": 0.6968,
+      "f1": 0.7359
+    },
+    "http_cookie": {
+      "gold": 4892,
+      "tp": 4176,
+      "fp": 1481,
+      "fn": 716,
+      "precision": 0.7382,
+      "recall": 0.8536,
+      "f1": 0.7917
+    },
+    "date": {
+      "gold": 73867,
+      "tp": 68245,
+      "fp": 5830,
+      "fn": 5622,
+      "precision": 0.9213,
+      "recall": 0.9239,
+      "f1": 0.9226
+    },
+    "ssn": {
+      "gold": 6062,
+      "tp": 5781,
+      "fp": 905,
+      "fn": 281,
+      "precision": 0.8646,
+      "recall": 0.9536,
+      "f1": 0.907
+    },
+    "age": {
+      "gold": 7167,
+      "tp": 3440,
+      "fp": 581,
+      "fn": 3727,
+      "precision": 0.8555,
+      "recall": 0.48,
+      "f1": 0.6149
+    },
+    "pin": {
+      "gold": 6456,
+      "tp": 5728,
+      "fp": 1335,
+      "fn": 728,
+      "precision": 0.811,
+      "recall": 0.8872,
+      "f1": 0.8474
+    },
+    "occupation": {
+      "gold": 36888,
+      "tp": 9861,
+      "fp": 8950,
+      "fn": 27027,
+      "precision": 0.5242,
+      "recall": 0.2673,
+      "f1": 0.3541
+    },
+    "biometric_identifier": {
+      "gold": 11379,
+      "tp": 11146,
+      "fp": 852,
+      "fn": 233,
+      "precision": 0.929,
+      "recall": 0.9795,
+      "f1": 0.9536
+    },
+    "employment_status": {
+      "gold": 11018,
+      "tp": 8471,
+      "fp": 1671,
+      "fn": 2547,
+      "precision": 0.8352,
+      "recall": 0.7688,
+      "f1": 0.8007
+    },
+    "customer_id": {
+      "gold": 20502,
+      "tp": 19618,
+      "fp": 2743,
+      "fn": 884,
+      "precision": 0.8773,
+      "recall": 0.9569,
+      "f1": 0.9154
+    },
+    "employee_id": {
+      "gold": 8878,
+      "tp": 8343,
+      "fp": 1146,
+      "fn": 535,
+      "precision": 0.8792,
+      "recall": 0.9397,
+      "f1": 0.9085
+    },
+    "unique_id": {
+      "gold": 1777,
+      "tp": 1072,
+      "fp": 1902,
+      "fn": 705,
+      "precision": 0.3605,
+      "recall": 0.6033,
+      "f1": 0.4513
+    },
+    "device_identifier": {
+      "gold": 2507,
+      "tp": 2206,
+      "fp": 1510,
+      "fn": 301,
+      "precision": 0.5936,
+      "recall": 0.8799,
+      "f1": 0.709
+    },
+    "state": {
+      "gold": 18318,
+      "tp": 13841,
+      "fp": 5008,
+      "fn": 4477,
+      "precision": 0.7343,
+      "recall": 0.7556,
+      "f1": 0.7448
+    },
+    "education_level": {
+      "gold": 9378,
+      "tp": 7444,
+      "fp": 1197,
+      "fn": 1934,
+      "precision": 0.8615,
+      "recall": 0.7938,
+      "f1": 0.8262
+    },
+    "city": {
+      "gold": 18347,
+      "tp": 12485,
+      "fp": 7956,
+      "fn": 5862,
+      "precision": 0.6108,
+      "recall": 0.6805,
+      "f1": 0.6438
+    },
+    "company_name": {
+      "gold": 54837,
+      "tp": 28483,
+      "fp": 33214,
+      "fn": 26354,
+      "precision": 0.4617,
+      "recall": 0.5194,
+      "f1": 0.4888
+    },
+    "url": {
+      "gold": 37847,
+      "tp": 30895,
+      "fp": 12606,
+      "fn": 6952,
+      "precision": 0.7102,
+      "recall": 0.8163,
+      "f1": 0.7596
+    },
+    "password": {
+      "gold": 6985,
+      "tp": 5648,
+      "fp": 1360,
+      "fn": 1337,
+      "precision": 0.8059,
+      "recall": 0.8086,
+      "f1": 0.8073
+    },
+    "blood_type": {
+      "gold": 5539,
+      "tp": 2968,
+      "fp": 2179,
+      "fn": 2571,
+      "precision": 0.5766,
+      "recall": 0.5358,
+      "f1": 0.5555
+    },
+    "medical_record_number": {
+      "gold": 11098,
+      "tp": 10600,
+      "fp": 1514,
+      "fn": 498,
+      "precision": 0.875,
+      "recall": 0.9551,
+      "f1": 0.9133
+    },
+    "phone_number": {
+      "gold": 23930,
+      "tp": 22728,
+      "fp": 3942,
+      "fn": 1202,
+      "precision": 0.8522,
+      "recall": 0.9498,
+      "f1": 0.8983
+    },
+    "certificate_license_number": {
+      "gold": 3002,
+      "tp": 2729,
+      "fp": 429,
+      "fn": 273,
+      "precision": 0.8642,
+      "recall": 0.9091,
+      "f1": 0.886
+    },
+    "religious_belief": {
+      "gold": 6257,
+      "tp": 3892,
+      "fp": 2211,
+      "fn": 2365,
+      "precision": 0.6377,
+      "recall": 0.622,
+      "f1": 0.6298
+    },
+    "postcode": {
+      "gold": 6279,
+      "tp": 5521,
+      "fp": 1215,
+      "fn": 758,
+      "precision": 0.8196,
+      "recall": 0.8793,
+      "f1": 0.8484
+    },
+    "cvv": {
+      "gold": 4843,
+      "tp": 2989,
+      "fp": 231,
+      "fn": 1854,
+      "precision": 0.9283,
+      "recall": 0.6172,
+      "f1": 0.7414
+    },
+    "sexuality": {
+      "gold": 3312,
+      "tp": 1783,
+      "fp": 515,
+      "fn": 1529,
+      "precision": 0.7759,
+      "recall": 0.5383,
+      "f1": 0.6357
+    },
+    "fax_number": {
+      "gold": 6423,
+      "tp": 5105,
+      "fp": 1058,
+      "fn": 1318,
+      "precision": 0.8283,
+      "recall": 0.7948,
+      "f1": 0.8112
+    },
+    "swift_bic": {
+      "gold": 5559,
+      "tp": 5272,
+      "fp": 491,
+      "fn": 287,
+      "precision": 0.9148,
+      "recall": 0.9484,
+      "f1": 0.9313
+    },
+    "date_time": {
+      "gold": 13221,
+      "tp": 12283,
+      "fp": 1435,
+      "fn": 938,
+      "precision": 0.8954,
+      "recall": 0.9291,
+      "f1": 0.9119
+    },
+    "ipv6": {
+      "gold": 3139,
+      "tp": 2968,
+      "fp": 334,
+      "fn": 171,
+      "precision": 0.8988,
+      "recall": 0.9455,
+      "f1": 0.9216
+    },
+    "ipv4": {
+      "gold": 6078,
+      "tp": 5775,
+      "fp": 537,
+      "fn": 303,
+      "precision": 0.9149,
+      "recall": 0.9501,
+      "f1": 0.9322
+    },
+    "language": {
+      "gold": 8651,
+      "tp": 5179,
+      "fp": 447,
+      "fn": 3472,
+      "precision": 0.9205,
+      "recall": 0.5987,
+      "f1": 0.7255
+    },
+    "vehicle_identifier": {
+      "gold": 4561,
+      "tp": 4481,
+      "fp": 877,
+      "fn": 80,
+      "precision": 0.8363,
+      "recall": 0.9825,
+      "f1": 0.9035
+    },
+    "political_view": {
+      "gold": 6402,
+      "tp": 2236,
+      "fp": 2899,
+      "fn": 4166,
+      "precision": 0.4354,
+      "recall": 0.3493,
+      "f1": 0.3876
+    },
+    "coordinate": {
+      "gold": 7659,
+      "tp": 6537,
+      "fp": 1588,
+      "fn": 1122,
+      "precision": 0.8046,
+      "recall": 0.8535,
+      "f1": 0.8283
+    },
+    "gender": {
+      "gold": 7645,
+      "tp": 5193,
+      "fp": 127,
+      "fn": 2452,
+      "precision": 0.9761,
+      "recall": 0.6793,
+      "f1": 0.8011
+    },
+    "tax_id": {
+      "gold": 1302,
+      "tp": 1112,
+      "fp": 448,
+      "fn": 190,
+      "precision": 0.7128,
+      "recall": 0.8541,
+      "f1": 0.7771
+    },
+    "api_key": {
+      "gold": 4667,
+      "tp": 4176,
+      "fp": 1712,
+      "fn": 491,
+      "precision": 0.7092,
+      "recall": 0.8948,
+      "f1": 0.7913
+    },
+    "national_id": {
+      "gold": 2847,
+      "tp": 1886,
+      "fp": 1703,
+      "fn": 961,
+      "precision": 0.5255,
+      "recall": 0.6625,
+      "f1": 0.5861
+    }
+  },
+  "mapped_micro": {
+    "rules": {
+      "p": 0.8536500034412352,
+      "r": 0.7321763256150293,
+      "f": 0.7882607463741828
+    },
+    "student": {
+      "p": 0.8875690773666507,
+      "r": 0.8722569029382683,
+      "f": 0.8798463748483473
+    },
+    "fusion_rules_first": {
+      "p": 0.8368652407820496,
+      "r": 0.8784649970730459,
+      "f": 0.8571606855288705
+    },
+    "fusion_checksum_first": {
+      "p": 0.8664959150479538,
+      "r": 0.9119896892509457,
+      "f": 0.8886609353392181
+    },
+    "fusion_longest_wins": {
+      "p": 0.8475474598272654,
+      "r": 0.8896907267208768,
+      "f": 0.8681079213005851
+    }
+  },
+  "mapped": {
+    "rules": {
+      "DATE_DOB": {
+        "gold": 18079,
+        "tp": 17409,
+        "fp": 190,
+        "fn": 670,
+        "precision": 0.9892,
+        "recall": 0.9629,
+        "f1": 0.9759
+      },
+      "CREDIT_CARD": {
+        "gold": 12867,
+        "tp": 1522,
+        "fp": 556,
+        "fn": 11345,
+        "precision": 0.7324,
+        "recall": 0.1183,
+        "f1": 0.2037
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 16693,
+        "tp": 4311,
+        "fp": 184,
+        "fn": 12382,
+        "precision": 0.9591,
+        "recall": 0.2583,
+        "f1": 0.4069
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 10558,
+        "tp": 3319,
+        "fp": 951,
+        "fn": 7239,
+        "precision": 0.7773,
+        "recall": 0.3144,
+        "f1": 0.4477
+      },
+      "EMAIL": {
+        "gold": 53930,
+        "tp": 53577,
+        "fp": 188,
+        "fn": 353,
+        "precision": 0.9965,
+        "recall": 0.9935,
+        "f1": 0.995
+      },
+      "SSN": {
+        "gold": 6062,
+        "tp": 6040,
+        "fp": 1525,
+        "fn": 22,
+        "precision": 0.7984,
+        "recall": 0.9964,
+        "f1": 0.8865
+      },
+      "PHONE_US": {
+        "gold": 23930,
+        "tp": 13599,
+        "fp": 20188,
+        "fn": 10331,
+        "precision": 0.4025,
+        "recall": 0.5683,
+        "f1": 0.4712
+      },
+      "URL": {
+        "gold": 37847,
+        "tp": 35094,
+        "fp": 1226,
+        "fn": 2753,
+        "precision": 0.9662,
+        "recall": 0.9273,
+        "f1": 0.9464
+      },
+      "MRN": {
+        "gold": 11098,
+        "tp": 5056,
+        "fp": 297,
+        "fn": 6042,
+        "precision": 0.9445,
+        "recall": 0.4556,
+        "f1": 0.6147
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 3002,
+        "tp": 1,
+        "fp": 1,
+        "fn": 3001,
+        "precision": 0.5,
+        "recall": 0.0003,
+        "f1": 0.0007
+      },
+      "IP_ADDRESS": {
+        "gold": 9217,
+        "tp": 8911,
+        "fp": 211,
+        "fn": 306,
+        "precision": 0.9769,
+        "recall": 0.9668,
+        "f1": 0.9718
+      }
+    },
+    "student": {
+      "DATE_DOB": {
+        "gold": 18079,
+        "tp": 17647,
+        "fp": 667,
+        "fn": 432,
+        "precision": 0.9636,
+        "recall": 0.9761,
+        "f1": 0.9698
+      },
+      "CREDIT_CARD": {
+        "gold": 12867,
+        "tp": 1498,
+        "fp": 15,
+        "fn": 11369,
+        "precision": 0.9901,
+        "recall": 0.1164,
+        "f1": 0.2083
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 16693,
+        "tp": 15346,
+        "fp": 4164,
+        "fn": 1347,
+        "precision": 0.7866,
+        "recall": 0.9193,
+        "f1": 0.8478
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 10558,
+        "tp": 10005,
+        "fp": 538,
+        "fn": 553,
+        "precision": 0.949,
+        "recall": 0.9476,
+        "f1": 0.9483
+      },
+      "EMAIL": {
+        "gold": 53930,
+        "tp": 51623,
+        "fp": 1729,
+        "fn": 2307,
+        "precision": 0.9676,
+        "recall": 0.9572,
+        "f1": 0.9624
+      },
+      "SSN": {
+        "gold": 6062,
+        "tp": 5769,
+        "fp": 409,
+        "fn": 293,
+        "precision": 0.9338,
+        "recall": 0.9517,
+        "f1": 0.9426
+      },
+      "URL": {
+        "gold": 37847,
+        "tp": 30895,
+        "fp": 8898,
+        "fn": 6952,
+        "precision": 0.7764,
+        "recall": 0.8163,
+        "f1": 0.7959
+      },
+      "MRN": {
+        "gold": 11098,
+        "tp": 10600,
+        "fp": 1514,
+        "fn": 498,
+        "precision": 0.875,
+        "recall": 0.9551,
+        "f1": 0.9133
+      },
+      "PHONE_US": {
+        "gold": 23930,
+        "tp": 22728,
+        "fp": 3942,
+        "fn": 1202,
+        "precision": 0.8522,
+        "recall": 0.9498,
+        "f1": 0.8983
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 3002,
+        "tp": 2729,
+        "fp": 429,
+        "fn": 273,
+        "precision": 0.8642,
+        "recall": 0.9091,
+        "f1": 0.886
+      },
+      "IP_ADDRESS": {
+        "gold": 9217,
+        "tp": 8475,
+        "fp": 156,
+        "fn": 742,
+        "precision": 0.9819,
+        "recall": 0.9195,
+        "f1": 0.9497
+      }
+    },
+    "fusion_rules_first": {
+      "DATE_DOB": {
+        "gold": 18079,
+        "tp": 17728,
+        "fp": 678,
+        "fn": 351,
+        "precision": 0.9632,
+        "recall": 0.9806,
+        "f1": 0.9718
+      },
+      "CREDIT_CARD": {
+        "gold": 12867,
+        "tp": 1522,
+        "fp": 564,
+        "fn": 11345,
+        "precision": 0.7296,
+        "recall": 0.1183,
+        "f1": 0.2036
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 16693,
+        "tp": 11269,
+        "fp": 3563,
+        "fn": 5424,
+        "precision": 0.7598,
+        "recall": 0.6751,
+        "f1": 0.7149
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 10558,
+        "tp": 8497,
+        "fp": 1397,
+        "fn": 2061,
+        "precision": 0.8588,
+        "recall": 0.8048,
+        "f1": 0.8309
+      },
+      "EMAIL": {
+        "gold": 53930,
+        "tp": 53581,
+        "fp": 195,
+        "fn": 349,
+        "precision": 0.9964,
+        "recall": 0.9935,
+        "f1": 0.9949
+      },
+      "SSN": {
+        "gold": 6062,
+        "tp": 6046,
+        "fp": 1530,
+        "fn": 16,
+        "precision": 0.798,
+        "recall": 0.9974,
+        "f1": 0.8866
+      },
+      "PHONE_US": {
+        "gold": 23930,
+        "tp": 22261,
+        "fp": 22177,
+        "fn": 1669,
+        "precision": 0.5009,
+        "recall": 0.9303,
+        "f1": 0.6512
+      },
+      "URL": {
+        "gold": 37847,
+        "tp": 36317,
+        "fp": 2470,
+        "fn": 1530,
+        "precision": 0.9363,
+        "recall": 0.9596,
+        "f1": 0.9478
+      },
+      "MRN": {
+        "gold": 11098,
+        "tp": 9824,
+        "fp": 1617,
+        "fn": 1274,
+        "precision": 0.8587,
+        "recall": 0.8852,
+        "f1": 0.8717
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 3002,
+        "tp": 2614,
+        "fp": 404,
+        "fn": 388,
+        "precision": 0.8661,
+        "recall": 0.8708,
+        "f1": 0.8684
+      },
+      "IP_ADDRESS": {
+        "gold": 9217,
+        "tp": 8918,
+        "fp": 216,
+        "fn": 299,
+        "precision": 0.9764,
+        "recall": 0.9676,
+        "f1": 0.9719
+      }
+    },
+    "fusion_checksum_first": {
+      "DATE_DOB": {
+        "gold": 18079,
+        "tp": 17670,
+        "fp": 747,
+        "fn": 409,
+        "precision": 0.9594,
+        "recall": 0.9774,
+        "f1": 0.9683
+      },
+      "CREDIT_CARD": {
+        "gold": 12867,
+        "tp": 1525,
+        "fp": 564,
+        "fn": 11342,
+        "precision": 0.73,
+        "recall": 0.1185,
+        "f1": 0.2039
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 16693,
+        "tp": 15249,
+        "fp": 3950,
+        "fn": 1444,
+        "precision": 0.7943,
+        "recall": 0.9135,
+        "f1": 0.8497
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 10558,
+        "tp": 9944,
+        "fp": 532,
+        "fn": 614,
+        "precision": 0.9492,
+        "recall": 0.9418,
+        "f1": 0.9455
+      },
+      "EMAIL": {
+        "gold": 53930,
+        "tp": 53581,
+        "fp": 195,
+        "fn": 349,
+        "precision": 0.9964,
+        "recall": 0.9935,
+        "f1": 0.9949
+      },
+      "SSN": {
+        "gold": 6062,
+        "tp": 6046,
+        "fp": 1530,
+        "fn": 16,
+        "precision": 0.798,
+        "recall": 0.9974,
+        "f1": 0.8866
+      },
+      "PHONE_US": {
+        "gold": 23930,
+        "tp": 22947,
+        "fp": 16478,
+        "fn": 983,
+        "precision": 0.582,
+        "recall": 0.9589,
+        "f1": 0.7244
+      },
+      "URL": {
+        "gold": 37847,
+        "tp": 36317,
+        "fp": 2470,
+        "fn": 1530,
+        "precision": 0.9363,
+        "recall": 0.9596,
+        "f1": 0.9478
+      },
+      "MRN": {
+        "gold": 11098,
+        "tp": 10472,
+        "fp": 1457,
+        "fn": 626,
+        "precision": 0.8779,
+        "recall": 0.9436,
+        "f1": 0.9095
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 3002,
+        "tp": 2723,
+        "fp": 425,
+        "fn": 279,
+        "precision": 0.865,
+        "recall": 0.9071,
+        "f1": 0.8855
+      },
+      "IP_ADDRESS": {
+        "gold": 9217,
+        "tp": 8918,
+        "fp": 216,
+        "fn": 299,
+        "precision": 0.9764,
+        "recall": 0.9676,
+        "f1": 0.9719
+      }
+    },
+    "fusion_longest_wins": {
+      "DATE_DOB": {
+        "gold": 18079,
+        "tp": 17698,
+        "fp": 708,
+        "fn": 381,
+        "precision": 0.9615,
+        "recall": 0.9789,
+        "f1": 0.9702
+      },
+      "CREDIT_CARD": {
+        "gold": 12867,
+        "tp": 1522,
+        "fp": 564,
+        "fn": 11345,
+        "precision": 0.7296,
+        "recall": 0.1183,
+        "f1": 0.2036
+      },
+      "ACCOUNT_NUMBER": {
+        "gold": 16693,
+        "tp": 11409,
+        "fp": 3424,
+        "fn": 5284,
+        "precision": 0.7692,
+        "recall": 0.6835,
+        "f1": 0.7238
+      },
+      "HEALTH_PLAN_ID": {
+        "gold": 10558,
+        "tp": 9442,
+        "fp": 452,
+        "fn": 1116,
+        "precision": 0.9543,
+        "recall": 0.8943,
+        "f1": 0.9233
+      },
+      "EMAIL": {
+        "gold": 53930,
+        "tp": 53581,
+        "fp": 195,
+        "fn": 349,
+        "precision": 0.9964,
+        "recall": 0.9935,
+        "f1": 0.9949
+      },
+      "SSN": {
+        "gold": 6062,
+        "tp": 6046,
+        "fp": 1530,
+        "fn": 16,
+        "precision": 0.798,
+        "recall": 0.9974,
+        "f1": 0.8866
+      },
+      "PHONE_US": {
+        "gold": 23930,
+        "tp": 23246,
+        "fp": 21194,
+        "fn": 684,
+        "precision": 0.5231,
+        "recall": 0.9714,
+        "f1": 0.68
+      },
+      "URL": {
+        "gold": 37847,
+        "tp": 36317,
+        "fp": 2470,
+        "fn": 1530,
+        "precision": 0.9363,
+        "recall": 0.9596,
+        "f1": 0.9478
+      },
+      "MRN": {
+        "gold": 11098,
+        "tp": 10066,
+        "fp": 1375,
+        "fn": 1032,
+        "precision": 0.8798,
+        "recall": 0.907,
+        "f1": 0.8932
+      },
+      "US_DRIVER_LICENSE": {
+        "gold": 3002,
+        "tp": 2614,
+        "fp": 404,
+        "fn": 388,
+        "precision": 0.8661,
+        "recall": 0.8708,
+        "f1": 0.8684
+      },
+      "IP_ADDRESS": {
+        "gold": 9217,
+        "tp": 8918,
+        "fp": 216,
+        "fn": 299,
+        "precision": 0.9764,
+        "recall": 0.9676,
+        "f1": 0.9719
+      }
+    }
+  }
+}

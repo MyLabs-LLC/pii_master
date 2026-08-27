@@ -1,0 +1,39 @@
+STAFFING OPERATIONS — DATA DICTIONARY WORKING PAPER
+SUBJECT: TIMECARD AND PLACEMENT TABLES, RESTRICTED-COLUMN INVENTORY
+DISTRIBUTION: APPLICATION SUPPORT, PAYROLL, RECORDS CUSTODIAN
+
+1. TABLE STAFF.PLACEMENT
+
+   * PLCMT_ID — INTEGER, NOT NULL, identity-assigned.
+   * MBR_NBR — DECIMAL(9,0), NOT NULL. Foreign key to STAFF.MEMBER_ELIG.
+   * CLIENT_ID — INTEGER, NOT NULL.
+   * WORKSITE_ADDR_LINE_1 — VARCHAR(35), NOT NULL. Client premises; not a member address.
+   * ASGN_STRT_DT — DATE, NOT NULL.
+   * ASGN_END_DT — DATE, NULL. Null denotes an open assignment.
+   * END_REAS_CD — CHAR(2), NULL. Restricted where the value indicates a conduct-related separation.
+   * SUPVR_TITLE_TX — VARCHAR(30), NULL. Title only. Named individuals are not carried here.
+
+2. TABLE STAFF.TIMECARD_DTL
+
+   * TC_ID — INTEGER, NOT NULL.
+   * PLCMT_ID — INTEGER, NOT NULL.
+   * WEEK_END_DT — DATE, NOT NULL. Partitioning key.
+   * REG_HRS_QTY — DECIMAL(5,2), NOT NULL.
+   * OT_HRS_QTY — DECIMAL(5,2), NOT NULL, default zero.
+   * APPRV_IND — CHAR(1), NOT NULL.
+   * KEYED_BY_USER_ID — CHAR(8), NOT NULL.
+
+3. RESTRICTED-COLUMN INVENTORY (ALL SUBSYSTEMS)
+
+   * TAX_ID_NBR, DOB_DT, ALT_ID_NBR, ALT_ID_TYPE_CD — member subsystem.
+   * SSN_NBR, BIRTH_DT — applicant master.
+   * EMRG_CNTC_NM, EMRG_CNTC_PHON_NBR — member subsystem, supervisory profiles only.
+   * BKGD_CHK_STAT_CD, END_REAS_CD — access by exception, logged.
+
+4. HANDLING RULES
+
+   * No restricted column is eligible for the ad hoc query environment. The view layer used by that environment omits them at definition.
+   * Test region refreshes are taken from a scrambling utility, not from a direct unload.
+   * Printed output containing a restricted column carries the confidential banner and is routed to the attended printer in the payroll area.
+   * Retention for timecard detail is seven years from WEEK_END_DT, then deletion by partition. Placement rows follow the member eligibility schedule.
+   * Downstream extracts from these two tables are limited to the payroll interface and the client invoicing feed. Neither carries an identity column beyond MBR_NBR.

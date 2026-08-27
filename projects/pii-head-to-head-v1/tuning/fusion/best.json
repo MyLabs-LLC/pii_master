@@ -1,0 +1,119 @@
+{
+ "family": "fusion",
+ "metrics": {
+  "equal_corpus_macro_f2": 0.4508576207035452,
+  "equal_corpus_micro_f1": 0.3482221786048291,
+  "measurable_priority_gates": 56,
+  "priority_point_passes": 56,
+  "worst_priority_recall": 0.999483337638853
+ },
+ "objective": [
+  1.0,
+  0.4508576207035452,
+  0.3482221786048291,
+  0.999483337638853
+ ],
+ "per_corpus": [
+  {
+   "dataset": "148775_pii2_train_98.81k",
+   "macro_f2": 0.42966742316577405,
+   "micro_f1": 0.17082286491745874
+  },
+  {
+   "dataset": "151708_openpii_pii_train_151.71k",
+   "macro_f2": 0.6062594200048304,
+   "micro_f1": 0.6125023306051859
+  },
+  {
+   "dataset": "15986_datax-dualjudge-trainset-5.36k",
+   "macro_f2": null,
+   "micro_f1": null
+  },
+  {
+   "dataset": "21743_nemotron_train_20.80k",
+   "macro_f2": null,
+   "micro_f1": null
+  },
+  {
+   "dataset": "23693_govdocs2-dualjudge-train80-12.86k",
+   "macro_f2": null,
+   "micro_f1": null
+  },
+  {
+   "dataset": "41429_betterdataai_ner_silver_train_41.43k",
+   "macro_f2": 0.16250059876118753,
+   "micro_f1": 0.17846479329818635
+  },
+  {
+   "dataset": "42504_ai4privacy_pii_masking_train_42.50k",
+   "macro_f2": 0.5204740525757858,
+   "micro_f1": 0.342186477134574
+  },
+  {
+   "dataset": "85593_pii_trainset_85.59k",
+   "macro_f2": 0.5353866090101479,
+   "micro_f1": 0.43713442706874067
+  }
+ ],
+ "strategies": {
+  "sensitive_pci_bank_account_number": "source:recall",
+  "sensitive_pci_card_verification_value_cvv": "or:hash,tfidf",
+  "sensitive_pci_credit_card": "or:hash,embedding",
+  "sensitive_pci_credit_card_expiration_date": "or:hash,tfidf,embedding",
+  "sensitive_pci_credit_card_number": "source:recall",
+  "sensitive_pci_credit_score": "source:tfidf",
+  "sensitive_pci_financial_instrument_global_identifier_figi": "source:embedding",
+  "sensitive_pci_iban": "source:recall",
+  "sensitive_pci_individual_taxpayer_identification_number_itin": "source:recall",
+  "sensitive_pci_last_four_credit_card_number_digits": "or:hash,embedding",
+  "sensitive_pci_routing_number": "source:tfidf",
+  "sensitive_pci_swift_code": "and:hash,tfidf,embedding",
+  "sensitive_phi_health_plan_beneficiary_number": "source:recall",
+  "sensitive_phi_icd_10": "source:hash",
+  "sensitive_phi_icd_code": "source:hash",
+  "sensitive_phi_medical_condition": "and:hash,tfidf,embedding",
+  "sensitive_phi_medical_record_number_mrn": "source:recall",
+  "sensitive_phi_medical_treatment": "source:hash",
+  "sensitive_phi_medication": "and:hash,embedding",
+  "sensitive_phi_patient_id_number": "source:recall",
+  "sensitive_pii_address": "source:recall",
+  "sensitive_pii_age": "or:hash,embedding",
+  "sensitive_pii_area_code": "majority:hash,tfidf,embedding",
+  "sensitive_pii_country_of_origin": "and:hash,tfidf,embedding",
+  "sensitive_pii_country_of_residence": "and:hash,tfidf,embedding",
+  "sensitive_pii_county": "and:hash,embedding",
+  "sensitive_pii_date_of_birth_dob": "and:tfidf,embedding",
+  "sensitive_pii_date_of_death": "or:hash,tfidf,embedding",
+  "sensitive_pii_driver_s_license_number": "source:recall",
+  "sensitive_pii_educational_level": "and:tfidf,embedding",
+  "sensitive_pii_email": "or:hash,tfidf,embedding",
+  "sensitive_pii_employment_date": "or:hash,tfidf,embedding",
+  "sensitive_pii_employment_status": "and:tfidf,embedding",
+  "sensitive_pii_ethnicity": "and:hash,embedding",
+  "sensitive_pii_full_name": "source:recall",
+  "sensitive_pii_gender_and_sex": "or:hash,tfidf",
+  "sensitive_pii_geolocation": "and:hash,tfidf,embedding",
+  "sensitive_pii_immigration_and_citizenship_status": "or:tfidf,embedding",
+  "sensitive_pii_income": "and:tfidf,embedding",
+  "sensitive_pii_ipv4": "or:hash,tfidf",
+  "sensitive_pii_ipv6": "source:embedding",
+  "sensitive_pii_last_four_us_ssn_digits": "majority:hash,tfidf,embedding",
+  "sensitive_pii_mac_address": "source:tfidf",
+  "sensitive_pii_marital_status": "and:hash,tfidf",
+  "sensitive_pii_military_identification_number": "source:recall",
+  "sensitive_pii_nationality": "and:hash,tfidf,embedding",
+  "sensitive_pii_passport_number": "source:recall",
+  "sensitive_pii_password": "source:recall",
+  "sensitive_pii_personal_identification_number_pin": "source:recall",
+  "sensitive_pii_phone_number": "or:hash,tfidf",
+  "sensitive_pii_religion": "and:hash,embedding",
+  "sensitive_pii_sexual_identity_and_orientation": "and:hash,tfidf",
+  "sensitive_pii_social_security_number": "source:recall",
+  "sensitive_pii_state": "source:embedding",
+  "sensitive_pii_username": "and:hash,tfidf,embedding",
+  "sensitive_pii_vehicle_identification_number_vin": "majority:hash,tfidf,embedding",
+  "sensitive_pii_visa_number": "source:recall",
+  "sensitive_pii_zip_code": "or:hash,tfidf"
+ },
+ "trial": 71
+}

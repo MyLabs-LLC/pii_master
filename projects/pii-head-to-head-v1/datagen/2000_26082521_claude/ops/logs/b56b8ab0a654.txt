@@ -1,0 +1,63 @@
+MEMORIAL DISTRICT HOSPITAL — PATIENT FINANCIAL SERVICES
+INTERFACE FIELD MAPPING RULE SHEET
+
+SECTION A — CONTROL
+  Form No. .................. PFS-MAP-0412
+  Revision .................. 3
+  Effective ................. 2004-04-19
+  Supersedes ................ PFS-MAP-0412 Rev. 2 (2003-11-03)
+  Source System ............. ADT/HIS, AS/400 LIB=BILLPRD
+  Target System ............. Receivables Data Mart, ORA 8.1.7, schema RDM_STG
+  Transport ................. Nightly ODBC extract -> fixed-width flat file -> SQL*Loader
+  Owner ..................... Manager, Patient Accounting
+  Approver .................. Records Custodian
+  Review Cycle .............. Semi-annual
+
+SECTION B — MAPPING RULES
+  DISP codes: PASS=carry as-is | TOKN=surrogate token | HASH=one-way digest
+              MASK=partial mask | SUPP=suppress at extract (column emitted null)
+
+  SEQ  SOURCE FIELD      TARGET COLUMN       TYPE      DISP   RULE REF
+  ---  ----------------  ------------------  --------  -----  --------
+  010  PT_LAST_NM        PAT_SURNAME         CHAR(30)  SUPP   R-101
+  020  PT_FIRST_NM       PAT_GIVEN           CHAR(20)  SUPP   R-101
+  030  PT_MID_INIT       PAT_MI              CHAR(1)   SUPP   R-101
+  040  PT_SSN            PAT_SSN_TKN         CHAR(16)  TOKN   R-114
+  050  MRN               PAT_MRN_TKN         CHAR(16)  TOKN   R-114
+  060  ACCT_NBR          ACCT_TKN            CHAR(16)  TOKN   R-114
+  070  DOB_DT            BIRTH_YR            NUM(4)    MASK   R-122
+  080  ADDR_LINE_1       (not mapped)        --        SUPP   R-101
+  090  ADDR_LINE_2       (not mapped)        --        SUPP   R-101
+  100  CITY_NM           (not mapped)        --        SUPP   R-101
+  110  STATE_CD          SVC_STATE_CD        CHAR(2)   PASS   R-130
+  120  ZIP_CD            ZIP_TRUNC           CHAR(3)   MASK   R-123
+  130  HOME_PHONE        (not mapped)        --        SUPP   R-101
+  140  GUAR_LAST_NM      (not mapped)        --        SUPP   R-101
+  150  GUAR_SSN          GUAR_SSN_TKN        CHAR(16)  TOKN   R-114
+  160  SUBSCR_ID         SUBSCR_TKN          CHAR(16)  TOKN   R-114
+  170  GRP_NBR           GRP_TKN             CHAR(16)  TOKN   R-115
+  180  PAYER_CD          PAYER_CD            CHAR(5)   PASS   R-130
+  190  ADM_DT            ADM_PERIOD          CHAR(7)   MASK   R-122
+  200  DSCH_DT           DSCH_PERIOD         CHAR(7)   MASK   R-122
+  210  DRG_CD            DRG_CD              CHAR(3)   PASS   R-130
+  220  ICD9_PRIN         DX_PRIN_CD          CHAR(6)   PASS   R-130
+  230  CPT4_1            PROC_CD_1           CHAR(5)   PASS   R-130
+  240  TOT_CHRG_AMT      CHRG_AMT            NUM(11,2) PASS   R-130
+  250  PAY_AMT           PAY_AMT             NUM(11,2) PASS   R-130
+  260  ADJ_AMT           ADJ_AMT             NUM(11,2) PASS   R-130
+
+SECTION C — NOTES
+  1. Token domain is per-field. Cross-field token equality is not guaranteed and
+     must not be relied upon for linkage.
+  2. R-122 reduces all calendar dates to year or year-month. Day-of-month is not
+     emitted to the mart under any condition.
+  3. R-123 truncates ZIP_CD to first three positions; populations under the
+     threshold in Appendix B are rolled to "000".
+  4. Fields marked SUPP are excluded at the extract SELECT list. They are not
+     nulled downstream.
+  5. Any new source column defaults to SUPP until a rule reference is assigned.
+
+SECTION D — SIGN-OFF
+  Prepared by ............... Senior Analyst, Decision Support     Date 2004-04-12
+  Reviewed by ............... Manager, Patient Accounting          Date 2004-04-15
+  Approved by ............... Records Custodian                    Date 2004-04-19

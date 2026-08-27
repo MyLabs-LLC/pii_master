@@ -1,0 +1,23 @@
+APPLICATION LOG EXTRACT
+Host: etl-node-03   Environment: PROD   Log: /var/log/fare_dw/etl_validation.log
+Extract window: 2021-09-21 01:58 to 02:41
+
+2021-09-21 01:58:44 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Job started. Profile MASK_PROF_07 loaded. Mapping revision 2021-09-16.
+2021-09-21 01:58:51 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Source read begun. Watermark applied.
+2021-09-21 02:04:19 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Rows read: 418,332. Rows masked: 418,332. Tokens requested: 1,251,004. Vault round trips: 313.
+2021-09-21 02:04:20 WARN  [ETL_FARE_NIGHTLY_20210921_0211] Column emergency_contact_number present in source but not in mapping. Action: DROP applied by default rule.
+2021-09-21 02:07:03 ERROR [ETL_FARE_NIGHTLY_20210921_0211] Rule R003 failed. Column rdr_postal_prefix. Rows affected: 1,204. Value not logged.
+2021-09-21 02:07:03 ERROR [ETL_FARE_NIGHTLY_20210921_0211] Rule R005 failed. Column para_cert_expiry null where acct_elig_cat = DISABILITY. Rows affected: 87. Routed to fare_dw.stg_quarantine.
+2021-09-21 02:07:04 ERROR [ETL_FARE_NIGHTLY_20210921_0211] Rule R007 failed. Column rdr_natid_token length mismatch. Rows affected: 12. Cause: vault timeout, on_vault_timeout = fail_row.
+2021-09-21 02:07:04 WARN  [ETL_FARE_NIGHTLY_20210921_0211] Rule R002 warning. Column acct_open_date greater than run_date. Rows affected: 3.
+2021-09-21 02:09:38 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Reject total: 1,303. Reject percentage: 0.31. Threshold 2.00 not breached.
+2021-09-21 02:09:39 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Merge begun on key para_reg_sid.
+2021-09-21 02:18:55 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Merge complete. Inserted: 2,914. Updated: 414,115. Unchanged: 0. Deleted: 0.
+2021-09-21 02:18:56 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Audit row written to fare_dw.etl_audit.
+2021-09-21 02:18:56 INFO  [ETL_FARE_NIGHTLY_20210921_0211] Job completed. Elapsed 20m 12s. Status SUCCESS_WITH_REJECTS.
+
+2021-09-21 02:20:11 INFO  [ETL_PARA_NIGHTLY_20210921_0220] Job started.
+2021-09-21 02:22:47 ERROR [ETL_PARA_NIGHTLY_20210921_0220] Column medical_reviewer_note received non-null payload from source. Mapping action DROP enforced. Rows affected: 640. Payload not written to log or quarantine.
+2021-09-21 02:23:02 ERROR [ETL_PARA_NIGHTLY_20210921_0220] Column guardian_family_name failed MASK_FULL. Cause: mask_literal not resolved on partition 4. Rows affected: 55. Job halted.
+2021-09-21 02:23:02 FATAL [ETL_PARA_NIGHTLY_20210921_0220] Job aborted. Status FAILED. No rows committed to fare_dw.dim_paratransit.
+2021-09-21 02:41:15 INFO  [ETL_PARA_NIGHTLY_20210921_0220] Restart requested by the on-call Data Services Analyst. Queued as ETL_PARA_NIGHTLY_20210921_0241.

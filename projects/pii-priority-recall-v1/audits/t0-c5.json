@@ -1,0 +1,26 @@
+{
+  "candidate": "t0-c5",
+  "stage": "propose",
+  "proposal": "Fit hash_sgd sufficient statistics on the 90% leakage-safe combined training partition, score the deterministic 10% internal validation partition, and MLflow-track 300 threshold/aggregation arms selected lexicographically by priority gates, worst recall, macro F2, micro F1.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "b67c1e7",
+  "commit": "e03a8e5",
+  "decision": "accepted_for_holdout_validation",
+  "evidence": {
+    "focused_tests": "12 passed",
+    "ruff": "passed",
+    "allocated_trials": 300,
+    "split": "normalized text SHA-256 modulo 10",
+    "selection_order": ["priority point passes", "worst priority recall", "equal-corpus macro F2", "equal-corpus micro F1"],
+    "completed_trials": 300,
+    "best_trial": 188,
+    "best_mlflow_run_id": "31ddf2df6cbf4dbba61d3fd4bc6e837d",
+    "internal_measurable_priority_gates": 54,
+    "internal_priority_point_passes": 54,
+    "internal_worst_priority_recall": 0.999230917131321,
+    "internal_equal_corpus_macro_f2": 0.4106814233868178,
+    "internal_equal_corpus_micro_f1": 0.33502722525973805,
+    "fit_rows": 478316,
+    "validation_rows": 53110
+  }
+}

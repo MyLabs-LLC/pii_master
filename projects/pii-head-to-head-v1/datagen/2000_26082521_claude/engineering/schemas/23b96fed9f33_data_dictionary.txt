@@ -1,0 +1,75 @@
+INTERNAL MEMORANDUM
+
+TO:   File
+FROM: Records Custodian
+DATE: 2011-09-19
+RE:   LOAN_APPL — dictionary excerpt, library MBRLIB (iSeries)
+
+Prepared at the request of the Internal Auditor. Physical file definitions follow. Types are as declared in the DDS source.
+
+COLUMN:    APPL_ID
+  TYPE:    DECIMAL(11,0)
+  NULL:    No
+  ACCESS:  General, lending roles
+  NOTES:   Assigned by the origination system at intake. Retained after decision.
+
+COLUMN:    MBR_NBR
+  TYPE:    DECIMAL(10,0)
+  NULL:    Yes
+  ACCESS:  General, lending roles
+  NOTES:   Null for non-member applicants pending membership. Populated at booking.
+
+COLUMN:    APPL_LAST_NM / APPL_FIRST_NM
+  TYPE:    CHAR(40) / CHAR(30)
+  NULL:    No
+  ACCESS:  Restricted — lending, collections, BSA
+  NOTES:   Not exposed to the teller platform. Excluded from all vendor files.
+
+COLUMN:    APPL_TAX_ID_NBR
+  TYPE:    CHAR(9)
+  NULL:    No
+  ACCESS:  Restricted — lending officers, BSA officer
+  NOTES:   Field-level encryption applied at release 2011.1. Prior rows were converted
+           in the June conversion run; no cleartext copies remain in MBRLIB. Journal
+           receivers from the conversion period were deleted per the approved plan.
+
+COLUMN:    APPL_BIRTH_DT
+  TYPE:    DECIMAL(8,0), CCYYMMDD
+  NULL:    No
+  ACCESS:  Restricted
+  NOTES:   Required for bureau pull and for Regulation B monitoring reporting.
+
+COLUMN:    APPL_ADDR_LINE_1 / APPL_CITY_NM / APPL_STATE_CD / APPL_POSTAL_CD
+  TYPE:    CHAR(50) / CHAR(30) / CHAR(2) / CHAR(9)
+  NULL:    No on line 1, city, state; yes on postal
+  ACCESS:  Restricted
+  NOTES:   Address of record at application. Not synchronized with MEMBER_MASTER after
+           booking; the master file governs statement delivery.
+
+COLUMN:    APPL_EMPLR_NM
+  TYPE:    CHAR(40)
+  NULL:    Yes
+  ACCESS:  Lending roles
+  NOTES:   Free text. Not standardized. Unsuitable for aggregation.
+
+COLUMN:    STATED_INCM_AMT
+  TYPE:    DECIMAL(11,2)
+  NULL:    Yes
+  ACCESS:  Lending roles
+
+COLUMN:    BUREAU_SCORE_NBR
+  TYPE:    DECIMAL(3,0)
+  NULL:    Yes
+  ACCESS:  Restricted — lending officers only
+  NOTES:   Score returned at pull. Reason codes carried in APPL_RSN_CD_1 through _4.
+           Adverse action notices draw from these fields.
+
+COLUMN:    DECSN_CD / DECSN_DT / DECSN_USER_ID
+  TYPE:    CHAR(2) / DECIMAL(8,0) / CHAR(10)
+  NULL:    No
+  ACCESS:  General, lending roles
+  NOTES:   DECSN_USER_ID is a staff sign-on, not a member identifier.
+
+RETENTION. Declined and withdrawn applications are held twenty-five months from DECSN_DT under Regulation B, then purged. Booked applications follow the note: seven years from payoff or charge-off. The annual purge job reports counts to this office.
+
+EXTRACTS. HMDA-reportable records are extracted to the loan application register build in the first week of each quarter; identity columns are dropped at the extract query, and the register carries census tract and rate spread only. The nightly warehouse feed excludes this file in its entirety. Requests for application-level data from the marketing area have been declined twice this year and should continue to be routed here rather than to Database Administration.

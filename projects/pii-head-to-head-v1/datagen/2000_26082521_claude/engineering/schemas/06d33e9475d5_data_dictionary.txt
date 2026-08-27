@@ -1,0 +1,21 @@
+DD EXCERPT — FAM.GUARDIAN_CONTACT
+Parent object of SIS.STU_DEMO via STU_LOCAL_ID. Rev 2.9, 2016-09-06.
+
+  GUARDIAN_SEQ_NO — SMALLINT — NOT NULL — ordinal within student; 1 = primary
+  STU_LOCAL_ID — CHAR(9) — NOT NULL — FK, enforced
+  GUARDIAN_LAST_NAME — VARCHAR(40) — NOT NULL — Tier 2
+  GUARDIAN_FIRST_NAME — VARCHAR(40) — NOT NULL — Tier 2
+  RELATIONSHIP_CD — CHAR(2) — NOT NULL — domain in REF.RELATIONSHIP
+  CUSTODY_FLG — CHAR(1) — NOT NULL — Y/N; N does not by itself bar record access
+  RESTRAINING_ORDER_FLG — CHAR(1) — NOT NULL — Y suppresses the row from all extracts; school office holds paper order
+  LIVES_WITH_FLG — CHAR(1) — NOT NULL — drives residency verification queue
+  GUARDIAN_MOBILE — CHAR(10) — NULL ok — Tier 2
+  GUARDIAN_EMAIL — VARCHAR(120) — NULL ok — Tier 2; unique index NOT enforced, shared addresses are common
+  PREFERRED_LANG_CD — CHAR(3) — NOT NULL — defaults ENG; drives translated notice queue
+  EMERG_CONTACT_ONLY_FLG — CHAR(1) — NOT NULL — Y excludes the row from grade and attendance mailings
+  UPD_BY_USER_ID — VARCHAR(20) — NOT NULL — school office operator, not the guardian
+  UPD_TS — TIMESTAMP(6) — NOT NULL
+
+  Access: Tier 2 columns visible to school office staff at the enrolling site only. Central office read is by role, logged.
+  Retention: purge at student exit + 5 years. Rows with RESTRAINING_ORDER_FLG = Y purge on the same schedule; paper retention is separate.
+  Extracts: mass-notification vendor (name, mobile, email, language, primary row only); no other extract is authorized. Health services reads live, does not extract.

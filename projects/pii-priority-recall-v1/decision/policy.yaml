@@ -1,0 +1,31 @@
+name: pii-priority-recall-v1
+constraints:
+- name: "priority tag recall \u2265 0.90 (conclusive)"
+  metric: recall
+  op: '>='
+  threshold: 0.9
+  scope: '*@*'
+  across: each
+  basis: ci_lower
+  min_support: 30
+  severity: hard
+  relative_to: null
+- name: "one-core p95 \u2264 5 ms"
+  metric: p95_latency_ms
+  op: <=
+  threshold: 5.0
+  scope: ''
+  across: each
+  basis: point
+  min_support: 0
+  severity: hard
+  relative_to: null
+preferences:
+- metric: macro_f2
+  scope: ''
+  greater_is_better: null
+  min_relative_change: 0.0
+- metric: micro_f1
+  scope: ''
+  greater_is_better: null
+  min_relative_change: 0.0

@@ -1,0 +1,30 @@
+MEMORANDUM
+
+TO:      Distribution
+FROM:    Office of the Records Custodian
+DATE:    2 November 1998
+RE:      Addendum to DA-DD-1998-041 — Two (2) Columns Added at Release 4.3
+
+The following two columns have been added to CUSTMAST effective with the 4.3 install and are hereby incorporated into the dictionary of record. Departmental abstracts should be corrected accordingly.
+
+     PREFERRED_CONTACT_CD
+          Type:        CHAR(1)
+          Nullable:    Yes
+          Note:        Indicates the channel by which the party has asked to
+                       be reached. Does not itself carry contact particulars.
+                       Unrestricted. Present in the branch productivity
+                       extract.
+
+     SOLICITATION_OPT_OUT_IND
+          Type:        CHAR(1)
+          Nullable:    No, defaults to 'N'
+          Note:        Set by the closing officer of record upon written or
+                       oral instruction of the party. Once set to 'Y' the
+                       value may not be reversed by any user profile other
+                       than ESCADM, and any such reversal is written to the
+                       audit journal. This column is to be honored by every
+                       downstream extract that feeds a mailing or telephone
+                       campaign, without exception and without inquiry into
+                       the age of the instruction.
+
+Neither column is to be treated as a substitute for the maintenance of the underlying instruction in the file jacket. The paper instruction remains the record copy and is retained under Schedule R notwithstanding the disposition of the row.

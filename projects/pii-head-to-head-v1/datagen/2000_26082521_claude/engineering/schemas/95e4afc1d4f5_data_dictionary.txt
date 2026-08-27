@@ -1,0 +1,119 @@
+COUNTY HEALTH DEPARTMENT
+BUREAU OF ADMINISTRATION — DATA ADMINISTRATION SECTION
+
+DATA DICTIONARY EXCERPT
+MEMBER MASTER / ENROLLMENT SEGMENT
+Form DA-9 · Revision 4 · Effective 01 July 1998
+
+1. SCOPE
+   1.1 This excerpt describes the enrollment segment of the member master file
+       maintained by the Bureau on behalf of the following program areas:
+       Maternal and Child Health, Communicable Disease Control, Environmental
+       Health (billing only), and Clinic Operations.
+   1.2 Excerpt is partial. Claims, encounter and immunization segments are
+       described separately on Forms DA-10 through DA-13.
+   1.3 File is designated a confidential record under the state health code.
+       Handling requirements in Sections 5 through 7 are mandatory.
+
+2. PHYSICAL DESCRIPTION
+   2.1 DBMS: Informix OnLine 7.24, instance chsprd.
+   2.2 Table: member_enroll. Index: ix_mbr_enr_01 (member_no, seg_eff_dt).
+   2.3 Row length: variable. Extents: 32 allocated, 19 in use as of last review.
+   2.4 Backup: nightly level 0 to cartridge, retained 30 days off-site.
+
+3. COLUMN LIST
+
+   member_no          INTEGER        NOT NULL
+       Surrogate key. Assigned by generator gen_mbr. Never re-issued, never
+       reused after purge. Not to be printed on client-facing correspondence.
+
+   legacy_case_no     CHAR(10)       NULL
+       Carried forward from the pre-1994 case management system. Retained for
+       reconciliation only. Scheduled for retirement, no date fixed.
+
+   last_name          CHAR(25)       NOT NULL     [RESTRICTED]
+   first_name         CHAR(18)       NOT NULL     [RESTRICTED]
+   middle_name        CHAR(18)       NULL         [RESTRICTED]
+   maiden_name        CHAR(25)       NULL         [RESTRICTED]
+       Name columns are stored as entered. No standardization routine is
+       applied. Matching is performed on a Soundex derivative held in
+       name_srch_cd, which is itself restricted.
+
+   birth_date         DATE           NOT NULL     [RESTRICTED]
+       Century-qualified following Y2K remediation, completed 11/97. Programs
+       must not compute age from a two-digit year.
+
+   ssn                CHAR(9)        NULL         [RESTRICTED — CLASS A]
+       Collection is voluntary except where required by a funding source.
+       Column is encrypted at rest as of Revision 4. Decryption is available to
+       batch job BMR340 only. No on-line panel displays this column in full.
+
+   res_addr_1         CHAR(35)       NULL         [RESTRICTED]
+   res_addr_2         CHAR(35)       NULL         [RESTRICTED]
+   res_city           CHAR(22)       NULL         [RESTRICTED]
+   res_state          CHAR(2)        NULL
+   res_zip            CHAR(9)        NULL         [RESTRICTED below 5 digits]
+   mail_addr_ind      CHAR(1)        NOT NULL
+       'Y' indicates a separate mailing address exists on table member_addr.
+
+   home_phone         CHAR(10)       NULL         [RESTRICTED]
+   msg_phone          CHAR(10)       NULL         [RESTRICTED]
+       Message telephone is not to be used for direct contact regarding
+       communicable disease program activity. See Bureau memorandum 96-22.
+
+   seg_eff_dt         DATE           NOT NULL
+   seg_end_dt         DATE           NULL
+       Null denotes an open segment. One open segment per member permitted;
+       enforced by trigger tr_mbr_enr_02.
+
+   program_cd         CHAR(4)        NOT NULL
+   funding_src_cd     CHAR(3)        NOT NULL
+   site_cd            CHAR(3)        NOT NULL
+   fpl_pct            SMALLINT       NULL
+   hh_size            SMALLINT       NULL
+   interp_need_ind    CHAR(1)        NOT NULL     default 'N'
+   confidential_ind   CHAR(1)        NOT NULL     default 'N'
+   purge_hold_ind     CHAR(1)        NOT NULL     default 'N'
+   upd_user_id        CHAR(8)        NOT NULL
+   upd_timestamp      DATETIME       NOT NULL
+
+4. NULLABILITY NOTES
+   4.1 Nullable does not mean optional at intake. Intake completeness is
+       governed by the program area procedure manual, not by the schema.
+   4.2 Blank and null are not equivalent in this table. Conversion programs
+       loaded blanks in several character columns prior to 1996. Report writers
+       must test for both conditions.
+
+5. ACCESS RESTRICTION
+   5.1 Columns marked [RESTRICTED] require role membership in enr_full.
+   5.2 Class A columns additionally require written authorization approved by
+       the Records Custodian, reviewed annually.
+   5.3 Rows with confidential_ind = 'Y' are suppressed from all reporting views
+       and all extracts listed in Section 7.
+   5.4 Terminal sessions are logged. Query volume against restricted columns is
+       reported monthly to the Bureau Chief.
+
+6. RETENTION
+   6.1 On-line: current segment plus 36 months of closed segments.
+   6.2 Archive: seven years from the latest seg_end_dt. Rows with
+       purge_hold_ind = 'Y' are exempt from purge pending resolution.
+   6.3 Minor client records are retained to age of majority plus seven years.
+   6.4 Purge is executed annually in September by job BMR990 and certified in
+       writing by the Records Custodian.
+
+7. DOWNSTREAM EXTRACTS
+   7.1 State immunization registry — weekly, 320-byte fixed record.
+   7.2 WIC state agency — monthly reconciliation, restricted columns limited to
+       those enumerated in the interagency agreement.
+   7.3 Medicaid MMIS eligibility match — weekly.
+   7.4 Bureau of Epidemiology aggregate file — quarterly. All restricted columns
+       suppressed; birth_date replaced by five-year age band; res_zip truncated.
+   7.5 Grant reporting extract — annual, counts only, no member-level rows.
+   7.6 No extract may be created outside this list without amendment of this
+       form and approval of the Data Administration Section.
+
+8. REVISION CONTROL
+   Rev. 1 — 09/94 initial issue
+   Rev. 2 — 06/96 added funding_src_cd, interp_need_ind
+   Rev. 3 — 11/97 century-qualified date columns
+   Rev. 4 — 07/98 encryption of ssn; added purge_hold_ind

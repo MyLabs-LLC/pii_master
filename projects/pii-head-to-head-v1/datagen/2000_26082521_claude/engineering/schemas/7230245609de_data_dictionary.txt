@@ -1,0 +1,57 @@
+MEMORANDUM
+
+TO:      Data Governance Committee
+FROM:    Manager, Information Systems
+DATE:    November 8, 2011
+RE:      Dictionary excerpt and control notes — MBR_CONTACT, CARD_MASTER
+CC:      Compliance Officer; Internal Auditor; Records Custodian
+
+I. PURPOSE
+
+To document the two files added under the fourth-quarter release and to record the access, retention and extract controls applied to each. This memo is the controlling documentation until the full dictionary is reissued in the first quarter.
+
+II. MBR_CONTACT (SQL Server, database CORE_ODS)
+
+  MBR_CONTACT_ID    int identity      not null   Primary key.
+  MBR_NBR           int               not null   FK to MEMBER_MASTER.
+  CONTACT_TYP_CD    char(2)           not null   Home, mobile, work, electronic.
+  PHONE_NBR         varchar(14)       null       Restricted. One row per type.
+  MOBILE_PHONE_NBR  varchar(14)       null       Restricted. Consent required for SMS.
+  EMAIL_ADDR_TXT    varchar(80)       null       Restricted. Single primary per member;
+                                                 enforced by unique filtered index.
+  DNC_FLG           bit               not null   Default 0. Set by member service only.
+  ESTMT_CONSENT_FLG bit               not null   Default 0. E-Sign consent evidence is
+                                                 held in the imaging system, not here.
+  CONSENT_DT        datetime          null
+  UPDT_USER_ID      varchar(10)       not null   Staff sign-on.
+  UPDT_TS           datetime          not null
+
+III. CARD_MASTER (SQL Server, database CORE_ODS)
+
+  CARD_ID           int identity      not null
+  MBR_NBR           int               not null
+  CARD_NBR_TOKEN    varchar(19)       not null   Token only. The primary account number
+                                                 is not stored in this database in any
+                                                 form, encrypted or otherwise; it remains
+                                                 at the processor.
+  CARD_LAST_FOUR    char(4)           not null   Display use.
+  CARD_TYP_CD       char(2)           not null   Debit, credit, ATM.
+  CARDHLDR_NM_LINE  varchar(26)       not null   Restricted. Embossing line as ordered.
+  ISSUE_DT          date              not null
+  EXPIR_DT          date              not null
+  STATUS_CD         char(2)           not null   Active, blocked, lost, stolen, closed.
+  BLOCK_RSN_CD      char(3)           null       Populated by the fraud queue.
+
+IV. ACCESS RESTRICTION
+
+Columns marked Restricted are exposed through views only. Direct table SELECT has been revoked from all named users other than two service accounts; the service account passwords are held under dual control by this office and the Security Officer. Card operations staff receive CARD_LAST_FOUR and CARDHLDR_NM_LINE and do not receive CARD_NBR_TOKEN. Quarterly access recertification covers both files and is due to the Internal Auditor within thirty days of quarter end.
+
+V. RETENTION
+
+Contact rows are retained for the life of the relationship plus five years. Superseded contact rows are moved to MBR_CONTACT_HIST at update and held three years, which is sufficient for dispute research under Regulation E. Card rows are retained five years past STATUS_CD change to closed. Blocked and fraud-flagged rows are held seven years and are exempt from the standard purge.
+
+VI. DOWNSTREAM EXTRACTS
+
+Four approved consumers: the e-statement vendor file (token, last four, delivery preference); the card reissue file to the processor (token, expiration, status); the collections work queue (member number and restricted contact columns, transmitted internally only); and the quarterly marketing extract, which receives member number, product codes and postal code and receives no restricted column. The marketing extract is built from a view; the view definition is under change control and is not to be modified at the request of the requesting department.
+
+Committee action is requested to confirm the retention periods stated in section V.

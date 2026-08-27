@@ -1,0 +1,33 @@
+MEMORANDUM
+
+TO:      Manager of Card Services
+FROM:    Records Custodian
+SUBJECT: Data Dictionary Addendum — CARD_SERVICE
+DATE:    22 April 2016
+FILE:    DG-DD-2016-016
+
+1.0  This addendum documents the CARD_SERVICE table introduced with the debit reissue project. It is issued as an appendix to DG-DD-2016-011 and does not alter that excerpt.
+
+2.0  COLUMN INVENTORY (pipe-delimited)
+
+CARD_SEQ_NBR|NUMBER(12)|NOT NULL|Surrogate key
+MBR_NBR|NUMBER(10)|NOT NULL|Foreign key to MEMBER_MASTER
+CARD_PAN_ENC|RAW(64)|NOT NULL|Restricted; tokenized, PCI scope
+CARD_LAST_FOUR|CHAR(4)|NOT NULL|Display element for servicing screens
+CARD_EMBOSS_NAME|VARCHAR2(26)|NOT NULL|Restricted
+CARD_EXPIRE_YM|CHAR(4)|NOT NULL|Restricted
+CARD_STATUS_CD|CHAR(2)|NOT NULL|Domain per Appendix D
+CARD_ISSUE_DT|DATE|NOT NULL|Production file date
+CARD_BLOCK_RSN_CD|CHAR(3)|NULL|Populated on hot-card action
+CARD_DAILY_ATM_LMT|NUMBER(9,2)|NOT NULL|Defaults from product table
+CARD_LAST_MAINT_TS|TIMESTAMP|NOT NULL|Audit trigger populated
+
+3.0  ACCESS RESTRICTION
+3.1  CARD_PAN_ENC is not readable by any interactive role. Servicing staff work exclusively from CARD_LAST_FOUR.
+3.2  The cardholder data environment is segmented; queries originate only from the designated jump host.
+
+4.0  RETENTION
+4.1  Rows are retained eighteen months following card expiry, then purged by job PRG-CARD-02.
+
+5.0  DOWNSTREAM EXTRACTS
+5.1  Extract EXT-CARD-001 delivers embossing columns to the card personalization bureau. No other extract references this table.

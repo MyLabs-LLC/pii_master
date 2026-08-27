@@ -1,0 +1,40 @@
+ETLSTU10 — OPERATOR RUN LOG (CONDENSED)
+STREAM: ETLSTU10   RUN: 19981012.0233   REGION: SISPROD   SYS: A22
+
+1. STEP TRACE
+
+   02:33:07  STEP010  INIT     RULE SET MRS-0417 R4 LOADED, 27 LABELS
+   02:33:09  STEP010  INIT     SUPPRESS LIST APPLIED, 7 LABELS DENIED AT SELECT
+   02:33:11  STEP020  READ     OPEN SISPROD.STUDENT.MASTER
+   02:41:26  STEP020  READ     CHECKPOINT 1  ROWS=10000
+   02:49:03  STEP020  READ     CHECKPOINT 2  ROWS=20000
+   02:56:44  STEP020  READ     CHECKPOINT 3  ROWS=30000
+   03:04:52  STEP020  READ     CHECKPOINT 4  ROWS=40000
+   03:06:01  STEP020  READ     EOF  ROWS READ=41207
+   03:06:03  STEP030  VALID    BEGIN
+   03:18:40  STEP030  VALID    E=122  W=97  PASS=40988
+   03:18:42  STEP040  XFORM    R01 TOKENS ISSUED=77
+   03:18:42  STEP040  XFORM    R03 WINDOWED=41173  FAILED=34
+   03:22:15  STEP050  WRITE    PUPACCT.EXTRACT  ROWS WRITTEN=40988
+   03:22:16  STEP050  WRITE    BLOCKS=6832  BYTES=12296400
+   03:22:19  STEP060  EXCP     SISWRK.EXCP.PUPACCT  ROWS=219
+   03:22:24  STEP070  PURGE    SISWRK.STG.PUPACCT GEN-3 DELETED
+   03:22:26  STEP099  TERM     RC=0004
+
+2. CLAUSES OF RECORD
+
+2.1 Return code 0004 reflects warning conditions only and does not bar transmission.
+
+2.2 Reconciliation: 41,207 read less 219 held equals 40,988 written. The counts agree and are certified by the third-shift operator.
+
+2.3 Labels DATE_OF_BIRTH, LEGAL_SURNAME, LEGAL_GIVEN_NAME, MIDDLE_INITIAL, GENDER_CODE and RACE_ETHNIC_CODE were transformed in core and are not held in any restart dataset.
+
+2.4 Labels SOC_SEC_NBR, MEDICAID_NBR, HOME_PHONE, EMERG_CONTACT_PHONE, RESIDENCE_STREET_1, GUARDIAN_1_SURNAME and GUARDIAN_1_EMPLOYER were denied at STEP010 per MRS-0417 clause 5.1 and were never opened for read.
+
+2.5 The tape volume for PUPACCT.EXTRACT was mounted at 03:22:14 and dismounted at 03:24:02. Custody passed to the Records Custodian at 07:30 on 12-OCT-1998 for courier despatch to the State Department of Education.
+
+2.6 Restart, if required, is from CHECKPOINT 4. A restart re-issues no tokens; the vault entry established at STEP040 governs.
+
+2.7 The catch-up run for held records is registered as ETLSTU10.19981019.0230.
+
+END OF LOG — ETLSTU10.19981012.0233

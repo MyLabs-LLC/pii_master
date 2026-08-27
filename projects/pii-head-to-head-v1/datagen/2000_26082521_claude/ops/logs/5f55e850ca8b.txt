@@ -1,0 +1,63 @@
+TITLE & ESCROW DATA SERVICES
+DATA QUALITY EXCEPTION REGISTER
+REPORT       DQ-EXC-0317-02
+GENERATED    2011-03-17 03:12:55 CST
+SOURCE JOB   ETL-8841 (subjobs .01 through .04)
+CYCLE        2011-03-17
+TOTAL ROWS PRESENTED      5,609,715
+TOTAL ROWS ACCEPTED       5,607,660
+TOTAL ROWS REJECTED           2,055
+
+1.  EXCEPTIONS BY RULE
+
+RULE     ERR CODE   FIELD LABEL                   ROWS    DISPOSITION
+--------------------------------------------------------------------------
+1.01     VAL-1102   BORROWER_LAST_NAME             412    HOLD FOR REPAIR
+1.02     VAL-1102   BORROWER_FIRST_NAME            389    HOLD FOR REPAIR
+1.03     VAL-2041   BORROWER_SSN                   201    QUARANTINE
+1.04     VAL-2044   BORROWER_SSN                    46    QUARANTINE
+1.05     VAL-3310   BORROWER_DOB                   118    HOLD FOR REPAIR
+1.06     VAL-4002   PROPERTY_ADDR_LINE_1           277    ROUTE TO STEWARD
+1.07     VAL-4011   PROPERTY_POSTAL_CODE           163    AUTO-CORRECT
+1.08     VAL-5120   ESCROW_ACCOUNT_NBR              91    QUARANTINE
+1.09     VAL-5121   DISBURSEMENT_ACCT_NBR           34    QUARANTINE
+1.10     VAL-5140   WIRE_ABA_RTN                     7    INCIDENT RAISED
+1.11     VAL-6001   SELLER_TIN                      52    QUARANTINE
+1.12     VAL-6220   LENDER_LOAN_NBR                168    HOLD FOR REPAIR
+1.13     VAL-7003   ESCROW_FILE_NBR                 63    ROUTE TO STEWARD
+1.14     VAL-7009   TITLE_POLICY_NBR                21    ROUTE TO STEWARD
+1.15     VAL-8801   NOTARY_COMMISSION_NBR           13    HOLD FOR REPAIR
+--------------------------------------------------------------------------
+                                          TOTAL   2,055
+
+2.  ERROR CODE DEFINITIONS
+
+2.01  VAL-1102  Mandatory party field arrived empty or whitespace only.
+2.02  VAL-2041  Value failed the checksum test defined for the field.
+2.03  VAL-2044  Value failed the length test defined for the field.
+2.04  VAL-3310  Date component out of permitted range for the field.
+2.05  VAL-4002  Situs line could not be standardised against the reference set.
+2.06  VAL-4011  Postal component shorter than the configured minimum.
+2.07  VAL-5120  Account field failed modulus validation.
+2.08  VAL-5121  Account field present without a matching disbursement header.
+2.09  VAL-5140  Routing field failed the suppression assertion at Clause 2.03
+                of ruleset DPS-MASK-0042.
+2.10  VAL-6001  Taxpayer field present on a record class where it is prohibited.
+2.11  VAL-6220  Loan reference not resolvable in the tokenisation vault.
+2.12  VAL-7003  File reference not found on the master index.
+2.13  VAL-7009  Policy reference duplicated within the cycle.
+2.14  VAL-8801  Commission field present after the suppression pass.
+
+3.  HANDLING INSTRUCTIONS
+
+3.01  Rows marked QUARANTINE are written to qtn_8841_<subjob>.dat and are
+      readable only by holders of the DQ_QUARANTINE role.
+3.02  Rows marked HOLD FOR REPAIR are returned to the originating branch queue
+      for correction at source. Field values are not reproduced in the queue
+      notification; only the field label and the error code are carried.
+3.03  Rows marked AUTO-CORRECT are amended by the standardisation service and
+      re-presented on the following cycle.
+3.04  Rows marked INCIDENT RAISED are referred to the Records Custodian within
+      one business day and are excluded from all extracts pending closure.
+3.05  This register is retained for seven years in accordance with the records
+      schedule maintained by the Compliance Officer.

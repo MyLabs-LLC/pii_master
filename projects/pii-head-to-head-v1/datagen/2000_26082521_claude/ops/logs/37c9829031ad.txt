@@ -1,0 +1,20 @@
+VALIDATION ERROR TRIAGE — CHD-ETL-IMM-0141
+Load: immunisation registry weekly
+Started 2016-09-11 23:40:02 CST / ended 2016-09-12 00:07:55 CST
+Rows read 18,774 / accepted 18,602 / rejected 172
+
+Triage checklist:
+
+* [x] E-1042 `date_of_birth` fails format mask YYYY-MM-DD — 61 rows; values not written to the error log, offsets only.
+* [x] E-1042 `vaccination_date` fails format mask YYYY-MM-DD — 12 rows.
+* [x] E-2210 `residence_zip` length < 5 before truncation rule applied — 44 rows.
+* [x] E-2211 `residence_state` not in reference domain — 9 rows.
+* [x] E-3301 `medical_record_number` null on required column — 28 rows; tokeniser skipped, rows quarantined.
+* [x] E-3302 `insurance_member_id` present but unrouted — 18 rows; field suppressed, rows retained.
+* [x] E-4400 `patient_last_name` exceeds 40 positions pre-hash — 0 rows.
+* [ ] E-5150 `emergency_contact_phone` populated on a feed declared contact-free — 172 occurrences flagged; source system owner to confirm the column can be dropped at query level.
+
+Disposition:
+
+* [x] Reject file `imm_reject_0141` written 2016-09-12 00:07:51; all identifying columns masked at write.
+* [ ] Corrected feed requested from the submitting clinic system; re-load scheduled for the following weekly window.

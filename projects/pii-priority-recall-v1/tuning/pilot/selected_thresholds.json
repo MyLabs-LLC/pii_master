@@ -1,0 +1,160 @@
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.14285714285714285,
+    "held_in_recall": 0.974025974025974,
+    "target": 0.96,
+    "threshold": 2.8404948711395264,
+    "worst_corpus_ci_lower": 0.9268066847335141
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.7835820895522388,
+    "held_in_recall": 0.9722222222222222,
+    "target": 0.96,
+    "threshold": 3.5094401836395264,
+    "worst_corpus_ci_lower": 0.9367797904845047
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.06436420722135008,
+    "held_in_recall": 0.9761904761904762,
+    "target": 0.98,
+    "threshold": 3.1139323711395264,
+    "worst_corpus_ci_lower": 1.0
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.4645669291338583,
+    "held_in_recall": 0.9672131147540983,
+    "target": 0.96,
+    "threshold": 2.173828125,
+    "worst_corpus_ci_lower": 0.9297297297297298
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_phi_patient_id_number": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.2735982966643009,
+    "held_in_recall": 0.9759493670886076,
+    "target": 0.96,
+    "threshold": 1.18115234375,
+    "worst_corpus_ci_lower": 0.9281767955801105
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.12254570074475288,
+    "held_in_recall": 0.9917808219178083,
+    "target": 0.96,
+    "threshold": 1.1142578125,
+    "worst_corpus_ci_lower": 0.9166666666666666
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5741714886901631,
+    "held_in_recall": 0.9745535714285715,
+    "target": 0.94,
+    "threshold": 0.543701171875,
+    "worst_corpus_ci_lower": 0.919267499157682
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.3161819537658464,
+    "held_in_recall": 0.9571106094808126,
+    "target": 0.94,
+    "threshold": 1.7347005605697632,
+    "worst_corpus_ci_lower": 0.9148148148148149
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.36129032258064514,
+    "held_in_recall": 0.9581749049429658,
+    "target": 0.94,
+    "threshold": 1.6529947519302368,
+    "worst_corpus_ci_lower": 0.9113687889665596
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.051747616886064454,
+    "held_in_recall": 0.95,
+    "target": 0.96,
+    "threshold": 1.1279296875,
+    "worst_corpus_ci_lower": 0.9230769230769231
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.16374059476890004,
+    "held_in_recall": 0.9870410367170627,
+    "target": 0.96,
+    "threshold": 0.9912109375,
+    "worst_corpus_ci_lower": 0.931504892367906
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.31532846715328466,
+    "held_in_recall": 0.9578713968957872,
+    "target": 0.94,
+    "threshold": 1.7119140625,
+    "worst_corpus_ci_lower": 0.9132075471698113
+  }
+}

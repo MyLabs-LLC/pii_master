@@ -1,0 +1,96 @@
+MEMORANDUM
+
+TO:      Distribution — Systems, Compliance, Escrow Accounting
+FROM:    the Records Custodian
+DATE:    1 March 2004
+SUBJECT: Masking configuration DMASK.CFG, version 4.2 — effective
+         with the March cycle
+FILE:    ADM-04-0112
+
+Version 4.2 supersedes version 4.1 in all non-production regions
+and in all warehouse extracts. Version 4.1 remains in force for the
+February close only. The configuration text is reproduced below for
+the record. Changes from 4.1 are marked at the right margin with an
+asterisk.
+
+; ------------------------------------------------------------
+; DMASK.CFG   rev 4.2   effective 2004-03-01
+; owner: the Records Custodian
+; ------------------------------------------------------------
+
+[GLOBAL]
+CONFIG_VERSION       = 4.2
+EFFECTIVE_DT         = 2004-03-01
+DEFAULT_ACTION       = SUPPRESS
+UNMAPPED_COLUMN      = WARN_AND_SUPPRESS
+UNMAPPED_ESCALATE    = FAIL_JOB                                  *
+TOKEN_VAULT          = TVLT01
+TOKEN_PREFIX         = TKN:
+AUDIT_LOG            = MASKAUD.LOG
+REVERSAL_ROLE        = ESCROW_CUSTODIAN_ONLY
+
+[CLASS.TAXID]
+COLUMNS   = PARTY_TIN, BUYER_TIN, SELLER_TIN, VENDOR_TIN,
+            W9_TIN_NBR, SELLER_TIN_1099S
+ACTION    = TOKENIZE
+PATTERN   = XXX-XX-XXXX
+RETAIN    = NONE
+NOTE      = 1099-S reporting extract exempt; see [EXEMPT.1099S]
+
+[CLASS.NAME]
+COLUMNS   = PARTY_NAME_LAST, PARTY_NAME_FIRST, PARTY_MIDDLE_INIT,
+            BUYER_NAME_FULL, SELLER_NAME_FULL, DISB_PAYEE_NAME,
+            SIGNATORY_NAME, NOTARY_NAME, AGENT_OF_RECORD_NAME
+ACTION    = SUBSTITUTE
+PATTERN   = XXXXXXXXXX
+RETAIN    = NONE
+
+[CLASS.CONTACT]
+COLUMNS   = PARTY_PHONE_HOME, PARTY_PHONE_WORK, PARTY_FAX_NBR,
+            PARTY_EMAIL_ADDR, MAIL_ADDR_LINE_1, MAIL_ADDR_LINE_2,
+            MAIL_CITY, MAIL_STATE, MAIL_ZIP
+ACTION    = SUPPRESS
+PATTERN   = (null)
+RETAIN    = MAIL_STATE, MAIL_ZIP5                                *
+
+[CLASS.DEMOGRAPHIC]
+COLUMNS   = PARTY_DOB, PARTY_DL_NBR, PARTY_DL_STATE,
+            PARTY_PASSPORT_NBR, MARITAL_STATUS_CD, VESTING_TEXT
+ACTION    = SUPPRESS
+PATTERN   = (null)
+NOTE      = VESTING_TEXT is free-form and may carry names; the
+            column is suppressed in whole. No partial rule.       *
+
+[CLASS.FINANCIAL]
+COLUMNS   = ESCROW_ACCT_NBR, TRUST_SUBACCT_NBR, DISB_ACCT_NBR,
+            WIRE_ABA_NBR, CHECK_NBR, LENDER_LOAN_NBR,
+            CARD_ACCT_NBR
+ACTION    = TOKENIZE
+PATTERN   = XXXXXXXXXXXX
+RETAIN    = LAST0                                                *
+
+[CLASS.PROPERTY]
+COLUMNS   = PROP_ADDR_LINE_1, PROP_ADDR_LINE_2, PROP_UNIT_NBR
+ACTION    = SUPPRESS
+COLUMNS_PASS = PROP_CITY, PROP_COUNTY, PROP_STATE, APN_NBR
+NOTE      = APN passes as a parcel attribute, not a party
+            attribute. Confirmed by Compliance 2004-02-24.
+
+[EXEMPT.1099S]
+JOBS      = IRS-1099S-ANNUAL
+COLUMNS   = SELLER_TIN_1099S, SELLER_NAME_FULL, PROP_ADDR_LINE_1
+ACTION    = PASSTHROUGH
+CONTROL   = DUAL_CUSTODY, LOG_EVERY_ROW
+
+; end of file
+
+Three items require action. First, RETAIN=LAST0 removes the
+trailing-digit retention previously allowed on account columns;
+reports that keyed on those digits must be rekeyed to the token.
+Second, VESTING_TEXT is now suppressed in whole, which will empty
+approximately 61,000 warehouse rows in the March load. Third, any
+column not appearing above will now abort the job rather than load
+suppressed; departments adding columns must file a request through
+this office not less than five business days before the cycle.
+
+Direct questions to this office. Do not alter the file locally.

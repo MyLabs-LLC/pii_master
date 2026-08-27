@@ -1,0 +1,41 @@
+DATA DICTIONARY EXCERPT — MEMBER PORTAL
+OBJECT.......: MBRSHIP.MEMBER_PROFILE
+INSTANCE.....: PRD-WEB
+REVISION.....: 3.0, 2016
+CLASS........: Restricted
+
+I. COLUMNS
+NAME                    TYPE            NULL      NOTE
+--------------------    ------------    ------    ------------------------------
+MBR_ID                  bigint          NO        PK. Portal-visible.
+MBR_STATUS_CD           char(2)         NO        Domain in DOM_MBR_STATUS.
+MBR_LAST_NAME           varchar(60)     NO
+MBR_FIRST_NAME          varchar(40)     YES
+MBR_LOGIN_EMAIL         varchar(120)    NO        Unique index. Also the login id.
+MBR_ALT_EMAIL           varchar(120)    YES       Not verified. Do not use for notice.
+MBR_PHONE               varchar(20)     YES
+MBR_ADDR_LINE_1         varchar(80)     YES
+MBR_CITY                varchar(50)     YES
+MBR_STATE_CD            char(2)         YES
+MBR_POSTAL_CD           varchar(10)     YES
+MBR_BIRTH_DATE          date            YES       Identity challenge only.
+MBR_TIN_LAST4           char(4)         YES       Challenge question source.
+MBR_PWD_HASH            varbinary(64)   NO        Salted. Never selected by report.
+MBR_PWD_SALT            varbinary(32)   NO
+MBR_FAILED_LOGIN_CNT    smallint        NO        Default 0. Lockout at threshold.
+MBR_LAST_LOGIN_DTM      datetime        YES
+MBR_CONSENT_ESIGN_FLAG  bit             NO        Default 0. E-SIGN disclosure.
+MBR_CONSENT_MKTG_FLAG   bit             NO        Default 0. Governs Section III.
+MBR_OPTOUT_DT           date            YES       Set on receipt of opt-out notice.
+LINKED_PTY_ID           bigint          YES       FK to dbo.PTY_MASTER. Sparse.
+CREATED_DTM             datetime        NO
+LAST_UPD_DTM            datetime        NO
+
+II. ACCESS RESTRICTION
+Web tier connects under a service account with execute rights on stored procedures only. No table-level select is granted. Support staff use the read-only masked view VW_MBR_SUPPORT, which suppresses MBR_BIRTH_DATE, MBR_TIN_LAST4, MBR_PWD_HASH and MBR_PWD_SALT. Elevation is granted case by case by the Records Custodian and expires at end of shift.
+
+III. RETENTION
+Profiles inactive for thirty-six consecutive months are set to closed status by JB_MBR_DORMANT and the address, phone and date-of-birth columns are nulled. Closed profiles are deleted after a further twelve months unless LINKED_PTY_ID is populated, in which case the row is retained with the escrow file.
+
+IV. DOWNSTREAM EXTRACTS
+Weekly campaign extract, filtered on MBR_CONSENT_MKTG_FLAG = 1 and MBR_OPTOUT_DT is null. Carries name, mailing address and login email. Delivered to the vendor by managed file transfer. Suppression list is refreshed before each run; the Marketing Operations Manager certifies the count against the source query.

@@ -1,0 +1,24 @@
+MEMORANDUM
+
+TO:      Data Governance Working Group; Store Systems Liaison
+FROM:    Office of the Records Custodian
+DATE:    March 14, 2011
+RE:      Data Dictionary Excerpt — MBR_MASTER (Loyalty and Pharmacy Services)
+
+Pursuant to Section 4.2 of the Information Handling Standard, the undersigned circulates the following excerpt of the MBR_MASTER table as presently constituted in the PROD_CRM instance. This excerpt is partial and shall not be relied upon as an exhaustive enumeration of the physical schema.
+
+COLUMN                TYPE            NULL   NOTES
+MBR_ID                NUMBER(12)      NO     Surrogate key. Sequence-assigned at enrollment.
+ENROLL_STORE_NBR      NUMBER(5)       NO     FK to STORE_DIM. Governs district reporting.
+MBR_LAST_NAME         VARCHAR2(40)    NO     Restricted. Role CRM_PII_READ only.
+MBR_FIRST_NAME        VARCHAR2(40)    NO     Restricted. As above.
+MBR_DOB               DATE            YES    Restricted. Required where RX_LINK_FLG = Y.
+MBR_ADDR_LINE_1       VARCHAR2(60)    YES    Restricted. Standardized nightly by address hygiene job.
+MBR_POSTAL_CD         VARCHAR2(10)    YES    Semi-restricted; first five positions released to marketing.
+MBR_PHONE_PRIMARY     VARCHAR2(20)    YES    Restricted. Do-not-call suppression applied at extract.
+MBR_EMAIL_ADDR        VARCHAR2(120)   YES    Restricted. Consent state carried in EMAIL_OPT_IN_CD.
+RX_LINK_FLG           CHAR(1)         NO     Y indicates linkage to pharmacy patient record.
+LAST_TXN_DT           DATE            YES    Basis for dormancy computation.
+REC_STATUS_CD         CHAR(2)         NO     AC, IN, SU, PU (purge-pending).
+
+Columns marked Restricted are excluded from all general-population views and from the nightly extract to the marketing datamart. Records attaining REC_STATUS_CD = 'PU' are retained thirty-six (36) months from LAST_TXN_DT, whereupon the restricted columns are overwritten and the row is retained in aggregate form only. Any deviation requires the prior written concurrence of the Privacy Officer.

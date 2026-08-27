@@ -1,0 +1,53 @@
+COMMERCIAL & GROUP SYSTEMS — DATA DICTIONARY EXCERPT
+SUBJECT AREA: MEMBER MASTER (MBR)
+PHYSICAL OBJECT: PROD.DW_MBR_MASTER (Oracle 12c, tablespace TS_MBR_DAT)
+DICTIONARY REVISION: 2021.03 — maintained by the Records Custodian, Enterprise Data Management
+
+COLUMN NAME              DATA TYPE       NULL  OPERATIONAL NOTE
+-----------------------  --------------  ----  -----------------------------------------------
+MBR_SK                   NUMBER(18)      N     Surrogate key. Sequence-generated. Never exposed
+                                               outside the warehouse boundary.
+MBR_ID                   VARCHAR2(12)    N     Enterprise member identifier. Class 2 (Internal).
+                                               Permitted in extracts to TPAs under BAA only.
+SUBSCR_ID                VARCHAR2(12)    N     Contract holder key. Self-referencing to MBR_ID
+                                               where subscriber and member are the same party.
+LEG_MBR_NBR              VARCHAR2(15)    Y     Legacy AS/400 key. Populated only for contracts
+                                               migrated prior to the 2018 conversion.
+SSN_TIN                  CHAR(9)         Y     Class 4 (Restricted). Column-level encryption via
+                                               TDE. SELECT granted to role R_MBR_PII only.
+                                               Excluded from all standard extracts; masked in
+                                               non-production clones by DM_MASK_PKG.
+NAME_LAST                VARCHAR2(40)    N     Class 3 (Confidential). Trimmed, upper-folded on
+                                               load. No diacritic normalization applied.
+NAME_FIRST               VARCHAR2(30)    N     Class 3 (Confidential).
+NAME_MID_INIT            CHAR(1)         Y     Populated in roughly 61% of active rows.
+NAME_SFX                 VARCHAR2(5)     Y     Free-text tail; not validated against a code set.
+DOB_DT                   DATE            N     Class 4 (Restricted). Used for age-band derivation
+                                               in RATING_FCT. Downstream extracts carry AGE_BAND
+                                               only; the raw date is suppressed at the view layer.
+GENDER_CD                CHAR(1)         Y     Domain: M, F, U, X. X added 2021-02 per state
+                                               filing requirement; historical rows not restated.
+ADDR_LINE_1              VARCHAR2(60)    Y     Class 3. Sourced from the enrollment gateway,
+                                               unstandardized until the nightly CASS pass runs.
+ADDR_LINE_2              VARCHAR2(60)    Y     Class 3.
+CITY_NM                  VARCHAR2(40)    Y     Class 3.
+STATE_CD                 CHAR(2)         Y     FIPS/USPS domain. Drives situs and premium tax.
+POSTAL_CD                VARCHAR2(10)    Y     Class 3 at 9-digit precision; the 3-digit prefix
+                                               view MBR_GEO_V is Class 1 and analytics-eligible.
+PHONE_HOME               VARCHAR2(10)    Y     Class 3. Digits only; extension stored separately.
+EMAIL_ADDR               VARCHAR2(120)   Y     Class 3. Consent flag must be evaluated jointly
+                                               with COMM_OPT_IN_FLG before any outbound use.
+COMM_OPT_IN_FLG          CHAR(1)         N     Y/N. Default N on new enrollment.
+ELIG_EFF_DT              DATE            N     Coverage effective date.
+ELIG_TERM_DT             DATE            Y     Null denotes active coverage.
+PLAN_CD                  VARCHAR2(8)     N     FK to DIM_PLAN.
+ROW_LOAD_TS              TIMESTAMP(6)    N     ETL audit column. Populated by MBR_LOAD_02.
+SRC_SYS_CD               VARCHAR2(4)     N     Origin system. Domain maintained in DIM_SRC_SYS.
+
+RETENTION: Row-level retention is seven years past ELIG_TERM_DT, after which the purge job
+MBR_PURGE_ANNUAL nulls Class 3 and Class 4 columns and retains the key and coverage skeleton for
+actuarial continuity. Legal-hold rows are flagged in MBR_HOLD_XREF and bypass the purge.
+
+ACCESS: Base table access is denied to all interactive accounts. Analysts consume MBR_ANALYTIC_V,
+which omits SSN_TIN, DOB_DT, and the three contact columns. Grant changes require an approved
+access request and quarterly recertification by the Records Custodian.

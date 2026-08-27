@@ -1,0 +1,61 @@
+DATA ELEMENT MAPPING RULE SPECIFICATION
+Office of the University Registrar — Enterprise Reporting Services
+Form RG-114 (rev. 09/2010)
+
+SECTION A — JOB REGISTRATION
+Job Identifier .................. ETL_REG_SIS2ODS_0417
+Job Group ....................... REGISTRAR_NIGHTLY
+Scheduler Entry ................. AUTOSYS::rg_sis2ods_d
+Effective Date .................. 2011-03-14
+Specification Status ............ APPROVED
+Prepared By ..................... Data Integration Analyst, Enterprise Reporting Services
+Reviewed By ..................... the Records Custodian, Office of the University Registrar
+Retention Class ................. R-07 (Student Record Derivative)
+
+SECTION B — SOURCE AND TARGET
+Source System ................... SIS Production (Oracle 10g, schema SATURN)
+Source Objects .................. SPRIDEN, SPBPERS, SPRADDR, SGBSTDN, SFRSTCR
+Target System ................... Operational Data Store (schema ODS_REG)
+Target Objects .................. D_PERSON, D_PERSON_CONTACT, F_ENROLLMENT
+Extract Window .................. Prior business day 00:00:00 through 23:59:59
+Load Method ..................... Type 2 slowly changing dimension, upsert by surrogate key
+
+SECTION C — MAPPING RULES
+Rule ID | Source Field | Target Field | Transformation
+M-001 | SPRIDEN_ID | PERSON_TOKEN | Surrogate token substitution, vault ref TKNV-REG-01
+M-002 | SPRIDEN_LAST_NAME | LAST_NAME | Trim; upper; suppress at ODS boundary per S-004
+M-003 | SPRIDEN_FIRST_NAME | FIRST_NAME | Trim; upper; suppress at ODS boundary per S-004
+M-004 | SPBPERS_SSN | NATIONAL_ID_TOKEN | Tokenise at extract; source value never staged
+M-005 | SPBPERS_BIRTH_DATE | BIRTH_YEAR | Derive year component only; discard day and month
+M-006 | SPBPERS_SEX | SEX_CODE | Pass through, domain-checked against V-SEX
+M-007 | SPRADDR_STREET_LINE1 | ADDR_LINE1_MASK | Full mask, retain length only
+M-008 | SPRADDR_STREET_LINE2 | ADDR_LINE2_MASK | Full mask, retain length only
+M-009 | SPRADDR_CITY | CITY | Pass through
+M-010 | SPRADDR_STAT_CODE | STATE_CODE | Pass through
+M-011 | SPRADDR_ZIP | POSTAL_PREFIX | Retain leading three characters, pad remainder
+M-012 | SPRTELE_PHONE_AREA | PHONE_MASK | Full mask
+M-013 | SPRTELE_PHONE_NUMBER | PHONE_MASK | Full mask, concatenated with M-012 output
+M-014 | GOREMAL_EMAIL_ADDRESS | EMAIL_DOMAIN | Retain domain component only
+M-015 | SGBSTDN_TERM_CODE_EFF | TERM_CODE | Pass through
+M-016 | SGBSTDN_LEVL_CODE | LEVEL_CODE | Pass through, domain-checked against V-LEVL
+M-017 | SGBSTDN_DEGC_CODE_1 | DEGREE_CODE | Pass through
+M-018 | SFRSTCR_CREDIT_HR | CREDIT_HOURS | Numeric, two decimal places
+M-019 | SFRSTCR_GRDE_CODE | GRADE_CODE | Pass through, restricted per S-002
+
+SECTION D — RESTRICTED ELEMENT HANDLING
+S-001 ... NATIONAL_ID_TOKEN is write-once. No downstream job may request detokenisation without a signed access authorisation on Form RG-208.
+S-002 ... GRADE_CODE and CREDIT_HOURS are directory-excluded and require role REG_ODS_ACADEMIC.
+S-003 ... FERPA confidentiality indicator SPBPERS_CONFID_IND is carried to CONFID_FLAG and evaluated before any extract to a non-registrar consumer.
+S-004 ... LAST_NAME and FIRST_NAME are suppressed to placeholder in all consumer views except REG_ODS_FULL.
+S-005 ... Masked outputs are fixed-width placeholder characters. Reversal is not supported by design.
+
+SECTION E — VOLUME EXPECTATIONS
+Expected source rows per run .... 214,000 to 238,000
+Expected target inserts ......... 1,400 to 4,900
+Expected target updates ......... 6,000 to 19,000
+Reject tolerance ................ 0.50 percent of source rows
+
+SECTION F — CHANGE LOG
+2010-11-02 | Initial specification issued
+2011-01-19 | M-011 amended from full postal code to three-character prefix
+2011-03-14 | M-014 added; S-005 clarified

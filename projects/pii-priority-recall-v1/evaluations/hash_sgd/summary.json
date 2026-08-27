@@ -1,0 +1,130 @@
+{
+  "aggregate": {
+    "equal_corpus_macro_f2": 0.42336969312911127,
+    "equal_corpus_micro_f1": 0.34522298884465286,
+    "measurable_priority_gates": 55,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 55,
+    "worst_priority_recall": 0.9966329966329966
+  },
+  "arms": [
+    {
+      "artifact": "evaluations/hash_sgd/4000_datax-dualjudge-evalset-1.32k.json",
+      "dataset": "4000_datax-dualjudge-evalset-1.32k",
+      "metrics": {
+        "docs_per_s": 2636.929668000428,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 1,
+        "priority_point_passes": 1,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "abdb0f692175420abc7423a66aaa1626",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/6589_govdocs2-dualjudge-eval20-3.53k.json",
+      "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+      "metrics": {
+        "docs_per_s": 2380.3893529538864,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 2,
+        "priority_point_passes": 2,
+        "worst_priority_recall": 0.9966329966329966
+      },
+      "mlflow_run_id": "e358418b33274bc4919d63d91764db86",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/ai4privacy_pii_masking_eval_10k.json",
+      "dataset": "ai4privacy_pii_masking_eval_10k",
+      "metrics": {
+        "docs_per_s": 61264.31700388324,
+        "macro_f2": 0.5138092054139196,
+        "micro_f1": 0.34727239185674924,
+        "priority_measurable": 10,
+        "priority_point_passes": 10,
+        "worst_priority_recall": 0.9990925589836661
+      },
+      "mlflow_run_id": "433ab40e2d264492b15adf9e347375f5",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/betterdataai_ner_silver_eval_10k.json",
+      "dataset": "betterdataai_ner_silver_eval_10k",
+      "metrics": {
+        "docs_per_s": 47719.85284748786,
+        "macro_f2": 0.1671016615024411,
+        "micro_f1": 0.19469056823235606,
+        "priority_measurable": 4,
+        "priority_point_passes": 4,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "2a828c1f20c04285a7cc60e23d48898e",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/nemotron_eval_6k.json",
+      "dataset": "nemotron_eval_6k",
+      "metrics": {
+        "docs_per_s": 22443.031947291784,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 0,
+        "priority_point_passes": 0,
+        "worst_priority_recall": null
+      },
+      "mlflow_run_id": "75db00b96f76494bb87372416f03175c",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/openpii_pii_eval_38k.json",
+      "dataset": "openpii_pii_eval_38k",
+      "metrics": {
+        "docs_per_s": 38348.719445444105,
+        "macro_f2": 0.6489332938717723,
+        "micro_f1": 0.6582602828889524,
+        "priority_measurable": 9,
+        "priority_point_passes": 9,
+        "worst_priority_recall": 0.9997093656906197
+      },
+      "mlflow_run_id": "b759fb0effd14ec49be7a4d1cd9be998",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/pii2_eval_30k.json",
+      "dataset": "pii2_eval_30k",
+      "metrics": {
+        "docs_per_s": 5732.5555873292105,
+        "macro_f2": 0.311098893470704,
+        "micro_f1": 0.146864267904674,
+        "priority_measurable": 15,
+        "priority_point_passes": 15,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "45b4346a65954e8a803d2a19f1082fc3",
+      "model": "hash_sgd"
+    },
+    {
+      "artifact": "evaluations/hash_sgd/pii_holdout_20k.json",
+      "dataset": "pii_holdout_20k",
+      "metrics": {
+        "docs_per_s": 6658.495086271451,
+        "macro_f2": 0.4759054113867193,
+        "micro_f1": 0.3790274333405324,
+        "priority_measurable": 14,
+        "priority_point_passes": 14,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "893d893f8ac04ff090f5202533e5055b",
+      "model": "hash_sgd"
+    }
+  ],
+  "model": "hash_sgd",
+  "read_window_chars": 20000,
+  "workers": 32
+}

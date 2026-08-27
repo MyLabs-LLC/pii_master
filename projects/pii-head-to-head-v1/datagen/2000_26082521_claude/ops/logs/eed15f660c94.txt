@@ -1,0 +1,32 @@
+VALIDATION EXCEPTION SUMMARY — DAILY
+COUNTY HEALTH DEPARTMENT / COMMUNICABLE DISEASE REGISTRY
+JOB ID: JOB03204   RUN SEQUENCE: 0117   PRODUCED 17-FEB-1999 03:41:22
+
+  A. VOLUME
+     1. Rows presented ..................... 6,884
+     2. Rows accepted ..................... 6,602
+     3. Rows held for correction .......... 282
+     4. Hold file ......................... [PROD.HOLD]CDREG0117.HLD;1
+
+  B. EXCEPTIONS BY FIELD
+     1. DATE_OF_BIRTH
+        a. E-114 outside century window .... 96
+        b. E-116 non-numeric in picture .... 11
+     2. REPORTING_PROVIDER_NPI
+        a. E-221 check digit fails ......... 44
+     3. RESIDENCE_ZIP
+        a. E-207 picture violation ......... 39
+     4. SPECIMEN_COLLECTION_DATE
+        a. E-131 later than REPORT_DATE .... 33
+     5. CASE_REGISTRY_ID
+        a. E-441 token length mismatch ..... 28
+        b. E-443 vault lookup miss ......... 9
+     6. DISEASE_CONDITION_CD
+        a. E-509 not in ICD-9-CM domain .... 22
+
+  C. DISPOSITION
+     1. Held rows carry masked values only; source values remain at origin.
+     2. Correction worklist routed to the Registry Supervisor.
+     3. Rows uncorrected after 10 business days return to the submitting
+        facility under the standing data quality memorandum.
+     4. Re-presentation occurs on the next nightly cycle.

@@ -1,0 +1,63 @@
+# masking.cfg
+# module: MSKENG 2.3.1
+# loaded 1999-02-08 01:12:44 CST by job RXW0412
+# validated against ETLMAP.RX.PATDIM.CFG rev 04
+
+  defaults {
+      unmasked_default   = DENY
+      on_unknown_field   = ABORT
+      audit_target       = MSKLOG.RXW.D1999038
+  }
+
+  profile "warehouse_load" {
+
+      class NAME {
+          fields  = PAT_LAST_NM, PAT_FIRST_NM, GUARANTOR_LAST_NM,
+                    PRESCRIBER_LAST_NM, EMPLR_CONTACT_NM
+          action  = TOKENIZE
+          display = "**********"
+      }
+
+      class GOVT_ID {
+          fields  = PAT_SSN, GUARANTOR_SSN, EMPLR_TAX_ID
+          action  = SUPPRESS
+          display = "***-**-****"
+          note    = field retained in copybook position, nulled on landing
+      }
+
+      class FINANCIAL {
+          fields  = HOUSE_ACCT_NBR, TENDER_CARD_NBR, TENDER_EXP_DT
+          action  = SUPPRESS
+          display = "****-****-****-****"
+      }
+
+      class CONTACT {
+          fields  = PAT_HOME_PHONE, PAT_WORK_PHONE, PAT_EMAIL_ADDR,
+                    PAT_ADDR_LN1, PAT_ADDR_LN2, PAT_ZIP4
+          action  = SUPPRESS
+          display = "[MASKED]"
+      }
+
+      class QUASI_ID {
+          fields  = PAT_DOB, PAT_ZIP5
+          action  = GENERALIZE
+          rule    = PAT_DOB -> YYYY ; PAT_ZIP5 -> first 3 positions
+      }
+
+      class PLAN_ID {
+          fields  = TPP_CARDHOLDER_ID, TPP_GROUP_NBR, MEMBER_NBR
+          action  = TOKENIZE
+          display = "TKN_##############"
+      }
+
+      class CLINICAL_FREETEXT {
+          fields  = SIG_TXT, ALLERGY_TXT, COUNSEL_NOTE_TXT
+          action  = SUPPRESS
+          reason  = free text unscannable, no reliable field boundary
+      }
+  }
+
+  exceptions {
+      # none active
+      # expired 1998-12-31: temporary PASS on PAT_ZIP5 for store siting study
+  }

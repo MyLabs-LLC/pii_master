@@ -1,0 +1,56 @@
+{
+  "collapse": {
+    "sensitive_pii_family_name": "sensitive_pii_full_name",
+    "sensitive_pii_given_name": "sensitive_pii_full_name",
+    "sensitive_pii_middle_name": "sensitive_pii_full_name",
+    "sensitive_pii_street_number_and_name": "sensitive_pii_address"
+  },
+  "collapsed": {
+    "equal_corpus_macro_f2": 0.4744511542964148,
+    "equal_corpus_micro_f1": 0.36418424062518084,
+    "measurable": 55,
+    "priority_conclusive_passes": 0
+  },
+  "current": {
+    "equal_corpus_macro_f2": 0.48345749382010117,
+    "equal_corpus_micro_f1": 0.38118396080534256
+  },
+  "delta": {
+    "macro_f2": -0.009006339523686346,
+    "micro_f1": -0.016999720180161715
+  },
+  "family": "champion_1k",
+  "per_corpus": {
+    "ai4privacy_pii_masking_eval_10k": {
+      "macro_f2": 0.5105222601462963,
+      "macro_f2_delta": 0.010972451662712157,
+      "micro_f1": 0.348208330807009,
+      "micro_f1_delta": -0.004701037494105276
+    },
+    "betterdataai_ner_silver_eval_10k": {
+      "macro_f2": 0.24474794612877326,
+      "macro_f2_delta": 0.013497584849639893,
+      "micro_f1": 0.20674875458219757,
+      "micro_f1_delta": 0.004596229230923565
+    },
+    "openpii_pii_eval_38k": {
+      "macro_f2": 0.594251211987007,
+      "macro_f2_delta": -0.035459265190791345,
+      "micro_f1": 0.6215705192349625,
+      "micro_f1_delta": -0.03973229947365686
+    },
+    "pii2_eval_30k": {
+      "macro_f2": 0.47745142697964904,
+      "macro_f2_delta": -0.015528303046841219,
+      "micro_f1": 0.18735065825492092,
+      "micro_f1_delta": -0.02089311627727075
+    },
+    "pii_holdout_20k": {
+      "macro_f2": 0.5452829262403487,
+      "macro_f2_delta": -0.018514165893151024,
+      "micro_f1": 0.45704294024681397,
+      "micro_f1_delta": -0.02426837688669964
+    }
+  },
+  "role": "diagnostic - NOT a gate; the contract is the current taxonomy"
+}

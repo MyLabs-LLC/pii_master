@@ -1,0 +1,64 @@
+INTEROFFICE MEMORANDUM
+OFFICE OF THE UNIVERSITY REGISTRAR
+
+TO:     Records Custodian
+FROM:   Extract Operations
+DATE:   6 April 2004
+RE:     Validation exceptions, job RGSTR_WKLY_0432, run 2004-04-05
+ATTACH: console extract, lines 0441-0498
+
+Attached is the console extract for the failing session. Reject file is
+RGSTR_WKLY_0432.rej.20040405, 1,114 records, held on LOGVOL pending your
+disposition.
+
+2004-04-05 01:00:02 INFO  JOB RGSTR_WKLY_0432 START uid=svc_etl node=ADMCOMP03
+2004-04-05 01:00:04 INFO  PROFILE MASK_PROF_STU_03 rev=4 LOADED bindings=23
+2004-04-05 01:00:04 INFO  VAULT VLT_REG_01 HANDSHAKE ok latency=112ms
+2004-04-05 01:00:09 INFO  SESSION s01 READER SPRIDEN open
+2004-04-05 01:04:51 INFO  SESSION s01 read=41,904 written=41,802 rejected=102
+2004-04-05 01:04:52 INFO  SESSION s02 READER SPBPERS open
+2004-04-05 01:07:18 WARN  VR-050 DOB out of permitted range col=DOB rows=27
+2004-04-05 01:07:18 WARN  VR-050 rows routed to reject; DOB_TKN not generated
+2004-04-05 01:09:40 WARN  VR-002 null not permitted col=LAST_NAME rows=6
+2004-04-05 01:09:40 WARN  VR-002 col=FIRST_NAME rows=11
+2004-04-05 01:09:41 WARN  VR-021 check digit failure col=SPRIDEN_ID rows=44
+2004-04-05 01:11:02 INFO  SESSION s02 read=41,904 written=41,816 rejected=88
+2004-04-05 01:11:03 INFO  MASK_ENGINE suppress applied cols=10 rows=41,816
+2004-04-05 01:11:03 INFO  MASK_ENGINE tokenize applied cols=3 rows=41,816
+2004-04-05 01:11:04 INFO  MASK_ENGINE partial applied cols=3 rows=41,816
+2004-04-05 01:11:11 INFO  SESSION s03 READER SPRADDR open
+2004-04-05 01:14:36 WARN  VR-033 length violation col=PERM_ADDR_ZIP rows=207
+2004-04-05 01:14:36 WARN  VR-034 domain violation col=PERM_ADDR_STATE rows=63
+2004-04-05 01:16:20 WARN  VR-037 col=MAIL_ADDR_LINE1 present with null
+                          MAIL_ADDR_CITY rows=88
+2004-04-05 01:18:02 INFO  SESSION s03 read=57,701 written=57,343 rejected=358
+2004-04-05 01:18:09 INFO  SESSION s04 READER SPRTELE open
+2004-04-05 01:20:44 WARN  VR-045 unparseable col=HOME_PHONE rows=316
+2004-04-05 01:20:44 WARN  VR-045 unparseable col=CELL_PHONE rows=52
+2004-04-05 01:20:45 INFO  VR-045 placeholder emitted; no source value landed
+2004-04-05 01:22:30 INFO  SESSION s04 read=39,410 written=39,042 rejected=368
+2004-04-05 01:22:36 INFO  SESSION s05 READER SPBPERS_XREF open
+2004-04-05 01:24:19 ERROR VR-060 unbound column encountered col=ETHNIC_CD
+2004-04-05 01:24:19 ERROR VR-060 fail_on_unbound=true; session s05 halted
+2004-04-05 01:24:19 ERROR VR-060 rows read=12,880 written=0 rejected=0
+2004-04-05 01:24:20 ERROR VR-060 col also unbound: VISA_TYPE, I20_EXPIRE_DT
+2004-04-05 01:24:22 INFO  ROLLBACK s05 target RGSTR_STG.STU_XREF restored
+2004-04-05 01:24:25 WARN  JOB RGSTR_WKLY_0432 END rc=0008 sessions=5 failed=1
+2004-04-05 01:24:25 INFO  TOTAL read=193,799 written=180,003 rejected=1,114
+
+Three items require your determination.
+
+First, VR-060. Columns ETHNIC_CD, VISA_TYPE and I20_EXPIRE_DT were added to the
+source view on 2004-04-02 without corresponding profile bindings. Session s05
+halted as designed. The weekly census feed to Institutional Research is short
+12,880 rows and will remain short until bindings are approved.
+
+Second, the reject file carries source values in clear for every failing column,
+including DOB, HOME_PHONE and PERM_ADDR_ZIP. Standard retention is fourteen days.
+Confirm whether the file is to be purged on schedule or held for correction.
+
+Third, VR-021. Forty-four identifiers failed the check digit routine. These
+appear to originate in the 1997 conversion. Recommend referral to the Records
+Custodian's correction queue rather than reprocessing.
+
+Reply requested by 9 April so the 12 April cycle may be scheduled.

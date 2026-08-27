@@ -1,0 +1,71 @@
+DATA DICTIONARY EXCERPT
+Form CIS-DD-014, revision 3
+Customer Care & Billing — Data Administration Unit
+
+SECTION A — OBJECT IDENTIFICATION
+Physical object....... CISPRD.CUST_MSTR (table)
+Logical name.......... Customer Master
+Source application.... Customer Information System, release 7.4.2
+Platform.............. Oracle 11g R1, instance CISPRD1
+Data steward.......... the Records Custodian, Customer Care & Billing
+Technical owner....... the Senior Database Administrator (on rotation)
+Classification........ Restricted / Customer Confidential
+Estimated volume...... 214,600 rows; growth approx. 1.4% annually
+Update mode........... OLTP insert and update; no physical delete
+
+SECTION B — COLUMN INVENTORY
+
+COLUMN NAME               TYPE           NULL  OPERATIONAL NOTE
+------------------------- -------------- ----  --------------------------------
+CUST_ID                   NUMBER(12)      N    Surrogate PK, sequence CUST_SEQ
+LEGACY_CUST_NBR           CHAR(9)         Y    Pre-2004 conversion; not reissued
+CUST_TYPE_CD              CHAR(2)         N    FK to CUST_TYPE_REF
+CUST_LAST_NM              VARCHAR2(40)    N    Trimmed on insert; mixed case
+CUST_FIRST_NM             VARCHAR2(30)    Y    Null on commercial accounts
+CUST_MID_INIT             CHAR(1)         Y
+BUS_LEGAL_NM              VARCHAR2(80)    Y    Required when type is not RES
+BIRTH_DT                  DATE            Y    Captured for assistance eligibility only
+SSN_LAST4                 CHAR(4)         Y    Verification only; not an index key
+TAX_ID_ENCR               RAW(64)         Y    Column-level AES-128
+DL_NBR_HASH               CHAR(40)        Y    One-way hash; no reverse routine
+PRIM_PHONE_NBR            VARCHAR2(14)    Y
+ALT_PHONE_NBR             VARCHAR2(14)    Y
+EMAIL_ADDR_TXT            VARCHAR2(60)    Y    Unvalidated prior to Jan 2010 cutover
+SVC_ADDR_LN_1             VARCHAR2(50)    N
+SVC_ADDR_LN_2             VARCHAR2(50)    Y
+SVC_POSTAL_CD             CHAR(10)        N    ZIP+4 where CASS-certified
+MAIL_ADDR_LN_1            VARCHAR2(50)    Y    Null implies mail to service address
+LANG_PREF_CD              CHAR(2)         Y    Drives bill insert selection
+MED_NECESSITY_IND         CHAR(1)         N    Y/N; suppresses disconnect queue
+DECEASED_IND              CHAR(1)         N    Y/N; default N
+ACCT_OPEN_DT              DATE            N
+ACCT_CLOSE_DT             DATE            Y    Null while active; starts retention clock
+LAST_MAINT_USER_ID        VARCHAR2(12)    N
+LAST_MAINT_TS             TIMESTAMP(6)    N
+
+SECTION C — ACCESS RESTRICTION
+Base table SELECT is granted to role CIS_DBA_ROLE only. Counter and call-center
+staff read through view CUST_MSTR_V, which masks TAX_ID_ENCR, DL_NBR_HASH and
+BIRTH_DT and returns SSN_LAST4 only when the session holds CIS_IDVERIFY_ROLE.
+Grants to individual accounts are prohibited under Administrative Directive 09-6;
+all grants are role-mediated and reviewed quarterly by the Records Custodian.
+Fine-grained auditing is enabled on the four masked columns; audit rows land in
+AUD$ and are exported to the security archive weekly.
+
+SECTION D — RETENTION
+Rows are retained six years following ACCT_CLOSE_DT under the state Local
+Government Records Retention Schedule, series LG-4200 (Utility Customer Account
+Records), then purged by job PRG_CUST_MSTR_ANNUAL. Rows carrying an open
+collections referral or an unreleased deposit are exempted from the purge until
+the flag clears. BIRTH_DT is nulled at 24 months past program termination
+irrespective of account status.
+
+SECTION E — DOWNSTREAM EXTRACTS
+EXT_PRINT_DAILY (print and mail vendor) — name, mailing address, language code.
+EXT_COLL_MONTHLY (collections agency) — name, mailing address, SSN_LAST4.
+EXT_ASSIST_QTR (energy assistance office) — name, BIRTH_DT, household counts.
+EXT_DW_NIGHTLY (enterprise warehouse) — all columns except the two encrypted or
+hashed identifiers, which are replaced by a warehouse-local surrogate.
+
+SECTION F — CHANGE CONTROL
+Structural change requires a signed DA-22 and regression of all four extracts.

@@ -1,0 +1,56 @@
+# /etc/adp/mask/masking_policy.cfg
+# revision 11
+# loaded  2016-03-14T01:58:24Z  by  svc_adp_etl
+# scope   ETL_CANDMSTR_NIGHTLY, ETL_PAYEXTR_WEEKLY, RPT_CLIENT_FEED
+# review  quarterly, Compliance Desk
+
+[global]
+default_action        = SUPPRESS
+token_vault           = tv-prod-02
+token_format          = TKN-%08X
+mask_char             = *
+preserve_length       = true
+fail_closed           = true
+audit_channel         = /var/log/adp/mask_audit.log
+break_glass_role      = Records Custodian
+break_glass_ttl_min   = 30
+
+[policy]
++----------------------+-------+-----------+----------------+---------+
+| TARGET_FIELD         | CLASS | ACTION    | RENDERED_AS    | ROLES   |
++----------------------+-------+-----------+----------------+---------+
+| hr_last_name         | PII   | PARTIAL   | A*****         | 3       |
+| hr_first_name        | PII   | PARTIAL   | A*****         | 3       |
+| hr_middle_init       | PII   | FULL      | *              | 2       |
+| hr_birth_date        | SPI   | FULL      | ****-**-**     | 1       |
+| hr_ni_number         | SPI   | TOKENISE  | TKN-********   | 1       |
+| hr_tax_id            | SPI   | TOKENISE  | TKN-********   | 1       |
+| hr_email_addr        | PII   | FULL      | ****@****.***  | 2       |
+| hr_phone_mobile      | PII   | FULL      | ***-***-****   | 2       |
+| hr_addr_line_1       | PII   | SUPPRESS  | (empty)        | 0       |
+| hr_addr_line_2       | PII   | SUPPRESS  | (empty)        | 0       |
+| hr_city              | PII   | PASSTHRU  | (as loaded)    | 4       |
+| hr_postal_code       | PII   | TRUNCATE  | AA* ***        | 3       |
+| hr_sort_code         | FIN   | TOKENISE  | TKN-********   | 1       |
+| hr_acct_number       | FIN   | TOKENISE  | TKN-********   | 1       |
+| hr_doc_number        | SPI   | TOKENISE  | TKN-********   | 1       |
+| hr_doc_expiry        | SPI   | FULL      | ****-**-**     | 1       |
+| hr_eeo_ethnic        | SPI   | AGGREGATE | (band only)    | 1       |
+| hr_eeo_gender        | SPI   | AGGREGATE | (band only)    | 1       |
+| hr_eeo_disab         | SPI   | SUPPRESS  | (empty)        | 0       |
+| hr_emerg_name        | PII   | SUPPRESS  | (empty)        | 0       |
+| hr_emerg_phone       | PII   | SUPPRESS  | (empty)        | 0       |
+| hr_rate_hourly       | FIN   | BAND      | Bnn            | 3       |
++----------------------+-------+-----------+----------------+---------+
+
+[enforcement]
+# ROLES is the count of entitlement groups permitted to view the rendered
+# form. ROLES=0 means no interactive path exists; the column is written
+# empty and the loader raises DQ-1142 if any inbound value is non-null.
+# AGGREGATE emits the statistical band only; individual codes are discarded
+# at stage 3 and are not retained in the staging schema or its journals.
+on_vault_timeout      = SUPPRESS
+on_policy_miss        = SUPPRESS
+on_unknown_column     = DROP_AND_COUNT
+log_field_names       = true
+log_field_values      = false

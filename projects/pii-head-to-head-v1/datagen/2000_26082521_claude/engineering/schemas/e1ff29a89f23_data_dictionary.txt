@@ -1,0 +1,74 @@
+DATA DICTIONARY WORKSHEET
+FORM IS-31 (COLUMN-BY-COLUMN)
+OBJECT ............................ CIS_PROD.PREM_OCCUPANT
+SYSTEM ............................ Customer Information System
+OWNING UNIT ....................... Meter Services Division
+CLASSIFICATION .................... Restricted — Category II
+PREPARED FOR ...................... Annual dictionary reconciliation
+
+PART 1 — FIELD ENTRIES
+
+ENTRY 01
+  Column name ..................... PREM_OCCUP_ID
+  Datatype ........................ NUMBER(12)
+  Null permitted .................. N
+  Operational note ................ Primary key. Not reused.
+
+ENTRY 02
+  Column name ..................... PREM_ID
+  Datatype ........................ NUMBER(12)
+  Null permitted .................. N
+  Operational note ................ Foreign key to the premise register.
+
+ENTRY 03
+  Column name ..................... OCCUP_LAST_NAME
+  Datatype ........................ VARCHAR2(60)
+  Null permitted .................. N
+  Operational note ................ Restricted. Tokenized in test refreshes.
+
+ENTRY 04
+  Column name ..................... OCCUP_FIRST_NAME
+  Datatype ........................ VARCHAR2(60)
+  Null permitted .................. Y
+  Operational note ................ Restricted. Tokenized in test refreshes.
+
+ENTRY 05
+  Column name ..................... OCCUP_DOB
+  Datatype ........................ DATE
+  Null permitted .................. Y
+  Operational note ................ Populated for senior-rate certification only.
+
+ENTRY 06
+  Column name ..................... OCCUP_CONTACT_PHONE
+  Datatype ........................ CHAR(10)
+  Null permitted .................. Y
+  Operational note ................ Used for outage notice; opt-out honored.
+
+ENTRY 07
+  Column name ..................... OCCUP_TENURE_CD
+  Datatype ........................ CHAR(1)
+  Null permitted .................. N
+  Operational note ................ Owner, tenant, or agent.
+
+ENTRY 08
+  Column name ..................... OCCUP_START_DT
+  Datatype ........................ DATE
+  Null permitted .................. N
+  Operational note ................ Drives proration of the first bill.
+
+ENTRY 09
+  Column name ..................... OCCUP_END_DT
+  Datatype ........................ DATE
+  Null permitted .................. Y
+  Operational note ................ Null while tenancy is current.
+
+PART 2 — ACCESS RESTRICTION
+Grants are issued to the roles MTR_FIELD_READ and CIS_SUPERVISOR. Entries 03 through 06 are excluded from the field-technician view and are visible only through the supervisory view, access to which is logged.
+
+PART 3 — RETENTION
+Rows are retained five (5) years after the date recorded at Entry 09, and are thereafter reduced to Entries 01, 02, 07, and 08 for planning purposes.
+
+PART 4 — DOWNSTREAM EXTRACTS
+Weekly to the outage notification vendor: Entry 06 and premise geocode only, transmitted over the secure channel. Annual to the Assessor's reconciliation file: Entries 02, 07, and 08 only. No extract of Entry 05 is authorized to any recipient.
+
+Certified correct by the Data Steward, Meter Services Division ......... Date: __________

@@ -1,0 +1,15 @@
+VALIDATION ERROR SUMMARY — JOB_CONC_LOAD_0413
+Run started 2004-04-13 02:14:22. Run ended 2004-04-13 02:29:51. RC=4.
+Rows presented 418,110. Rows accepted 417,884. Rows rejected 226.
+
+o  V-101  Mandatory column empty: APPLICANT_SURNAME_TOKEN ............ 14 rows
+o  V-103  Token not resolvable in vault domain NAME .................. 3 rows
+o  V-114  BOARDING_ZONE_CODE outside reference set ................... 96 rows
+o  V-118  RESIDENTIAL_POSTCODE truncation produced fewer than 3 chars . 21 rows
+o  V-122  ELIGIBILITY_EVIDENCE_TYPE code retired 2003-11-30 .......... 61 rows
+o  V-131  ENROLMENT_DATE later than run date ......................... 8 rows
+o  V-140  Unmasked value detected in column PAYMENT_CARD_PAN ......... 23 rows
+
+o  Action on V-140: load halted for the affected partition at 02:26:40 per fail-closed policy. Affected rows quarantined to QUARANTINE.CONC.D20040413, permissions 600, owner batch account. Notify the Records Custodian before start of business. Do not open the quarantine file to inspect content; report the count and the reason code only.
+o  Action on V-103: raise a vault reconciliation request; three tokens predate the CONC_STD_V3 to V4 migration.
+o  Action on all other codes: return to the source system owner for correction at source. Do not amend values in the staging area.

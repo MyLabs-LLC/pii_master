@@ -1,0 +1,7 @@
+2021-02-09 — Operations note appended to the nightly run log, Regional Distribution Hub 4
+
+The consignment extract started on schedule at 02:00:04Z and completed at 02:41:19Z under job identifier ETL-CONS-NIGHT-0117, run reference RUN-20210209-0044. The reader stage pulled 412,880 rows from the consignment staging view and passed 411,904 of them to the writer; the remaining 976 were diverted to the quarantine table for the reasons summarised in the validation digest. The Records Custodian was notified by the standing rule at 02:45Z, as is normal when quarantine exceeds two hundred rows.
+
+Two mapping rules behaved differently from the previous run. The rule that populates consignee_family_name from the carrier feed now trims leading separators before comparison, so the count of rows failing length validation fell from 611 to 84. The rule covering recipient_contact_number continues to reject anything that does not resolve to a national format after normalisation; those rows are written with the field set to <null> rather than being held, on the instruction of the Data Protection lead recorded in change note CHG-2020-0894.
+
+Masking applied cleanly. Sample lines drawn from the writer log show the expected output shape, for example: `row=118442 consignee_full_name=[MASKED] delivery_address_line_1=[MASKED] recipient_email=[MASKED] driver_licence_number=[TOKENIZED]`. No unmasked field reached the downstream warehouse. The run is closed and requires no rework.

@@ -1,0 +1,29 @@
+VALIDATION ERROR SUMMARY — INBOUND COUNTY RECORDER FEED
+Feed CNTY-RECV-07 | cycle 1998-11-04 | JOBID ESC0512 | 03:02:11 to 03:26:40
+
+* Rows submitted: 44,190. Rows accepted: 43,517. Rows rejected: 673. Rejection rate 1.52% (threshold 2.00%, not breached).
+
+* Rejects by rule, descending:
+  - V-104 GRANTOR_NAME null or blank after trim — 291 rows — action: hold, re-request from county
+  - V-118 PROP_ADDR_LINE1 exceeds declared width (40) — 147 rows — action: truncate flagged, manual review
+  - V-203 BORR_SSN fails length/format edit — 96 rows — action: reject row, do not tokenise
+  - V-207 SELLER_TIN present where entity type = INDIVIDUAL — 58 rows — action: reject, notify submitter
+  - V-140 PROP_ZIP5 not numeric — 41 rows — action: default to county centroid, flag DQ_ZIP
+  - V-166 RECORD_DATE outside window (pre-1901 or post-cycle) — 22 rows — action: reject, Y2K edit applies
+  - V-311 ESCROW_ACCT_NO checksum fail — 11 rows — action: reject, route to the Escrow Operations Manager
+  - V-402 PHONE_HM populated on a feed where the column is contractually suppressed — 7 rows — action: overwrite to spaces at gate, log incident DQ-981104-3
+
+* Field-level completeness on accepted rows:
+  - FILE_NO 100.0% | ORDER_NO 100.0% | POLICY_NO 99.8%
+  - GRANTOR_NAME 100.0% | GRANTEE_NAME 99.1%
+  - PROP_ADDR_LINE1 99.4% | PROP_CITY 99.9% | PROP_ST 100.0% | PROP_ZIP5 99.7%
+  - BORR_SSN 61.2% (expected; optional on recorder feed)
+  - BORR_DOB 0.0% (column suppressed at gate by design)
+  - EMAIL_ADDR 0.0% (column suppressed at gate by design)
+
+* Handling checklist for this cycle:
+  - [x] reject file written to /prod/reject/981104/cnty07.rej (673 rows, no clear-text class-P columns)
+  - [x] all rejected rows carry FILE_NO and rule code only
+  - [x] V-402 incident logged; submitter contact routed through the Records Custodian
+  - [ ] resubmission window opens 1998-11-06; expect corrected GRANTOR_NAME batch
+  - [ ] re-run V-104 counts after resubmission and close DQ-981104-3

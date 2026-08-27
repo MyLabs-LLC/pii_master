@@ -1,0 +1,22 @@
+{
+  "iteration": 0,
+  "candidate_id": "t0-c1",
+  "harness_parent": "h0",
+  "targeted_mechanism": "measured student is not on the serving path; checksum-first fusion + revalidate already scores macro_f2 0.863 / severity_recall_min 0.907 on D_ho but scan_text cannot emit it",
+  "editable_surface": "src/pii_master/ (OnnxNerDetector, fusion policy, scan_text --deep)",
+  "expected_effect": "deep mode matches eval_student fusion_checksum_first on mapped types; fast mode unchanged; frozen --fail-under stays green",
+  "regression_risk": "student false PHI on adversarial frozen docs (none-007 truncated MRN/card fragments) unless revalidate + confidence floor ship with the detector",
+  "evaluator": "frozen eval --fail-under + span exact-match on Nemotron D_in/D_ho via gate_metrics (NEVER the student grading itself)",
+  "metric": "macro_f2",
+  "score_in_before": 0.614,
+  "score_in_after": 0.862,
+  "delta_in": 0.248,
+  "score_ho_before": 0.605,
+  "score_ho_after": 0.863,
+  "delta_ho": 0.258,
+  "acceptance_rule": "delta_in >= 0 AND delta_ho >= 0 AND max(delta_in, delta_ho) > 0",
+  "decision": "accept",
+  "action_taken": "git commit 66d098b",
+  "mlflow_run_id": "",
+  "notes": "Frozen --deep --fail-under green after min-digits + longer-rule preference. 2k package sample macro_f2 0.864."
+}

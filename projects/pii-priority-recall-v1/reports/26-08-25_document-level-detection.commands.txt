@@ -1,0 +1,2194 @@
+[2026-08-25T14:02:08Z] Exit: 1 | Context: feasibility | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp feasibility --metric macro_f2 --target 0.90 --ceiling 0.5892 --ceiling-method optimistic: 95% corpus-bootstrap CI upper of the selected 1k fusion champion (point 0.4835); best of 5 model families over 1,000 trials was 0.4871 --baseline 0.0985 --note Read-depth ladder is flat: 20x more input (1k->20k chars) moves macro F2 by 0.0037 (0.4835->0.4798), so more text is not the missing ingredient. All 55/55 priority recall gates and the latency gate already pass; the miss is precision, not recall. --out projects/pii-priority-recall-v1/feasibility.json
+--- Output ---
+| Evidence | Value |
+| --- | ---: |
+| target (macro_f2) | 0.9 |
+| optimistic: 95% corpus-bootstrap CI upper of the selected 1k fusion champion (point 0.4835); best of 5 model families over 1,000 trials was 0.4871 | 0.5892 |
+| current baseline | 0.0985 |
+| **verdict** | **unlikely** |
+| target the evidence supports | 0.5892 |
+
+> Read-depth ladder is flat: 20x more input (1k->20k chars) moves macro F2 by 0.0037 (0.4835->0.4798), so more text is not the missing ingredient. All 55/55 priority recall gates and the latency gate already pass; the miss is precision, not recall.
+
+target macro_f2 0.9: **unlikely**. optimistic: 95% corpus-bootstrap CI upper of the selected 1k fusion champion (point 0.4835); best of 5 model families over 1,000 trials was 0.4871 puts the ceiling near 0.589. Spending the budget is unlikely to reach 0.9; the evidence supports about 0.589. Agree the target before approving, not after.
+
+[mp] wrote projects/pii-priority-recall-v1/feasibility.json
+--------------
+
+[2026-08-25T14:11:35Z] Exit: 1 | Context: select-pilot | Took: 0.0s
+Directory: /home/lence/workspace/pii_master
+$ .venv/bin/python -m training.select_priority_thresholds --sample 4000 --workers 8 --out pilot --matrix-cache /tmp/claude-1000/-home-lence-workspace-pii-master/53582437-d46c-4393-8b16-27992018302f/scratchpad/pilot.npz
+--- Output ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/select_priority_thresholds.py", line 26, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+--------------
+
+[2026-08-25T14:12:07Z] Exit: 0 | Context: select-pilot | Took: 5.2s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.select_priority_thresholds --sample 4000 --workers 8 --out pilot --matrix-cache /tmp/claude-1000/-home-lence-workspace-pii-master/53582437-d46c-4393-8b16-27992018302f/scratchpad/pilot.npz
+--- Output ---
+[select] scoring 4000 held-in docs from 5 corpora
+[select] scored 4000 docs (0 read errors)
+[select] cached matrix -> /tmp/claude-1000/-home-lence-workspace-pii-master/53582437-d46c-4393-8b16-27992018302f/scratchpad/pilot.npz
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.14285714285714285,
+    "held_in_recall": 0.974025974025974,
+    "target": 0.96,
+    "threshold": 2.8404948711395264,
+    "worst_corpus_ci_lower": 0.9268066847335141
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.7835820895522388,
+    "held_in_recall": 0.9722222222222222,
+    "target": 0.96,
+    "threshold": 3.5094401836395264,
+    "worst_corpus_ci_lower": 0.9367797904845047
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.06436420722135008,
+    "held_in_recall": 0.9761904761904762,
+    "target": 0.98,
+    "threshold": 3.1139323711395264,
+    "worst_corpus_ci_lower": 1.0
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.4645669291338583,
+    "held_in_recall": 0.9672131147540983,
+    "target": 0.96,
+    "threshold": 2.173828125,
+    "worst_corpus_ci_lower": 0.9297297297297298
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_phi_patient_id_number": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.2735982966643009,
+    "held_in_recall": 0.9759493670886076,
+    "target": 0.96,
+    "threshold": 1.18115234375,
+    "worst_corpus_ci_lower": 0.9281767955801105
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.12254570074475288,
+    "held_in_recall": 0.9917808219178083,
+    "target": 0.96,
+    "threshold": 1.1142578125,
+    "worst_corpus_ci_lower": 0.9166666666666666
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5741714886901631,
+    "held_in_recall": 0.9745535714285715,
+    "target": 0.94,
+    "threshold": 0.543701171875,
+    "worst_corpus_ci_lower": 0.919267499157682
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.3161819537658464,
+    "held_in_recall": 0.9571106094808126,
+    "target": 0.94,
+    "threshold": 1.7347005605697632,
+    "worst_corpus_ci_lower": 0.9148148148148149
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.36129032258064514,
+    "held_in_recall": 0.9581749049429658,
+    "target": 0.94,
+    "threshold": 1.6529947519302368,
+    "worst_corpus_ci_lower": 0.9113687889665596
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k"
+    ],
+    "held_in_precision": 0.051747616886064454,
+    "held_in_recall": 0.95,
+    "target": 0.96,
+    "threshold": 1.1279296875,
+    "worst_corpus_ci_lower": 0.9230769230769231
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "reason": "no corpus >= 30 positives",
+    "target": null,
+    "threshold": null
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.16374059476890004,
+    "held_in_recall": 0.9870410367170627,
+    "target": 0.96,
+    "threshold": 0.9912109375,
+    "worst_corpus_ci_lower": 0.931504892367906
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.31532846715328466,
+    "held_in_recall": 0.9578713968957872,
+    "target": 0.94,
+    "threshold": 1.7119140625,
+    "worst_corpus_ci_lower": 0.9132075471698113
+  }
+}
+--------------
+
+[2026-08-25T14:13:51Z] Exit: 0 | Context: select-full | Took: 76.6s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.select_priority_thresholds --sample 800000 --workers 8 --out perlabel_1k --margin 0.01
+--- Output ---
+[select] scoring 489684 held-in docs from 5 corpora
+[select]   20000/489684
+[select]   40000/489684
+[select]   60000/489684
+[select]   80000/489684
+[select]   100000/489684
+[select]   120000/489684
+[select]   140000/489684
+[select]   160000/489684
+[select]   180000/489684
+[select]   200000/489684
+[select]   220000/489684
+[select]   240000/489684
+[select]   260000/489684
+[select]   280000/489684
+[select]   300000/489684
+[select]   320000/489684
+[select]   340000/489684
+[select]   360000/489684
+[select]   380000/489684
+[select]   400000/489684
+[select]   420000/489684
+[select]   440000/489684
+[select]   460000/489684
+[select]   480000/489684
+[select] scored 489684 docs (0 read errors)
+[select] cached matrix -> projects/pii-priority-recall-v1/cache/champion_1k_recall_heldin.npz
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03192685912521852,
+    "held_in_recall": 0.9785407725321889,
+    "target": 0.94,
+    "threshold": 1.9710286855697632,
+    "worst_corpus_ci_lower": 0.9287201790306914
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1971173326644413,
+    "held_in_recall": 0.9971693509028795,
+    "target": 0.94,
+    "threshold": 1.314453125,
+    "worst_corpus_ci_lower": 0.9299935085591675
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.01679544742612509,
+    "held_in_recall": 0.9681011134517002,
+    "target": 0.94,
+    "threshold": 2.1705729961395264,
+    "worst_corpus_ci_lower": 0.9301406980373471
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.17297703452527743,
+    "held_in_recall": 0.9922417222934441,
+    "target": 0.94,
+    "threshold": 1.5091146230697632,
+    "worst_corpus_ci_lower": 0.927535419509976
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "corpora_used": [
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03289967287896522,
+    "held_in_recall": 0.9549216027874564,
+    "target": 0.94,
+    "threshold": 3.2623698711395264,
+    "worst_corpus_ci_lower": 0.9294346725161963
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.013456806535518194,
+    "held_in_recall": 0.9925994449583718,
+    "target": 0.94,
+    "threshold": 1.7610677480697632,
+    "worst_corpus_ci_lower": 0.9207741496146692
+  },
+  "sensitive_phi_patient_id_number": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.004055609590691283,
+    "held_in_recall": 0.9961643835616438,
+    "target": 0.96,
+    "threshold": 2.05859375,
+    "worst_corpus_ci_lower": 0.9285714285714286
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.2531686221717765,
+    "held_in_recall": 0.9911899205112086,
+    "target": 0.94,
+    "threshold": 0.9576823115348816,
+    "worst_corpus_ci_lower": 0.9247826014184766
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.17493744303587705,
+    "held_in_recall": 0.9693847566574839,
+    "target": 0.94,
+    "threshold": 1.3033853769302368,
+    "worst_corpus_ci_lower": 0.9274486094316807
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5596236359113335,
+    "held_in_recall": 0.9743125876752546,
+    "target": 0.92,
+    "threshold": 0.5917155146598816,
+    "worst_corpus_ci_lower": 0.9162825295868386
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18801073346129799,
+    "held_in_recall": 0.9979597107438016,
+    "target": 0.94,
+    "threshold": 1.3466796875,
+    "worst_corpus_ci_lower": 0.9220023067548746
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.29862018722108125,
+    "held_in_recall": 0.9859187274880944,
+    "target": 0.94,
+    "threshold": 1.490234375,
+    "worst_corpus_ci_lower": 0.9279710800524115
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.01773079620664682,
+    "held_in_recall": 0.9932173022779627,
+    "target": 0.94,
+    "threshold": 0.6888020634651184,
+    "worst_corpus_ci_lower": 0.9142857142857143
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.009519127636753664,
+    "held_in_recall": 0.9855027760641579,
+    "target": 0.94,
+    "threshold": 1.3785806894302368,
+    "worst_corpus_ci_lower": 0.9210526315789473
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18169969965860966,
+    "held_in_recall": 0.9824837229949689,
+    "target": 0.94,
+    "threshold": 1.2073568105697632,
+    "worst_corpus_ci_lower": 0.9286135195769722
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.23279897307301928,
+    "held_in_recall": 0.9928069460711921,
+    "target": 0.94,
+    "threshold": 1.4505208730697632,
+    "worst_corpus_ci_lower": 0.9284731043794398
+  }
+}
+--------------
+
+[2026-08-25T14:14:27Z] Exit: 0 | Context: materialize | Took: 3.1s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.materialize_perlabel
+--- Output ---
+{
+  "changed": {
+    "sensitive_pci_bank_account_number": {
+      "held_in_precision": 0.03192685912521852,
+      "held_in_recall": 0.9785407725321889,
+      "target": 0.94,
+      "threshold_after": 1.9710286855697632,
+      "threshold_before": 1.4101893901824951,
+      "worst_corpus_ci_lower": 0.9287201790306914
+    },
+    "sensitive_pci_credit_card_number": {
+      "held_in_precision": 0.1971173326644413,
+      "held_in_recall": 0.9971693509028795,
+      "target": 0.94,
+      "threshold_after": 1.314453125,
+      "threshold_before": 0.9510576725006104,
+      "worst_corpus_ci_lower": 0.9299935085591675
+    },
+    "sensitive_pci_iban": {
+      "held_in_precision": 0.01679544742612509,
+      "held_in_recall": 0.9681011134517002,
+      "target": 0.94,
+      "threshold_after": 2.1705729961395264,
+      "threshold_before": 1.4099012613296509,
+      "worst_corpus_ci_lower": 0.9301406980373471
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin": {
+      "held_in_precision": 0.17297703452527743,
+      "held_in_recall": 0.9922417222934441,
+      "target": 0.94,
+      "threshold_after": 1.5091146230697632,
+      "threshold_before": 0.8401750326156616,
+      "worst_corpus_ci_lower": 0.927535419509976
+    },
+    "sensitive_phi_health_plan_beneficiary_number": {
+      "held_in_precision": 0.03289967287896522,
+      "held_in_recall": 0.9549216027874564,
+      "target": 0.94,
+      "threshold_after": 3.2623698711395264,
+      "threshold_before": 2.014380693435669,
+      "worst_corpus_ci_lower": 0.9294346725161963
+    },
+    "sensitive_phi_medical_record_number_mrn": {
+      "held_in_precision": 0.013456806535518194,
+      "held_in_recall": 0.9925994449583718,
+      "target": 0.94,
+      "threshold_after": 1.7610677480697632,
+      "threshold_before": 0.3328394293785095,
+      "worst_corpus_ci_lower": 0.9207741496146692
+    },
+    "sensitive_phi_patient_id_number": {
+      "held_in_precision": 0.004055609590691283,
+      "held_in_recall": 0.9961643835616438,
+      "target": 0.96,
+      "threshold_after": 2.05859375,
+      "threshold_before": 2.617222785949707,
+      "worst_corpus_ci_lower": 0.9285714285714286
+    },
+    "sensitive_pii_address": {
+      "held_in_precision": 0.2531686221717765,
+      "held_in_recall": 0.9911899205112086,
+      "target": 0.94,
+      "threshold_after": 0.9576823115348816,
+      "threshold_before": 0.4239528179168701,
+      "worst_corpus_ci_lower": 0.9247826014184766
+    },
+    "sensitive_pii_driver_s_license_number": {
+      "held_in_precision": 0.17493744303587705,
+      "held_in_recall": 0.9693847566574839,
+      "target": 0.94,
+      "threshold_after": 1.3033853769302368,
+      "threshold_before": 0.6313029527664185,
+      "worst_corpus_ci_lower": 0.9274486094316807
+    },
+    "sensitive_pii_full_name": {
+      "held_in_precision": 0.5596236359113335,
+      "held_in_recall": 0.9743125876752546,
+      "target": 0.92,
+      "threshold_after": 0.5917155146598816,
+      "threshold_before": 0.13396771252155304,
+      "worst_corpus_ci_lower": 0.9162825295868386
+    },
+    "sensitive_pii_military_identification_number": {
+      "held_in_precision": 0.18801073346129799,
+      "held_in_recall": 0.9979597107438016,
+      "target": 0.94,
+      "threshold_after": 1.3466796875,
+      "threshold_before": 0.9700481295585632,
+      "worst_corpus_ci_lower": 0.9220023067548746
+    },
+    "sensitive_pii_passport_number": {
+      "held_in_precision": 0.29862018722108125,
+      "held_in_recall": 0.9859187274880944,
+      "target": 0.94,
+      "threshold_after": 1.490234375,
+      "threshold_before": 0.9275015592575073,
+      "worst_corpus_ci_lower": 0.9279710800524115
+    },
+    "sensitive_pii_password": {
+      "held_in_precision": 0.01773079620664682,
+      "held_in_recall": 0.9932173022779627,
+      "target": 0.94,
+      "threshold_after": 0.6888020634651184,
+      "threshold_before": 0.3246713876724243,
+      "worst_corpus_ci_lower": 0.9142857142857143
+    },
+    "sensitive_pii_personal_identification_number_pin": {
+      "held_in_precision": 0.009519127636753664,
+      "held_in_recall": 0.9855027760641579,
+      "target": 0.94,
+      "threshold_after": 1.3785806894302368,
+      "threshold_before": 0.9359908103942871,
+      "worst_corpus_ci_lower": 0.9210526315789473
+    },
+    "sensitive_pii_social_security_number": {
+      "held_in_precision": 0.18169969965860966,
+      "held_in_recall": 0.9824837229949689,
+      "target": 0.94,
+      "threshold_after": 1.2073568105697632,
+      "threshold_before": 0.5732578635215759,
+      "worst_corpus_ci_lower": 0.9286135195769722
+    },
+    "sensitive_pii_visa_number": {
+      "held_in_precision": 0.23279897307301928,
+      "held_in_recall": 0.9928069460711921,
+      "target": 0.94,
+      "threshold_after": 1.4505208730697632,
+      "threshold_before": 0.9537143111228943,
+      "worst_corpus_ci_lower": 0.9284731043794398
+    }
+  },
+  "family": "perlabel_1k",
+  "model_dir": "projects/pii-priority-recall-v1/models/perlabel_1k"
+}
+--------------
+
+[2026-08-25T14:15:05Z] Exit: 1 | Context: validate-holdout | Took: 24.2s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.evaluate_priority_model --project projects/pii-priority-recall-v1 --family perlabel_1k --workers 8
+--- Output ---
+{"dataset": "4000_datax-dualjudge-evalset-1.32k", "docs_per_s": 3531.44, "errors": 0, "rows": 4000}
+{"dataset": "6589_govdocs2-dualjudge-eval20-3.53k", "docs_per_s": 4441.19, "errors": 11, "rows": 6589}
+{"dataset": "ai4privacy_pii_masking_eval_10k", "docs_per_s": 16652.05, "errors": 0, "rows": 10626}
+{"dataset": "betterdataai_ner_silver_eval_10k", "docs_per_s": 12395.02, "errors": 0, "rows": 10360}
+{"dataset": "nemotron_eval_6k", "docs_per_s": 6997.19, "errors": 0, "rows": 5617}
+{"dataset": "openpii_pii_eval_38k", "docs_per_s": 10037.57, "errors": 0, "rows": 38937}
+{"dataset": "pii2_eval_30k", "docs_per_s": 4733.56, "errors": 0, "rows": 30000}
+{"dataset": "pii_holdout_20k", "docs_per_s": 5013.67, "errors": 0, "rows": 20000}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 226, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 220, in main
+    result = run(args.project.resolve(), family=args.family, workers=args.workers)
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 209, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:27:14Z] Exit: 0 | Context: select-v2 | Took: 73.4s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.select_priority_thresholds --sample 900000 --workers 8 --out perlabel_v2 --margin 0.01 --matrix-cache projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+--- Output ---
+[select] scoring 473503 held-in docs from 8 corpora
+[select]   20000/473503
+[select]   40000/473503
+[select]   60000/473503
+[select]   80000/473503
+[select]   100000/473503
+[select]   120000/473503
+[select]   140000/473503
+[select]   160000/473503
+[select]   180000/473503
+[select]   200000/473503
+[select]   220000/473503
+[select]   240000/473503
+[select]   260000/473503
+[select]   280000/473503
+[select]   300000/473503
+[select]   320000/473503
+[select]   340000/473503
+[select]   360000/473503
+[select]   380000/473503
+[select]   400000/473503
+[select]   420000/473503
+[select]   440000/473503
+[select]   460000/473503
+[select] scored 473498 docs (5 read errors)
+[select] cached matrix -> projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03536387794275693,
+    "held_in_recall": 0.9808945497630331,
+    "target": 0.94,
+    "threshold": 1.9606119394302368,
+    "worst_corpus_ci_lower": 0.9282080457053113
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1997257095667391,
+    "held_in_recall": 0.9972265855095229,
+    "target": 0.94,
+    "threshold": 1.3427734375,
+    "worst_corpus_ci_lower": 0.928021438405849
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.017817613473254442,
+    "held_in_recall": 0.9721739130434782,
+    "target": 0.94,
+    "threshold": 2.1936848163604736,
+    "worst_corpus_ci_lower": 0.928674088463367
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18146634699960293,
+    "held_in_recall": 0.9907793633369923,
+    "target": 0.94,
+    "threshold": 1.5546875,
+    "worst_corpus_ci_lower": 0.9250263724083625
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "corpora_used": [
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03308253145486015,
+    "held_in_recall": 0.9559471365638766,
+    "target": 0.94,
+    "threshold": 3.2623698711395264,
+    "worst_corpus_ci_lower": 0.9291365075441942
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.0138428210590657,
+    "held_in_recall": 0.9920549710113807,
+    "target": 0.94,
+    "threshold": 1.7610677480697632,
+    "worst_corpus_ci_lower": 0.9207738314371898
+  },
+  "sensitive_phi_patient_id_number": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.003687875740784322,
+    "held_in_recall": 0.9949494949494949,
+    "target": 0.96,
+    "threshold": 2.05859375,
+    "worst_corpus_ci_lower": 0.9280469045815979
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.23452377656347925,
+    "held_in_recall": 0.9920742983721829,
+    "target": 0.92,
+    "threshold": 0.7578938603401184,
+    "worst_corpus_ci_lower": 0.9109140479854513
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1739636410656344,
+    "held_in_recall": 0.9713679745493107,
+    "target": 0.94,
+    "threshold": 1.3014322519302368,
+    "worst_corpus_ci_lower": 0.92633225697716
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5320027974603838,
+    "held_in_recall": 0.9861222276164608,
+    "target": 0.92,
+    "threshold": 0.3727213442325592,
+    "worst_corpus_ci_lower": 0.9154120102211618
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18443333094333308,
+    "held_in_recall": 0.9980438437661666,
+    "target": 0.94,
+    "threshold": 1.35546875,
+    "worst_corpus_ci_lower": 0.9112024365821095
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.30899063622069417,
+    "held_in_recall": 0.9839481078495845,
+    "target": 0.94,
+    "threshold": 1.5201822519302368,
+    "worst_corpus_ci_lower": 0.9261799566804381
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.020122969154055145,
+    "held_in_recall": 0.9925393018918198,
+    "target": 0.94,
+    "threshold": 0.6888020634651184,
+    "worst_corpus_ci_lower": 0.913038492221779
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.010187795262995127,
+    "held_in_recall": 0.9852182880715022,
+    "target": 0.94,
+    "threshold": 1.3785806894302368,
+    "worst_corpus_ci_lower": 0.9200709724387091
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1881196377999391,
+    "held_in_recall": 0.9806521739130435,
+    "target": 0.94,
+    "threshold": 1.2135416269302368,
+    "worst_corpus_ci_lower": 0.9265379956761477
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.24603799255652806,
+    "held_in_recall": 0.9920423557178625,
+    "target": 0.94,
+    "threshold": 1.4759114980697632,
+    "worst_corpus_ci_lower": 0.9254809392138006
+  }
+}
+--------------
+
+[2026-08-25T14:27:29Z] Exit: 0 | Context: materialize-v2 | Took: 2.3s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.materialize_perlabel --family perlabel_v2 --selection perlabel_v2
+--- Output ---
+{
+  "changed": {
+    "sensitive_pci_bank_account_number": {
+      "held_in_precision": 0.03536387794275693,
+      "held_in_recall": 0.9808945497630331,
+      "target": 0.94,
+      "threshold_after": 1.9606119394302368,
+      "threshold_before": 1.4101893901824951,
+      "worst_corpus_ci_lower": 0.9282080457053113
+    },
+    "sensitive_pci_credit_card_number": {
+      "held_in_precision": 0.1997257095667391,
+      "held_in_recall": 0.9972265855095229,
+      "target": 0.94,
+      "threshold_after": 1.3427734375,
+      "threshold_before": 0.9510576725006104,
+      "worst_corpus_ci_lower": 0.928021438405849
+    },
+    "sensitive_pci_iban": {
+      "held_in_precision": 0.017817613473254442,
+      "held_in_recall": 0.9721739130434782,
+      "target": 0.94,
+      "threshold_after": 2.1936848163604736,
+      "threshold_before": 1.4099012613296509,
+      "worst_corpus_ci_lower": 0.928674088463367
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin": {
+      "held_in_precision": 0.18146634699960293,
+      "held_in_recall": 0.9907793633369923,
+      "target": 0.94,
+      "threshold_after": 1.5546875,
+      "threshold_before": 0.8401750326156616,
+      "worst_corpus_ci_lower": 0.9250263724083625
+    },
+    "sensitive_phi_health_plan_beneficiary_number": {
+      "held_in_precision": 0.03308253145486015,
+      "held_in_recall": 0.9559471365638766,
+      "target": 0.94,
+      "threshold_after": 3.2623698711395264,
+      "threshold_before": 2.014380693435669,
+      "worst_corpus_ci_lower": 0.9291365075441942
+    },
+    "sensitive_phi_medical_record_number_mrn": {
+      "held_in_precision": 0.0138428210590657,
+      "held_in_recall": 0.9920549710113807,
+      "target": 0.94,
+      "threshold_after": 1.7610677480697632,
+      "threshold_before": 0.3328394293785095,
+      "worst_corpus_ci_lower": 0.9207738314371898
+    },
+    "sensitive_phi_patient_id_number": {
+      "held_in_precision": 0.003687875740784322,
+      "held_in_recall": 0.9949494949494949,
+      "target": 0.96,
+      "threshold_after": 2.05859375,
+      "threshold_before": 2.617222785949707,
+      "worst_corpus_ci_lower": 0.9280469045815979
+    },
+    "sensitive_pii_address": {
+      "held_in_precision": 0.23452377656347925,
+      "held_in_recall": 0.9920742983721829,
+      "target": 0.92,
+      "threshold_after": 0.7578938603401184,
+      "threshold_before": 0.4239528179168701,
+      "worst_corpus_ci_lower": 0.9109140479854513
+    },
+    "sensitive_pii_driver_s_license_number": {
+      "held_in_precision": 0.1739636410656344,
+      "held_in_recall": 0.9713679745493107,
+      "target": 0.94,
+      "threshold_after": 1.3014322519302368,
+      "threshold_before": 0.6313029527664185,
+      "worst_corpus_ci_lower": 0.92633225697716
+    },
+    "sensitive_pii_full_name": {
+      "held_in_precision": 0.5320027974603838,
+      "held_in_recall": 0.9861222276164608,
+      "target": 0.92,
+      "threshold_after": 0.3727213442325592,
+      "threshold_before": 0.13396771252155304,
+      "worst_corpus_ci_lower": 0.9154120102211618
+    },
+    "sensitive_pii_military_identification_number": {
+      "held_in_precision": 0.18443333094333308,
+      "held_in_recall": 0.9980438437661666,
+      "target": 0.94,
+      "threshold_after": 1.35546875,
+      "threshold_before": 0.9700481295585632,
+      "worst_corpus_ci_lower": 0.9112024365821095
+    },
+    "sensitive_pii_passport_number": {
+      "held_in_precision": 0.30899063622069417,
+      "held_in_recall": 0.9839481078495845,
+      "target": 0.94,
+      "threshold_after": 1.5201822519302368,
+      "threshold_before": 0.9275015592575073,
+      "worst_corpus_ci_lower": 0.9261799566804381
+    },
+    "sensitive_pii_password": {
+      "held_in_precision": 0.020122969154055145,
+      "held_in_recall": 0.9925393018918198,
+      "target": 0.94,
+      "threshold_after": 0.6888020634651184,
+      "threshold_before": 0.3246713876724243,
+      "worst_corpus_ci_lower": 0.913038492221779
+    },
+    "sensitive_pii_personal_identification_number_pin": {
+      "held_in_precision": 0.010187795262995127,
+      "held_in_recall": 0.9852182880715022,
+      "target": 0.94,
+      "threshold_after": 1.3785806894302368,
+      "threshold_before": 0.9359908103942871,
+      "worst_corpus_ci_lower": 0.9200709724387091
+    },
+    "sensitive_pii_social_security_number": {
+      "held_in_precision": 0.1881196377999391,
+      "held_in_recall": 0.9806521739130435,
+      "target": 0.94,
+      "threshold_after": 1.2135416269302368,
+      "threshold_before": 0.5732578635215759,
+      "worst_corpus_ci_lower": 0.9265379956761477
+    },
+    "sensitive_pii_visa_number": {
+      "held_in_precision": 0.24603799255652806,
+      "held_in_recall": 0.9920423557178625,
+      "target": 0.94,
+      "threshold_after": 1.4759114980697632,
+      "threshold_before": 0.9537143111228943,
+      "worst_corpus_ci_lower": 0.9254809392138006
+    }
+  },
+  "family": "perlabel_v2",
+  "model_dir": "projects/pii-priority-recall-v1/models/perlabel_v2"
+}
+--------------
+
+[2026-08-25T14:28:01Z] Exit: 1 | Context: validate-v2 | Took: 24.1s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.evaluate_priority_model --project projects/pii-priority-recall-v1 --family perlabel_v2 --workers 8
+--- Output ---
+{"dataset": "4000_datax-dualjudge-evalset-1.32k", "docs_per_s": 3536.45, "errors": 0, "rows": 4000}
+{"dataset": "6589_govdocs2-dualjudge-eval20-3.53k", "docs_per_s": 4468.24, "errors": 11, "rows": 6589}
+{"dataset": "ai4privacy_pii_masking_eval_10k", "docs_per_s": 16659.34, "errors": 0, "rows": 10626}
+{"dataset": "betterdataai_ner_silver_eval_10k", "docs_per_s": 12480.65, "errors": 0, "rows": 10360}
+{"dataset": "nemotron_eval_6k", "docs_per_s": 7064.88, "errors": 0, "rows": 5617}
+{"dataset": "openpii_pii_eval_38k", "docs_per_s": 10102.37, "errors": 0, "rows": 38937}
+{"dataset": "pii2_eval_30k", "docs_per_s": 4736.9, "errors": 0, "rows": 30000}
+{"dataset": "pii_holdout_20k", "docs_per_s": 5027.96, "errors": 0, "rows": 20000}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 226, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 220, in main
+    result = run(args.project.resolve(), family=args.family, workers=args.workers)
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 209, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:28:26Z] Exit: 1 | Context: bootstrap-v2 | Took: 8.6s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.final_bootstrap --project projects/pii-priority-recall-v1 --family perlabel_v2
+--- Output ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 170, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 164, in main
+    result = run(args.project.resolve(), family=args.family)
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 154, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:30:57Z] Exit: 0 | Context: select-v3 | Took: 11.4s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.select_priority_thresholds --sample 900000 --workers 8 --out perlabel_v3 --margin 0.005 --matrix-cache projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+--- Output ---
+[select] reusing cached matrix projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03536387794275693,
+    "held_in_recall": 0.9808945497630331,
+    "target": 0.94,
+    "threshold": 1.9606119394302368,
+    "worst_corpus_ci_lower": 0.9141252410924764
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1997257095667391,
+    "held_in_recall": 0.9972265855095229,
+    "target": 0.94,
+    "threshold": 1.3427734375,
+    "worst_corpus_ci_lower": 0.9146632478632478
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.017817613473254442,
+    "held_in_recall": 0.9721739130434782,
+    "target": 0.94,
+    "threshold": 2.1936848163604736,
+    "worst_corpus_ci_lower": 0.9145299145299145
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18146634699960293,
+    "held_in_recall": 0.9907793633369923,
+    "target": 0.94,
+    "threshold": 1.5546875,
+    "worst_corpus_ci_lower": 0.9130393610013174
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "corpora_used": [
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.03308253145486015,
+    "held_in_recall": 0.9559471365638766,
+    "target": 0.94,
+    "threshold": 3.2623698711395264,
+    "worst_corpus_ci_lower": 0.9142070729950317
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.013668266364435945,
+    "held_in_recall": 0.9944170066566459,
+    "target": 0.96,
+    "threshold": 1.7125650644302368,
+    "worst_corpus_ci_lower": 0.9210478985232866
+  },
+  "sensitive_phi_patient_id_number": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.0035989757361896135,
+    "held_in_recall": 0.9978354978354979,
+    "target": 0.99,
+    "threshold": 1.8665364980697632,
+    "worst_corpus_ci_lower": 1.0
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.23130298592163598,
+    "held_in_recall": 0.9943808807689963,
+    "target": 0.94,
+    "threshold": 0.5940755009651184,
+    "worst_corpus_ci_lower": 0.9226190476190477
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1739636410656344,
+    "held_in_recall": 0.9713679745493107,
+    "target": 0.94,
+    "threshold": 1.3014322519302368,
+    "worst_corpus_ci_lower": 0.911864149193756
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5320027974603838,
+    "held_in_recall": 0.9861222276164608,
+    "target": 0.92,
+    "threshold": 0.3727213442325592,
+    "worst_corpus_ci_lower": 0.9109159347553325
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.18215607899821532,
+    "held_in_recall": 0.9982863424728401,
+    "target": 0.96,
+    "threshold": 1.3375650644302368,
+    "worst_corpus_ci_lower": 0.919983870967742
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.30899063622069417,
+    "held_in_recall": 0.9839481078495845,
+    "target": 0.94,
+    "threshold": 1.5201822519302368,
+    "worst_corpus_ci_lower": 0.9129032258064517
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.019785136366071907,
+    "held_in_recall": 0.993738342659206,
+    "target": 0.96,
+    "threshold": 0.6593424677848816,
+    "worst_corpus_ci_lower": 0.9122807017543859
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.009997742781240776,
+    "held_in_recall": 0.9896871777243039,
+    "target": 0.96,
+    "threshold": 1.3590494394302368,
+    "worst_corpus_ci_lower": 0.9230769230769231
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1881196377999391,
+    "held_in_recall": 0.9806521739130435,
+    "target": 0.94,
+    "threshold": 1.2135416269302368,
+    "worst_corpus_ci_lower": 0.9132944060654479
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.24603799255652806,
+    "held_in_recall": 0.9920423557178625,
+    "target": 0.94,
+    "threshold": 1.4759114980697632,
+    "worst_corpus_ci_lower": 0.914107131077248
+  }
+}
+--------------
+
+[2026-08-25T14:31:20Z] Exit: 0 | Context: materialize-v3 | Took: 2.3s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.materialize_perlabel --family perlabel_v3 --selection perlabel_v3
+--- Output ---
+{
+  "changed": {
+    "sensitive_pci_bank_account_number": {
+      "held_in_precision": 0.03536387794275693,
+      "held_in_recall": 0.9808945497630331,
+      "target": 0.94,
+      "threshold_after": 1.9606119394302368,
+      "threshold_before": 1.4101893901824951,
+      "worst_corpus_ci_lower": 0.9141252410924764
+    },
+    "sensitive_pci_credit_card_number": {
+      "held_in_precision": 0.1997257095667391,
+      "held_in_recall": 0.9972265855095229,
+      "target": 0.94,
+      "threshold_after": 1.3427734375,
+      "threshold_before": 0.9510576725006104,
+      "worst_corpus_ci_lower": 0.9146632478632478
+    },
+    "sensitive_pci_iban": {
+      "held_in_precision": 0.017817613473254442,
+      "held_in_recall": 0.9721739130434782,
+      "target": 0.94,
+      "threshold_after": 2.1936848163604736,
+      "threshold_before": 1.4099012613296509,
+      "worst_corpus_ci_lower": 0.9145299145299145
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin": {
+      "held_in_precision": 0.18146634699960293,
+      "held_in_recall": 0.9907793633369923,
+      "target": 0.94,
+      "threshold_after": 1.5546875,
+      "threshold_before": 0.8401750326156616,
+      "worst_corpus_ci_lower": 0.9130393610013174
+    },
+    "sensitive_phi_health_plan_beneficiary_number": {
+      "held_in_precision": 0.03308253145486015,
+      "held_in_recall": 0.9559471365638766,
+      "target": 0.94,
+      "threshold_after": 3.2623698711395264,
+      "threshold_before": 2.014380693435669,
+      "worst_corpus_ci_lower": 0.9142070729950317
+    },
+    "sensitive_phi_medical_record_number_mrn": {
+      "held_in_precision": 0.013668266364435945,
+      "held_in_recall": 0.9944170066566459,
+      "target": 0.96,
+      "threshold_after": 1.7125650644302368,
+      "threshold_before": 0.3328394293785095,
+      "worst_corpus_ci_lower": 0.9210478985232866
+    },
+    "sensitive_phi_patient_id_number": {
+      "held_in_precision": 0.0035989757361896135,
+      "held_in_recall": 0.9978354978354979,
+      "target": 0.99,
+      "threshold_after": 1.8665364980697632,
+      "threshold_before": 2.617222785949707,
+      "worst_corpus_ci_lower": 1.0
+    },
+    "sensitive_pii_address": {
+      "held_in_precision": 0.23130298592163598,
+      "held_in_recall": 0.9943808807689963,
+      "target": 0.94,
+      "threshold_after": 0.5940755009651184,
+      "threshold_before": 0.4239528179168701,
+      "worst_corpus_ci_lower": 0.9226190476190477
+    },
+    "sensitive_pii_driver_s_license_number": {
+      "held_in_precision": 0.1739636410656344,
+      "held_in_recall": 0.9713679745493107,
+      "target": 0.94,
+      "threshold_after": 1.3014322519302368,
+      "threshold_before": 0.6313029527664185,
+      "worst_corpus_ci_lower": 0.911864149193756
+    },
+    "sensitive_pii_full_name": {
+      "held_in_precision": 0.5320027974603838,
+      "held_in_recall": 0.9861222276164608,
+      "target": 0.92,
+      "threshold_after": 0.3727213442325592,
+      "threshold_before": 0.13396771252155304,
+      "worst_corpus_ci_lower": 0.9109159347553325
+    },
+    "sensitive_pii_military_identification_number": {
+      "held_in_precision": 0.18215607899821532,
+      "held_in_recall": 0.9982863424728401,
+      "target": 0.96,
+      "threshold_after": 1.3375650644302368,
+      "threshold_before": 0.9700481295585632,
+      "worst_corpus_ci_lower": 0.919983870967742
+    },
+    "sensitive_pii_passport_number": {
+      "held_in_precision": 0.30899063622069417,
+      "held_in_recall": 0.9839481078495845,
+      "target": 0.94,
+      "threshold_after": 1.5201822519302368,
+      "threshold_before": 0.9275015592575073,
+      "worst_corpus_ci_lower": 0.9129032258064517
+    },
+    "sensitive_pii_password": {
+      "held_in_precision": 0.019785136366071907,
+      "held_in_recall": 0.993738342659206,
+      "target": 0.96,
+      "threshold_after": 0.6593424677848816,
+      "threshold_before": 0.3246713876724243,
+      "worst_corpus_ci_lower": 0.9122807017543859
+    },
+    "sensitive_pii_personal_identification_number_pin": {
+      "held_in_precision": 0.009997742781240776,
+      "held_in_recall": 0.9896871777243039,
+      "target": 0.96,
+      "threshold_after": 1.3590494394302368,
+      "threshold_before": 0.9359908103942871,
+      "worst_corpus_ci_lower": 0.9230769230769231
+    },
+    "sensitive_pii_social_security_number": {
+      "held_in_precision": 0.1881196377999391,
+      "held_in_recall": 0.9806521739130435,
+      "target": 0.94,
+      "threshold_after": 1.2135416269302368,
+      "threshold_before": 0.5732578635215759,
+      "worst_corpus_ci_lower": 0.9132944060654479
+    },
+    "sensitive_pii_visa_number": {
+      "held_in_precision": 0.24603799255652806,
+      "held_in_recall": 0.9920423557178625,
+      "target": 0.94,
+      "threshold_after": 1.4759114980697632,
+      "threshold_before": 0.9537143111228943,
+      "worst_corpus_ci_lower": 0.914107131077248
+    }
+  },
+  "family": "perlabel_v3",
+  "model_dir": "projects/pii-priority-recall-v1/models/perlabel_v3"
+}
+--------------
+
+[2026-08-25T14:31:45Z] Exit: 1 | Context: validate-v3 | Took: 24.3s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.evaluate_priority_model --project projects/pii-priority-recall-v1 --family perlabel_v3 --workers 8
+--- Output ---
+{"dataset": "4000_datax-dualjudge-evalset-1.32k", "docs_per_s": 3516.2, "errors": 0, "rows": 4000}
+{"dataset": "6589_govdocs2-dualjudge-eval20-3.53k", "docs_per_s": 4452.94, "errors": 11, "rows": 6589}
+{"dataset": "ai4privacy_pii_masking_eval_10k", "docs_per_s": 16377.95, "errors": 0, "rows": 10626}
+{"dataset": "betterdataai_ner_silver_eval_10k", "docs_per_s": 12418.43, "errors": 0, "rows": 10360}
+{"dataset": "nemotron_eval_6k", "docs_per_s": 6934.97, "errors": 0, "rows": 5617}
+{"dataset": "openpii_pii_eval_38k", "docs_per_s": 10083.34, "errors": 0, "rows": 38937}
+{"dataset": "pii2_eval_30k", "docs_per_s": 4728.48, "errors": 0, "rows": 30000}
+{"dataset": "pii_holdout_20k", "docs_per_s": 5010.85, "errors": 0, "rows": 20000}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 226, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 220, in main
+    result = run(args.project.resolve(), family=args.family, workers=args.workers)
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 209, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:31:54Z] Exit: 1 | Context: bootstrap-v3 | Took: 8.5s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.final_bootstrap --project projects/pii-priority-recall-v1 --family perlabel_v3
+--- Output ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 170, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 164, in main
+    result = run(args.project.resolve(), family=args.family)
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 154, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:33:02Z] Exit: 0 | Context: select-v4 | Took: 12.0s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.select_priority_thresholds --sample 900000 --workers 8 --out perlabel_v4 --margin 0.03 --matrix-cache projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+--- Output ---
+[select] reusing cached matrix projects/pii-priority-recall-v1/cache/champion_1k_recall_allcorpora.npz
+{
+  "sensitive_pci_bank_account_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.027736721804260848,
+    "held_in_recall": 0.9881516587677726,
+    "target": 0.96,
+    "threshold": 1.6637369394302368,
+    "worst_corpus_ci_lower": 0.94
+  },
+  "sensitive_pci_credit_card_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.16129889287187132,
+    "held_in_recall": 0.9983555860985667,
+    "target": 0.96,
+    "threshold": 1.2218424081802368,
+    "worst_corpus_ci_lower": 0.9384951631316469
+  },
+  "sensitive_pci_iban": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.01363788203740372,
+    "held_in_recall": 0.9805217391304348,
+    "target": 0.96,
+    "threshold": 1.8623046875,
+    "worst_corpus_ci_lower": 0.9386477362305926
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.15378348446337872,
+    "held_in_recall": 0.9945664105378704,
+    "target": 0.96,
+    "threshold": 1.443359375,
+    "worst_corpus_ci_lower": 0.9359407104008595
+  },
+  "sensitive_phi_health_plan_beneficiary_number": {
+    "corpora_used": [
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.024251782551432854,
+    "held_in_recall": 0.9686447266131122,
+    "target": 0.96,
+    "threshold": 2.9485676288604736,
+    "worst_corpus_ci_lower": 0.9390565185125316
+  },
+  "sensitive_phi_medical_record_number_mrn": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.013219295673193273,
+    "held_in_recall": 0.996993772815117,
+    "target": 0.98,
+    "threshold": 1.5973306894302368,
+    "worst_corpus_ci_lower": 0.9531223783557047
+  },
+  "sensitive_phi_patient_id_number": {
+    "corpora_used": [
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k"
+    ],
+    "held_in_precision": 0.0035989757361896135,
+    "held_in_recall": 0.9978354978354979,
+    "target": 0.99,
+    "threshold": 1.8665364980697632,
+    "worst_corpus_ci_lower": 1.0
+  },
+  "sensitive_pii_address": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.23072745674014467,
+    "held_in_recall": 0.9965350458268133,
+    "target": 0.96,
+    "threshold": 0.5675048828125,
+    "worst_corpus_ci_lower": 0.9513381995133819
+  },
+  "sensitive_pii_driver_s_license_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.1536085418789736,
+    "held_in_recall": 0.98287493513233,
+    "target": 0.96,
+    "threshold": 1.2239583730697632,
+    "worst_corpus_ci_lower": 0.9342838345864661
+  },
+  "sensitive_pii_full_name": {
+    "corpora_used": [
+      "26095_govdocs2-dualjudge-train80-14.25k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.5312438091841991,
+    "held_in_recall": 0.9910645165522942,
+    "target": 0.94,
+    "threshold": 0.3339029848575592,
+    "worst_corpus_ci_lower": 0.9403303305403629
+  },
+  "sensitive_pii_military_identification_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.17522246396750338,
+    "held_in_recall": 0.9986258406621832,
+    "target": 0.98,
+    "threshold": 1.2986654043197632,
+    "worst_corpus_ci_lower": 0.94734492481203
+  },
+  "sensitive_pii_passport_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.2566842028011464,
+    "held_in_recall": 0.993244455072637,
+    "target": 0.96,
+    "threshold": 1.404296875,
+    "worst_corpus_ci_lower": 0.9396804090763822
+  },
+  "sensitive_pii_password": {
+    "corpora_used": [
+      "16000_datax-dualjudge-trainset-5.37k",
+      "ai4privacy_pii_masking_train_42k",
+      "betterdataai_ner_silver_train_41k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.019143529946984365,
+    "held_in_recall": 0.9965361044497735,
+    "target": 0.98,
+    "threshold": 0.5701497197151184,
+    "worst_corpus_ci_lower": 0.9436553281955886
+  },
+  "sensitive_pii_personal_identification_number_pin": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.008889680721004097,
+    "held_in_recall": 0.994843588862152,
+    "target": 0.98,
+    "threshold": 1.2306314706802368,
+    "worst_corpus_ci_lower": 0.9537543544003368
+  },
+  "sensitive_pii_social_security_number": {
+    "corpora_used": [
+      "ai4privacy_pii_masking_train_42k",
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.17189085621677294,
+    "held_in_recall": 0.9870217391304348,
+    "target": 0.96,
+    "threshold": 1.11767578125,
+    "worst_corpus_ci_lower": 0.941533950617284
+  },
+  "sensitive_pii_visa_number": {
+    "corpora_used": [
+      "openpii_pii_train_155k",
+      "pii2_train_150k",
+      "pii_trainset_100k"
+    ],
+    "held_in_precision": 0.21437895922938452,
+    "held_in_recall": 0.995168003572169,
+    "target": 0.96,
+    "threshold": 1.4137369394302368,
+    "worst_corpus_ci_lower": 0.9370622895622895
+  }
+}
+--------------
+
+[2026-08-25T14:33:05Z] Exit: 0 | Context: materialize-v4 | Took: 2.3s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.materialize_perlabel --family perlabel_v4 --selection perlabel_v4
+--- Output ---
+{
+  "changed": {
+    "sensitive_pci_bank_account_number": {
+      "held_in_precision": 0.027736721804260848,
+      "held_in_recall": 0.9881516587677726,
+      "target": 0.96,
+      "threshold_after": 1.6637369394302368,
+      "threshold_before": 1.4101893901824951,
+      "worst_corpus_ci_lower": 0.94
+    },
+    "sensitive_pci_credit_card_number": {
+      "held_in_precision": 0.16129889287187132,
+      "held_in_recall": 0.9983555860985667,
+      "target": 0.96,
+      "threshold_after": 1.2218424081802368,
+      "threshold_before": 0.9510576725006104,
+      "worst_corpus_ci_lower": 0.9384951631316469
+    },
+    "sensitive_pci_iban": {
+      "held_in_precision": 0.01363788203740372,
+      "held_in_recall": 0.9805217391304348,
+      "target": 0.96,
+      "threshold_after": 1.8623046875,
+      "threshold_before": 1.4099012613296509,
+      "worst_corpus_ci_lower": 0.9386477362305926
+    },
+    "sensitive_pci_individual_taxpayer_identification_number_itin": {
+      "held_in_precision": 0.15378348446337872,
+      "held_in_recall": 0.9945664105378704,
+      "target": 0.96,
+      "threshold_after": 1.443359375,
+      "threshold_before": 0.8401750326156616,
+      "worst_corpus_ci_lower": 0.9359407104008595
+    },
+    "sensitive_phi_health_plan_beneficiary_number": {
+      "held_in_precision": 0.024251782551432854,
+      "held_in_recall": 0.9686447266131122,
+      "target": 0.96,
+      "threshold_after": 2.9485676288604736,
+      "threshold_before": 2.014380693435669,
+      "worst_corpus_ci_lower": 0.9390565185125316
+    },
+    "sensitive_phi_medical_record_number_mrn": {
+      "held_in_precision": 0.013219295673193273,
+      "held_in_recall": 0.996993772815117,
+      "target": 0.98,
+      "threshold_after": 1.5973306894302368,
+      "threshold_before": 0.3328394293785095,
+      "worst_corpus_ci_lower": 0.9531223783557047
+    },
+    "sensitive_phi_patient_id_number": {
+      "held_in_precision": 0.0035989757361896135,
+      "held_in_recall": 0.9978354978354979,
+      "target": 0.99,
+      "threshold_after": 1.8665364980697632,
+      "threshold_before": 2.617222785949707,
+      "worst_corpus_ci_lower": 1.0
+    },
+    "sensitive_pii_address": {
+      "held_in_precision": 0.23072745674014467,
+      "held_in_recall": 0.9965350458268133,
+      "target": 0.96,
+      "threshold_after": 0.5675048828125,
+      "threshold_before": 0.4239528179168701,
+      "worst_corpus_ci_lower": 0.9513381995133819
+    },
+    "sensitive_pii_driver_s_license_number": {
+      "held_in_precision": 0.1536085418789736,
+      "held_in_recall": 0.98287493513233,
+      "target": 0.96,
+      "threshold_after": 1.2239583730697632,
+      "threshold_before": 0.6313029527664185,
+      "worst_corpus_ci_lower": 0.9342838345864661
+    },
+    "sensitive_pii_full_name": {
+      "held_in_precision": 0.5312438091841991,
+      "held_in_recall": 0.9910645165522942,
+      "target": 0.94,
+      "threshold_after": 0.3339029848575592,
+      "threshold_before": 0.13396771252155304,
+      "worst_corpus_ci_lower": 0.9403303305403629
+    },
+    "sensitive_pii_military_identification_number": {
+      "held_in_precision": 0.17522246396750338,
+      "held_in_recall": 0.9986258406621832,
+      "target": 0.98,
+      "threshold_after": 1.2986654043197632,
+      "threshold_before": 0.9700481295585632,
+      "worst_corpus_ci_lower": 0.94734492481203
+    },
+    "sensitive_pii_passport_number": {
+      "held_in_precision": 0.2566842028011464,
+      "held_in_recall": 0.993244455072637,
+      "target": 0.96,
+      "threshold_after": 1.404296875,
+      "threshold_before": 0.9275015592575073,
+      "worst_corpus_ci_lower": 0.9396804090763822
+    },
+    "sensitive_pii_password": {
+      "held_in_precision": 0.019143529946984365,
+      "held_in_recall": 0.9965361044497735,
+      "target": 0.98,
+      "threshold_after": 0.5701497197151184,
+      "threshold_before": 0.3246713876724243,
+      "worst_corpus_ci_lower": 0.9436553281955886
+    },
+    "sensitive_pii_personal_identification_number_pin": {
+      "held_in_precision": 0.008889680721004097,
+      "held_in_recall": 0.994843588862152,
+      "target": 0.98,
+      "threshold_after": 1.2306314706802368,
+      "threshold_before": 0.9359908103942871,
+      "worst_corpus_ci_lower": 0.9537543544003368
+    },
+    "sensitive_pii_social_security_number": {
+      "held_in_precision": 0.17189085621677294,
+      "held_in_recall": 0.9870217391304348,
+      "target": 0.96,
+      "threshold_after": 1.11767578125,
+      "threshold_before": 0.5732578635215759,
+      "worst_corpus_ci_lower": 0.941533950617284
+    },
+    "sensitive_pii_visa_number": {
+      "held_in_precision": 0.21437895922938452,
+      "held_in_recall": 0.995168003572169,
+      "target": 0.96,
+      "threshold_after": 1.4137369394302368,
+      "threshold_before": 0.9537143111228943,
+      "worst_corpus_ci_lower": 0.9370622895622895
+    }
+  },
+  "family": "perlabel_v4",
+  "model_dir": "projects/pii-priority-recall-v1/models/perlabel_v4"
+}
+--------------
+
+[2026-08-25T14:33:30Z] Exit: 1 | Context: validate-v4 | Took: 24.4s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.evaluate_priority_model --project projects/pii-priority-recall-v1 --family perlabel_v4 --workers 8
+--- Output ---
+{"dataset": "4000_datax-dualjudge-evalset-1.32k", "docs_per_s": 3566.44, "errors": 0, "rows": 4000}
+{"dataset": "6589_govdocs2-dualjudge-eval20-3.53k", "docs_per_s": 4429.45, "errors": 11, "rows": 6589}
+{"dataset": "ai4privacy_pii_masking_eval_10k", "docs_per_s": 16502.35, "errors": 0, "rows": 10626}
+{"dataset": "betterdataai_ner_silver_eval_10k", "docs_per_s": 12281.34, "errors": 0, "rows": 10360}
+{"dataset": "nemotron_eval_6k", "docs_per_s": 6978.46, "errors": 0, "rows": 5617}
+{"dataset": "openpii_pii_eval_38k", "docs_per_s": 10123.79, "errors": 0, "rows": 38937}
+{"dataset": "pii2_eval_30k", "docs_per_s": 4715.03, "errors": 0, "rows": 30000}
+{"dataset": "pii_holdout_20k", "docs_per_s": 5013.71, "errors": 0, "rows": 20000}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 226, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 220, in main
+    result = run(args.project.resolve(), family=args.family, workers=args.workers)
+  File "/home/lence/workspace/pii_master/training/evaluate_priority_model.py", line 209, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:33:39Z] Exit: 1 | Context: bootstrap-v4 | Took: 8.6s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.final_bootstrap --project projects/pii-priority-recall-v1 --family perlabel_v4
+--- Output ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 170, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 164, in main
+    result = run(args.project.resolve(), family=args.family)
+  File "/home/lence/workspace/pii_master/training/final_bootstrap.py", line 154, in run
+    run_record["artifacts"].append(artifact)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'append'
+--------------
+
+[2026-08-25T14:34:25Z] Exit: 0 | Context: latency-1core | Took: 3.1s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master MODEL_PIPELINE_CPUS=1 /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.bench_perlabel
+--- Output ---
+{"docs_per_s": 1007.1055293302505, "family": "champion_1k", "mean_ms": 0.8710115009999999, "n_documents": 1000, "p50_ms": 0.6790275, "p95_ms": 1.6972052999999998, "p99_ms": 1.86626944, "read_window_chars": 1000}
+{"docs_per_s": 1007.3992578966912, "family": "perlabel_v4", "mean_ms": 0.871158433, "n_documents": 1000, "p50_ms": 0.688729, "p95_ms": 1.7168549, "p99_ms": 1.8931760099999997, "read_window_chars": 1000}
+--------------
+
+[2026-08-25T14:35:14Z] Exit: 1 | Context: decide-r1 | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py
+--- Output ---
+Traceback (most recent call last):
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py", line 67, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py", line 52, in main
+    arms = bd.build_arms(suite)
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision/build_decision.py", line 122, in build_arms
+    lat = latency_rows()
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py", line 35, in latency_rows_with_candidate
+    rows = bd.latency_rows()
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py", line 35, in latency_rows_with_candidate
+    rows = bd.latency_rows()
+  File "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py", line 35, in latency_rows_with_candidate
+    rows = bd.latency_rows()
+  [Previous line repeated 994 more times]
+RecursionError: maximum recursion depth exceeded
+--------------
+
+[2026-08-25T14:35:27Z] Exit: 0 | Context: decide-r1 | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python projects/pii-priority-recall-v1/decision_r1/build_arms_r1.py
+--- Output ---
+current_rules    macro_f2=0.0985 p95=nanms scopes=128
+hash_sgd         macro_f2=0.4234 p95=6.841ms scopes=128
+hash_sgd_f2      macro_f2=0.4871 p95=nanms scopes=128
+tfidf_linear     macro_f2=0.4832 p95=nanms scopes=128
+embeddingbag_asl macro_f2=0.4647 p95=nanms scopes=128
+hybrid_priority_001 macro_f2=0.4466 p95=7.649ms scopes=128
+hybrid_priority  macro_f2=0.4798 p95=8.829ms scopes=128
+champion_1k      macro_f2=0.4835 p95=2.200ms scopes=128
+perlabel_v4      macro_f2=0.4932 p95=1.717ms scopes=128
+--------------
+
+[2026-08-25T14:35:42Z] Exit: 0 | Context: decide-r1 | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-priority-recall-v1/decision/policy.yaml --arms projects/pii-priority-recall-v1/decision_r1/arms.json --suite projects/pii-priority-recall-v1/decision/suite.json --out projects/pii-priority-recall-v1/decision_r1/decision.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| ai4privacy_pii_masking_eval_10k | external | complete | 10,626 | 0 | yes |
+| betterdataai_ner_silver_eval_10k | external | complete | 10,360 | 0 | yes |
+| nemotron_eval_6k | external | positive_only | 5,617 | 0 | yes |
+| openpii_pii_eval_38k | external | complete | 38,937 | 0 | yes |
+| pii2_eval_30k | external | complete | 30,000 | 0 | yes |
+| pii_holdout_20k | sealed | complete | 20,000 | 0 | yes |
+
+| Arm | Verdict | priority tag recall ≥ 0.90 (conclusive) | one-core p95 ≤ 5 ms | macro_f2 | micro_f1 |
+| --- | --- | --- | --- | ---: | ---: |
+| current_rules | **blocked** | not measurable | not measurable | 0.0985 | 0.2000 |
+| hash_sgd | **blocked** | not measurable | **FAIL** (6.841) | 0.4234 | 0.3452 |
+| hash_sgd_f2 | **blocked** | not measurable | not measurable | 0.4871 | 0.5098 |
+| tfidf_linear | **blocked** | not measurable | not measurable | 0.4832 | 0.4929 |
+| embeddingbag_asl | **blocked** | not measurable | not measurable | 0.4647 | 0.4691 |
+| hybrid_priority_001 | **blocked** | not measurable | **FAIL** (7.649) | 0.4466 | 0.3634 |
+| hybrid_priority | **blocked** | not measurable | **FAIL** (8.829) | 0.4798 | 0.3791 |
+| champion_1k | feasible | PASS 55/55 | PASS | 0.4835 | 0.3812 |
+| **perlabel_v4** | **selected** | PASS 55/55 | PASS | 0.4932 | 0.4249 |
+
+**73 scope(s) could not be judged on the selected arm** — not passes, and not failures:
+- `sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k` — not measured on this corpus
+- `sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k` — support 3 < 30, observed 1.0000
+- `sensitive_pci_bank_account_number@betterdataai_ner_silver_eval_10k` — support 5 < 30, observed 0.4000
+- `sensitive_pci_bank_account_number@nemotron_eval_6k` — not measured on this corpus
+- `sensitive_pci_bank_account_number@openpii_pii_eval_38k` — support 1 < 30, observed 1.0000
+- `sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k` — not measured on this corpus
+- `sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k` — not measured on this corpus
+- `sensitive_pci_credit_card_number@betterdataai_ner_silver_eval_10k` — support 2 < 30, observed 0.5000
+- `sensitive_pci_credit_card_number@nemotron_eval_6k` — not measured on this corpus
+- `sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k` — not measured on this corpus
+- `sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k` — not measured on this corpus
+- `sensitive_pci_iban@betterdataai_ner_silver_eval_10k` — not measured on this corpus
+- `sensitive_pci_iban@nemotron_eval_6k` — not measured on this corpus
+- `sensitive_pci_iban@openpii_pii_eval_38k` — support 1 < 30, observed 1.0000
+- `sensitive_pci_iban@pii_holdout_20k` — not measured on this corpus
+- `sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k` — not measured on this corpus
+- `sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k` — not measured on this corpus
+- `sensitive_pci_individual_taxpayer_identification_number_itin@ai4privacy_pii_masking_eval_10k` — not measured on this corpus
+- `sensitive_pci_individual_taxpayer_identification_number_itin@betterdataai_ner_silver_eval_10k` — support 1 < 30, observed 1.0000
+- `sensitive_pci_individual_taxpayer_identification_number_itin@nemotron_eval_6k` — not measured on this corpus
+- …and 53 more (see the decision JSON)
+
+SELECTED perlabel_v4
+  - 2/9 arm(s) cleared every hard constraint
+  - macro_f2: best 0.493173 (perlabel_v4) — decided
+
+[mp] wrote projects/pii-priority-recall-v1/decision_r1/decision.json
+--------------
+
+[2026-08-25T14:36:50Z] Exit: 0 | Context: bootstrap-v4-rerun | Took: 8.5s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.final_bootstrap --project projects/pii-priority-recall-v1 --family perlabel_v4
+--- Output ---
+{
+  "equal_corpus_macro_f2": 0.4931731543924182,
+  "equal_corpus_macro_f2_ci": {
+    "ci_high": 0.5980218078051055,
+    "ci_low": 0.35341039489039516,
+    "confidence": 0.95,
+    "n_resamples": 1000,
+    "unit": "holdout_corpus",
+    "value": 0.4931731543924183
+  },
+  "equal_corpus_micro_f1": 0.4249105595117525,
+  "equal_corpus_micro_f1_ci": {
+    "ci_high": 0.5701702841016248,
+    "ci_low": 0.2875011134045814,
+    "confidence": 0.95,
+    "n_resamples": 1000,
+    "unit": "holdout_corpus",
+    "value": 0.4249105595117525
+  },
+  "macro_f2_target": 0.9,
+  "macro_f2_target_pass": false,
+  "measurable_priority_gates": 55,
+  "n_arms": 8,
+  "n_complete_arms": 5,
+  "priority_conclusive_passes": 55,
+  "priority_failures": 0,
+  "priority_gate_pass": true,
+  "priority_inconclusive": 0,
+  "priority_point_passes": 55,
+  "worst_priority_recall": 0.9463276836158192
+}
+--------------
+
+[2026-08-25T16:04:14Z] Exit: 0 | Context: label-agreement | Took: 7.8s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.label_agreement_probe
+--- Output ---
+
+=== A. inter-judge agreement (datax, 4708 shared documents) ===
+document-level 'has any PII' agreement : 0.9535
+macro F1 ceiling over 20 tags          : 0.5138
+support-weighted F1 ceiling            : 0.4686
+
+tag                                          A+     B+   both  F1ceil   kappa
+middle_name                                 329      3      3  0.0181  0.0168
+employment_status                             5    177      4  0.0440  0.0420
+address                                      49    573     40  0.1286  0.1116 *
+given_name                                 1513    261    254  0.2864  0.2118
+family_name                                1547    312    292  0.3141  0.2291
+country_of_residence                         26     61     15  0.3448  0.3397
+full_name                                   455   1809    452  0.3993  0.2896 *
+medical_treatment                            16     36     14  0.5385  0.5363
+gender_and_sex                               30     62     25  0.5435  0.5395
+zip_code                                    468    228    197  0.5661  0.5359
+medical_condition                            31     57     25  0.5682  0.5645
+educational_level                            55    116     49  0.5731  0.5662
+state                                       760    431    377  0.6331  0.5845
+password                                     20     36     18  0.6429  0.6409 *
+employment_date                              35     56     30  0.6593  0.6562
+county                                      278    160    146  0.6667  0.6516
+street_number_and_name                      552    403    332  0.6953  0.6618 *
+age                                          45     56     43  0.8515  0.8499
+phone_number                                613    584    535  0.8939  0.8785
+email                                       732    704    653  0.9095  0.8932
+
+=== B. cross-corpus threshold demand at recall 0.9 ===
+tag                                                  corpora   thr_min   thr_max   spread  prev_spread
+sensitive_phi_medical_record_number_mrn                    3    1.8493    7.0573     3.8x         1.5x
+sensitive_pii_full_name                                    6    0.3920    1.2301     3.1x         2.6x
+sensitive_pci_credit_card_number                           4    1.6510    4.8014     2.9x        18.4x
+sensitive_pii_password                                     5    0.7474    1.5426     2.1x        29.0x
+sensitive_pii_address                                      7    0.8755    1.7910     2.0x        17.0x
+sensitive_phi_patient_id_number                            2    2.6465    4.7077     1.8x         3.4x
+sensitive_phi_health_plan_beneficiary_number               2    4.1947    7.2331     1.7x         1.0x
+sensitive_pci_bank_account_number                          3    2.3607    3.8464     1.6x         4.2x
+sensitive_pii_personal_identification_number_pin           3    1.4554    2.2249     1.5x         1.9x
+sensitive_pci_individual_taxpayer_identification_number_itin       3    1.8932    2.8659     1.5x        22.7x
+sensitive_pii_social_security_number                       4    1.4036    2.0915     1.5x        18.6x
+sensitive_pii_military_identification_number               3    1.3932    2.0293     1.5x       167.7x
+sensitive_pii_visa_number                                  3    1.6296    2.0150     1.2x        36.7x
+sensitive_pii_driver_s_license_number                      4    1.4147    1.7409     1.2x        21.1x
+sensitive_pii_passport_number                              4    1.7529    2.0316     1.2x        36.8x
+sensitive_pci_iban                                         2    2.9476    3.2214     1.1x         3.1x
+
+wrote projects/pii-priority-recall-v1/label_agreement.json
+--------------
+
+[2026-08-25T16:05:50Z] Exit: 1 | Context: feasibility-agreement | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp feasibility --metric macro_f2 --target 0.90 --agreement 0.5138 --agreement-source two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) --ceiling 0.5892 --ceiling-method optimistic: champion's 95% corpus-bootstrap CI upper bound --baseline 0.4932 --note Model-independent. Collapsing the name taxonomy (judges agree F1 0.992 on name PRESENCE, 0.018-0.40 on which name tag) and street-address raises the ceiling to macro 0.6354 / weighted 0.7879 - the largest single lever available. --out projects/pii-priority-recall-v1/feasibility_agreement.json
+--- Output ---
+| Evidence | Value |
+| --- | ---: |
+| target (macro_f2) | 0.9 |
+| optimistic: champion's 95% corpus-bootstrap CI upper bound | 0.5892 |
+| two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) | 0.5138 |
+| current baseline | 0.4932 |
+| **verdict** | **unlikely** |
+| target the evidence supports | 0.5138 |
+
+> Model-independent. Collapsing the name taxonomy (judges agree F1 0.992 on name PRESENCE, 0.018-0.40 on which name tag) and street-address raises the ceiling to macro 0.6354 / weighted 0.7879 - the largest single lever available.
+
+target macro_f2 0.9: **unlikely**. optimistic: champion's 95% corpus-bootstrap CI upper bound puts the ceiling near 0.589. two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) puts the ceiling near 0.514. Spending the budget is unlikely to reach 0.9; the evidence supports about 0.514. Agree the target before approving, not after.
+
+[mp] wrote projects/pii-priority-recall-v1/feasibility_agreement.json
+--------------
+
+[2026-08-25T16:23:52Z] Exit: 0 | Context: scope-taxonomy | Took: 34.4s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.simulate_taxonomy_collapse --bootstrap
+--- Output ---
+family         taxonomy    macroF2  microF1  pass  incon  fail  measurable
+champion_1k    current      0.4835   0.3812    55      0     0          55
+champion_1k    collapsed    0.4745   0.3642    55      0     0          55
+champion_1k    DELTA       -0.0090  -0.0170
+perlabel_v4    current      0.4932   0.4249    55      0     0          55
+perlabel_v4    collapsed    0.4855   0.4123    55      0     0          55
+perlabel_v4    DELTA       -0.0077  -0.0126
+
+corpus                             tag             sup->   sup      P->     P      R->     R
+4000_datax-dualjudge-evalset-1.32k address         350->   350    n/a->   n/a  1.000-> 1.000
+6589_govdocs2-dualjudge-eval20-3.5 full_name      3215->  3215    n/a->   n/a  0.952-> 0.965
+6589_govdocs2-dualjudge-eval20-3.5 address         891->   891    n/a->   n/a  0.956-> 0.956
+ai4privacy_pii_masking_eval_10k    full_name      5114->  5470  0.483-> 0.516  0.991-> 0.990
+ai4privacy_pii_masking_eval_10k    address        2529->  2529  0.242-> 0.242  1.000-> 1.000
+betterdataai_ner_silver_eval_10k   full_name      8591->  8592  0.829-> 0.829  0.999-> 0.999
+betterdataai_ner_silver_eval_10k   address         254->   254  0.025-> 0.025  0.996-> 0.996
+openpii_pii_eval_38k               full_name     29335-> 30464  0.753-> 0.782  1.000-> 1.000
+openpii_pii_eval_38k               address       15267-> 15267  0.392-> 0.392  1.000-> 1.000
+pii2_eval_30k                      full_name      6811->  9994  0.229-> 0.339  0.982-> 0.991
+pii2_eval_30k                      address        2553->  2841  0.085-> 0.094  0.987-> 0.987
+pii_holdout_20k                    full_name      7836-> 11449  0.388-> 0.571  0.981-> 0.990
+pii_holdout_20k                    address        4629->  6566  0.232-> 0.329  0.994-> 0.995
+
+wrote projects/pii-priority-recall-v1/taxonomy_collapse_scope.json
+--------------
+
+[2026-08-25T17:45:03Z] Exit: 0 | Context: taxonomy-diagnostic | Took: 95.7s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.simulate_taxonomy_collapse --emit --families current_rules hash_sgd hash_sgd_f2 tfidf_linear embeddingbag_asl hybrid_priority_001 hybrid_priority champion_1k perlabel_1k perlabel_v2 perlabel_v3 perlabel_v4
+--- Output ---
+current_rules    collapsed macro F2 0.1099 (+0.0114)  micro F1 0.2366 (+0.0365)
+hash_sgd         collapsed macro F2 0.4126 (-0.0108)  micro F1 0.3313 (-0.0139)
+hash_sgd_f2      collapsed macro F2 0.4864 (-0.0007)  micro F1 0.5087 (-0.0011)
+tfidf_linear     collapsed macro F2 0.4820 (-0.0011)  micro F1 0.4930 (+0.0001)
+embeddingbag_asl collapsed macro F2 0.4536 (-0.0111)  micro F1 0.4568 (-0.0123)
+hybrid_priority_001 collapsed macro F2 0.4409 (-0.0058)  micro F1 0.3482 (-0.0152)
+hybrid_priority  collapsed macro F2 0.4717 (-0.0082)  micro F1 0.3635 (-0.0156)
+champion_1k      collapsed macro F2 0.4745 (-0.0090)  micro F1 0.3642 (-0.0170)
+perlabel_1k      collapsed macro F2 0.4911 (-0.0070)  micro F1 0.4361 (-0.0099)
+perlabel_v2      collapsed macro F2 0.4918 (-0.0070)  micro F1 0.4368 (-0.0100)
+perlabel_v3      collapsed macro F2 0.4916 (-0.0070)  micro F1 0.4340 (-0.0103)
+perlabel_v4      collapsed macro F2 0.4855 (-0.0077)  micro F1 0.4123 (-0.0126)
+--------------
+
+[2026-08-25T17:57:33Z] Exit: 1 | Context: doc-level-eval | Took: 0.8s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.doc_level_eval
+--- Output ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lence/workspace/pii_master/training/doc_level_eval.py", line 239, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/lence/workspace/pii_master/training/doc_level_eval.py", line 211, in main
+    report = run(args.project, args.families)
+  File "/home/lence/workspace/pii_master/training/doc_level_eval.py", line 151, in run
+    "judge_ceiling": judge_ceiling(),
+                     ~~~~~~~~~~~~~^^
+  File "/home/lence/workspace/pii_master/training/doc_level_eval.py", line 115, in judge_ceiling
+    a = load_judge(DATAX / JUDGE_A)
+  File "/home/lence/workspace/pii_master/training/label_agreement_probe.py", line 60, in load_judge
+    with path.open(encoding="utf-8") as stream:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/lence/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/lence/workspace/data/datax/data/manifest_gemini_5k_v4.jsonl'
+--------------
+
+[2026-08-25T17:59:11Z] Exit: 0 | Context: doc-level-eval | Took: 15.3s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.doc_level_eval
+--- Output ---
+JUDGE CEILING on the same question (4708 documents, two independent judges)
+  raw agreement 0.9535   F1 0.9472   kappa 0.9057
+
+family                    F1      F2       P       R     acc  worstF1  recall-only
+current_rules         0.6041  0.5224  0.9891  0.4807  0.4871   0.0993       0.5412
+hash_sgd              0.9824  0.9925  0.9677  1.0000  0.9676   0.9121       0.9994
+hash_sgd_f2           0.9781  0.9855  0.9681  0.9910  0.9592   0.9132       0.9988
+tfidf_linear          0.9787  0.9864  0.9681  0.9921  0.9604   0.9134       0.9985
+embeddingbag_asl      0.9824  0.9926  0.9677  1.0000  0.9677   0.9120       0.9519
+hybrid_priority_001   0.9824  0.9925  0.9677  1.0000  0.9677   0.9121       0.9994
+hybrid_priority       0.9824  0.9926  0.9677  1.0000  0.9676   0.9120       0.9994
+champion_1k           0.9824  0.9926  0.9677  1.0000  0.9676   0.9120       0.9994
+perlabel_v4           0.9823  0.9924  0.9677  0.9998  0.9675   0.9121       0.9969
+
+per-corpus detail for embeddingbag_asl:
+  corpus                                     gold+        P        R       F1    prev
+  4000_datax-dualjudge-evalset-1.32k          1137 not-meas   0.9050 not-meas not-meas
+  6589_govdocs2-dualjudge-eval20-3.53k        3366 not-meas   0.9988 not-meas not-meas
+  ai4privacy_pii_masking_eval_10k            10626   1.0000   1.0000   1.0000  1.0000
+  betterdataai_ner_silver_eval_10k           10360   1.0000   1.0000   1.0000  1.0000
+  openpii_pii_eval_38k                       38937   1.0000   1.0000   1.0000  1.0000
+  pii2_eval_30k                              25149   0.8383   1.0000   0.9120  0.8383
+  pii_holdout_20k                            20000   1.0000   1.0000   1.0000  1.0000
+
+wrote projects/pii-priority-recall-v1/doc_level.json
+--------------
+
+[2026-08-25T18:02:42Z] Exit: 0 | Context: doc-level-dualjudge | Took: 17.8s
+Directory: /home/lence/workspace/pii_master
+$ env PYTHONPATH=/home/lence/workspace/pii_master /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/python -m training.doc_level_eval
+--- Output ---
+=== DUAL-JUDGE corpora: the only document-level gold with real negatives ===
+family                    F1      F2       P       R    spec     acc
+current_rules         0.4573  0.4123  0.5588  0.3869  0.6549  0.5166
+hash_sgd              0.6941  0.8487  0.5341  0.9994  0.0021  0.5343
+hash_sgd_f2           0.6917  0.8421  0.5346  0.9873  0.0164  0.5348
+tfidf_linear          0.6916  0.8420  0.5345  0.9873  0.0158  0.5345
+embeddingbag_asl      0.6940  0.8486  0.5340  0.9994  0.0015  0.5340
+hybrid_priority_001   0.6942  0.8488  0.5342  0.9994  0.0025  0.5344
+hybrid_priority       0.6940  0.8487  0.5340  0.9994  0.0017  0.5341
+champion_1k           0.6940  0.8486  0.5340  0.9994  0.0015  0.5340
+perlabel_v4           0.6939  0.8483  0.5341  0.9987  0.0026  0.5341
+
+  4000_datax-dualjudge-evalset-1.32k
+    family                    n   prev       P       R      F1    spec  disputed flagged
+    current_rules          2797  0.473  0.4781  0.3301  0.3905  0.6762            0.286 
+    hash_sgd               2797  0.473  0.4734  1.0000  0.6426  0.0000            1.000 
+    hash_sgd_f2            2797  0.473  0.4691  0.9758  0.6336  0.0075            0.997 
+    tfidf_linear           2797  0.473  0.4690  0.9758  0.6335  0.0068            0.995 
+    embeddingbag_asl       2797  0.473  0.4734  1.0000  0.6426  0.0000            1.000 
+    hybrid_priority_001    2797  0.473  0.4734  1.0000  0.6426  0.0000            1.000 
+    hybrid_priority        2797  0.473  0.4734  1.0000  0.6426  0.0000            1.000 
+    champion_1k            2797  0.473  0.4734  1.0000  0.6426  0.0000            1.000 
+    perlabel_v4            2797  0.473  0.4735  1.0000  0.6427  0.0007            1.000 
+
+  6589_govdocs2-dualjudge-eval20-3.53k
+    family                    n   prev       P       R      F1    spec  disputed flagged
+    current_rules          5946  0.594  0.6395  0.4438  0.5240  0.6337            0.384 
+    hash_sgd               5946  0.594  0.5949  0.9989  0.7457  0.0041            1.000 
+    hash_sgd_f2            5946  0.594  0.6001  0.9989  0.7497  0.0253            1.000 
+    tfidf_linear           5946  0.594  0.6000  0.9989  0.7497  0.0249            1.000 
+    embeddingbag_asl       5946  0.594  0.5946  0.9989  0.7455  0.0029            1.000 
+    hybrid_priority_001    5946  0.594  0.5951  0.9989  0.7459  0.0050            1.000 
+    hybrid_priority        5946  0.594  0.5947  0.9989  0.7455  0.0033            1.000 
+    champion_1k            5946  0.594  0.5946  0.9989  0.7455  0.0029            1.000 
+    perlabel_v4            5946  0.594  0.5947  0.9975  0.7451  0.0046            0.997 
+
+JUDGE CEILING on the same question (946 documents, two independent judges)
+  raw agreement 0.9545   F1 0.9487   kappa 0.9080
+
+family                    F1      F2       P       R     acc  worstF1  recall-only
+current_rules         0.6041  0.5224  0.9891  0.4807  0.4871   0.0993       0.5412
+hash_sgd              0.9824  0.9925  0.9677  1.0000  0.9676   0.9121       0.9994
+hash_sgd_f2           0.9781  0.9855  0.9681  0.9910  0.9592   0.9132       0.9988
+tfidf_linear          0.9787  0.9864  0.9681  0.9921  0.9604   0.9134       0.9985
+embeddingbag_asl      0.9824  0.9926  0.9677  1.0000  0.9677   0.9120       0.9519
+hybrid_priority_001   0.9824  0.9925  0.9677  1.0000  0.9677   0.9121       0.9994
+hybrid_priority       0.9824  0.9926  0.9677  1.0000  0.9676   0.9120       0.9994
+champion_1k           0.9824  0.9926  0.9677  1.0000  0.9676   0.9120       0.9994
+perlabel_v4           0.9823  0.9924  0.9677  0.9998  0.9675   0.9121       0.9969
+
+per-corpus detail for embeddingbag_asl:
+  corpus                                     gold+        P        R       F1    prev
+  4000_datax-dualjudge-evalset-1.32k          1137 not-meas   0.9050 not-meas not-meas
+  6589_govdocs2-dualjudge-eval20-3.53k        3366 not-meas   0.9988 not-meas not-meas
+  ai4privacy_pii_masking_eval_10k            10626   1.0000   1.0000   1.0000  1.0000
+  betterdataai_ner_silver_eval_10k           10360   1.0000   1.0000   1.0000  1.0000
+  openpii_pii_eval_38k                       38937   1.0000   1.0000   1.0000  1.0000
+  pii2_eval_30k                              25149   0.8383   1.0000   0.9120  0.8383
+  pii_holdout_20k                            20000   1.0000   1.0000   1.0000  1.0000
+
+wrote projects/pii-priority-recall-v1/doc_level.json
+--------------
+

@@ -1,0 +1,32 @@
+MEMORANDUM
+
+TO:      Billing Systems Analysts
+FROM:    Data Governance Lead
+DATE:    27 August 2021
+SUBJECT: MBR_CONTACT_PREF — Dictionary Excerpt
+
+1. Scope. This excerpt covers the contact preference child table only. Parent definitions remain as published for MBR_MASTER.
+
+2. Columns.
+
+COLUMN | TYPE | NULL | NOTES
+PREF_ID | BIGINT | N | Surrogate key.
+MBR_KEY | BIGINT | N | FK to MBR_MASTER; cascade on purge.
+CHANNEL_CD | CHAR(2) | N | Values held in CHANNEL_REF.
+CONTACT_POINT_ENC | VARBINARY(256) | Y | Encrypted at column level; holds the phone number or email address for the stated channel. Decryption is available to the statement generator service account only.
+CONTACT_POINT_LAST4 | CHAR(4) | Y | Display aid for service desk verification; restricted.
+PREF_LANGUAGE_CD | CHAR(3) | N | Drives statement template selection.
+CONSENT_FLG | CHAR(1) | N | Y or N; no default.
+CONSENT_CAPTURED_TS | TIMESTAMP | Y | Null where consent has never been recorded.
+SUPPRESS_FLG | CHAR(1) | N | Defaults to N. Overrides CONSENT_FLG when set.
+SUPPRESS_REASON_CD | CHAR(3) | Y | Mandatory where SUPPRESS_FLG is Y.
+UPDATED_BY_ROLE | VARCHAR(30) | N | Role identifier, not a user identifier.
+UPDATED_TS | TIMESTAMP | N | Set by trigger.
+
+3. Access. The columns CONTACT_POINT_ENC and CONTACT_POINT_LAST4 are restricted. No developer role holds read access in production; defect investigation is performed against the masked copy in the lower environment.
+
+4. Retention. Preference rows follow the parent account and are purged with it. Superseded preference rows are retained for twenty-four months in PREF_HISTORY to evidence consent at the time of each contact.
+
+5. Extracts. The statement generator receives a same-day feed of PREF_ID, MBR_KEY, CHANNEL_CD, PREF_LANGUAGE_CD, CONSENT_FLG and SUPPRESS_FLG. CONTACT_POINT_ENC is resolved inside the service boundary and is not written to any file, log or queue.
+
+6. Action. Analysts holding queries built before Release 4.2 are to confirm by 10 September that no such query selects the restricted columns. Confirmations are to be lodged with the Records Custodian.

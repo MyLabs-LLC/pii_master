@@ -1,0 +1,61 @@
+HOSPITAL BILLING OFFICE — DATA DICTIONARY EXCERPT
+FORM PFS-DD-09 | SCHEMA PFS_STAGE | REV. 09/2016
+
+>> SECTION I — REGISTER ENTRY
+Object................|STG_MEMBER_INBOUND
+Type..................|Staging table, truncate-and-load
+Source................|HL7 ADT A01/A04/A08 via interface engine
+Cycle.................|Continuous, commit every 500 messages
+Owner.................|Interface Operations, on behalf of PFS
+Retention of object...|Rows cleared at 0400 daily after successful promote
+
+>> SECTION II — COLUMN REGISTER
+NAME | TYPE | NULL | NOTE
+STG_ROW_ID | NUMBER(15) | N | Load sequence. Not a business key.
+MSG_CTRL_ID_TXT | VARCHAR2(20) | N | From MSH-10. Used for replay.
+MRN_TXT | VARCHAR2(20) | N | PID-3. Category 3.
+ALT_MRN_TXT | VARCHAR2(20) | Y | Legacy facility identifier, pre-merger.
+PAT_LAST_NAME_TXT | VARCHAR2(60) | N | PID-5. Category 3.
+PAT_FIRST_NAME_TXT | VARCHAR2(60) | N | PID-5. Category 3.
+PAT_DOB_DT | DATE | N | PID-7. Category 3. Rejected if future-dated.
+PAT_SEX_CD | CHAR(1) | Y | PID-8. Reference-checked on promote.
+PAT_SSN_TXT | VARCHAR2(11) | Y | PID-19. Category 4. Nulled on promote unless
+  the account is flagged for agency placement. Not written to interface logs.
+PAT_ADDR_LINE_1_TXT | VARCHAR2(80) | Y | PID-11. Category 3.
+PAT_CITY_TXT | VARCHAR2(50) | Y | PID-11.
+PAT_STATE_CD | CHAR(2) | Y | PID-11.
+PAT_POSTAL_CD | VARCHAR2(10) | Y | PID-11.
+PAT_PHONE_HOME_TXT | VARCHAR2(15) | Y | PID-13. Category 3.
+GUARANTOR_NAME_TXT | VARCHAR2(120) | Y | GT1-3. Category 3.
+GUARANTOR_ACCT_NBR | VARCHAR2(18) | Y | Assigned downstream if absent.
+INS_SUBSCRIBER_ID_TXT | VARCHAR2(30) | Y | IN1-49. Category 3.
+INS_GROUP_NBR_TXT | VARCHAR2(30) | Y | IN1-8.
+ADMIT_DT | DATE | Y | PV1-44.
+LOAD_TS | TIMESTAMP | N | System-assigned.
+PROMOTE_STATUS_CD | CHAR(1) | N | P/F/H. H indicates held for review.
+ERR_REASON_CD | VARCHAR2(8) | Y | Populated where status is F.
+
+>> SECTION III — ACCESS RESTRICTION
+1. Schema PFS_STAGE is not published to the reporting catalog.
+2. SELECT is held by interface service accounts and by two analysts in
+   Interface Operations. No end-user grants exist or will be issued.
+3. Error queue review is performed at the console; extracts of held rows
+   require Privacy Office approval on Form IS-27.
+4. Trace-level interface logging must not be enabled in production. Where
+   enabled under an incident ticket, logs are deleted at ticket closure.
+
+>> SECTION IV — RETENTION
+1. Table rows: cleared daily as above.
+2. Interface engine message archive: 30 days on disk, 90 days on tape.
+3. Rejected message store: 180 days, then destroyed. Extension requires
+   written direction from the Records Custodian.
+
+>> SECTION V — DOWNSTREAM EXTRACTS
+None permitted directly from this schema. Promoted rows land in
+PFS_CORE.MEMBER_MASTER and are governed by Form PFS-DD-04. Any request to
+read staging content for reconciliation is logged as an exception and
+reported in the quarterly access review.
+
+>> SECTION VI — STATUS
+Entry current as of revision date. Change control: CR-2016-0447 open,
+pertaining to ALT_MRN_TXT deprecation.

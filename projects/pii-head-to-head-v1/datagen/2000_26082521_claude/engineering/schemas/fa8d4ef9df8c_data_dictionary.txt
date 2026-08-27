@@ -1,0 +1,51 @@
+DATA DICTIONARY — EXCERPT AND CHANGE RECORD
+OBJECT: RPT.VW_PTY_SETTLEMENT_EXTRACT (view)
+BASE OBJECTS: dbo.PTY_MASTER, ESCRW.FILE_HDR, ESCRW.DISB_LINE
+CLASSIFICATION: Restricted
+REVISION: 2.4, effective Q3 2016
+PREPARED BY: Data Governance Office
+APPROVED BY: Records Custodian; Compliance Officer
+
+1.0 PURPOSE
+1.1 Single supported source for settlement-level party reporting. Direct query of base tables by reporting personnel is prohibited.
+1.2 The view is definition-locked. Any column added to a base table is excluded until this record is amended.
+
+2.0 COLUMN INVENTORY
+2.1 FILE_NBR — varchar(20) — NOT NULL — Reporting grain, with PTY_ROLE_CD.
+2.2 BRANCH_CD — char(3) — NOT NULL — Derived from FILE_NBR prefix.
+2.3 PTY_ROLE_CD — char(4) — NOT NULL —
+2.4 PTY_LAST_NAME — varchar(60) — NOT NULL —
+2.5 PTY_FIRST_NAME — varchar(40) — NULL —
+2.6 PTY_ENTITY_NAME — varchar(120) — NULL —
+2.7 PTY_CITY — varchar(50) — NULL —
+2.8 PTY_STATE_CD — char(2) — NULL —
+2.9 PTY_POSTAL_CD — varchar(10) — NULL — Truncated to five characters in the view.
+2.10 CLOSING_DT — date — NULL — Null until the file reaches closed status.
+2.11 DISB_TOTAL_AMT — decimal(15,2) — NULL — Sum over ESCRW.DISB_LINE.
+2.12 UNDERWRITER_CD — char(4) — NOT NULL —
+2.13 POLICY_TYPE_CD — char(2) — NOT NULL —
+2.14 EXTRACT_RUN_DTM — datetime — NOT NULL — Stamped at materialisation.
+
+3.0 EXCLUDED COLUMNS
+3.1 PTY_TIN, PTY_SSN_ENC, PTY_BIRTH_DATE, PTY_DL_NBR_ENC, PTY_HOME_PHONE, PTY_MOBILE_PHONE, PTY_EMAIL_ADDR and PTY_ADDR_LINE_1 are not exposed by this view and will not be added.
+3.2 Requests to reinstate any column in 3.1 are to be raised as a formal exception and are decided by the Compliance Officer. Verbal approval is not sufficient.
+
+4.0 ACCESS RESTRICTION
+4.1 Select granted to role RPT_READER. Membership is reviewed quarterly by the Records Custodian; the review is evidenced in the access certification file.
+4.2 Terminated personnel are removed within one business day of the notice from Human Resources. Removal is performed at the domain group, not at the database.
+4.3 Service accounts consuming this view are enumerated in the interface register and may not be shared across interfaces.
+
+5.0 RETENTION
+5.1 The view carries no independent retention. Rows disappear as base rows are purged.
+5.2 Materialised output written to the reporting staging area is retained for ninety days and then deleted by JB_RPT_HOUSEKEEP. Extract files are not archived to removable media.
+
+6.0 DOWNSTREAM EXTRACTS
+6.1 Monthly production report to the underwriter. Carries columns 2.1 through 2.13.
+6.2 Quarterly branch performance workbook. Aggregated; no party name carried.
+6.3 Annual audit sample pull. Carried on encrypted media, logged out and back in by the Records Custodian, destroyed on completion of fieldwork.
+6.4 No extract from this view may be placed on a shared network drive or attached to external correspondence.
+
+7.0 CHANGE RECORD
+7.1 Rev 2.2 — added UNDERWRITER_CD and POLICY_TYPE_CD.
+7.2 Rev 2.3 — truncated PTY_POSTAL_CD to five characters.
+7.3 Rev 2.4 — removed PTY_MBR_NBR following deprecation of the legacy member program.

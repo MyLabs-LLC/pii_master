@@ -1,0 +1,32 @@
+DATA DICTIONARY EXCERPT — EMPLOYER PASS AND PAYROLL DEDUCTION PROGRAM
+Physical Table: EMPPASS     Dictionary Version 1.9     Owner: Office of Revenue Systems
+
+1. General.
+
+   1.1 EMPPASS records the individual participants enrolled through participating employers under the pre-tax transit benefit program. The employer entity itself is recorded in EMPMAST and is not personal data; the columns dictionaried below are, and the distinction governs everything in clause 4.
+
+   1.2 The table is refreshed from employer-supplied enrollment files on a monthly cycle. Employers submit on cartridge or, since March 1998, by dial-up transfer to the enrollment mailbox; the layouts differ by submission method and are reconciled by module EMP0300 into the common internal format described here.
+
+2. Columns.
+
+   2.1 EMP_ENROLL_NBR, DECIMAL(9,0), NOT NULL, primary key. EMPLOYER_CTL_NBR, DECIMAL(7,0), NOT NULL, foreign key to EMPMAST.
+
+   2.2 PARTIC_LAST_NAM, VARCHAR(30), NOT NULL; PARTIC_FRST_NAM, VARCHAR(20), NOT NULL; PARTIC_MDL_INIT, CHAR(1), nullable.
+
+   2.3 EMPLOYEE_ID_TXT, VARCHAR(20), NOT NULL, is the identifier assigned by the employer and is not under the Authority's control; its format varies by employer and it must not be parsed. SSN_NBR, CHAR(9), nullable, is accepted only where the employer submits no other stable identifier and is used solely to match against a prior month's enrollment.
+
+   2.4 WORK_ADDR_LN_1, VARCHAR(40), NOT NULL; WORK_ZIP_CDE, CHAR(9), NOT NULL; RES_ZIP_CDE, CHAR(5), nullable, supplied by roughly a third of employers and used for corridor analysis. TEL_WORK_NBR, CHAR(10), nullable. EMAIL_ADR_TXT, VARCHAR(60), nullable.
+
+   2.5 PASS_TYP_CDE, CHAR(3), NOT NULL; FARECARD_SER_NBR, CHAR(16), nullable until first issuance; DEDUCT_AMT, DECIMAL(5,2), NOT NULL WITH DEFAULT; BENEFIT_AMT, DECIMAL(5,2), NOT NULL WITH DEFAULT; ENROLL_EFF_DTE and ENROLL_TERM_DTE, DATE, the latter nullable; PARTIC_STS_CDE, CHAR(1), NOT NULL.
+
+3. Null treatment. Where an employer's submission omits a nullable column, the prior month's value is not carried forward; the column is set to null and the omission is reported on the exception listing EMPR040 for follow-up by the program coordinator. Carrying values forward was the practice through Version 1.6 and was discontinued because it masked terminations.
+
+4. Access, retention, and extracts.
+
+   4.1 Access to the name, identity, and contact columns is limited to RACF group EMP$ADMN. The employer relations staff work through VW_EMPPASS_ROSTER, which is further constrained by a row-level predicate on EMPLOYER_CTL_NBR so that no representative may retrieve the roster of an employer other than those assigned to that representative.
+
+   4.2 No participant-level data is returned to the employer beyond that which the employer itself submitted, together with PASS_TYP_CDE and the enrollment dates. Employer requests for ridership or travel detail at the participant level are refused as a matter of standing policy; aggregate counts are supplied where the enrolled population exceeds twenty-five.
+
+   4.3 Terminated enrollments are retained four years from ENROLL_TERM_DTE to satisfy the record-keeping obligation attaching to the pre-tax benefit, then purged by job EMPP070. SSN_NBR is overwritten at twelve months following termination irrespective of the longer row retention.
+
+   4.4 The only recurring extract is EMPX020, the monthly reconciliation file returned to each employer over the same channel by which the enrollment was received. Ad hoc extracts require Form RM-27 and the countersignature of the Records Custodian.

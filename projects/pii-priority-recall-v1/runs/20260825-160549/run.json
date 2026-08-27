@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-25",
+  "run_id": "20260825-160549",
+  "commands": [
+    {
+      "ts": "2026-08-25T16:05:50Z",
+      "command": "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp feasibility --metric macro_f2 --target 0.90 --agreement 0.5138 --agreement-source two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) --ceiling 0.5892 --ceiling-method optimistic: champion's 95% corpus-bootstrap CI upper bound --baseline 0.4932 --note Model-independent. Collapsing the name taxonomy (judges agree F1 0.992 on name PRESENCE, 0.018-0.40 on which name tag) and street-address raises the ceiling to macro 0.6354 / weighted 0.7879 - the largest single lever available. --out projects/pii-priority-recall-v1/feasibility_agreement.json",
+      "output": "| Evidence | Value |\n| --- | ---: |\n| target (macro_f2) | 0.9 |\n| optimistic: champion's 95% corpus-bootstrap CI upper bound | 0.5892 |\n| two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) | 0.5138 |\n| current baseline | 0.4932 |\n| **verdict** | **unlikely** |\n| target the evidence supports | 0.5138 |\n\n> Model-independent. Collapsing the name taxonomy (judges agree F1 0.992 on name PRESENCE, 0.018-0.40 on which name tag) and street-address raises the ceiling to macro 0.6354 / weighted 0.7879 - the largest single lever available.\n\ntarget macro_f2 0.9: **unlikely**. optimistic: champion's 95% corpus-bootstrap CI upper bound puts the ceiling near 0.589. two independent judge models over the same 4,708 datax documents; macro F1 between judges across 20 tags with >=30 support (support-weighted 0.4686) puts the ceiling near 0.514. Spending the budget is unlikely to reach 0.9; the evidence supports about 0.514. Agree the target before approving, not after.\n\n[mp] wrote projects/pii-priority-recall-v1/feasibility_agreement.json\n",
+      "exit_code": 1,
+      "context": "feasibility-agreement",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 0.726
+    }
+  ],
+  "commands_source": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/runs/20260825-160549/events.jsonl"
+}

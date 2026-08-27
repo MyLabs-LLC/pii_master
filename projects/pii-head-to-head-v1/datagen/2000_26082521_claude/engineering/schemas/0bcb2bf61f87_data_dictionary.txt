@@ -1,0 +1,44 @@
+DATA DICTIONARY EXCERPT — FORM DD-11
+STAGING OBJECT: STGCUS.MBR_LOAD_STG
+SOURCE: CARRIER PARTNER FLAT FILE, DAILY 04:15
+
+SECTION 1 — STATUS
+1.1  Object type ......... Staging table, truncate-and-load
+1.2  Instance ............ PRDCUS1
+1.3  Load job ............ LD_MBR_STG_D01 (Control-M)
+1.4  Retention in table .. 72 hours, then truncated by PRG_STG_H72
+
+SECTION 2 — COLUMN LAYOUT
+
+  POS  COLUMN NAME           TYPE           NULL  NOTE
+  ---  --------------------  -------------  ----  ------------------------------
+    1  SRC_FILE_ID           VARCHAR2(20)   N     Filename as received
+    2  SRC_REC_NO            NUMBER(8)      N     Line number within file
+    3  PTNR_MBR_REF          VARCHAR2(20)   N     Partner's own key; not ours
+    4  SURNAME_RAW           VARCHAR2(60)   Y     Restricted. Untrimmed
+    5  FORENAME_RAW          VARCHAR2(60)   Y     Restricted. Untrimmed
+    6  ADDR_BLOCK_RAW        VARCHAR2(255)  Y     Restricted. Unparsed, may
+                                                  contain the whole address
+    7  POSTCODE_RAW          VARCHAR2(10)   Y     Restricted until validated
+    8  TEL_NO_RAW            VARCHAR2(20)   Y     Restricted
+    9  EMAIL_RAW             VARCHAR2(120)  Y     Restricted
+   10  DT_OF_BIRTH_RAW       VARCHAR2(10)   Y     Restricted. Text, mixed
+                                                  formats across partners
+   11  LOAD_DTTM             DATE           N     System
+   12  VALID_FLG             CHAR(1)        N     Set by validation step
+   13  REJECT_RSN_CD         CHAR(3)        Y     Populated where VALID_FLG='N'
+
+SECTION 3 — RESTRICTION
+3.1  Every column at positions 4 to 10 is restricted. The staging schema carries no reporting grant of any kind.
+3.2  SELECT is held by the ETL service account and by named members of the DBA group. Developers have no grant on the production staging schema; defect investigation is carried out against the pre-production copy, which is loaded from a scrambled file.
+3.3  Rejected rows are not to be corrected in place. Corrections are requested from the partner and reloaded on the following cycle.
+
+SECTION 4 — DOWNSTREAM
+4.1  On successful validation, rows are merged into CUSTDTA.CUST_MBR_MSTR. No other object is written by this job.
+4.2  Reject listings produced for the partner carry SRC_REC_NO, PTNR_MBR_REF and REJECT_RSN_CD only, and no restricted column.
+4.3  Source files are moved to the encrypted archive volume on completion and are deleted after 30 days.
+
+SECTION 5 — SIGN-OFF
+5.1  Maintained by ....... the ETL Team Leader
+5.2  Countersigned ....... the Records Custodian
+5.3  Version ............. 1.2, effective 11 April 2011

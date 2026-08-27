@@ -1,0 +1,59 @@
+{
+  "approved_at": "2026-08-25T18:45:30.547964+00:00",
+  "approved_by": "user",
+  "plan": {
+    "budget": {
+      "max_trials": 1000,
+      "max_wallclock_s": 43200
+    },
+    "cpu": {
+      "published_latency": "exactly 1 core",
+      "training": "up to 32 cores"
+    },
+    "editable_surfaces": [
+      "training/",
+      "tests/",
+      "projects/pii-quiet-alarm/",
+      "src/pii_master/ (narrow serving hooks only, if the cascade needs them)"
+    ],
+    "feasibility": {
+      "doc_specificity_0.90": "plausible (supported 0.955)",
+      "priority_macro_precision_0.90": "unlikely (supported 0.458)"
+    },
+    "hard_gates": {
+      "doc_precision": ">=0.90 ci_lower",
+      "doc_recall": ">=0.85 ci_lower",
+      "doc_specificity": ">=0.85 ci_lower",
+      "p95_latency_ms_one_core": "<=5.0",
+      "priority_tag_recall": ">=0.75 ci_lower min_support=30"
+    },
+    "immutable": [
+      "/home/lence/workspace/data/2-eval/** (manifests, gold, split membership)",
+      "metric formulas, min_support=30, every gate threshold",
+      "projects/pii-quiet-alarm/suite.yaml",
+      "projects/pii-quiet-alarm/policy.yaml"
+    ],
+    "modules": [
+      "eval",
+      "tune",
+      "datagen",
+      "classify"
+    ],
+    "operation": "full-loop-precision-1000",
+    "policy": "pii-quiet-alarm-precision-gate",
+    "project": "projects/pii-quiet-alarm",
+    "ranker": [
+      "priority_macro_f05",
+      "macro_f05",
+      "p95_latency_ms (lower)"
+    ],
+    "target": "projects/pii-quiet-alarm/dist/ champion bundle",
+    "taxonomy_collapse": {
+      "sensitive_pii_family_name": "sensitive_pii_full_name",
+      "sensitive_pii_given_name": "sensitive_pii_full_name",
+      "sensitive_pii_middle_name": "sensitive_pii_full_name",
+      "sensitive_pii_street_number_and_name": "sensitive_pii_address"
+    }
+  },
+  "plan_sha256": "dceb27e3412c8c3a68ecffc313b9ee715d3c2a020c3db7e857416460d7d1fde1"
+}

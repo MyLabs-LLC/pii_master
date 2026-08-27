@@ -1,0 +1,13 @@
+MEMORANDUM
+
+TO:       Divisional Privacy Coordinators; Reporting Unit
+FROM:     Data Administrator, Bureau of Information Services
+SUBJECT:  Dictionary entry, table CLNT_XREF, and restrictions attaching thereto
+
+The cross-reference table has been placed in production and the following entry is adopted into the dictionary as Section 21. Coordinators are directed to review the restrictions before certifying any access request touching this table.
+
+The table exists to reconcile client records originating in the several program systems, and its columns are as follows. CLNT_ID, NUMBER(10), NOT NULL, being the departmental identifier. SRC_SYS_CD, VARCHAR2(4), NOT NULL, identifying the originating system. SRC_CLNT_KEY_TXT, VARCHAR2(20), NOT NULL, being the identifier assigned by that originating system and designated Restricted for the reason that certain source systems assign keys derived from identity elements. MTCH_SCORE_QTY, NUMBER(5,2), NULL permitted. MTCH_MTHD_CD, VARCHAR2(2), NOT NULL. MTCH_RVW_STAT_CD, CHAR(1), NOT NULL, indicating whether a probabilistic match has been reviewed by the reconciliation clerk. XREF_CRT_DTM, DATE, NOT NULL, and XREF_UPD_DTM, DATE, NOT NULL, being maintained by trigger.
+
+Coordinators are reminded that the deterministic matching routine consults CLNT_LAST_NAM, CLNT_BRTH_DT, and CLNT_SSN_NBR in the master table, and that the resulting score is persisted here while the elements consulted are not. It follows that this table, though it holds no identity column of its own, is treated as Restricted in the aggregate, access being conferred by role CHD_XREF_R alone.
+
+Rows are retained for the retention period of the parent client row and are purged in the same cycle. No standing extract draws upon this table. Should the Reporting Unit receive a request contemplating its use, the request shall be referred to the Records Custodian without action, and the referral shall be noted in the reporting unit's request log in the ordinary course.

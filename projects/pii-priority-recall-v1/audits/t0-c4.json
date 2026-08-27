@@ -1,0 +1,18 @@
+{
+  "candidate": "t0-c4",
+  "stage": "propose",
+  "proposal": "Add a compact positive/unlabelled-aware hashed cue-and-identifier-shape model. Complete rows provide positives and negatives, partial rows provide positives only, and every combined-corpus document contributes document-frequency evidence.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "6e632a0",
+  "commit": "a5400fc",
+  "decision": "accepted_for_validation",
+  "evidence": {
+    "focused_tests": "13 passed",
+    "model_tests": "4 passed",
+    "ruff": "passed",
+    "hashed_feature_slots": 131072,
+    "max_document_features": 512,
+    "value_redaction": "digits normalized before hashing",
+    "partial_label_policy": "positive-only"
+  }
+}

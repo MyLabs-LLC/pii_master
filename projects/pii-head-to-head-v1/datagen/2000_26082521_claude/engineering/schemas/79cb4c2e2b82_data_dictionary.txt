@@ -1,0 +1,58 @@
+MEMBER FILE DATA DICTIONARY — CONSOLIDATED EXCERPT
+Covers MBRMAST (member master), MBRXREF (cross reference) and the extract layouts derived from them. Supersedes the September issue.
+
+MEMBER MASTER — KEY AND STATUS COLUMNS
+
+- MBR_ID — PACKED(9,0) — NOT NULL — the only identifier approved for use in new programs, reports and screen headings.
+- SSN_NBR — CHAR(9) — NOT NULL — legacy natural key. Still required by the payroll interface and by the annual wage reporting run, so it cannot be dropped. Object and column authority as set out under Access below.
+- MBR_STAT_CD — CHAR(1) — NOT NULL — A active, I inactive, T terminated, H hold. Edited against MBRSTAT.
+- PLACEMENT_STAT — CHAR(1) — NOT NULL — set by the assignment post; not maintainable from the inquiry screens.
+- APPL_DT — DATE — NOT NULL — date the application was taken; four-digit year.
+- HIRE_DT — DATE — NULL allowed — first assignment start.
+- TERM_DT — DATE — NULL allowed — drives the retention clock. A null here holds the record indefinitely, so branch staff must complete this field when a member is closed out.
+- BRANCH_CD — CHAR(4) — NOT NULL — office of record; also controls which rows a branch profile can retrieve.
+
+MEMBER MASTER — PERSONAL DATA COLUMNS
+
+- LAST_NAME — CHAR(25) — NOT NULL
+- FIRST_NAME — CHAR(15) — NOT NULL
+- MID_INIT — CHAR(1) — NULL allowed
+- ADDR_LINE_1 — CHAR(30) — NOT NULL
+- ADDR_LINE_2 — CHAR(30) — NULL allowed
+- CITY — CHAR(20) — NOT NULL
+- STATE_CD — CHAR(2) — NOT NULL
+- ZIP_CD — CHAR(9) — NOT NULL — unhyphenated
+- HOME_PHONE — CHAR(10) — NULL allowed
+- MSG_PHONE — CHAR(10) — NULL allowed
+- DOB_DT — DATE — NULL allowed
+- GENDER_CD, ETHNIC_CD, VET_STAT_CD — CHAR(1) each — NULL allowed — held for EEO reporting only
+- EMRG_CONTACT_NAME — CHAR(30) — NULL allowed
+- EMRG_CONTACT_PHONE — CHAR(10) — NULL allowed
+- BANK_ROUTE_NBR — CHAR(9) — NULL allowed — direct deposit enrollment
+- BANK_ACCT_NBR — CHAR(17) — NULL allowed — direct deposit enrollment
+
+CROSS REFERENCE FILE
+
+- MBRXREF holds MBR_ID, ALT_ID_NBR, OLD_BRANCH_CD and MERGE_TO_MBR_ID. It is written only by the duplicate-merge utility MB900R and is read-only to every other program.
+
+ACCESS
+
+- *PUBLIC authority is *EXCLUDE on all three files. Authority is granted by group profile: RECGRP full update, PAYGRP read on the identifier, name and banking columns, BRNGRP read on the branch-owned rows excluding the banking, screening and EEO columns.
+- The banking columns are additionally masked on every printed report; only the last four positions of BANK_ACCT_NBR appear on the direct deposit confirmation notice.
+- Requests to view or extract restricted columns are made in writing to the Records Custodian and are logged. The log is reviewed quarterly by the Compliance group.
+
+RETENTION
+
+- Member master: seven years from TERM_DT. Purge job MBPURG runs the first Sunday in January and archives to tape before deletion.
+- Banking columns: cleared ninety days after TERM_DT by job MBBNKPG, independently of the master purge.
+- EEO columns: held two years from TERM_DT, then cleared.
+- Cross reference rows: retained as long as either related master record exists.
+
+DOWNSTREAM EXTRACTS
+
+- MBEXT01 — payroll service bureau — nightly — identifier, name and pay columns.
+- MBEXT02 — workers compensation carrier — monthly — identifier, branch, skill and hours columns.
+- MBEXT03 — EEO reporting — quarterly — aggregate counts, no rows.
+- MBEXT04 — branch scheduling package — weekly — identifier, skill, availability and geography columns.
+- MBEXT06 — direct deposit prenote — as required — identifier, name and banking columns; transmitted by dial-up only, never written to tape.
+- Every extract is recorded on form RC-12 at creation and at disposal. Layouts are not to be altered without a change request approved by the Records Custodian.

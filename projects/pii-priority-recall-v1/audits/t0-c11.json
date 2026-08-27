@@ -1,0 +1,15 @@
+{
+  "candidate": "t0-c11",
+  "stage": "propose",
+  "proposal": "Add a compact NumPy EmbeddingBag runtime based on a truncated SVD of positive combined-corpus weights. Preserve a training-only asymmetric-loss calibration surface while keeping production free of PyTorch.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "53d0197",
+  "commit": "d9effc8",
+  "decision": "accepted_for_validation",
+  "evidence": {
+    "tests": "8 passed",
+    "ruff": "passed",
+    "runtime_dependency": "NumPy only",
+    "training_dependency": "PyTorch overlay only"
+  }
+}

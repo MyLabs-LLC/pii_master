@@ -1,0 +1,62 @@
+BAYFIELD DRUG STORES, INC.
+PHARMACY SYSTEMS DIVISION — DATA ADMINISTRATION
+DATA ELEMENT SUPPRESSION AND MASKING SPECIFICATION
+Control No. PSD-STD-0417, Revision C
+Supersedes Revision B dated 14-APR-1998
+Effective 02-NOV-1998 00:00 CST
+
+1. PURPOSE AND CONSTRUCTION
+
+1.1 This Specification prescribes the mandatory treatment of the data elements enumerated in Clauses 3 and 4 whenever such elements are extracted from the Pharmacy Management System (PMS/VSAM) or the Third Party Claims Repository (DB2 subsystem DBP1) and propagated to any environment other than Production.
+
+1.2 Where any provision of this Specification conflicts with a departmental practice, working instruction, or verbal direction, this Specification shall govern, and the conflicting practice shall be of no force or effect until amended in writing by the Records Custodian.
+
+1.3 The terms "suppress," "mask," and "tokenise" shall bear the meanings assigned in Clause 2 and no other meaning.
+
+2. DEFINITIONS
+
+2.1 "Suppress" means that the field shall be written to the target as low-values or spaces, in accordance with the copybook picture clause, and that no derivative of the source content shall persist in any intermediate work file, sort work dataset, or SYSOUT listing.
+
+2.2 "Mask" means that the field shall be written in the format prescribed by the applicable mask picture, such that positional structure is preserved and content is not.
+
+2.3 "Tokenise" means that the field shall be replaced by a surrogate value issued by the Token Vault (subsystem TKV1) which bears no computable relation to the source content.
+
+3. CLASS A ELEMENTS — MANDATORY SUPPRESSION
+
+3.1 The following stanza is in force and shall not be overridden at the job level:
+
+      [SUPPRESS.CLASS.A]
+      PAT_LAST_NM         = SUPPRESS
+      PAT_FIRST_NM        = SUPPRESS
+      PAT_MIDDLE_INIT     = SUPPRESS
+      PAT_DOB             = SUPPRESS
+      PAT_SSN             = SUPPRESS
+      PAT_ADDR_LINE_1     = SUPPRESS
+      PAT_ADDR_LINE_2     = SUPPRESS
+      PAT_HOME_PHONE      = SUPPRESS
+      PAT_WORK_PHONE      = SUPPRESS
+      GUARANTOR_NAME      = SUPPRESS
+      EMERG_CONTACT_NAME  = SUPPRESS
+      ON.VIOLATION        = ABEND(U4017)
+
+3.2 Any attempt to disable the foregoing by means of an override member in PSD.PARMLIB shall cause the step to terminate with user completion code U4017 and shall be reported to the Records Custodian within one business day.
+
+4. CLASS B ELEMENTS — MASKING AND TOKENISATION
+
+4.1 The following elements shall be masked according to the picture indicated, the mask picture being a format specification and not a value:
+
+      PAT_SSN_DISPLAY     MASK  9(3)-9(2)-9(4)  ->  "***-**-****"
+      PAT_ZIP5            MASK  9(5)            ->  "***XX" (low order retained)
+      PAT_ZIP4            SUPPRESS
+      RX_CARD_NBR         MASK  X(19)           ->  "**** **** **** ****"
+      PAT_EMAIL_ADR       MASK  X(40)           ->  "*****@*****"
+
+4.2 The following elements shall be tokenised and shall carry the token domain prefix indicated: MBR_ID (domain MBR), CARDHOLDER_ID (domain CHD), RX_NBR (domain RXN), PAT_ACCT_NBR (domain ACT).
+
+4.3 PLAN_BIN, PCN, GRP_NBR, NDC_CD, DAYS_SUPPLY, QTY_DISPENSED, and FILL_SEQ_NBR are Class C and pass unaltered.
+
+5. AUDIT OF COMPLIANCE
+
+5.1 Each conforming execution shall write a compliance record to PSD.AUDIT.MASKLOG. The most recent such record reads: JOB PHRXETL0 / JOBID JOB07741 / 01-NOV-1998 23.41.06 / STEP EXTR040 / ROWS READ 17,406,212 / ROWS WRITTEN 17,406,212 / CLASS A OCCURRENCES SUPPRESSED 17,406,212 / CLASS B OCCURRENCES TOKENISED 41,203,884 / EXCEPTIONS 0 / RC=0000.
+
+5.2 Compliance records shall be retained for seven (7) years and shall not be purged by the generation data group rotation applicable to ordinary job output.

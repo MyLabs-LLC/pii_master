@@ -1,0 +1,53 @@
+{
+ "alpha": 7.209510351431974e-07,
+ "balance": "none",
+ "spec_target": 0.95,
+ "groups": {
+  "148775_pii2_train_98.81k": 0,
+  "151708_openpii_pii_train_151.71k": 0,
+  "15986_datax-dualjudge-trainset-5.36k": 12,
+  "21743_nemotron_train_20.80k": 0,
+  "23693_govdocs2-dualjudge-train80-12.86k": 793,
+  "41429_betterdataai_ner_silver_train_41.43k": 0,
+  "42504_ai4privacy_pii_masking_train_42.50k": 0,
+  "85593_pii_trainset_85.59k": 0
+ },
+ "results": {
+  "per-document (current)": {
+   "govdocs2": {
+    "auc_held_in": 0.9893958946016987,
+    "auc_sealed": 0.8433678639054695,
+    "d_auc": -0.14602803069622927,
+    "recall_held_in": 0.9878419452887538,
+    "recall_sealed": 0.7477037887485649,
+    "n_held_in": 3494
+   },
+   "datax": {
+    "auc_held_in": 0.897693732153459,
+    "auc_sealed": 0.8503847655726549,
+    "d_auc": -0.04730896658080419,
+    "recall_held_in": 0.6202764976958526,
+    "recall_sealed": 0.571353894406691,
+    "n_held_in": 2389
+   }
+  },
+  "grouped (fixed)": {
+   "govdocs2": {
+    "auc_held_in": 0.9863955039190934,
+    "auc_sealed": 0.8477690603326695,
+    "d_auc": -0.13862644358642384,
+    "recall_held_in": 0.9855574812247256,
+    "recall_sealed": 0.744833524684271,
+    "n_held_in": 3594
+   },
+   "datax": {
+    "auc_held_in": 0.8934622640887111,
+    "auc_sealed": 0.8430943452748464,
+    "d_auc": -0.05036791881386471,
+    "recall_held_in": 0.6109253065774805,
+    "recall_sealed": 0.5922634605331939,
+    "n_held_in": 2249
+   }
+  }
+ }
+}

@@ -1,0 +1,34 @@
+MEMBER RECORD LAYOUT — SEQUENTIAL EXTRACT MBRSEQ40
+RECORD LENGTH: 400          BLOCK: 4000          REV 1.7
+ORIGINATING FILE: MBRMAST (COREPRD)
+PREPARED FOR: DATA PROCESSING COMMITTEE
+
+SEQ  FIELD NAME            POS  LEN  FMT     NULL  NOTE
+---  --------------------  ---  ---  ------  ----  --------------------------
+010  MBR-NBR               001  010  X(10)   N     Key
+020  MBR-STAT-CD           011  001  X(01)   N
+030  MBR-LAST-NAME         012  025  X(25)   N     Cat II
+040  MBR-FIRST-NAME        037  015  X(15)   N     Cat II
+050  MBR-MIDDLE-INIT       052  001  X(01)   Y     Cat II
+060  MBR-TIN               053  009  X(09)   Y     Cat III / masked in
+                                                   variant MBRSEQ40M
+070  MBR-BIRTH-DT          062  008  9(08)   Y     Cat III / CCYYMMDD
+080  MBR-ADDR-LINE-1       070  030  X(30)   N     Cat II
+090  MBR-ADDR-LINE-2       100  030  X(30)   Y     Cat II
+100  MBR-CITY              130  020  X(20)   N     Cat II
+110  MBR-STATE-CD          150  002  X(02)   N
+120  MBR-ZIP               152  009  X(09)   N
+130  MBR-HOME-PHONE        161  010  X(10)   Y     Cat II
+140  MBR-JOIN-DT           171  008  9(08)   N     CCYYMMDD post-remediation
+150  MBR-AGG-SHARE-BAL     179  011  S9(9)V99 N    Signed, packed on request
+160  MBR-AGG-LOAN-BAL      190  011  S9(9)V99 N
+170  MBR-MKTG-OPT-OUT      201  001  X(01)   N
+180  FILLER                202  199  X(199)  N     Reserved
+
+Two variants are cut nightly by MBREXT40. The unmasked variant is written to
+a restricted output queue and released only to the credit bureau transmission
+job. The masked variant, in which MBR-TIN and MBR-BIRTH-DT are space filled,
+is the sole version supplied to the statement vendor, the card processor and
+the marketing analysis tape. Tapes are logged out through the Records
+Custodian, retained for two cycles, and degaussed on return. Requests for the
+unmasked variant require written approval from the security officer.

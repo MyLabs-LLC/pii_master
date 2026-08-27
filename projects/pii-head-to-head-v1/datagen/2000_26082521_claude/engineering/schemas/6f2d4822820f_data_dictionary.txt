@@ -1,0 +1,66 @@
+DATA DICTIONARY EXCERPT — MEMBER MASTER
+PHYSICAL FILE: MBRMAST          LIBRARY: COREPRD          REV 3.2
+PLATFORM: AS/400 V4R2 / DB2 FOR OS/400
+CUSTODIAN: RECORDS CUSTODIAN, OPERATIONS SERVICES
+DATA CLASS: RESTRICTED — CATEGORY II UNLESS NOTED
+PAGE 1 OF 14
+
+COLUMN NAME         TYPE          NULL  OPERATIONAL NOTES
+------------------  ------------  ----  ------------------------------------
+MBR_NBR             CHAR(10)      N     Primary key. Right-justified, zero
+                                        filled. Never reassigned on closure.
+MBR_BRANCH_CD       CHAR(2)       N     Home branch of record.
+MBR_STAT_CD         CHAR(1)       N     A=active C=closed D=deceased
+                                        P=pending R=restricted.
+MBR_JOIN_DT         DATE          N     Converted from PIC 9(6) YYMMDD under
+                                        century remediation, phase 2.
+MBR_LAST_NAME       CHAR(25)      N     Cat II. Upper case, no punctuation.
+MBR_FIRST_NAME      CHAR(15)      N     Cat II.
+MBR_MIDDLE_INIT     CHAR(1)       Y     Cat II.
+MBR_SUFFIX_CD       CHAR(3)       Y     Cat II.
+MBR_TIN             CHAR(9)       Y     Cat III. Column-level authority only.
+                                        Excluded from all print streams.
+MBR_TIN_TYPE_CD     CHAR(1)       Y     S=SSN E=EIN I=ITIN blank=unverified.
+MBR_TIN_CERT_FLG    CHAR(1)       N     W-9 certification on file. Drives
+                                        backup withholding logic.
+MBR_BIRTH_DT        DATE          Y     Cat III. Consumed by age-tiered
+                                        product eligibility only.
+MBR_ADDR_LINE_1     CHAR(30)      N     Cat II. CASS-standardized nightly.
+MBR_ADDR_LINE_2     CHAR(30)      Y     Cat II.
+MBR_CITY            CHAR(20)      N     Cat II.
+MBR_STATE_CD        CHAR(2)       N
+MBR_ZIP             CHAR(9)       N     Positions 6-9 blank when ZIP+4 not
+                                        returned by the address hygiene run.
+MBR_HOME_PHONE      CHAR(10)      Y     Cat II.
+MBR_WORK_PHONE      CHAR(10)      Y     Cat II.
+MBR_EMAIL_ADDR      VARCHAR(50)   Y     Cat II. Added rev 3.0. Sparse; not
+                                        yet a supported notice channel.
+MBR_MOTHER_MAIDN    CHAR(25)      Y     Cat III. Telephone authentication
+                                        challenge. Suppressed on all inquiry
+                                        screens below authority level 6.
+MBR_DRV_LIC_NBR     CHAR(20)      Y     Cat III. CIP evidence.
+MBR_EMPLR_NAME      CHAR(30)      Y     Cat II. Field-of-membership proof.
+MBR_MKTG_OPT_OUT    CHAR(1)       N     Y suppresses the member from the
+                                        MCIF extract and all list rentals.
+MBR_STMT_SUPP_FLG   CHAR(1)       N     Y=hold statement at branch.
+MBR_LAST_MAINT_DT   DATE          N     System maintained.
+MBR_LAST_MAINT_ID   CHAR(8)       N     Operator profile, not member data.
+
+ACCESS RESTRICTION
+Category III columns are governed by authorization list MBRSEC3. *PUBLIC is
+*EXCLUDE at object level; group profiles OPSCLK and TELLER hold *USE on the
+MBRV01 logical view, which omits MBR_TIN, MBR_BIRTH_DT, MBR_MOTHER_MAIDN and
+MBR_DRV_LIC_NBR. Direct file authority is held by four named operations
+profiles and reviewed quarterly by the Records Custodian against the security
+officer's authority report.
+
+RETENTION
+Rows persist five years past MBR_STAT_CD = C. Category III columns are nulled
+at closure plus 24 months by job MBRPRG02 unless a litigation hold code is
+present in the suspense file.
+
+DOWNSTREAM EXTRACTS
+MBRMAST feeds the statement print vendor (name and address only), the EFT
+processor (member number and status), the credit bureau Metro submission
+(name, address, TIN), and the monthly MCIF marketing file (opt-out honored,
+TIN and birth date excluded by extract program, not by view).

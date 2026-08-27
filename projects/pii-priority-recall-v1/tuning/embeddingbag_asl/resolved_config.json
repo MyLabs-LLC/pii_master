@@ -1,0 +1,83 @@
+{
+  "asl_losses": {
+    "8": 0.05948882922530174,
+    "16": 0.05641341581940651,
+    "24": 0.05426584929227829,
+    "32": 0.0508267767727375
+  },
+  "best_config": {
+    "generic_target_index": 3,
+    "priority_target_index": 5,
+    "score_mode": "rank32",
+    "threshold_multiplier": 1.0
+  },
+  "best_mlflow_run_id": "7056fbc462c044e38dce98abf23bb074",
+  "best_trial": 48,
+  "calibration_rows": 10626,
+  "exact_metrics": {
+    "equal_corpus_macro_f2": 0.4391370002529773,
+    "equal_corpus_micro_f1": 0.44409365360318426,
+    "measurable_priority_gates": 54,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000731172312941
+  },
+  "family": "embeddingbag_asl",
+  "fast_metrics": {
+    "equal_corpus_macro_f2": 0.4401639839899521,
+    "equal_corpus_micro_f1": 0.44409365360318426,
+    "measurable_priority_gates": 54,
+    "per_corpus": [
+      {
+        "dataset": "16000_datax-dualjudge-trainset-5.37k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "26095_govdocs2-dualjudge-train80-14.25k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "ai4privacy_pii_masking_train_42k",
+        "macro_f2": 0.47378845938657904,
+        "micro_f1": 0.3800293282008982
+      },
+      {
+        "dataset": "betterdataai_ner_silver_train_41k",
+        "macro_f2": 0.1437777231764701,
+        "micro_f1": 0.28943014352225943
+      },
+      {
+        "dataset": "nemotron_train_22k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "openpii_pii_train_155k",
+        "macro_f2": 0.6160799779455511,
+        "micro_f1": 0.6568816304524854
+      },
+      {
+        "dataset": "pii2_train_150k",
+        "macro_f2": 0.4285012837617501,
+        "micro_f1": 0.288921512460613
+      },
+      {
+        "dataset": "pii_trainset_100k",
+        "macro_f2": 0.5386724756794098,
+        "micro_f1": 0.6052056533796653
+      }
+    ],
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000731172312941
+  },
+  "model_dir": "models/embeddingbag_asl",
+  "n_trials": 300,
+  "rank": 32,
+  "selection_rows": 42484,
+  "validation_read_errors": 0
+}

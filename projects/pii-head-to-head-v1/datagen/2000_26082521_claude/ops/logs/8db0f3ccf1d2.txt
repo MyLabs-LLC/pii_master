@@ -1,0 +1,62 @@
+===============================================================================
+ BATCH OPERATIONS — JOB RUN LOG EXTRACT
+ SERVER: BILLETL01 (W2K SP4)     SCHEDULER: CTRL-M     LOG: D:\ETL\LOGS\0311.LOG
+===============================================================================
+
+ RUN HEADER
+   Job Stream ............ RDM_NIGHTLY
+   Job Id ................ RDM_NIGHTLY_20040311_0217
+   Sequence .............. 4 of 9
+   Invoked By ............ SCHEDULER SVC ACCOUNT (BATCH)
+   Config Profile ........ pfs_mask_prod.cfg rev 7
+   Mapping Sheet ......... PFS-MAP-0412 rev 3
+
+-------------------------------------------------------------------------------
+02:17:03 [INFO ] RDM_NIGHTLY_20040311_0217 stage=INIT profile loaded, 26 rules
+02:17:03 [INFO ] stage=INIT token vault reachable, keyset=PFS-2004Q1
+02:17:11 [INFO ] stage=EXTRACT source=BILLPRD.PFACCT select list = 26 cols,
+                 suppressed at source = 7 cols (PT_LAST_NM, PT_FIRST_NM,
+                 PT_MID_INIT, ADDR_LINE_1, ADDR_LINE_2, CITY_NM, HOME_PHONE)
+02:41:52 [INFO ] stage=EXTRACT complete rows_read=418,336 bytes=214,553,088
+02:41:53 [INFO ] stage=TRANSFORM begin, commit interval 5,000
+02:44:10 [WARN ] rule=R-114 field=PT_SSN vault miss, new token minted
+                 count=1,204 (first-encounter accounts)
+02:47:38 [ERROR] rule=R-114 field=GUAR_SSN input length 0 after trim,
+                 disposition=REJECT rows=612 code=VAL-021
+02:49:02 [ERROR] rule=R-122 field=DOB_DT unparseable under mask CCYYMMDD,
+                 disposition=REJECT rows=88 code=VAL-014
+02:49:02 [INFO ] rejected values are not written to log or reject file;
+                 reject file carries row ordinal + code only
+02:51:19 [WARN ] rule=R-123 field=ZIP_CD truncation group below threshold,
+                 rolled to 000 rows=2,940
+02:53:44 [ERROR] rule=R-115 field=GRP_NBR token collision on retry,
+                 disposition=HOLD rows=17 code=VAL-033
+02:55:01 [WARN ] field=SUBSCR_ID present in source but absent from payer
+                 crosswalk PAYER_CD=NON-PAR, tokenised, flagged for review
+                 rows=6,401
+02:58:26 [INFO ] stage=TRANSFORM complete rows_in=418,336 rows_out=417,619
+                 rows_rejected=700 rows_held=17
+02:58:27 [INFO ] stage=LOAD begin target=RDM_STG.CLAIM_FACT direct=TRUE
+03:14:55 [ERROR] ORA-01400 cannot insert NULL into ("RDM_STG"."CLAIM_FACT".
+                 "ACCT_TKN") rows=17 (held set, see VAL-033)
+03:15:02 [INFO ] stage=LOAD complete rows_loaded=417,602 rows_discarded=17
+03:15:03 [INFO ] stage=AUDIT control totals CHRG_AMT source vs target VARIANCE
+                 within tolerance; row delta = 734 (700 rej + 17 held + 17 disc)
+03:15:04 [WARN ] row delta double-counts held set; audit note raised AN-0311-2
+03:15:06 [INFO ] stage=FINAL exit=4 (completed with warnings)
+-------------------------------------------------------------------------------
+
+ RUN FOOTER
+   Elapsed ............... 00:58:03
+   Rows Read ............. 418,336
+   Rows Loaded ........... 417,602
+   Rows Rejected ......... 700
+   Rows Held ............. 17
+   Distinct Codes ........ VAL-014, VAL-021, VAL-033, ORA-01400
+   Reject File ........... D:\ETL\REJECT\RDM_20040311.RJT (ordinals + codes)
+   Next Action ........... Held set requires ACCT_NBR re-tokenisation before
+                           rerun of stage LOAD only. Do not rerun EXTRACT.
+   Escalated To .......... Duty Operator -> Senior Analyst, Decision Support
+   Retention ............. Log 90 days, reject file 30 days, then purge
+
+===============================================================================

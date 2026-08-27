@@ -1,0 +1,23 @@
+POLICYHOLDER MASTER FILE (PHMAST) — RECORD LAYOUT NOTES
+Legacy Systems Support — VSAM KSDS PROD.PHMAST.CLUSTER
+Notes to copybook PHMAST01, page 3 of 9
+
+2.1  The fields described here occupy positions 1 through 214 of the 512-byte record and are declared in copybook PHMAST01, which is copied by fourteen production programs in the PH0100 through PH0900 series. Because the file is a VSAM KSDS rather than a relational table, nullability is expressed by convention rather than by the access method: alphanumeric fields are low-values when unknown, numeric fields are zero-filled, and the packed date fields carry a value of all nines where the date was not captured at conversion. Programmers are cautioned that a spaces-filled field is not equivalent to low-values and that the two conditions are distinguished by the edit routine PHEDIT03.
+
+2.2  The key and name fields are as follows.
+
+     PH-POLICY-NBR      PIC X(11)     key, always present
+     PH-INSD-LAST-NAME  PIC X(25)     always present
+     PH-INSD-FIRST-NAME PIC X(15)     always present
+     PH-INSD-MI         PIC X          low-values permitted
+     PH-INSD-SSN        PIC X(09)     low-values permitted
+     PH-INSD-DOB        PIC 9(08) COMP-3   nines permitted
+     PH-INSD-SEX        PIC X          U permitted
+
+2.3  The mailing group occupies positions 62 through 176 and comprises PH-MAIL-ADDR-1 and PH-MAIL-ADDR-2, each PIC X(30), the second permitting low-values; PH-MAIL-CITY, PIC X(28); PH-MAIL-STATE, PIC X(02); and PH-MAIL-ZIP, PIC X(09) with the plus-four positions frequently unpopulated on records converted from the predecessor system in 1998. PH-HOME-PHONE and PH-DAY-PHONE, each PIC X(10), follow, and PH-EMAIL, PIC X(50), was appended in the 2002 release and is low-values on the majority of in-force records.
+
+2.4  Access to the cluster is controlled by RACF profile PROD.PHMAST.**, with UPDATE granted only to the batch identifiers of the PH-series jobs and READ granted to a small number of named support identifiers. No terminal-based file utility is authorised against the production cluster. Requests for a copy of the file for problem determination are logged by the Records Custodian and the copy is deleted within five business days of the closure of the incident.
+
+2.5  Retention of the physical file is thirty generations on disk and seven years on cartridge under the archive standard; the underlying record retention obligation for policyholder identity data is the life of the policy plus seven years, and the cartridge schedule is set to satisfy it.
+
+2.6  Downstream, PHMAST is read by the nightly interface to the agency management system, which passes the policy number and the name and mailing groups but suppresses PH-INSD-SSN and PH-INSD-DOB; by the state statistical reporting extract, which passes no identity fields at all; and by the annual privacy notice mailing file. Any program added to the list above must be recorded on this page and reviewed by Legacy Systems Support before it is scheduled.

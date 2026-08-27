@@ -1,0 +1,51 @@
+DATA DICTIONARY EXCERPT
+FORM DD-07 — MEMBER SEARCH INDEX (CUSTDTA.MBR_SRCH_IDX)
+Contract Logistics Division
+
+PART I — GENERAL
+
+1.1  This sheet records the definition of the depot counter search index and is to be read with Form DD-04 (rev. 3). Where the two conflict, DD-04 governs.
+
+1.2  The index is rebuilt nightly by job IDX_MBR_N01 following the close of the depot handover window. It holds no authoritative data; every column is derived from the member master and may be discarded and regenerated.
+
+1.3  Notwithstanding clause 1.2, the index is within scope of the restriction and retention arrangements at Parts III and IV, on the ground that the derived values remain capable of identifying an individual.
+
+PART II — COLUMN DEFINITIONS
+
+2.1  SRCH_KEY — VARCHAR2(24), NOT NULL. Composite of the first four characters of SURNAME and POSTCODE_OUT, upper-cased. Restricted.
+
+2.2  MBR_ID — NUMBER(12), NOT NULL. Carried forward unchanged from the master.
+
+2.3  SURNAME_SNDX — CHAR(6), NULL PERMITTED. Soundex of SURNAME. Null where SURNAME contains characters outside the permitted set. Restricted.
+
+2.4  POSTCODE_OUT — VARCHAR2(4), NULL PERMITTED. Unrestricted; see clause 3.3.
+
+2.5  ADDR_HOUSE_NO — VARCHAR2(10), NULL PERMITTED. Parsed from ADDR_LINE_1 by the load routine. Parsing is unreliable for flats and named properties and the column is advisory only. Restricted.
+
+2.6  ACTIVE_FLG — CHAR(1), NOT NULL. 'Y' only where the master record carries MBR_STATUS_CD = 'AC'.
+
+2.7  IDX_BUILD_DT — DATE, NOT NULL. Populated by the load job. Counter staff are instructed to escalate where this column is more than 48 hours old.
+
+PART III — ACCESS RESTRICTION
+
+3.1  Grants are limited to RL_DEPOT_COUNTER (SELECT) and the load service account (INSERT, DELETE). No UPDATE grant exists.
+
+3.2  The index is not replicated to the disaster recovery instance; it is rebuilt from the replicated master on failover.
+
+3.3  POSTCODE_OUT may be used in operational reporting without further authority. All other columns at Part II are restricted and may not be joined to any warehouse object.
+
+PART IV — RETENTION AND EXTRACTS
+
+4.1  Rows are truncated in full at each rebuild. No historical version is kept and no archive is taken.
+
+4.2  Where a member record is purged under clause E.1 of DD-04, the corresponding index row disappears at the following rebuild. No separate purge instruction is required.
+
+4.3  One extract is defined: EXT_SRCH_DR, a controlled copy taken only on invocation of the business continuity plan, released to the standby site under the authority of the duty Operations Manager and destroyed on return to normal running.
+
+4.4  No other extract, file transfer or reporting feed may be created against this object. Requests are to be directed to the Records Custodian in writing.
+
+PART V — AUTHORISATION
+
+5.1  Prepared by: the Application Data Administrator, 22 March 2011.
+5.2  Approved by: the Records Custodian.
+5.3  Next review: March 2012.

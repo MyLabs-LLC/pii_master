@@ -1,0 +1,71 @@
+*******************************************************************************
+*                    RXPHARM ETL SESSION OUTPUT - NIGHTLY                     *
+*******************************************************************************
+ SESSION..........: s_ETL_RXMBR_STG_LOAD
+ WORKFLOW.........: wf_EDW_NIGHTLY_RX
+ JOB ID...........: ETL04-0310-0441       BATCH: B0441
+ FOLDER...........: EDW_PHARMACY          REPOSITORY: EDWREP01
+ SERVER...........: edwetl02 (SunOS 5.8)  INTEGRATION SVC: is_edw_prod
+ START............: 2004-03-10 01:00:04 CST
+ END..............: 2004-03-10 03:58:41 CST
+ ELAPSED..........: 02:58:37
+ COMPLETION CODE..: 0004 (COMPLETED WITH WARNINGS)
+*******************************************************************************
+
+SOURCE / TARGET ROW ACCOUNTING
+STEP  OBJECT_NAME                TYPE    APPLIED     AFFECTED   REJECTED
+----  -------------------------  ------  ----------  ---------  ---------
+0100  SQ_RXMBR_EXTRACT           SOURCE   1,284,776  1,284,776          0
+0200  EXP_TRIM_NORMALIZE         XFORM    1,284,776  1,284,776          0
+0300  LKP_TOKEN_VAULT_RXMBR      LOOKUP   1,284,776  1,282,471      2,305
+0400  EXP_MASK_APPLY             XFORM    1,282,471  1,282,471          0
+0500  FIL_DROP_COLUMN_GATE       FILTER   1,282,471  1,282,471          0
+0600  RTR_VALIDATION_SPLIT       ROUTER   1,282,471  1,279,427      3,044
+0700  RX_MEMBER_STG              TARGET   1,279,427  1,279,427          0
+0800  RX_MEMBER_STG_REJ          TARGET       5,349      5,349          0
+----  -------------------------  ------  ----------  ---------  ---------
+
+COLUMN DISPOSITION AT TARGET
+TARGET_FIELD               WRITTEN     PLACEHOLDER   TOKENIZED   SUPPRESSED
+-------------------------  ----------  ------------  ----------  ----------
+MEMBER_LAST_NAME           1,279,427             0   1,279,427            0
+MEMBER_FIRST_NAME          1,279,427             0   1,279,427            0
+MEMBER_MIDDLE_INITIAL      1,279,427     1,279,427           0    1,279,427
+MEMBER_BIRTH_YEAR          1,279,427             0           0            0
+MEMBER_GENDER_CODE         1,279,427             0           0            0
+MEMBER_STREET_1            1,279,427     1,279,427           0    1,279,427
+MEMBER_STREET_2            1,279,427     1,279,427           0    1,279,427
+MEMBER_CITY_NAME           1,279,427             0           0            0
+MEMBER_STATE_CODE          1,279,427             0           0            0
+MEMBER_POSTAL_TRUNC        1,273,087             0           0            0
+MEMBER_PLAN_ID             1,279,427             0   1,279,427            0
+SUBSCRIBER_ID              1,279,427             0   1,279,427            0
+PLAN_GROUP_NUMBER          1,279,427             0           0            0
+SCRIPT_NUMBER              1,279,427             0   1,279,427            0
+PRODUCT_NDC_CODE           1,279,427             0           0            0
+DISPENSE_DATE              1,279,427             0           0            0
+PRESCRIBER_LAST_NAME       1,279,427     1,279,427           0    1,279,427
+PRESCRIBER_DEA_ID          1,279,427             0   1,279,427            0
+SITE_NUMBER                1,279,427             0           0            0
+DISPENSER_STAFF_ID         1,279,427             0   1,279,427            0
+-------------------------  ----------  ------------  ----------  ----------
+
+FIELDS NOT WRITTEN (DROP_COLUMN IN FORCE)
+ MEMBER_TAX_ID / MEMBER_HOME_PHONE / MEMBER_EMAIL_ADDRESS
+ Inbound occurrences discarded at step 0500: 20,143
+
+SESSION MESSAGES
+ 01:00:04  SESN0100  session initialising, cache dir /edw/cache/rxmbr
+ 01:03:52  READ0100  source file RXMBR.EXT.D040309 opened, blksz 27998
+ 01:33:47  LKUP0311  2,305 token vault misses, rows routed to hold partition
+ 02:44:02  MASK0508  drop-column gate engaged, payload not logged
+ 03:41:19  WRT_0100  commit interval 10,000, 128 commits issued
+ 03:57:02  SESN0180  post-session command /edw/bin/rxaudit.sh rc=0
+ 03:58:41  SESN0199  session completed, rc=0004
+
+DOWNSTREAM
+ f_edw_rxmbr_dim_load waits on this session and is scheduled for 04:15 CST.
+ Hold partition (2,305 rows) requeues under batch B0442 after the vault
+ refresh at 04:00 CST. If the refresh slips past 04:10, notify the on-call
+ data services analyst and the Records Custodian before releasing the
+ dimension load. Reject file is retained 30 days then purged by cron.

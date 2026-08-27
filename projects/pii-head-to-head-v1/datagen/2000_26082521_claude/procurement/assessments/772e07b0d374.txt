@@ -1,0 +1,67 @@
+VENDOR SECURITY ASSESSMENT QUESTIONNAIRE
+Part C — Encryption and Key Management Detail
+Municipal Water and Light Department, Information Services Division
+Form VSA-4C (Rev. 1, 2011)
+
+Legend
+    [ ] YES  [ ] NO  [ ] N/A          Check one per item where offered.
+    EVID:    Mark REQ where documentary evidence must be attached.
+    ATT:     Enter the attachment number assigned by the supplier.
+
+C-1  CRYPTOGRAPHIC INVENTORY
+     C-1.1  Does the supplier maintain a written inventory of cryptographic
+            modules applied to Department personal information?
+                [ ] YES  [ ] NO  [ ] N/A          EVID: REQ     ATT: ______
+            Narrative response:
+                [_______________________________________________________]
+                [_______________________________________________________]
+
+     C-1.2  Are cryptographic modules validated under FIPS 140-2?
+                [ ] YES  [ ] NO  [ ] N/A          EVID: REQ     ATT: ______
+            Certificate number, if applicable:
+                [_______________________________________________________]
+
+C-2  DATA AT REST
+     C-2.1  Identify the encryption method applied at each of the following
+            layers. Enter "NONE" where no encryption is applied.
+                a.  Full disk:        [__________________]   EVID: REQ  ATT: ____
+                b.  File system:      [__________________]   EVID: REQ  ATT: ____
+                c.  Database column:  [__________________]   EVID: REQ  ATT: ____
+                d.  Backup media:     [__________________]   EVID: REQ  ATT: ____
+
+     C-2.2  Are backup tapes or disks encrypted prior to leaving the
+            supplier's premises?
+                [ ] YES  [ ] NO  [ ] N/A          EVID: REQ     ATT: ______
+
+C-3  DATA IN TRANSIT
+     C-3.1  State the minimum protocol version permitted for connections
+            carrying personal information.
+                [_______________________________________________________]
+                                                  EVID: REQ     ATT: ______
+     C-3.2  Are weak or deprecated cipher suites disabled at the server?
+                [ ] YES  [ ] NO  [ ] N/A          EVID: REQ     ATT: ______
+     C-3.3  Describe the method used to verify certificate validity and
+            expiration.
+                [_______________________________________________________]
+                                                  EVID: REQ     ATT: ______
+
+C-4  KEY MANAGEMENT
+     C-4.1  Where are cryptographic keys stored relative to the data they
+            protect?
+                [_______________________________________________________]
+                                                  EVID: REQ     ATT: ______
+     C-4.2  State the key rotation interval.
+                [_______________________________________________________]
+     C-4.3  Describe the dual-control or split-knowledge procedures applied
+            to key custody, identifying custodian positions by role title
+            only.
+                [_______________________________________________________]
+                [_______________________________________________________]
+                                                  EVID: REQ     ATT: ______
+     C-4.4  Describe the procedure followed when a key custodian's
+            assignment is terminated.
+                [_______________________________________________________]
+                                                  EVID: REQ     ATT: ______
+
+Completed by (title only): _________________________  Date: ____________
+Reviewed by the Records Custodian: _________________  Date: ____________

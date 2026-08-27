@@ -1,0 +1,68 @@
+IRONWOOD VALLEY CREDIT UNION
+INFORMATION SERVICES DIVISION
+DATA ELEMENT MAPPING RULE SHEET
+Form IS-114 (Rev. 03/98)                                    Page 1 of 1
+
+SECTION 1 - JOB IDENTIFICATION
+  Job Name ................. CNVMAP01
+  Job Number ............... J-1998-0417
+  Source Library ........... PRODLIB/CNVSRC(CNVMAP01)
+  Schedule ................. Nightly, 02:15 CST
+  Run Started .............. 11/09/1998  02:15:04
+  Run Completed ............ 11/09/1998  02:41:37
+  Prepared By .............. Conversion Analyst, Information Services
+  Reviewed By .............. the Records Custodian
+  Approved By .............. the Data Security Officer
+
+SECTION 2 - SOURCE AND TARGET
+  Source File .............. MEMMAST (VSAM KSDS)
+  Copybook ................. MEMMAST.CPY, level 01 MEMBER-MASTER-REC
+  Records Read ............. 41,882
+  Target Table ............. DW.MEMBER_DIM (DB2 V5)
+  Rows Written ............. 41,619
+  Rows Held for Review ..... 263
+
+SECTION 3 - FIELD MAPPING TABLE
+
+  SOURCE FIELD NAME       PIC       TARGET COLUMN         RULE  DISP
+  ----------------------  --------  --------------------  ----  ----
+  MBR-NBR                 9(09)     MEMBER_KEY            TKN   H
+  MBR-SSN                 9(09)     TAX_ID_TOKEN          TKN   H
+  MBR-LAST-NAME           X(20)     SURNAME               SUP   N
+  MBR-FIRST-NAME          X(15)     GIVEN_NAME            SUP   N
+  MBR-MID-INIT            X(01)     MIDDLE_INITIAL        SUP   N
+  MBR-DOB                 9(08)     BIRTH_DT              MSK   P
+  MBR-ADDR-LINE-1         X(30)     ADDR_LINE_1           SUP   N
+  MBR-ADDR-LINE-2         X(30)     ADDR_LINE_2           SUP   N
+  ADDR-CITY               X(20)     CITY_NM               SUP   N
+  ADDR-ST                 X(02)     STATE_CD              PASS  Y
+  ADDR-ZIP5               9(05)     POSTAL_CD_TRUNC       MSK   P
+  HOME-PHONE              9(10)     PHONE_HOME            MSK   P
+  WORK-PHONE              9(10)     PHONE_WORK            MSK   P
+  EMAIL-ADDR              X(40)     EMAIL_ADDR            SUP   N
+  MOTHERS-MAIDEN-NAME     X(20)     AUTH_CHALLENGE        SUP   N
+  DRIVERS-LIC-NBR         X(15)     GOVT_ID_TOKEN         TKN   H
+  SHARE-ACCT-NBR          9(12)     SHARE_ACCT_TOKEN      TKN   H
+  LOAN-ACCT-NBR           9(12)     LOAN_ACCT_TOKEN       TKN   H
+  ATM-CARD-NBR            9(16)     CARD_TOKEN            TKN   H
+  EMPLOYER-NAME           X(30)     EMPLOYER_NM           SUP   N
+  MBR-OPEN-DT             9(08)     RELATIONSHIP_OPEN_DT  PASS  Y
+  BRANCH-CD               9(03)     BRANCH_CD             PASS  Y
+  PROD-TYPE-CD            X(04)     PRODUCT_TYPE_CD       PASS  Y
+
+SECTION 4 - HANDLING CODES
+  TKN  Replace with vault token. Original not written to target.
+  MSK  Overlay all positions with the fill character. Length preserved.
+  SUP  Column defined in target DDL but not populated by this job.
+  PASS Non-identifying. Carried forward unaltered.
+
+  DISP: H = held in vault  P = placeholder written  N = not written
+        Y = written as read
+
+SECTION 5 - AUTHORIZATION
+  Any change to a TKN or SUP row requires re-approval by the Data
+  Security Officer before the next production run.
+
+  Conversion Analyst ____________________  Date __________
+  Records Custodian  ____________________  Date __________
+  Data Security Off. ____________________  Date __________

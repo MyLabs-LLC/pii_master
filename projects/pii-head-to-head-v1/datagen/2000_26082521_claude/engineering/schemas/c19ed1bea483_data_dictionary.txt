@@ -1,0 +1,42 @@
+DATA DICTIONARY EXCERPT
+TABLE: MBR_PROFILE — PRIORITY DELIVERY MEMBERSHIP
+PLATFORM: DB2 UDB 9.7, LIBRARY MBRPROD, MEMBERSHIP SERVICES
+Prepared by the Records Custodian for the Data Protection Working Group, 6 June 2011
+
+SECTION A — IDENTIFIERS AND CONTROL COLUMNS
+
+- MBR_NO — DECIMAL(11,0) — NOT NULL — primary key. Confirm the check digit routine is still enforced at the application layer.
+- CUST_ID — DECIMAL(12,0) — NULL — foreign key to CUST_MASTER. Confirm orphan count is reported weekly.
+- SCHEME_CD — CHAR(3) — NOT NULL — membership tier. Domain in REF_SCHEME.
+- ENROL_DT — DATE — NOT NULL — date the membership opened.
+- LAPSE_DT — DATE — NULL — populated by the overnight lapse job; drives the retention clock.
+
+SECTION B — RESTRICTED PERSONAL-DATA COLUMNS
+
+Treat every column in this section as restricted. Access is by named group only, and the group membership list is re-approved each half year.
+
+- TITLE_CD — CHAR(4) — NULL
+- FORENAME_TXT — VARCHAR(50) — NOT NULL
+- SURNAME_TXT — VARCHAR(60) — NOT NULL
+- PREV_SURNAME_TXT — VARCHAR(60) — NULL — retained for claims matching only.
+- DOB_DT — DATE — NULL — restricted above the general group; read access limited to Claims Handling.
+- HOME_TEL_TXT — VARCHAR(24) — NULL
+- WORK_TEL_TXT — VARCHAR(24) — NULL
+- EMAIL_ADDR_TXT — VARCHAR(160) — NULL
+- HOME_ADDR_KEY — DECIMAL(12,0) — NULL — pointer to ADDR_STORE; the address text itself is not held on this table.
+- DRIV_LIC_REF_TXT — VARCHAR(20) — NULL — collected for the trade counter collection scheme. Confirm capture has ceased on the new counter build.
+
+SECTION C — CONSENT AND SUPPRESSION
+
+- MKTG_CONSENT_FLG — CHAR(1) — NOT NULL — default N.
+- TEL_SUPPRESS_FLG — CHAR(1) — NOT NULL — set from the monthly preference file.
+- POST_SUPPRESS_FLG — CHAR(1) — NOT NULL.
+- CONSENT_UPD_TS — TIMESTAMP — NULL — evidence column for any consent query.
+
+SECTION D — CHECKS BEFORE SIGN-OFF
+
+- Confirm no column in Section B appears in the schema of any view held outside MBRPROD.
+- Confirm the nightly extract to the mailing house carries the address key and the suppression flags, and no Section B text column other than the salutation build.
+- Confirm records with LAPSE_DT older than six years appear on the deletion candidate report.
+- Confirm the deletion candidate report was actioned, not merely produced, for the prior two cycles.
+- Confirm any ad hoc export request in the period has a written authorisation from the Data Protection Officer attached to the change record.

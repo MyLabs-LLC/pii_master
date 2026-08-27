@@ -1,0 +1,16 @@
+{
+  "metric": "macro_f2",
+  "target": 0.92,
+  "verdict": "unlikely",
+  "supported_target": 0.8885,
+  "ceiling": 0.8885,
+  "ceiling_method": "teacher bound: ettin-68m reported F1 0.963 on all ten reachable classes + CREDIT_CARD structural cap 0.1439 (1525/12867 Nemotron card gold is Luhn-valid)",
+  "agreement": null,
+  "agreement_source": "",
+  "baseline": 0.8629,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "Absolute cap with ten PERFECT classes is 0.9222; reaching 0.92 needs mean F2 0.9976 on the other ten vs 0.9349 today. Ship gate severity_recall_min 0.907 already passes."
+  ]
+}

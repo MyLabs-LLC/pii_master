@@ -1,0 +1,60 @@
+PARTY MASTER — DATA DICTIONARY EXCERPT
+Schema: ESCROWPRD.PARTY_MASTER
+Excerpt covers identity, contact and disbursement columns only.
+
+SECTION 1 — REGISTER CONTROL
+  Business owner ......... the Records Custodian
+  Technical owner ........ the Database Administration Lead
+  Data classification .... Restricted (Tier 2)
+  Review cycle ........... Semi-annual, with the Compliance Officer
+  Revision ............... 2021.02
+
+SECTION 2 — KEY AND LINKAGE COLUMNS
+COLUMN | TYPE | NULL | OPERATIONAL NOTE
+PARTY_ID | NUMBER(12) | N | Surrogate key, sequence-generated. Never reused.
+FILE_NBR | VARCHAR2(18) | N | Escrow file. Joins to FILE_HEADER.
+ORDER_NBR | VARCHAR2(18) | Y | Title order. Null until title is opened.
+PARTY_ROLE_CD | CHAR(3) | N | BUY, SEL, BOR, LDR, AGT. Validated against ROLE_REF.
+SOURCE_SYS_CD | CHAR(4) | N | Origin system for the row.
+BRANCH_CD | CHAR(5) | N | Drives row-level access filtering.
+
+SECTION 3 — IDENTITY ELEMENTS (RESTRICTED)
+COLUMN | TYPE | NULL | OPERATIONAL NOTE
+PARTY_LAST_NAME | VARCHAR2(60) | Y | Null for entity parties. Masked in all non-production copies.
+PARTY_FIRST_NAME | VARCHAR2(40) | Y | Masked in all non-production copies.
+PARTY_MIDDLE_NAME | VARCHAR2(40) | Y | Vesting text is built from this column; do not trim.
+ENTITY_LEGAL_NAME | VARCHAR2(120) | Y | Populated when PARTY_TYPE_CD = 'E'.
+TIN_SSN_ENC | RAW(64) | Y | Column-level encryption. Decrypt grant is by named role only.
+TIN_TYPE_CD | CHAR(1) | Y | S = individual, E = entity.
+DOB_DT | DATE | Y | Collected for CIP only. Excluded from all reporting views.
+GOVT_ID_TYPE_CD | CHAR(2) | Y | Identification type captured at signing.
+GOVT_ID_NBR_ENC | RAW(64) | Y | Encrypted. Purged on the CIP retention schedule.
+
+SECTION 4 — CONTACT COLUMNS
+COLUMN | TYPE | NULL | OPERATIONAL NOTE
+MAIL_ADDR_LINE_1 | VARCHAR2(80) | Y | Mailing, not subject property. Property sits in PARCEL.
+MAIL_CITY_NAME | VARCHAR2(40) | Y | Standardized nightly by the address hygiene job.
+MAIL_STATE_CD | CHAR(2) | Y |
+MAIL_POSTAL_CD | VARCHAR2(10) | Y | Nine-digit form permitted.
+EMAIL_ADDR | VARCHAR2(120) | Y | Used for secure-link delivery. Not exported to marketing.
+PHONE_MOBILE | VARCHAR2(20) | Y | Digits only; extensions go in PHONE_EXT.
+ESIGN_CONSENT_DT | DATE | Y | Null blocks electronic delivery.
+
+SECTION 5 — DISBURSEMENT COLUMNS
+COLUMN | TYPE | NULL | OPERATIONAL NOTE
+BANK_ROUTING_ENC | RAW(64) | Y | Encrypted. No screen displays the clear value.
+BANK_ACCT_NBR_ENC | RAW(64) | Y | Encrypted. Entry restricted to the Escrow Officer role.
+WIRE_CALLBACK_DT | DATE | Y | Must be populated before a wire is released.
+WIRE_VERIF_BY_ROLE | VARCHAR2(30) | Y | Records the verifying role, not the individual.
+
+SECTION 6 — ACCESS RESTRICTION
+Read access to Sections 3 and 5 is granted through the ESCROW_PII_READ role, approved by the Records Custodian and recertified quarterly. Analysts hold ESCROW_ANALYTIC_READ, which resolves to the masked view V_PARTY_ANALYTIC. Ad hoc query tools are pointed at the view, never the base table.
+
+SECTION 7 — RETENTION
+Party rows follow the file: seven years after disbursement, or the longer state period where applicable. GOVT_ID_NBR_ENC and DOB_DT are nulled five years after closing by the quarterly purge job. Purge counts are reported to the Compliance Officer.
+
+SECTION 8 — DOWNSTREAM EXTRACTS
+  1099-S reporting file — includes TIN_SSN_ENC and name columns; SFTP to the reporting vendor, January cycle.
+  OFAC screening feed — name and address columns only; daily.
+  Underwriter remittance — no Section 3 or Section 5 columns.
+  CRM feed — masked view only; EMAIL_ADDR suppressed.

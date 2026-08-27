@@ -1,0 +1,108 @@
+# pii-head-to-head-v1 -- the DECLARED CONTRA-VIEW policy.
+#
+# Written at the same time as `policy.yaml`, before any number arrived, and
+# reported beside it. `policy.yaml` is the headline; this is the second reading.
+#
+# WHY TWO POLICIES RATHER THAN ONE.
+# The two contenders were built to opposite objectives. Ranking them on a single
+# ladder answers "which model wins under this objective" and quietly implies it
+# answered "which model is better". It did not. Declaring both ladders up front
+# -- and naming which one is the headline -- is what keeps the second reading
+# from looking like a result discovered after the first one disappointed.
+#
+# Same instrument, same arms, same sealed corpora, same fixed evaluator. Only
+# the ranker and the gate change.
+name: pii-head-to-head-precision-view
+
+constraints:
+  # ------------------------------------------------------------------ 1 & 2
+  # THE CUSTOMER GUARANTEE, as the precision-first lineage stated it: a
+  # customer should not be told a document holds PII when it does not. Judged
+  # only on the three corpora carrying genuine document-level negatives (10,003
+  # of them); elsewhere in 2-eval prevalence is 1.0 and there is nothing to be
+  # wrong about, so those corpora are NOT_MEASURABLE rather than a free pass.
+  #
+  # Both bars are carried because they bind on different corpora. Precision
+  # depends on prevalence and specificity does not: on datax (prevalence 0.478)
+  # precision is the binding bar, on pii2 (prevalence 0.838) specificity is.
+  - name: document-level precision >= 0.90 (conclusive)
+    metric: doc_precision
+    op: ">="
+    threshold: 0.90
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  - name: document-level specificity >= 0.85 (conclusive)
+    metric: doc_specificity
+    op: ">="
+    threshold: 0.85
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 3
+  # THE DETECTION FLOOR. Two-sided protection against winning the precision
+  # bars by going quiet.
+  - name: document-level recall >= 0.85 (conclusive)
+    metric: doc_recall
+    op: ">="
+    threshold: 0.85
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 4
+  # THE PRIORITY FLOOR at the precision-first lineage's own 0.75, not the
+  # recall-first lineage's 0.90. Still per-tag, still per-corpus, still
+  # conclusive, still 30-instance minimum.
+  - name: priority tag recall >= 0.75 (conclusive)
+    metric: recall
+    op: ">="
+    threshold: 0.75
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 5
+  - name: one-core p95 <= 5 ms
+    metric: p95_latency_ms
+    op: "<="
+    threshold: 5.0
+    severity: hard
+
+  # ------------------------------------------------------------------ advisory
+  - name: prediction rate
+    metric: prediction_rate
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+  - name: worst measurable priority recall
+    metric: severity_recall_min
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+preferences:
+  # 1. THE RANKER. Precision-weighted F0.5 over the 16 priority tags,
+  #    macro-averaged. Precision decides; the recall floors above are what stop
+  #    that becoming "predict nothing".
+  - metric: priority_macro_f05
+    min_relative_change: 0.0
+
+  # 2. The same question over the whole supported catalogue.
+  - metric: macro_f05
+    min_relative_change: 0.0
+
+  # 3. When quality is indistinguishable, take the faster model.
+  - metric: p95_latency_ms
+    greater_is_better: false

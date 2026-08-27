@@ -1,0 +1,67 @@
+MEMORANDUM
+
+TO:      Applications Development — Store Systems
+         Pharmacy Systems Support
+         Marketing Information Services
+FROM:    Database Administration
+DATE:    12 November 1998
+SUBJECT: Data dictionary excerpt — MBRMST (Member Master), release 4.2
+
+This excerpt covers the identity portion of MBRMST only. Prescription history (RXHST), third-party plan enrollment (TPPLAN) and loyalty accumulator (LYLACC) are documented in separate excerpts and are keyed to MBR_ID. Physical file resides on the DB2/400 production library PHRMPRD. Any program referencing these columns must be recompiled against the current copybook member MBRMSTC before promotion.
+
+COLUMN NAME       TYPE          NULL  OPERATIONAL NOTES
+----------------  ------------  ----  ------------------------------------------
+MBR_ID            CHAR(11)      N     Primary key. System assigned at enrollment.
+MBR_LAST_NAM      CHAR(25)      N     Upper case at edit. Truncated in extracts.
+MBR_FRST_NAM      CHAR(15)      N     Upper case at edit.
+MBR_MID_INIT      CHAR(1)       Y
+MBR_NAM_SFX_CD    CHAR(3)       Y     Domain table SFXTBL.
+MBR_DOB_CYMD      DEC(7,0)      N     Century digit added under Y2K remediation
+                                      project 97-114. Legacy YYMMDD converted.
+MBR_SSN           CHAR(9)       Y     RESTRICTED. See note 2.
+MBR_ADR_LN1       CHAR(30)      N     CASS certified nightly.
+MBR_ADR_LN2       CHAR(30)      Y
+MBR_CITY_NAM      CHAR(20)      N
+MBR_ST_CD         CHAR(2)       N
+MBR_ZIP_CD        CHAR(9)       N     Right five positions blank if ZIP+4 absent.
+MBR_HOME_PHON     CHAR(10)      Y     Digits only, no punctuation stored.
+MBR_WORK_PHON     CHAR(10)      Y
+MBR_EMAIL_ADR     VARCHAR(50)   Y     Added release 4.1 for refill notice pilot.
+MBR_GENDER_CD     CHAR(1)       N     M / F / U.
+MBR_LANG_CD       CHAR(2)       Y     Drives label and counselling leaflet print.
+MBR_HOH_ID        CHAR(11)      Y     Self-referencing to MBR_ID; household link.
+MBR_CARD_NO       CHAR(16)      Y     Savings card, embossed. RESTRICTED.
+HOME_STORE_NO     DEC(4,0)      N     Validated against STRMST.
+MBR_ENRL_DT_CYMD  DEC(7,0)      N
+MBR_STAT_CD       CHAR(1)       N     A active / I inactive / D deceased flag set
+                                      by returned mail process.
+MBR_LAST_ACT_DT   DEC(7,0)      Y     Updated by nightly POS post.
+MBR_MKTG_OPT_CD   CHAR(1)       N     Y / N. Default N for enrollments after
+                                      01 January 1998 per Legal memo 97-31.
+MBR_DEL_FLG       CHAR(1)       N     Logical delete. Rows are never physically
+                                      removed by on-line programs.
+
+Notes:
+
+1. Access is granted at the RACF group level, not by individual profile. Group
+   PHRMRO carries read access to all columns except those marked RESTRICTED.
+
+2. RESTRICTED columns are excluded from the general read view MBRMSTV. Access
+   requires membership in group PHRMSEC, which is approved in writing by the
+   Records Custodian and reviewed each quarter. All reads against the base table
+   are journalled to QAUDJRN.
+
+3. Retention: rows carrying MBR_STAT_CD of I are retained twenty-four months past
+   MBR_LAST_ACT_DT, then written to the archive tape set MBRARC and cleared from
+   the on-line file. Retention of the dispensing record is governed separately by
+   the applicable state board of pharmacy rule and is not shortened by this
+   process.
+
+4. Downstream extracts: job MBRX010 builds the weekly marketing extract and omits
+   all RESTRICTED columns, MBR_DOB_CYMD and any row where MBR_MKTG_OPT_CD is N.
+   Job MBRX040 builds the mail-order fulfilment file and does carry the address
+   columns; it is transmitted over the leased line only. No extract is to be
+   written to diskette or to a store-level device.
+
+Direct questions on this excerpt to Database Administration, extension listed in
+the systems directory.

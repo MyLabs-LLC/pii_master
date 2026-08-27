@@ -1,0 +1,47 @@
+REGIONAL TRANSIT AUTHORITY — NIGHTLY LOAD, RUN LOG EXTRACT
+Job: JOB-ETL-FARE-0442
+Run identifier: R160713-02
+Window: 2016-07-13 02:00 to 04:00 (local)
+Operator on shift: duty analyst, Data Services
+
+1. RUN SUMMARY
+
+   1.1  Start 02:14:07. End 03:41:52. Elapsed 01:27:45. Final state: COMPLETED WITH REJECTS.
+   1.2  Rows read 1,284,336. Rows masked 1,284,336. Rows loaded 1,281,902. Rows rejected 2,434.
+   1.3  Reject rate 0.19 per cent, below the 0.50 per cent escalation threshold in OPS-31 Clause 6.
+
+2. LOG EXTRACT — MASKING AND LOAD STAGES
+
+   02:14:07 INFO  [R160713-02] stage=EXTRACT src=FARECARD.ACCT_HOLDER rows_read=1284336
+   02:14:09 INFO  [R160713-02] profile=FARECARD_CUSTOMER_V3 loaded rules=6
+   02:19:44 INFO  [R160713-02] stage=MASK rule=MSK-001 col=acct_ref rows=1284336 nulls=0
+   02:21:02 INFO  [R160713-02] stage=MASK rule=MSK-004 col=first_name rows=1284336 nulls=118
+   02:21:03 INFO  [R160713-02] stage=MASK rule=MSK-004 col=last_name rows=1284336 nulls=6
+   02:23:38 INFO  [R160713-02] stage=MASK rule=MSK-007 col=date_of_birth rows=1284336 nulls=41902
+   02:24:11 INFO  [R160713-02] stage=MASK rule=MSK-009 col=mailing_postal_code rows=1284336 nulls=3311
+   02:26:50 INFO  [R160713-02] stage=MASK rule=MSK-011 col=card_pan rows=1284336 nulls=0
+   02:26:51 WARN  [R160713-02] stage=MASK rule=MSK-002 col=mailing_addr_line_2 present_in_source=Y suppressed=Y
+   02:27:04 WARN  [R160713-02] stage=MASK col=alt_email_address no_rule_bound action=SUPPRESS_DEFAULT
+   02:27:04 WARN  [R160713-02] classification_gap col=alt_email_address ticket=DS-2291
+   02:31:19 INFO  [R160713-02] stage=STAGE file=fare_acct_holder.dat rows_written=1284336 bytes=214883921
+   02:58:26 INFO  [R160713-02] stage=LOAD tgt=WH.DIM_RIDER rows_attempted=1284336
+   03:39:10 INFO  [R160713-02] stage=LOAD rows_inserted=902114 rows_updated=379788 rows_rejected=2434
+   03:41:52 INFO  [R160713-02] run complete state=COMPLETED_WITH_REJECTS
+
+3. REJECT BREAKDOWN BY VALIDATION CODE
+
+   3.1  VAL-102 rider_birth_year outside permitted range 1900 to 2016 — 1,207 rows.
+   3.2  VAL-118 fare_category_code not present in reference table DIM_FARE_CATEGORY — 806 rows.
+   3.3  VAL-140 card_last4 non-numeric after masking — 291 rows.
+   3.4  VAL-155 rider_sk token collision against prior run — 88 rows.
+   3.5  VAL-171 rider_postal_prefix length not equal to 3 — 42 rows.
+
+4. OPERATOR ACTIONS TAKEN
+
+   4.1  Rejected rows written to WH_REJECT.DIM_RIDER_REJ with run identifier and validation code. Column values in the reject table carry the same masking profile as the target.
+   4.2  Warning at 02:27:04 raised to the Records Custodian under ticket DS-2291 for classification of alt_email_address.
+   4.3  No re-run requested. Rejects carried to the 2016-07-14 correction cycle.
+
+5. NEXT SCHEDULED RUN
+
+   5.1  JOB-ETL-FARE-0443, window 2016-07-14 02:00 to 04:00 (local).

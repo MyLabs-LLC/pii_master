@@ -1,0 +1,74 @@
+GRANITE VALLEY PUBLIC SCHOOLS
+Department of Information Technology — Data Governance Unit
+THIRD-PARTY VENDOR SECURITY AND PRIVACY ASSESSMENT
+Form DG-16A | Effective September 2016 | Supersedes DG-14B
+
+PART I — IDENTIFICATION
+
+- Vendor Legal Name: ____________________
+- Parent Company, if applicable: ____________________
+- Application or Service Name: ____________________
+- Sponsoring School or Department: ____________________
+- Estimated Student Population Affected: ____________________
+- Estimated Staff Population Affected: ____________________
+- Contract Term (from / to): ______ / ______
+- Assessment Reference Number: ____________________
+
+PART II — CONTROL QUESTIONS
+
+Complete each item. Every row carries an evidence disposition: R = artifact required, O = artifact optional, N = narrative only.
+
+- 1. Enumerate by field label all personal information elements the service ingests from district systems. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 2. Enumerate all personal information elements the service generates independently of district input. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 3. State the storage architecture, including database engine, file store, and any message queue that persists records. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 4. Identify all jurisdictions in which district records are stored, processed, or backed up. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 5. State the encryption algorithm, mode, and key length applied to personal information at rest. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 6. State whether encryption is applied at the volume, database, or field level, and identify unencrypted exceptions. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 7. Describe key generation, escrow, rotation frequency, and the custodian role holding key material. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 8. State the minimum TLS version and permitted cipher suites for all interfaces exposed to the district. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 9. Describe the mechanism used for scheduled roster transfers and confirm that unauthenticated endpoints are disabled. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 10. Describe controls preventing personal information from appearing in application logs, error traces, and support tickets. [ O ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 11. Identify every subprocessor with access to district records and the contractual flow-down applied. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 12. State the retention period for active records, inactive records, and system backups. [ N ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 13. State the media sanitization standard followed for failed drives and decommissioned hardware. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 14. Describe the disposal process for printed output, including shredding standard and chain of custody. [ O ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 15. State the elapsed time from contract termination to verified destruction of all copies, including offsite backups. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 16. Confirm that a signed destruction certificate is furnished to the Records Custodian and identify the issuing role. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 17. State the notification window, in hours, following confirmation of unauthorized disclosure. [ N ]
+  Response: ______________________________________________  Evidence Ref: ______
+- 18. Identify the most recent independent security audit, its scope, and the period covered. [ R ]
+  Response: ______________________________________________  Evidence Ref: ______
+
+PART III — EVIDENCE SCHEDULE
+
+- Attachment 1: Network and data flow diagram
+- Attachment 2: Encryption standard or cryptographic policy extract
+- Attachment 3: Independent audit report or attestation letter
+- Attachment 4: Media sanitization and disposal procedure
+- Attachment 5: Subprocessor register
+- Attachment 6: Incident response plan, notification section only
+- Attachment 7: Specimen destruction certificate
+
+PART IV — DISTRICT DISPOSITION
+
+Reviewer Title: ____________________
+Finding: Accept ☐  Accept with remediation plan ☐  Reject ☐
+Remediation Due Date: ____________________
+Data Governance Chair (Title): ____________________  Signature: ____________________
+Date of Determination: ____________________

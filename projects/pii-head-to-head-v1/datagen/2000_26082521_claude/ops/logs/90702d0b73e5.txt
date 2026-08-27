@@ -1,0 +1,19 @@
+REGISTRAR DATA OPERATIONS — DAILY VALIDATION TRIAGE
+Job: VAL_STU_DEMOG | Run identifier: RUN-2021-0419-0058 | Window opened 2021-04-19T00:58:03-05:00
+
+• Confirmed the reject file was produced and is non-empty: rows_read=63,020; rows_accepted=62,608; rows_rejected=412.
+
+• Confirmed that the rejected rows are held in quarantine and were not promoted to ods_stage.stu_demographic.
+
+• Reviewed each distinct error class and its count, as emitted:
+    ERR-1104 date_of_birth failed range predicate .................. 61
+    ERR-1109 ssn failed checksum after detokenisation probe ........ 8
+    ERR-2201 home_postal_code not in USPS reference set ............ 174
+    ERR-2208 mobile_phone_number failed E.164 normalisation ........ 122
+    ERR-3301 emergency_contact_name present without relationship ... 47
+
+• Confirmed that all diagnostic messages emitted to the application log identify the offending column by name and the offending row by surrogate key only, and that no attribute value has been written to the log stream in clear form.
+
+• Determined that ERR-1109 is attributable to a source-side key rotation and not to data corruption; referred to the Records Custodian for source correction.
+
+• Scheduled reprocessing of the quarantined set in run RUN-2021-0419-0730.

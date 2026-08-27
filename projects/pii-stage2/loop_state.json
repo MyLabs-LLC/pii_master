@@ -1,0 +1,36 @@
+{
+  "approval_gates_hit": 1,
+  "history": [
+    {
+      "accepted": "t0-c1",
+      "commit": "66d098b",
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "measure"
+    },
+    {
+      "accepted": "t1-c1",
+      "commit": "301241e",
+      "round_no": 1,
+      "route": "continue_loop",
+      "stage": "validate"
+    },
+    {
+      "rejected": "t1-c3",
+      "reason": "kaggle-ft ONNX fails frozen fail-under (none-011 NONE->PHI, HEALTH_PLAN_ID recall, MRN precision) despite higher Nemotron 5k macro_f2 and Kaggle D_ho F5 0.717",
+      "round_no": 1,
+      "route": "continue_loop",
+      "stage": "validate"
+    }
+  ],
+  "mlflow_parent_run_id": "03d7725916034a53acfe2a65685f4bb6",
+  "project": "pii-stage2",
+  "round_no": 1,
+  "route": "continue_loop",
+  "stage": "propose",
+  "stopped_reason": "",
+  "trials_used": 3,
+  "updated_at": "2026-08-23T08:00:00+00:00",
+  "wallclock_s": 0.0,
+  "notes": "Champion serving remains original student_m.onnx + name taxonomy. Kaggle-ft weights live only at /home/lence/pii-stage2-runs/kaggle-ft. Next: FAX_NUMBER (PHONE precision) or a serving-safe name-postprocess; do not swap champion ONNX without frozen green."
+}

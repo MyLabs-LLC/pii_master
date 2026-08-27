@@ -1,0 +1,17 @@
+{
+  "metric": "priority_macro_precision",
+  "target": 0.9,
+  "verdict": "unlikely",
+  "supported_target": 0.4582,
+  "ceiling": 0.5236,
+  "ceiling_method": "best point on the frozen champion's own per-label threshold sweep (pii_holdout_20k, 14 measurable priority tags)",
+  "agreement": 0.4582,
+  "agreement_source": "two independent judges over the same 946 datax documents: macro F1 0.4582 across 12 tags with >=30 support (support-weighted 0.4728)",
+  "baseline": 0.1759,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "Tag-level precision is measured against gold two judges only agree on at macro F1 0.46: a correct tag the corpus failed to list is scored as a false positive. The measurement, not the model, is the binding limit.",
+    "Collapsing name and street-address component tags into their generic parents raised the prior run's measurable tag ceiling from 0.51 to 0.64 macro / 0.79 weighted -- the largest single lever available."
+  ]
+}

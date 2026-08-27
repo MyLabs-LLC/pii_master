@@ -1,0 +1,34 @@
+MEMORANDUM
+
+TO:   Data Governance Committee
+FROM: Supervisor, Database Administration
+DATE: 14 March 2011
+RE:   MEMBER_MASTER — dictionary excerpt (demographic block)
+
+Supersedes DD-02 dated 09 November 2010. Share and loan sub-ledger columns are carried in DD-04 and are not repeated here.
+
+COLUMN                TYPE          NULL  NOTES
+--------------------  ------------  ----  ------------------------------------------------
+MBR_NBR               NUMBER(10)    N     Primary key. Sequence-assigned at account open.
+MBR_LAST_NM           VARCHAR2(40)  N     Restricted. Roles MSR, LEND, BSA.
+MBR_FIRST_NM          VARCHAR2(30)  N     Restricted, as above.
+MBR_MID_INIT          CHAR(1)       Y     Optional at CIP intake.
+TAX_ID_NBR            VARCHAR2(11)  Y     Encrypted at rest. DBA read blocked; unmask
+                                          requires change ticket plus Security Officer
+                                          countersignature.
+BIRTH_DT              DATE          Y     Restricted. Drives age-based product eligibility
+                                          and youth account rollover.
+ADDR_LINE_1           VARCHAR2(50)  N     Restricted. Maintained through address screen
+                                          only; no direct table update permitted.
+ADDR_LINE_2           VARCHAR2(50)  Y
+CITY_NM               VARCHAR2(30)  N
+STATE_CD              CHAR(2)       N     Validated against REF_STATE.
+POSTAL_CD             VARCHAR2(10)  N     ZIP+4 where carrier route is known.
+HOME_PHONE_NBR        VARCHAR2(14)  Y     Use governed by DNC_FLG.
+EMAIL_ADDR_TXT        VARCHAR2(80)  Y     Populated only on recorded e-statement consent.
+OPEN_DT               DATE          N
+CLOSE_DT              DATE          Y     Null while relationship is active.
+
+RETENTION. Demographic block is held five years past CLOSE_DT and dropped on the annual purge run each February. Purge exceptions require written hold from the Records Custodian.
+
+EXTRACTS. Nightly EXTR_MBR_DLY to the reporting warehouse carries MBR_NBR and non-restricted columns only. No restricted column leaves the core environment absent written approval of the Records Custodian and the Compliance Officer.

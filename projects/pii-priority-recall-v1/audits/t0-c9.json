@@ -1,0 +1,22 @@
+{
+  "candidate": "t0-c9",
+  "stage": "propose",
+  "proposal": "Hybrid candidate 001: route the 16 immutable priority tags through the internal recall-max hash head and all other tags through the feasible-region macro-F2 hash head. No threshold is learned from hold-out labels.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "4f8731b",
+  "commit": "f3e21e4",
+  "decision": "accepted_as_current_gate-passing_champion",
+  "evidence": {
+    "tests": "6 passed",
+    "ruff": "passed",
+    "priority_component": "hash_sgd trial 188",
+    "generic_component": "hash_sgd trial 32",
+    "hybrid_trial": 1,
+    "holdout_tuned": false,
+    "holdout_equal_corpus_macro_f2": 0.4466479172234951,
+    "holdout_equal_corpus_micro_f1": 0.3634095748846606,
+    "holdout_measurable_priority_gates": 55,
+    "holdout_priority_point_passes": 55,
+    "holdout_worst_priority_recall": 0.9966329966329966
+  }
+}

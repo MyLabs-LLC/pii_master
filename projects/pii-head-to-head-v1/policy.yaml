@@ -1,0 +1,125 @@
+# pii-head-to-head-v1 -- the DECLARED HEADLINE policy.
+#
+# Derived from `$SKILL_DIR/profiles/sensitive-data.yaml` with its shape intact:
+# the `ci_lower` basis, `min_support: 30`, severity recall as a *constraint*
+# rather than something to optimise, and macro F2 as the ranker.
+#
+# WHY THE DOMAIN PROFILE AND NOT EITHER CONTENDER'S OWN POLICY.
+# Each of the two models ships with a policy it was selected under --
+# `pii-priority-recall-v1` gated on per-tag recall >= 0.90 and ranked on macro
+# F2; `pii-steady-aim` gated on document precision/specificity and ranked on
+# priority macro F0.5. Scoring a head-to-head under either one hands the win to
+# the model that policy was written for. The neutral instrument is the domain
+# profile that predates both, so that is what ranks here.
+#
+# The precision-first view is NOT discarded -- it is declared in
+# `policy_precision_view.yaml`, written at the same time as this file and
+# before any number arrived, and both decisions are reported. This one is the
+# headline; that one is the contra-view. Naming which is which up front is the
+# whole point.
+name: pii-head-to-head-recall-gate
+
+constraints:
+  # ------------------------------------------------------------------ 1
+  # THE SHIP GATE. Per-tag recall on the priority tags, judged on the bootstrap
+  # lower bound rather than the point estimate. `across: each` means every
+  # measurable tag x corpus pair must pass, which is what produces a count like
+  # "55/55 measurable gates" instead of an average a strong common tag carries.
+  - name: priority tag recall >= 0.90 (conclusive)
+    metric: recall
+    op: ">="
+    threshold: 0.90
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    # A corpus holding fewer than ~30 instances of a tag cannot tell you that
+    # tag's recall clears 0.90. Those pairs are NOT_MEASURABLE and are named in
+    # the report as excluded: "could not measure" and "passed" are different
+    # claims.
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 2
+  # THE SERVING CONSTRAINT, checked at selection rather than after the fact.
+  # Every published latency in this run is measured on exactly one core with
+  # nothing else running; training uses all 32.
+  - name: one-core p95 <= 5 ms
+    metric: p95_latency_ms
+    op: "<="
+    threshold: 5.0
+    severity: hard
+
+  # ------------------------------------------------------------------ advisory
+  # Measured and reported on every arm, never deciding the winner. The three
+  # document-level properties are the customer-facing guarantee the
+  # precision-first lineage was built around; carrying them as advisory means
+  # they appear on both arms' rows without one contender's bar picking the
+  # winner. They are measurable only on the three corpora holding genuine
+  # document-level negatives; the other five are NOT_MEASURABLE, not a pass.
+  - name: document-level precision
+    metric: doc_precision
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: document-level specificity
+    metric: doc_specificity
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: document-level recall
+    metric: doc_recall
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  # A tag at precision 0.93 / recall 0.12 is *silent* -- usually an interface
+  # cap, a cheap fix. A tag predicted zero times across 30,000 documents is
+  # *unlearned*. Same F2, opposite remedies; the prediction rate tells them
+  # apart.
+  - name: prediction rate
+    metric: prediction_rate
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+  - name: worst measurable priority recall
+    metric: severity_recall_min
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+preferences:
+  # 1. THE RANKER. Macro F2 over the collapsed 58-label catalogue: recall
+  #    weighted four times precision, macro-averaged so a dead rare class
+  #    cannot hide behind a strong common one. It ranks; it does not gate.
+  #
+  #    Stated plainly because it matters: macro F2 favours the recall-first
+  #    architecture by construction. That is not a flaw in the instrument, it
+  #    is the domain's stated position that a missed identifier costs more than
+  #    a false alarm -- but it is why the contra-view policy exists and why
+  #    both decisions are reported.
+  - metric: macro_f2
+    min_relative_change: 0.0
+
+  # 2. Micro F1 breaks a macro-F2 tie. Reported on every row regardless: the
+  #    macro-micro gap is itself the diagnostic, since micro >> macro means a
+  #    model carried by its head tags with a dead tail.
+  - metric: micro_f1
+
+  # 3. Last tie-break: when quality is indistinguishable, take the faster model.
+  - metric: p95_latency_ms
+    greater_is_better: false

@@ -1,0 +1,47 @@
+DATA DICTIONARY EXCERPT
+Outbound Interface Layout — EXT_ASSIST_QTR
+Form CIS-DD-021 / Customer Care & Billing
+
+INTERFACE HEADER
+  Feed name.......... EXT_ASSIST_QTR
+  Direction.......... Outbound
+  Consumer........... County energy assistance office
+  Frequency.......... Quarterly, second business day
+  Format............. Fixed-width, 412 bytes, EBCDIC-to-ASCII translated
+  Transport.......... SFTP to the county drop, key-based authentication
+  Source objects..... CUST_MSTR, BILL_PARTY, ASSIST_ENROLL
+
+RECORD LAYOUT
+  POS    FIELD NAME             TYPE       NULL   NOTE
+  001    REC_TYPE_CD            CHAR(1)    N      D = detail, T = trailer
+  002    ENROLL_ID              CHAR(12)   N      From ASSIST_ENROLL
+  014    APPLICANT_LAST_NM      CHAR(40)   N      Space-padded right
+  054    APPLICANT_FIRST_NM     CHAR(30)   Y
+  084    BIRTH_DT               CHAR(8)    Y      CCYYMMDD
+  092    SSN_LAST4              CHAR(4)    Y      Match key for the county file
+  096    MAIL_ADDR_LN_1         CHAR(50)   Y
+  146    MAIL_POSTAL_CD         CHAR(10)   Y
+  156    HOUSEHOLD_SIZE_QTY     CHAR(2)    N      Zero-filled
+  158    INCOME_BAND_CD         CHAR(2)    N      Band, not amount
+  160    ARREARS_AMT            CHAR(11)   N      Implied two decimals
+  171    MED_NECESSITY_IND      CHAR(1)    N
+  172    FILLER                 CHAR(241)  N      Reserved
+
+ACCESS RESTRICTION
+  The generating job runs under the CIS batch account. The staging directory is
+  readable by that account and by the Records Custodian only. Operations staff
+  may confirm file arrival by record count; they hold no read privilege on
+  content. Re-runs require a ticket and are logged in the interface register.
+
+RETENTION
+  Staging copies are deleted on transmission acknowledgment. The control
+  register entry, which carries counts and hash totals but no field content, is
+  retained three years. Source enrollment rows follow schedule LG-4200 and are
+  purged six years after program termination; BIRTH_DT and SSN_LAST4 are nulled
+  at 24 months past termination, which suppresses those positions on any
+  subsequent reissue of a historical file.
+
+NOTES
+  Positions 084 and 092 were added at the county's request in the March 2011
+  revision and are populated only where the applicant supplied them at intake.
+  A blank in either position does not invalidate the record.

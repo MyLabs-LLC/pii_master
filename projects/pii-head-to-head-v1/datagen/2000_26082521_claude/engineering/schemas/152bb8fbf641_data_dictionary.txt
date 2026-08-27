@@ -1,0 +1,51 @@
+DATA DICTIONARY EXCERPT — CUSTOMER MASTER (PRD.CUSTMAST)
+Escrow/Title Production System, Release 4.2 (DB2 for MVS, subsystem DB2P)
+Custodian of record: Records Custodian, Corporate Compliance
+Excerpt covers clauses 1.0 through 7.4. Segment definitions for CUSTNOTE and CUSTXREF are carried in a separate excerpt.
+
+1.0 SCOPE
+1.1 This excerpt describes the physical columns of table PRD.CUSTMAST as installed at Release 4.2, DBRM bind of the third quarter.
+1.2 CUSTMAST holds one row per customer party occurrence. A party may recur across escrow files; recurrence is resolved through CUSTXREF and not through this table.
+1.3 Column widths shown are DB2 declared widths. COBOL copybook CUSTMSTC carries the corresponding host-variable definitions; where the copybook picture clause differs from the declared width, the copybook governs at compile and the DDL governs at load.
+
+2.0 KEY AND CONTROL COLUMNS
+2.1 CUST_SEQ_NBR — DECIMAL(11,0) — NOT NULL — Surrogate key, assigned by generator module CUSTGEN. No business meaning. Never reused after purge.
+2.2 FILE_NBR — CHAR(12) — NOT NULL — Escrow file identifier. Foreign key to PRD.FILEMAST. Branch prefix occupies the first three positions.
+2.3 PARTY_ROLE_CD — CHAR(2) — NOT NULL — Domain table CDPARTY. Values distinguish buyer, seller, borrower, lender contact, agent of record.
+2.4 REC_STAT_CD — CHAR(1) — NOT NULL — A = active, C = closed, P = pending purge, X = suppressed by Records Custodian request.
+2.5 ADD_TS / UPD_TS — TIMESTAMP — NOT NULL — Row audit stamps. UPD_TS drives the change-data capture read in job CUSTCDC.
+
+3.0 PARTY IDENTIFICATION COLUMNS
+3.1 CUST_LAST_NAME — VARCHAR(35) — NOT NULL
+3.2 CUST_FIRST_NAME — VARCHAR(25) — NULLABLE (entity parties carry name in CUST_LAST_NAME only)
+3.3 CUST_MID_INIT — CHAR(1) — NULLABLE
+3.4 CUST_SFX_CD — CHAR(4) — NULLABLE
+3.5 ENTITY_NAME — VARCHAR(60) — NULLABLE — Populated where PARTY_TYPE_CD indicates corporation, partnership or trust.
+3.6 BIRTH_DT — DATE — NULLABLE — Captured only where underwriting guidelines require age verification. Four-digit year enforced after the Y2K remediation of Release 4.0; pre-remediation rows were expanded under the pivot rule and are flagged in Y2K_CNV_IND.
+3.7 TAXPAYER_ID_NBR — CHAR(9) — NULLABLE — Carries either an individual taxpayer identifier or an entity employer identifier as qualified by TAX_ID_TYPE_CD. Required where the file generates a settlement information return.
+3.8 DRV_LIC_NBR — VARCHAR(20) — NULLABLE — Captured at signing for notary journal reconciliation. DRV_LIC_ST_CD qualifies.
+
+4.0 CONTACT COLUMNS
+4.1 ADDR_LINE_1, ADDR_LINE_2 — VARCHAR(40) — Line 1 NOT NULL where REC_STAT_CD = A.
+4.2 CITY_NAME — VARCHAR(28) — NOT NULL. STATE_CD — CHAR(2) — NOT NULL. POSTAL_CD — CHAR(9) — NOT NULL, unpunctuated.
+4.3 HOME_PHON_NBR, WORK_PHON_NBR, FAX_NBR — CHAR(10) — NULLABLE — Stored unpunctuated. Extension carried in WORK_PHON_EXT.
+4.4 EMAIL_ADDR — VARCHAR(50) — NULLABLE — Added at Release 4.1. Sparsely populated; do not use as a match key.
+
+5.0 SETTLEMENT AND DISBURSEMENT COLUMNS
+5.1 ESCROW_ACCT_NBR — CHAR(14) — NULLABLE — Trust ledger subaccount. Reconciled nightly against the trust accounting system.
+5.2 DISB_DDA_NBR — VARCHAR(17) — NULLABLE — Payee deposit account for wired proceeds.
+5.3 DISB_ABA_NBR — CHAR(9) — NULLABLE — Routing identifier. Edited against the routing directory at entry.
+5.4 LOAN_NBR — VARCHAR(20) — NULLABLE — Lender-assigned. Not unique across lenders.
+5.5 POLICY_NBR — VARCHAR(18) — NULLABLE — Populated at policy issue, not at commitment.
+
+6.0 ACCESS RESTRICTION
+6.1 Columns at 3.6, 3.7, 3.8, 5.1, 5.2 and 5.3 are designated restricted. Table-level SELECT is not granted to end-user groups.
+6.2 Production access is by view only. View V_CUSTMAST_GEN masks the restricted columns and is granted to branch operations. View V_CUSTMAST_FULL is granted to escrow accounting and to the Records Custodian.
+6.3 Ad hoc query access under the query manager is limited to the general view. Requests for full-view access are logged and reviewed quarterly.
+6.4 Unloads of the base table require written authorization of the Records Custodian and are performed only to the controlled unload dataset with tape retention marked non-scratch.
+
+7.0 RETENTION AND DOWNSTREAM EXTRACTS
+7.1 Rows remain live for the statutory retention period applicable to the file jurisdiction, measured from file close, after which REC_STAT_CD is set to P by job CUSTAGE.
+7.2 Purge job CUSTPRG blanks the restricted columns at 3.6 through 5.3 and retains identification and contact columns for the residual claims window.
+7.3 Extract CUSTX01 (marketing mail file) selects from the general view only and carries name, address and postal columns. Restricted columns are not eligible for this extract under any parameter setting.
+7.4 Extract CUSTX07 (information reporting) carries TAXPAYER_ID_NBR, name and address columns and is written encrypted to the reporting vendor tape. Distribution list is maintained by the Records Custodian.

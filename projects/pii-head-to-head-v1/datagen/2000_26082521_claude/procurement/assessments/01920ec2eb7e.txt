@@ -1,0 +1,63 @@
+CEDAR RIDGE MUTUAL INSURANCE ASSOCIATION
+Office of the Chief Information Security Officer
+
+CONTINUATION SHEET 3 — TRANSMISSION AND ENCRYPTION CONTROLS
+Companion to Form VRM-114 (Rev. 2)                    Revision date: Oct. 2011
+
+3.0 SCOPE AND METHOD OF COMPLETION
+
+3.0.1  This sheet supplements Section 4 of the master questionnaire and is to
+       be completed by suppliers assessed at Tier 1 only.
+3.0.2  For each clause the Supplier shall mark the Y/N/NA column, complete the
+       response box, and supply the artefact named in the Evidence Required
+       column. Responses recorded outside the boxes will not be assessed.
+3.0.3  Terms not defined on this sheet carry the meaning given at Clause 1.3
+       of the master questionnaire.
+
++-------+----------------------------------------+----------+------------------+----------------+
+| Ref   | Control Question                       | Y/N/     | Supplier         | Evidence       |
+|       |                                        | N/A      | Response         | Required       |
++=======+========================================+==========+==================+================+
+| 3.1   | List each interface by which Personal  |          |                  | Y - diagram    |
+|       | Information leaves the Supplier's      |          |                  |                |
+|       | network boundary.                      |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.2   | State the minimum TLS version and      |          |                  | Y - config     |
+|       | cipher suite permitted on each         |          |                  |                |
+|       | interface listed at Clause 3.1.        |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.3   | Confirm that Personal Information is   |          |                  | Y - crypto std |
+|       | encrypted at rest using AES-256 or     |          |                  |                |
+|       | an equivalent approved algorithm.      |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.4   | Describe the key custody model,        |          |                  | Y - key policy |
+|       | including who may authorise key        |          |                  |                |
+|       | recovery, stated by role title.        |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.5   | State whether Personal Information     |          |                  | Y - DLP config |
+|       | is ever transmitted in the body or     |          |                  |                |
+|       | attachment of electronic mail.         |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.6   | Describe compensating controls where   |          |                  | Y - risk memo  |
+|       | a legacy interface cannot support      |          |                  |                |
+|       | the standards stated at Clause 3.2.    |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+| 3.7   | State the frequency of penetration     |          |                  | Y - test rpt   |
+|       | testing performed against public       |          |                  |                |
+|       | facing interfaces.                     |          |                  |                |
++-------+----------------------------------------+----------+------------------+----------------+
+
+3.8 EXCEPTIONS
+
+3.8.1  Any control that cannot be met as stated shall be recorded below with
+       the compensating measure in force and the target remediation quarter.
+
+    Clause in exception: ......................................................
+    Compensating measure: .....................................................
+    Target remediation quarter: ...............................................
+
+ATTESTATION
+
+Signature of authorised officer: ..............................................
+Role title: ...................................................................
+Date: .........................................................................

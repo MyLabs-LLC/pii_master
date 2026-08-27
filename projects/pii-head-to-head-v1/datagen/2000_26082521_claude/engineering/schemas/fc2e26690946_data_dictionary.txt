@@ -1,0 +1,27 @@
+ELIGIBILITY AND BILLING TABLE — DATA DICTIONARY EXCERPT
+BILL.MEMBER_ELIG, County Health Department Business Office
+Revision 3, 2021. Approved by the Business Office Manager.
+
+1. This excerpt lists the member-level columns of BILL.MEMBER_ELIG. Claim-line columns appear in the companion excerpt BILL-DD-008.
+
+2. Columns.
+   (a) ELIG_SK — INTEGER, NOT NULL. Surrogate key.
+   (b) CLIENT_MRN — VARCHAR(12), NOT NULL. Foreign key to the client master.
+   (c) MEMBER_ID_NBR — VARCHAR(24), NOT NULL. Payer-assigned membership number as printed on the coverage card.
+   (d) SUBSCRIBER_LAST_NAME — VARCHAR(60), NULL. Populated when the member is a dependent.
+   (e) SUBSCRIBER_FIRST_NAME — VARCHAR(40), NULL.
+   (f) SUBSCRIBER_DOB — DATE, NULL.
+   (g) RELATIONSHIP_CD — CHAR(2), NOT NULL.
+   (h) PAYER_ID_CD — CHAR(5), NOT NULL.
+   (i) PLAN_GROUP_NBR — VARCHAR(20), NULL.
+   (j) COVERAGE_START_DT — DATE, NOT NULL.
+   (k) COVERAGE_END_DT — DATE, NULL. Null indicates active coverage as of the last verification.
+   (l) SLIDING_SCALE_TIER_CD — CHAR(1), NULL. Set from the income declaration on file.
+   (m) HOUSEHOLD_SIZE_NBR — SMALLINT, NULL.
+   (n) LAST_VERIFIED_TS — TIMESTAMP, NOT NULL.
+
+3. Access restriction. Columns (c) through (f) and (l) through (m) are Restricted and are granted only to the Billing Specialist and Billing Supervisor roles. Clinical staff see coverage status through the eligibility banner in the practice management system and hold no direct grant on this table. The Records Custodian reviews the grant list each quarter and reports exceptions to the Privacy Officer.
+
+4. Retention. Eligibility rows are retained for seven years from the close of the fiscal year in which the last associated claim was adjudicated, in line with the Business Office record schedule. Purged rows are logged; the log is retained for ten years.
+
+5. Downstream extracts. The clearinghouse submission file carries columns (c) through (i) as required by the 837 transaction. The monthly sliding-scale utilization report carries (l) and (m) in aggregate only, with cells under eleven suppressed. No extract from this table is permitted to a non-covered entity without prior review by the Privacy Officer.

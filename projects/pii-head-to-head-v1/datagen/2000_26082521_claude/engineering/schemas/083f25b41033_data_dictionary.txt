@@ -1,0 +1,31 @@
+DATA DICTIONARY EXCERPT — CLAIM PARTY DIMENSION
+Ref: DD-CLM-0088 | Rev 2 | 2016-05-23 | Owner: Claims Data Services
+
+SECTION A — OBJECT
+Object: EDW_PRD.DIM_CLAIM_PARTY
+Type: Type 2 slowly changing dimension
+Refresh: Nightly, following claims fact load
+
+SECTION B — COLUMNS
+| COLUMN NAME        | TYPE          | NULL | NOTE                                     |
+| CLM_PARTY_SK       | NUMBER(12)    | N    | Surrogate key                            |
+| CLM_NBR            | VARCHAR2(14)  | N    | Restricted                               |
+| CLMT_LAST_NM       | VARCHAR2(35)  | N    | Restricted; masked in lower environments |
+| CLMT_FIRST_NM      | VARCHAR2(25)  | N    | Restricted; masked in lower environments |
+| CLMT_BIRTH_DT      | DATE          | Y    | Restricted; age band derived at load     |
+| CLMT_SSN           | VARCHAR2(9)   | Y    | Highly restricted; encrypted at rest     |
+| CLMT_ADDR_LINE_1   | VARCHAR2(50)  | Y    | Restricted                               |
+| CLMT_CITY_NM       | VARCHAR2(30)  | Y    | Restricted                               |
+| CLMT_STATE_CD      | CHAR(2)       | N    | Permitted for reporting                  |
+| CLMT_ZIP_CD        | VARCHAR2(9)   | Y    | Truncate to five for reporting           |
+| CLMT_PHONE_NBR     | VARCHAR2(10)  | Y    | Restricted                               |
+| PROV_NPI_NBR       | VARCHAR2(10)  | Y    | Provider identifier; not member data     |
+| EFF_FROM_TS        | TIMESTAMP(6)  | N    | Row validity start                       |
+| EFF_TO_TS          | TIMESTAMP(6)  | Y    | Null on current row                      |
+| CURR_ROW_IND       | CHAR(1)       | N    | Y/N                                      |
+
+SECTION C — HANDLING
+Restricted columns are available to the Claims Analytics role only. Highly restricted columns are excluded from that role and are read through the secured view V_CLM_PARTY_SEC. Litigation-hold claims are flagged by LGL_HOLD_IND on the parent fact and are exempt from purge.
+
+SECTION D — RETENTION AND EXTRACTS
+Rows retained ten years from claim closure, or for the duration of any litigation hold. Two extracts consume this object: the subrogation vendor file (claim number and state only) and the reinsurance cession file (no claimant identity columns). Additions to this list require Claims Data Services approval.

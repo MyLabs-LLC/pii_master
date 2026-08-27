@@ -235,3 +235,13 @@ projects/*/cache/
 projects/*/artifacts/
 projects/*/mlflow.db
 mlruns/
+projects/*/mlruns/
+projects/*/data/
+**/predictions.jsonl
+# Model binaries wherever they are staged (see projects/*/models/ above).
+**/weights.npz
+**/*.safetensors
+# Assembled run records and command archives run to tens of MB on large sweeps.
+# run.json is regenerable from the project's evaluations/.
+projects/pii-priority-recall-v1/run.json
+projects/pii-priority-recall-v1/reports/*.commands.txt

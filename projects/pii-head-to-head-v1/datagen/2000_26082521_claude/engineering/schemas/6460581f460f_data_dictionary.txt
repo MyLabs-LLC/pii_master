@@ -1,0 +1,46 @@
+DATA DICTIONARY EXCERPT — CUSTOMER CONTACT HISTORY (SYB.CUST_CONTACT)
+Branch Servicing System, Sybase System 11
+Sections 1 through 6
+
+1. GENERAL
+1.1 One row per recorded contact with a party to an escrow or title order. Rows are inserted by the servicing front end and by the interactive voice unit; no delete privilege exists on the table.
+1.2 The table is denormalized against CUSTMAST for query performance. Identification columns are copied at insert and are not maintained thereafter; CUSTMAST is the system of record for all such columns.
+
+2. COLUMN INVENTORY
+
+  COLUMN NAME          TYPE           NULL   NOTE
+  CONTACT_ID           numeric(12)    no     identity
+  FILE_NBR             char(12)       no     index CC_IX1
+  CUST_SEQ_NBR         numeric(11)    no     index CC_IX2
+  CONTACT_DTTM         datetime       no     local branch time, not GMT
+  CHANNEL_CD           char(1)        no     P/L/W/F/I
+  CUST_LAST_NAME       varchar(35)    no     copied at insert
+  CUST_FIRST_NAME      varchar(25)    yes    copied at insert
+  CALLBACK_PHON_NBR    char(10)       yes    unpunctuated
+  CALLBACK_EXT         char(5)        yes
+  EMAIL_ADDR           varchar(50)    yes    outbound correspondence only
+  MAIL_ADDR_1          varchar(40)    yes    populated on address-change contacts
+  MAIL_POSTAL_CD       char(9)        yes
+  TAXPAYER_ID_NBR      char(9)        yes    restricted, see 4.2
+  VERIF_METH_CD        char(2)        yes    identity verification method applied
+  NOTE_TXT             varchar(255)   yes    free text, see 3.3
+  OPER_ID              char(8)        no     entering operator
+
+3. ENTRY CONTROLS
+3.1 CALLBACK_PHON_NBR is edited for length and numeric content only. No area code validation is performed.
+3.2 TAXPAYER_ID_NBR is populated only where the contact concerns information reporting. The front end suppresses the field on all other contact types.
+3.3 NOTE_TXT is free text and is not scanned. Operators are instructed by the servicing procedure manual not to key identification or account numbers into this column. Compliance sampling of this column is performed monthly.
+
+4. ACCESS RESTRICTION
+4.1 SELECT on the base table is held by the servicing role and by database administration.
+4.2 TAXPAYER_ID_NBR is masked in the servicing screen map and is returned in clear only to the compliance role. The column is excluded from all reporting views.
+4.3 The reporting server copy, refreshed by dump and load each weekend, is created from a load script that sets TAXPAYER_ID_NBR to null after load. Verification of that step is a checklist item for the weekend operator.
+
+5. RETENTION
+5.1 Contact rows are retained for the servicing retention interval measured from CONTACT_DTTM, then moved to the history segment by job CC_ROLL.
+5.2 The history segment carries FILE_NBR, CUST_SEQ_NBR, CONTACT_DTTM, CHANNEL_CD, OPER_ID and NOTE_TXT. Name, contact and identification columns are dropped at roll.
+
+6. DOWNSTREAM EXTRACTS
+6.1 Extract CC_QUAL feeds the service quality measurement vendor and carries CHANNEL_CD, CONTACT_DTTM, OPER_ID and duration only.
+6.2 Extract CC_ADDR feeds the address-change queue in the production system and carries mailing columns and CUST_SEQ_NBR. It does not carry NOTE_TXT.
+6.3 No extract from this table is authorized to a marketing destination.

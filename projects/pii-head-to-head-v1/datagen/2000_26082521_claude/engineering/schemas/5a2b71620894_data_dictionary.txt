@@ -1,0 +1,34 @@
+DATA DICTIONARY EXCERPT — CLIENT REGISTRATION SUBSYSTEM
+COUNTY HEALTH DEPARTMENT / MIS UNIT / SHEET 3 OF 11
+
+A. TABLE: CLNT_REG (Oracle 7.3, tablespace CHSDAT)
+
+B. COLUMNS
+   CLNT_NBR        NUMBER(10)      NOT NULL   sequence-generated
+   ALT_ID_NBR      VARCHAR2(15)    NULL       legacy conversion key
+   NAM_LAST        VARCHAR2(30)    NOT NULL   restricted
+   NAM_FIRST       VARCHAR2(20)    NOT NULL   restricted
+   BRTH_DT         DATE            NOT NULL   restricted
+   SSN             VARCHAR2(9)     NULL       restricted; optional at intake
+   STR_ADR         VARCHAR2(40)    NULL       restricted
+   POST_CD         VARCHAR2(9)     NULL       restricted below 5 digits
+   TEL_NBR         VARCHAR2(10)    NULL       restricted; not extracted
+   RACE_CD         VARCHAR2(2)     NULL       state domain
+   ETHN_CD         VARCHAR2(2)     NULL       state domain
+   REG_DT          DATE            NOT NULL
+   INACT_DT        DATE            NULL       null = active
+   SEAL_IND        CHAR(1)         NOT NULL   default 'N'
+
+C. RESTRICTION
+   Restricted columns are visible only to roles CHS_INTAKE and CHS_SUPV.
+   Rows carrying SEAL_IND = 'Y' are filtered by database trigger from every
+   reporting role without exception. No override procedure exists.
+
+D. RETENTION
+   Seven years from INACT_DT, then archived to CLNT_REG_ARC. Archive is
+   read-only and is not accessible to reporting roles.
+
+E. EXTRACTS
+   Vital statistics match file (monthly) and Medicaid eligibility reconciliation
+   (weekly). Both omit TEL_NBR and STR_ADR. Layouts on file with the Records
+   Custodian.

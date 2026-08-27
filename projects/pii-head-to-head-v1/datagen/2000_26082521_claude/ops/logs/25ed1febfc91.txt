@@ -1,0 +1,41 @@
+ETL RUN LOG EXTRACT — JOB_CIS_EXTRACT_NIGHTLY
+Run id: RUN-20210418-0203-CIS
+Scheduler: ctrl-m job CIS_NGT_001, ordinal 7 of 12
+Window: 2021-04-18 02:03:11 → 02:41:56
+
+* 02:03:11 — INIT. Config `etl_cis.conf` loaded. Mask policy POL-CIS-MASK-v4.2 attached. Vault handshake `tv-cis-01` OK (latency 41 ms).
+* 02:03:19 — SOURCE READ opened on CIS_PROD.CUSTOMER_MASTER.
+    - rows offered ................ 412,884
+    - rows read ................... 412,884
+    - read errors ................. 0
+* 02:07:44 — STAGE 1 (conform) complete.
+    - rows in / out ............... 412,884 / 412,884
+    - columns dropped at source ... 6 (SVC_ADDR_LINE1, SVC_ADDR_LINE2, MAIL_ADDR_LINE1, MAIL_ADDR_LINE2, PRIMARY_PHONE, ALT_PHONE)
+* 02:07:45 — STAGE 2 (mask) started.
+    - SUPPRESS applied to 11 columns; null writes 4,541,724
+    - TOKENISE applied to 4 columns; vault calls 1,651,536; cache hit rate 0.87
+    - PARTIAL applied to SVC_POSTCODE; truncations 412,884
+* 02:19:02 — WARN MASK-114. Column EMAIL_ADDR present in source but absent from rule map for locale variant. Fail-closed default applied. Rows affected 3,318. Emitted as ***MASKED***.
+* 02:19:02 — WARN MASK-118. Column DOB contained non-date literal in 61 rows. Suppression applied regardless; no value written. Rows referred to reject set.
+* 02:24:30 — STAGE 2 complete.
+    - rows in / out ............... 412,884 / 411,902
+    - rows to reject set .......... 982
+* 02:24:31 — STAGE 3 (validate) started. Rule pack `dq_cis_v9`.
+    - VAL-201 ACCT_NBR token null ................ 0 rows
+    - VAL-202 PREMISE_ID token null .............. 14 rows [reject]
+    - VAL-206 tkn_party non-deterministic ........ 0 rows
+    - VAL-211 SVC_POSTCODE length ≠ 3 ............ 219 rows [reject]
+    - VAL-214 RATE_CLASS not in domain list ...... 68 rows [reject]
+    - VAL-218 ARREARS_BAND null where ARREARS_BAL > 0 ... 411 rows [warn, retained]
+    - VAL-220 unmasked-pattern scan on output ..... 0 hits
+    - VAL-221 free-text scan on BILL_NOTE_TXT ..... 270 rows [quarantine]
+* 02:33:12 — STAGE 3 complete. Rows failing hard validation 301. Rows quarantined 270.
+* 02:33:13 — TARGET WRITE to DWH_STG.CUST_MASTER_MSK.
+    - rows written ................ 411,331
+    - rows rejected ............... 1,553
+    - reconciliation delta ........ 0 against stage 3 output
+* 02:41:50 — Reject file written to `/etl/reject/RUN-20210418-0203-CIS.rej`. Contains row keys as tokens only; no source column values persisted.
+* 02:41:52 — Quarantine set written to restricted mount, access limited to the Records Custodian.
+* 02:41:56 — RUN COMPLETE. Exit status 0 (completed with warnings). Duration 00:38:45.
+* Follow-up raised: TCK-2021-1188 — add EMAIL_ADDR locale variant to rule map before next cycle.
+* Follow-up raised: TCK-2021-1189 — investigate 14 null PREMISE_ID tokens; suspected upstream orphan premises.

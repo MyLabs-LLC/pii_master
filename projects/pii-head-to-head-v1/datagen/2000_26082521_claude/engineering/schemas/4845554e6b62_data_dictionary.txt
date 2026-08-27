@@ -1,0 +1,61 @@
+TITLE AND ESCROW SYSTEMS — DATA DICTIONARY EXCERPT
+Register section: Customer and Party Data
+Prepared for the annual information inventory
+
+Instructions: one entry per column. Complete every labelled line. Return the section to the Records Custodian.
+
+ENTRY 1
+  Column name ............ PARTY_FULL_NAME_DISP
+  Data type .............. VARCHAR2(160)
+  Nullable ............... No
+  Populated by ........... Trigger; concatenation of the name parts
+  Access ................. Standard escrow roles; excluded from vendor extracts
+  Retention .............. Follows the file record, seven years post-closing
+  Notes .................. Display only. Do not use as a match key.
+
+ENTRY 2
+  Column name ............ TIN_SSN_ENC
+  Data type .............. RAW(64)
+  Nullable ............... Yes
+  Populated by ........... Escrow Officer at file setup
+  Access ................. ESCROW_PII_READ role; decrypt logged to the audit table
+  Retention .............. Seven years, then purged with the file
+  Notes .................. Required before the 1099-S extract can run. Requests to view the clear value go through the Compliance Officer.
+
+ENTRY 3
+  Column name ............ DOB_DT
+  Data type .............. DATE
+  Nullable ............... Yes
+  Populated by ........... Identity verification step
+  Access ................. Restricted; not present in any reporting view
+  Retention .............. Nulled five years after closing
+  Notes .................. Customer identification programme use only.
+
+ENTRY 4
+  Column name ............ MAIL_ADDR_LINE_1
+  Data type .............. VARCHAR2(80)
+  Nullable ............... Yes
+  Populated by ........... Order entry or the lender feed
+  Access ................. Standard escrow roles
+  Retention .............. Follows the file record
+  Notes .................. Mailing address. The subject property address is held separately in PARCEL and is public record; the two are not interchangeable.
+
+ENTRY 5
+  Column name ............ EMAIL_ADDR
+  Data type .............. VARCHAR2(120)
+  Nullable ............... Yes
+  Populated by ........... Order entry, or self-service portal registration
+  Access ................. Standard escrow roles; masked for analysts
+  Retention .............. Three years past last file activity
+  Notes .................. Used for secure document delivery. Suppressed from the CRM feed.
+
+ENTRY 6
+  Column name ............ BANK_ACCT_NBR_ENC
+  Data type .............. RAW(64)
+  Nullable ............... Yes
+  Populated by ........... Disbursement setup, dual entry
+  Access ................. Escrow Officer and the Funding Supervisor only
+  Retention .............. Purged ninety days after final disbursement
+  Notes .................. Never displayed. Changes require a fresh callback and a new WIRE_CALLBACK_DT.
+
+Section sign-off: the Records Custodian, on completion of review.

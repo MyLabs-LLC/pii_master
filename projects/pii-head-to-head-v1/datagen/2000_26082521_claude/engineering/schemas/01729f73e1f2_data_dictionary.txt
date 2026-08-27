@@ -1,0 +1,33 @@
+DATA DICTIONARY EXCERPT
+DB2 FOR MVS, SUBSYSTEM DSNP, TABLE ESCROW.PARTY_XREF
+TITLE OPERATIONS — DATA ADMINISTRATION STANDARDS SERIES, ITEM 14
+
+1. Purpose and scope.
+   1.1 PARTY_XREF associates a party occurrence with one or more escrow files. It is a cross-reference table and is not the system of record for party demographics.
+   1.2 Demographic columns appearing below are carried for match and confirmation only.
+
+2. Column definitions.
+   2.1 PARTY_XREF_ID, INTEGER, NOT NULL, identity. Primary key.
+   2.2 PARTY_ID, INTEGER, NOT NULL. Foreign key to ESCROW.PARTY.
+   2.3 FILE_NBR, CHAR(14), NOT NULL. Foreign key to ESCROW.FILE_INDEX.
+   2.4 PARTY_ROLE_CD, CHAR(3), NOT NULL. Values from ESCROW.ROLE_CD. Includes buyer, seller, lender, agent and trustee roles.
+   2.5 PARTY_LAST_NM, VARCHAR(35), NOT NULL. Confidential.
+   2.6 PARTY_FIRST_NM, VARCHAR(25), NULLABLE. Confidential.
+   2.7 PARTY_TAX_ID, CHAR(9), NULLABLE. Restricted. Populated only where a reporting obligation attaches to the role in 2.4.
+   2.8 PARTY_TAX_ID_TYPE, CHAR(1), NULLABLE. Restricted. Indicates individual or entity identifier.
+   2.9 PARTY_BIRTH_DT, DATE, NULLABLE. Restricted. Populated by the underwriting interface only.
+   2.10 MAIL_ADDR_ID, INTEGER, NULLABLE. Foreign key to ESCROW.ADDRESS.
+   2.11 CONTACT_PHONE_NBR, CHAR(10), NULLABLE. Confidential.
+   2.12 ADDED_TS, TIMESTAMP, NOT NULL. Audit.
+   2.13 ADDED_AUTHID, CHAR(8), NOT NULL. Audit.
+
+3. Access.
+   3.1 SELECT on the base table is held by plan owner only.
+   3.2 Application access is through views. View ESCROW.V_PARTY_XREF omits 2.7, 2.8 and 2.9.
+   3.3 Restricted columns are readable through ESCROW.V_PARTY_RPT, secured to the reporting group. Access is auditable and reviewed semiannually by the Records Custodian.
+   3.4 QMF and ad hoc query access to this table is not authorized.
+
+4. Retention and extracts.
+   4.1 Rows persist for the life of the escrow file plus seven years from disbursement.
+   4.2 Restricted columns are set null at file closing plus fourteen months, except where an open reporting obligation exists.
+   4.3 Extract PXR040 supplies the title plant with 2.2 through 2.6 and 2.10. No restricted column is eligible for extract to the plant, to the agency network, or to any party outside the company.

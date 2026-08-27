@@ -1,0 +1,73 @@
+DATA DICTIONARY EXCERPT
+SCHOOL DISTRICT — DEPARTMENT OF INFORMATION SYSTEMS
+FILE: HEALTH_SVC_MBR   RELEASE: 2004.2   SHEET: 4
+
+PART I — GENERAL
+
+1. This excerpt describes the member attributes of the Health Services
+   registry as constituted at release 2004.2. It supersedes sheet 4 of
+   release 2003.1 in its entirety.
+
+2. Column definitions are binding on all programs reading the file. Any
+   program that derives a value not listed below shall be documented on
+   Form IS-DER-31 before promotion to production.
+
+PART II — COLUMN DEFINITIONS
+
+3. HSM_MEMBER_KEY
+   3.1 Type: DECIMAL(9,0).  3.2 Nullable: No.
+   3.3 Notes: Cross-reference to the student master. No re-use of retired
+       keys is permitted.
+
+4. HSM_NM_LAST / HSM_NM_FIRST
+   4.1 Type: CHAR(30) / CHAR(20).  4.2 Nullable: No / No.
+   4.3 Notes: Carried for print legibility on clinic logs only. Access
+       restricted to the Health Services role and the Records Custodian.
+
+5. HSM_DT_BIRTH
+   5.1 Type: DATE.  5.2 Nullable: No.
+   5.3 Notes: Governs immunization schedule calculation. Never rendered on
+       any extract; only the derived age band is exported.
+
+6. HSM_ID_MEDICAID
+   6.1 Type: CHAR(12).  6.2 Nullable: Yes.
+   6.3 Notes: Restricted class A. Excluded from every report definition.
+       Write access limited to the Billing Clerk role.
+
+7. HSM_CD_CONDITION_1 through HSM_CD_CONDITION_5
+   7.1 Type: CHAR(4) each.  7.2 Nullable: Yes.
+   7.3 Notes: Coded against CONDITION_REF. Free text is not accepted in
+       these positions and shall not be introduced.
+
+8. HSM_TXT_NOTE
+   8.1 Type: VARCHAR(2000).  8.2 Nullable: Yes.
+   8.3 Notes: Restricted class A. Excluded from all extracts without
+       exception. Subject to review by the School Nurse Coordinator.
+
+9. HSM_FL_CONSENT_SHARE
+   9.1 Type: CHAR(1).  9.2 Nullable: Yes.
+   9.3 Notes: A null value is processed as withheld consent.
+
+10. HSM_TS_LAST_TOUCH
+    10.1 Type: TIMESTAMP.  10.2 Nullable: No.
+    10.3 Notes: Maintained by database trigger. Application updates are
+         rejected.
+
+PART III — ACCESS, RETENTION AND EXTRACTS
+
+11. Restricted class A columns are readable only through stored procedure
+    SP_HSM_CLINIC and only from workstations in the health office subnet.
+
+12. Rows are retained for the period of enrollment plus seven years, after
+    which the record is destroyed under the approved retention schedule.
+    Note columns are purged at the close of each school year plus two.
+
+13. Two downstream extracts are authorized: the immunization compliance
+    count to the county, monthly, aggregate only; and the state audit
+    file, annual, keyed and age-banded, carrying no name, identifier or
+    contact column.
+
+14. Requests for additional extracts shall be filed with the Records
+    Custodian not less than thirty days before the required delivery date.
+
+Approved: Director of Information Systems ______  Coordinator ______

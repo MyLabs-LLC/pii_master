@@ -1,0 +1,82 @@
+============================================================================
+ PATIENT FINANCIAL SERVICES              INFORMATION PROTECTION HANDOUT
+ ANNUAL COMPLIANCE EDUCATION 2021        DOCUMENT PFS-114A / REV 09-2021
+ CUSTODIAN OF RECORD: RECORDS CUSTODIAN  APPROVER: PRIVACY OFFICER
+============================================================================
+
+SECTION 1. CLASSIFICATION SCHEDULE
+----------------------------------------------------------------------------
+ CODE | FIELD LABEL                  | STORE | PRINT | VOICE | EXTERNAL SEND
+------+------------------------------+-------+-------+-------+---------------
+ A-01 | Patient Name                 | YES   | MASK  | VERIFY| SECURE ONLY
+ A-02 | Medical Record Number        | YES   | MASK  | NO    | SECURE ONLY
+ A-03 | Patient Account Number       | YES   | MASK  | NO    | SECURE ONLY
+ A-04 | Social Security Number       | YES   | NO    | NO    | PROHIBITED
+ A-05 | Date of Birth                | YES   | MASK  | VERIFY| SECURE ONLY
+ B-01 | Guarantor Mailing Address    | YES   | YES   | NO    | SECURE ONLY
+ B-02 | Home or Mobile Telephone     | YES   | MASK  | NO    | SECURE ONLY
+ B-03 | Electronic Mail Address      | YES   | MASK  | NO    | SECURE ONLY
+ C-01 | Payment Card Number          | NO    | NO    | NO    | PROHIBITED
+ C-02 | Card Verification Value      | NO    | NO    | NO    | PROHIBITED
+ C-03 | Bank Account / Routing       | NO    | NO    | NO    | PROHIBITED
+ D-01 | Diagnosis or Procedure Text  | YES   | MASK  | NO    | AUTH REQUIRED
+ D-02 | Behavioral Health Indicator  | SEGRG | NO    | NO    | AUTH REQUIRED
+ D-03 | Substance Use Treatment Flag | SEGRG | NO    | NO    | AUTH REQUIRED
+ D-04 | Reproductive Care Indicator  | SEGRG | NO    | NO    | AUTH REQUIRED
+----------------------------------------------------------------------------
+ LEGEND: MASK = TRUNCATE TO LAST FOUR OR SUPPRESS. SEGRG = SEGREGATED
+ MODULE, ROLE-GATED. VERIFY = TWO-FACTOR CALLER VERIFICATION FIRST.
+
+SECTION 2. PROHIBITED PRACTICES
+----------------------------------------------------------------------------
+ P-1  Transmission of any A, C, or D field to a personal mail account.
+ P-2  Storage of any C field in a note, ticket, chat, or scanned image.
+ P-3  Access to an account absent an assigned work queue entry.
+ P-4  Removal of printed worklists from the department floor.
+ P-5  Photography of any workstation display by any device.
+ P-6  Sharing of credentials, badges, or session tokens.
+ P-7  Disclosure to a caller who has failed identity verification.
+
+SECTION 3. CONSEQUENCE MATRIX
+----------------------------------------------------------------------------
+ SEV | CONDUCT                        | EMPLOYMENT      | REGULATORY
+-----+--------------------------------+-----------------+-----------------
+  1  | Negligent, no disclosure       | COACHING        | INTERNAL LOG
+  2  | Negligent, limited disclosure  | WRITTEN WARNING | BREACH REVIEW
+  3  | Access without business need   | SUSPENSION      | OCR REPORTABLE
+  4  | Willful disclosure or export   | TERMINATION     | REFERRAL
+  5  | Disclosure for personal gain   | TERMINATION     | CRIMINAL REFERRAL
+----------------------------------------------------------------------------
+ Civil penalties are assessed against the organization per violation and
+ per category, with annual caps applied by tier of culpability. Individual
+ liability attaches at severity 4 and above.
+
+SECTION 4. SCENARIO ASSESSMENT
+----------------------------------------------------------------------------
+ Enter one classification code and one severity for each situation.
+
+ NO | SITUATION                                          | CODE | SEV
+----+----------------------------------------------------+------+-----
+ 1  | A representative requests an itemized statement    |      |
+    | be sent to an address that does not match the      |      |
+    | guarantor record on file.                          |      |
+ 2  | A biller finds a prior shift left a printed        |      |
+    | aging report in the shared copier tray.            |      |
+ 3  | An inbound message to the department mailbox       |      |
+    | contains a full card number and expiration.        |      |
+ 4  | A staff member searches an account belonging to    |      |
+    | a neighbor after seeing a local news report.       |      |
+ 5  | A collections vendor asks for a spreadsheet that   |      |
+    | includes diagnosis narrative for aged balances.    |      |
+ 6  | A caller answers two of three verification         |      |
+    | questions and becomes agitated at the third.       |      |
+----+----------------------------------------------------+------+-----
+
+SECTION 5. REPORTING
+----------------------------------------------------------------------------
+ IMMEDIATE      Notify the department supervisor. Do not attempt recovery
+                of transmitted material without instruction.
+ WITHIN 24 HRS  Submit incident form IM-22A to the Privacy Officer.
+ PRESERVATION   Retain logs, envelopes, and printed material. Do not
+                delete messages associated with the incident.
+============================================================================

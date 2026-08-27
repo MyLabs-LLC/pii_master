@@ -1,0 +1,70 @@
+CUSTOMER CONTACT SUBJECT AREA — DATA DICTIONARY EXCERPT
+Register No. DD-CST-0243, Revision B
+Business Owner: Policyholder Services
+Technical Owner: Enterprise Data Warehouse Team
+Issued: 2016-08-01
+Supersedes: Revision A dated 2015-11-09
+
+PURPOSE
+This excerpt documents the contact and demographic columns held in CRM_ODS.CUST_CONTACT and the operational handling rules that apply to them. It is issued for use by report developers, extract authors, and the vendor management function. Column-level definitions are authoritative; any conflict with the source system data model is to be reported to the Technical Owner within five business days.
+
+COLUMN DETAIL
+
+CUST_ID
+  Type: NUMBER(10)
+  Nullable: No
+  Notes: Primary key. Assigned by the policy administration system at first policy issue. Persists across policy lapse and reinstatement. Not reissued.
+
+PARTY_ROLE_CD
+  Type: VARCHAR2(4)
+  Nullable: No
+  Notes: Distinguishes named insured, additional insured, payor, and authorized representative. Reference domain REF.PARTY_ROLE.
+
+CUST_FULL_NM
+  Type: VARCHAR2(60)
+  Nullable: No
+  Notes: Concatenated at source. Classified Confidential. Substituted with generated values in the QA and UAT refresh (job REFRESH_MASK_02).
+
+CUST_LAST_NM / CUST_FIRST_NM
+  Type: VARCHAR2(35) / VARCHAR2(25)
+  Nullable: No / No
+  Notes: Parsed components. Classified Confidential. Not to be used as a join key under any circumstance.
+
+TAX_ID_NBR
+  Type: VARCHAR2(9)
+  Nullable: Yes
+  Notes: Classified Highly Restricted. Populated for commercial accounts and for individual accounts subject to 1099 reporting. Stored encrypted. Excluded from all views except V_TAX_RPTG_SECURE.
+
+DOB_DT
+  Type: DATE
+  Nullable: Yes
+  Notes: Classified Confidential. Nullable for commercial party roles. Underwriting derives ATTAINED_AGE_NBR at policy effective date; downstream consumers must request the derived column rather than the raw date.
+
+MAIL_ADDR_LINE_1 / MAIL_ADDR_LINE_2 / MAIL_CITY_NM / MAIL_STATE_CD / MAIL_ZIP_CD
+  Type: VARCHAR2(50) / VARCHAR2(50) / VARCHAR2(30) / CHAR(2) / VARCHAR2(9)
+  Nullable: No / Yes / No / No / No
+  Notes: Classified Confidential except MAIL_STATE_CD. Standardized nightly against the CASS-certified address engine; ADDR_STDZN_STAT_CD records the outcome.
+
+PRIM_PHONE_NBR / ALT_PHONE_NBR
+  Type: VARCHAR2(10)
+  Nullable: Yes / Yes
+  Notes: Classified Confidential. Do-not-call status is held separately in CUST_CONTACT_PREF and must be checked before any outbound campaign extract is released.
+
+EMAIL_ADDR_TXT
+  Type: VARCHAR2(100)
+  Nullable: Yes
+  Notes: Classified Confidential. Consent flag EMAIL_CNSNT_IND governs use. Rows with EMAIL_CNSNT_IND = 'N' are filtered from all marketing extracts at the view layer, not at the extract layer.
+
+BANK_ACCT_NBR / BANK_RTG_NBR
+  Type: VARCHAR2(17) / VARCHAR2(9)
+  Nullable: Yes / Yes
+  Notes: Classified Highly Restricted. Present only for accounts on recurring electronic funds transfer. Tokenized at the point of capture; the warehouse holds the token, not the value.
+
+ACCESS RESTRICTION
+Confidential columns are exposed through role CRM_ODS_STD. Highly Restricted columns require role CRM_ODS_FIN, granted individually and recertified each January and July. Extraction of Highly Restricted columns to a flat file is blocked by database policy; requests requiring such data are routed to the Secure Reporting queue.
+
+RETENTION
+Contact rows are retained while any associated policy is in force and for seven years after final disposition of the last policy or claim, whichever is later. Bank tokens are revoked immediately upon cancellation of the electronic funds transfer authorization.
+
+DOWNSTREAM EXTRACTS
+Four scheduled extracts consume this object: the billing print vendor file, the renewal notice file, the agent book-of-business file, and the annual statutory data call support file. The agent file carries name and mailing address only. No extract carries TAX_ID_NBR, BANK_ACCT_NBR, or BANK_RTG_NBR without a documented exception recorded in the Exception Register.

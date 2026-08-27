@@ -1,0 +1,36 @@
+MEMORANDUM
+
+TO:      Operations Manager; Compliance Officer
+FROM:    Data Administration Unit
+DATE:    June 2, 2011
+SUBJECT: Dictionary excerpt — SHARE_ACCT and SHARE_JT_OWNR
+
+Issued for the quarterly governance review. Definitions below are authoritative as of core release 2011.2.
+
+1. SHARE_ACCT_ID — NUMBER(12), NOT NULL. Surrogate key. No business meaning; do not print on member-facing output.
+
+2. MBR_NBR — NUMBER(10), NOT NULL. Foreign key to MEMBER_MASTER. Cascade delete disabled; closures are logical only.
+
+3. SHARE_TYP_CD — CHAR(4), NOT NULL. Regular share, share draft, money market, certificate. Validated against REF_SHARE_TYP.
+
+4. ACCT_NBR_ENCR — VARBINARY, NOT NULL. Encrypted. Application layer renders last four positions only. Full-value retrieval is logged and reviewed monthly by the Security Officer.
+
+5. ACCT_NBR_TOKEN — VARCHAR2(16), NOT NULL. Non-reversible token. This is the only account identifier permitted in extracts, reports, and vendor files.
+
+6. CUR_BAL — NUMBER(15,2), NOT NULL. Posted balance at last end-of-day. Not real time.
+
+7. AVAIL_BAL — NUMBER(15,2), NOT NULL. Net of holds.
+
+8. OPEN_DT — DATE, NOT NULL.
+
+9. LAST_ACTVY_DT — DATE, NULL permitted. Feeds the dormancy and escheatment queues.
+
+10. DORMANT_FLG — CHAR(1), NOT NULL, default N.
+
+11. ESCHEAT_STATE_CD — CHAR(2), NULL permitted. Populated by the abandoned-property job.
+
+SHARE_JT_OWNR carries JT_OWNR_LAST_NM, JT_OWNR_FIRST_NM, JT_OWNR_TAX_ID_NBR, JT_OWNR_BIRTH_DT, JT_OWNR_RELN_CD and JT_OWNR_ADDED_DT. All five identity columns are classified Restricted. Read access is limited to the member service, lending and BSA roles. The columns are excluded from the marketing extract by view definition, not by report filter; branch staff are reminded that ad hoc query tools do not enforce the exclusion.
+
+RETENTION. Account rows are retained five years following closure, consistent with the Bank Secrecy Act recordkeeping schedule. Certificate history is retained seven years. Joint-owner identity columns purge on the same cycle as the parent account.
+
+EXTRACTS. Three consumers are approved: the nightly warehouse load, the monthly statement print file, and the quarterly Metro 2 credit reporting build. Each is documented in the extract register. No new consumer is to be enabled without a completed data request form.

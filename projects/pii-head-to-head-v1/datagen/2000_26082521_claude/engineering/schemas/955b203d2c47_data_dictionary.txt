@@ -1,0 +1,72 @@
+COUNTY HEALTH DEPARTMENT
+INFORMATION SERVICES DIVISION — DATA DICTIONARY EXCERPT
+
+SECTION A — DOCUMENT CONTROL
+Document ID ............ DD-CHS-004
+Revision ............... 3.2
+Effective .............. 2011-04-01 (supersedes Rev. 3.1, 2010-09-15)
+Prepared by ............ Data Steward, Community Health Services
+Concurrence ............ Records Custodian; HIPAA Privacy Officer
+Next review ............ 2012-04-01
+
+SECTION B — SYSTEM AND TABLE IDENTIFICATION
+Application ............ Community Health Client Registry (CHCR)
+Platform ............... Microsoft SQL Server 2005 SP4, Standard Edition
+Database / schema ...... CHCR_PROD / dbo
+Table .................. CLIENT_MASTER
+Primary key ............ CLIENT_SK (IDENTITY, surrogate)
+Maintenance ............ Clinic front-end forms; nightly address hygiene batch
+
+SECTION C — COLUMN INVENTORY
+Column name            Type           Null  Operational note
+CLIENT_SK              INT            N     Surrogate key; never exported outside CHCR.
+MEMBER_NUM             VARCHAR(12)    N     Program-assigned; masked in all report headers.
+CLIENT_ID_LEGACY       CHAR(9)        Y     Crosswalk to retired case system; read-only.
+LAST_NAME              VARCHAR(40)    N     Trimmed, upper-cased on insert.
+FIRST_NAME             VARCHAR(30)    N     Trimmed, upper-cased on insert.
+MIDDLE_INIT            CHAR(1)        Y     Single character; periods stripped.
+NAME_SUFFIX            VARCHAR(5)     Y     Domain table SUFFIX_REF.
+DOB                    DATETIME       N     Time portion stored as midnight.
+SSN                    CHAR(9)        Y     Digits only; optional collection per intake policy.
+GENDER_CD              CHAR(1)        N     Domain M / F / U.
+ADDR_LINE_1            VARCHAR(50)    N     Standardized by CASS batch.
+ADDR_LINE_2            VARCHAR(50)    Y     Unit or apartment designator.
+CITY                   VARCHAR(30)    N     Standardized by CASS batch.
+STATE_CD               CHAR(2)        N     USPS abbreviation.
+ZIP5                   CHAR(5)        N     Drives service-area assignment.
+ZIP4                   CHAR(4)        Y     Populated by hygiene batch only.
+PHONE_HOME             CHAR(10)       Y     Digits only; no formatting characters.
+PHONE_MOBILE           CHAR(10)       Y     Added Rev. 3.0; used for appointment reminders.
+EMAIL_ADDR             VARCHAR(60)    Y     Optional; suppressed if CONSENT_CONTACT_FLG = N.
+MEDICAID_ID            VARCHAR(13)    Y     Validated against monthly eligibility file.
+RACE_CD                CHAR(2)        Y     OMB rollup applied at reporting layer.
+ETHNICITY_CD           CHAR(2)        Y     OMB rollup applied at reporting layer.
+LANG_PREF_CD           CHAR(3)        Y     Drives interpreter scheduling flag.
+HOUSEHOLD_SK           INT            Y     Foreign key to HOUSEHOLD_MASTER.
+CONSENT_CONTACT_FLG    CHAR(1)        N     Default N; set at intake only.
+REC_STATUS_CD          CHAR(1)        N     A active, I inactive, M merged.
+CREATED_DTM            DATETIME       N     Server time, non-updatable.
+UPDATED_BY_USER_ID     VARCHAR(15)    N     Network account of last writer.
+
+SECTION D — ACCESS RESTRICTION
+Direct table SELECT is granted to the Application DBA and to the CHCR service
+account only. Clinical staff reach the table through view V_CLIENT_LOOKUP, which
+omits SSN and MEDICAID_ID. Requests for the unmasked columns are routed to the
+Records Custodian and require written supervisor justification, retained for the
+life of the account. Column-level reads are logged to AUDIT_COLUMN_ACCESS.
+
+SECTION E — RETENTION
+Rows are retained seven years past the last documented service encounter. For
+clients served as minors, retention runs seven years past the eighteenth
+birthday. Purge is executed annually by the Application DBA against the Records
+Custodian's approved disposition list; merged rows are retained as tombstones.
+
+SECTION F — DOWNSTREAM EXTRACTS
+1. Nightly ETL to CHD_WAREHOUSE. Name, address, phone, email, and SSN columns are
+   dropped at the staging step; MEMBER_NUM is replaced by a hashed key.
+2. Quarterly epidemiology extract. County-level counts by ZIP5, age band derived
+   from DOB, RACE_CD, and ETHNICITY_CD. No direct identifiers.
+3. State registry upload, HL7 2.3.1, weekly. Transmitted via secure FTP under the
+   data use agreement on file with the Records Custodian.
+4. Ad hoc extracts require a completed Data Release Request and are logged in the
+   extract register maintained by the Data Steward.

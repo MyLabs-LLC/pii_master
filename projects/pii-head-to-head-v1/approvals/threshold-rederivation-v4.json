@@ -1,0 +1,36 @@
+{
+  "approved_at": "2026-08-27T00:52:41.991664+00:00",
+  "approved_by": "user",
+  "plan": {
+    "budget": {
+      "max_trials": 1,
+      "note": "one deterministic re-selection, no search"
+    },
+    "editable_surfaces": [
+      "training/h2h_thresholds_v4.py",
+      "training/h2h_score_bundle.py",
+      "projects/pii-head-to-head-v1/models/cascade_v4/",
+      "projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v4/",
+      "projects/pii-head-to-head-v1/evaluations/",
+      "projects/pii-head-to-head-v1/decision/",
+      "projects/pii-head-to-head-v1/reports/"
+    ],
+    "forbidden_surfaces": [
+      "training/h2h_eval.py",
+      "training/quiet_select.py",
+      "projects/pii-head-to-head-v1/suite.yaml",
+      "projects/pii-head-to-head-v1/policy.yaml",
+      "projects/pii-head-to-head-v1/policy_precision_view.yaml",
+      "/home/lence/workspace/data/2-eval"
+    ],
+    "modules": [
+      "eval",
+      "tune"
+    ],
+    "operation": "threshold-rederivation-and-eval",
+    "project": "projects/pii-head-to-head-v1",
+    "promotion": "none - no arm is expected to clear the declared gates",
+    "target": "re-derive tag thresholds 44/51 on the TRAINING calibration carve (quiet_fit.carve_holdin), never on data/2-eval; emit v4; score v3 and v4 on the eight sealed corpora under the unchanged evaluator and policies"
+  },
+  "plan_sha256": "3ff2241f08da89c4d70d3ad33f530c99a1d51720998858643da2dd8542a84f7e"
+}

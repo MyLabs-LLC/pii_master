@@ -1,0 +1,41 @@
+# pmx-etl/conf/masking/policy_prod.yaml — revision 9
+# committed 2021-04-05T00:41:12Z by the Data Protection Engineering on-call rotation
+# consumed by jobs PMX-ETL-PROD-*, PMX-ETL-STAGE-*; hot reload prohibited
+
+policy:
+  version: 9
+  fail_mode: closed          # per clause 5.1 of 010_patient_core.rules
+  default_disposition: SUPPRESS
+
+  tiers:
+    T1_direct:
+      fields: [patient_first_name, patient_last_name, ssn_full, ssn_last4,
+               payment_card_pan, addr_line_1, addr_line_2, email_address]
+      permitted_dispositions: [TOKENIZE, DROP, SUPPRESS]
+    T2_indirect:
+      fields: [patient_dob, zip5, phone_home, phone_mobile, member_id,
+               rx_number, prescriber_npi, loyalty_account_number]
+      permitted_dispositions: [TOKENIZE, MASK, GENERALIZE, SUPPRESS]
+    T3_open:
+      fields: [gender_code, state_code, ndc_code, bin_number, pcn_code,
+               fill_date, days_supply, store_number]
+      permitted_dispositions: [PASS]
+
+  masks:
+    phone_home:              "(***) ***-****"
+    phone_mobile:            "(***) ***-****"
+    email_address:           "****@****.***"
+    insurance_group_number:  "****"
+    zip5:                    "###**"
+    ssn_last4:               "[NULL-BY-POLICY]"
+
+  tokenization:
+    vaults: [pii-v2, mbr-v1, rx-v3, npi-v1, loy-v1]
+    surrogate_form: "<TKN>"
+    reversible: false
+    keyring_rotation_days: 180
+
+  logging:
+    emit_values: false       # non-waivable; any true value fails validation at load
+    emit_field_names: true
+    emit_row_counts: true

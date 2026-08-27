@@ -1,0 +1,75 @@
+DATA DICTIONARY EXCERPT — MEMBER MASTER SUBJECT AREA
+SCHEMA PHRMCY_MBR . TABLE MBR_MASTER . RX HOST RELEASE 7.2
+ISSUED BY DATA ADMINISTRATION . CUSTODY: THE RECORDS CUSTODIAN
+
+1. SCOPE AND APPLICATION
+   1.1 This excerpt describes the member master table of the loyalty and
+       pharmacy profile database as installed at Release 7.2. It is issued
+       for the use of application development, store systems support, and
+       the Data Administration group.
+   1.2 The excerpt is limited to the columns inventoried at clause 3.
+       Transaction and fill history tables are documented separately in
+       the Rx Host Data Dictionary, Volume II.
+
+2. CLASSIFICATION AND ACCESS
+   2.1 Columns bearing the note "Restricted" carry Class 2 handling under
+       the Information Handling Standard. Class 2 columns shall not be
+       selected into the ad hoc query tool, spooled to a departmental
+       printer, or copied to any workstation-resident file.
+   2.2 Access is granted by role, not by individual grant. The roles
+       PHRM_RPH, PHRM_TECH, and PHRM_CSR carry differing column masks;
+       the mask matrix is held by the Records Custodian.
+   2.3 Exception access is requested in writing and expires at 90 days.
+
+3. COLUMN INVENTORY
+
++----------------------+---------------+------+------------------------------------------+
+| COLUMN NAME          | DATA TYPE     | NULL | OPERATIONAL NOTE                         |
++----------------------+---------------+------+------------------------------------------+
+| MBR_ID               | NUMBER(12)    | NO   | Surrogate key. Assigned by Rx host.      |
+| LOYALTY_CARD_NBR     | CHAR(16)      | NO   | Unique index. Reissue writes new row.    |
+| MBR_LAST_NAM         | VARCHAR2(30)  | NO   | Restricted. Role PHRM_CSR and above.     |
+| MBR_FRST_NAM         | VARCHAR2(30)  | NO   | Restricted. Role PHRM_CSR and above.     |
+| MBR_MID_INIT         | CHAR(1)       | YES  | Optional at point of enrolment.          |
+| MBR_DOB              | DATE          | NO   | Restricted. Age check only via view.     |
+| MBR_GNDR_CD          | CHAR(1)       | YES  | Clinical edit checks. Coded domain.      |
+| ADDR_LINE_1          | VARCHAR2(40)  | YES  | Restricted. Excluded from Extract B.     |
+| ADDR_LINE_2          | VARCHAR2(40)  | YES  | Restricted. Excluded from Extract B.     |
+| CITY_NAM             | VARCHAR2(20)  | YES  | Released to Extract B in aggregate.      |
+| ST_CD                | CHAR(2)       | YES  | Released to Extract B in aggregate.      |
+| POSTAL_CD            | CHAR(9)       | YES  | First five released; +4 restricted.      |
+| HOME_PHN_NBR         | CHAR(10)      | YES  | Restricted. Refill IVR use only.         |
+| EMAIL_ADDR           | VARCHAR2(60)  | YES  | Restricted. Suppressed on opt-out.       |
+| SSN_NBR              | CHAR(9)       | YES  | Deprecated 2003. No new writes.          |
+| THRD_PTY_PLAN_CD     | CHAR(6)       | YES  | Coded. Joins to PLAN_XREF on plan cd.    |
+| NPP_ACK_DT           | DATE          | YES  | Privacy notice acknowledgement date.     |
+| MKTG_OPT_IN_FLG      | CHAR(1)       | NO   | Governs Extract C eligibility.           |
+| LAST_MAINT_USER_ID   | VARCHAR2(8)   | NO   | Operator id. Audit trail retention.      |
+| PURGE_ELIG_DT        | DATE          | YES  | Derived. Drives archive selection.       |
++----------------------+---------------+------+------------------------------------------+
+
+4. RETENTION
+   4.1 Loyalty rows are retained 24 months from the last qualifying
+       purchase, after which the row is archived to tape and the master
+       row reduced to key, store, and status columns.
+   4.2 Rows carrying a pharmacy profile linkage are held to the longer of
+       the state board of pharmacy minimum or ten years, and are exempt
+       from the clause 4.1 reduction.
+   4.3 PURGE_ELIG_DT is derived nightly by the retention job. It is not
+       maintainable from any store or office terminal.
+   4.4 SSN_NBR is under overwrite remediation. The column is scheduled
+       for drop at Release 7.4 and must not be referenced in new code.
+
+5. DOWNSTREAM EXTRACTS
+   5.1 Extract A, nightly to the warehouse, carries no Restricted column.
+   5.2 Extract B, quarterly to the co-op mailing bureau, carries the
+       geography columns only and is produced under a signed handling
+       undertaking held by the Records Custodian.
+   5.3 Extract C is drawn only where MKTG_OPT_IN_FLG carries an
+       affirmative value at the time of extraction.
+   5.4 No extract of any class carries clinical or allergy columns.
+
+6. MAINTENANCE
+   6.1 Amendment is by change control ticket against the Rx host schema.
+   6.2 This excerpt is reviewed semi-annually by the Records Custodian
+       jointly with the Pharmacy Systems Manager.

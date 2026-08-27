@@ -1,0 +1,16 @@
+{
+  "candidate": "t0-c14",
+  "stage": "validate",
+  "proposal": "Semantics-preserving finalist optimization: extract hashed document features once and share them across hash/TF-IDF/EmbeddingBag fusion heads; make ZIP/XML reads honor requested read depth; collapse the exact document bootstrap into equivalent TP/FN/other multinomial draws.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "d612e94",
+  "commit": "9931b6f",
+  "decision": "accepted",
+  "evidence": {
+    "focused_tests": "20 passed",
+    "ruff": "passed",
+    "prediction_semantics": "shared-feature predictions tested equal to component predictions",
+    "read_depths_chars": [1000, 2500, 10000, 20000],
+    "bootstrap_distribution": "exact multinomial collapse of document resampling"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "candidate": "t0-c16",
+  "stage": "validate",
+  "proposal": "Materialize the evidence-selected hybrid_priority trial 63 with an immutable 1,000-character read window. Preserve nested components and strategies; only the benchmarked serving read limit changes.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "7fff28b",
+  "commit": "6523f28",
+  "decision": "accepted_as_champion_candidate",
+  "evidence": {
+    "tests": "4 passed",
+    "ruff": "passed",
+    "source_family": "hybrid_priority",
+    "source_trial": 63,
+    "read_window_chars": 1000,
+    "holdout_priority_point_passes": 55,
+    "holdout_worst_priority_recall": 0.9887766554433222,
+    "equal_corpus_macro_f2": 0.48345749382010117,
+    "one_core_p95_ms": 2.2000838999999996
+  }
+}

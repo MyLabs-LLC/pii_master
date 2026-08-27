@@ -1,0 +1,70 @@
+OFFICE OF THE UNIVERSITY REGISTRAR
+DATA DICTIONARY EXCERPT — MEMBER DIRECTORY VIEW
+Form RMU-7 | Review cycle: annual | Current review closed 2016-09-30
+
+1.0  OBJECT
+     1.1  View name ......... STUDENT.V_MEMBER_DIRECTORY
+     1.2  Base tables ....... MEMBER_MASTER, MEMBER_ENROLLMENT, MEMBER_ADDRESS
+     1.3  Refresh ........... Materialized, rebuilt nightly at 02:15
+     1.4  Steward ........... Associate Registrar for Records
+     1.5  Custodian ......... the Records Custodian
+
+2.0  COLUMN LIST
+
+     COLUMN                 TYPE           NULL   NOTE
+     ---------------------  -------------  -----  --------------------------
+     MEMBER_KEY             NUMBER(10)     NO     Join key only.
+     DISPLAY_NAME           VARCHAR2(120)  NO     Concatenation of chosen or
+                                                  legal first name and legal
+                                                  last name.
+     CAMPUS_EMAIL           VARCHAR2(128)  NO     Directory item.
+     PRIMARY_MAJOR_CODE     VARCHAR2(4)    YES    Directory item.
+     CLASS_STANDING_CODE    CHAR(2)        YES    Directory item.
+     ENROLL_STATUS_CODE     CHAR(1)        NO     Full/part-time flag.
+     DEGREE_AWARDED_CODE    VARCHAR2(6)    YES    Populated at conferral.
+     CONFERRAL_TERM         VARCHAR2(6)    YES    Directory item.
+     CAMPUS_LOCATION_CODE   VARCHAR2(4)    YES    Main, regional, or online.
+
+3.0  COLUMNS DELIBERATELY EXCLUDED
+
+     The following base-table columns are not carried into the view and must not
+     be added without a signed change request: SSN_ENCRYPTED, DATE_OF_BIRTH,
+     PERM_ADDR_LINE1 through PERM_ZIP, MAIL_ADDR_LINE1 through MAIL_ZIP,
+     PRIMARY_PHONE, ALT_PHONE, PERSONAL_EMAIL, RESIDENCY_DETERMINATION_CODE,
+     FINANCIAL_HOLD_IND.
+
+4.0  ACCESS RESTRICTION
+
+     4.1  The view is readable by the campus directory application service
+          account and by the registrar staff role.
+     4.2  Rows where FERPA_BLOCK_IND = 'Y' are filtered during the nightly
+          rebuild. The filter is applied in the materialization, so a stale
+          rebuild cannot expose a newly suppressed row; the rebuild is monitored
+          and a failure raises a page to the on-call analyst.
+     4.3  Suppression requests received after the nightly window are applied by
+          manual delete from the materialized view, and the change is recorded
+          on the daily exception sheet.
+
+5.0  RETENTION
+
+     5.1  The view holds currently enrolled members plus members conferred
+          within the prior two terms.
+     5.2  No independent retention obligation attaches to the view; it is
+          rebuilt from the base tables and carries no data of record.
+
+6.0  DOWNSTREAM EXTRACTS
+
+     6.1  Campus directory web application — live query, no copy retained.
+     6.2  Commencement program file — DISPLAY_NAME, DEGREE_AWARDED_CODE,
+          PRIMARY_MAJOR_CODE. Produced once per conferral term and released to
+          the printing vendor after review by the Records Custodian.
+     6.3  Student government election roster — MEMBER_KEY, CAMPUS_EMAIL,
+          CLASS_STANDING_CODE. Released once per academic year under a signed
+          data use agreement.
+     6.4  No extract from this view is permitted to third parties for
+          solicitation purposes.
+
+7.0  CHANGE CONTROL
+     Additions to Section 2.0 require the signature of the Associate Registrar
+     for Records and a security review by Information Security. Removals may be
+     made by the custodian and reported at the next review.

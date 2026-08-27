@@ -1,0 +1,24 @@
+NIGHTLY OPERATIONS CHECKLIST — REGISTRAR DATA WAREHOUSE
+WINDOW 2004-03-15 02:00–05:00 CST / OPERATOR SHIFT: THIRD
+BATCH ID BAT-20040315-N / CONSOLE regetl01
+
+[x] 01:55 — Confirm prior-day backup of REGPROD completed. RMAN job 4471, status COMPLETE.
+[x] 01:58 — Verify masking profile DMSK-0417 loaded and checksum matched. Bind count 19.
+[x] 02:00 — Release wf_reg_stu_dim_ld. Run ID 20040315-0421.
+[x] 02:32 — Record student dimension counts: read 48,213 / written 47,006 / inserted 6,140 / updated 40,633 / rejected 233.
+[x] 02:35 — Release wf_reg_enrl_fact_ld. Run ID 20040315-0422.
+[x] 03:41 — Record enrollment fact counts: read 312,554 / written 311,904 / rejected 650.
+       [x] Rejects by class: FK_MISS on STU_KEY_HASH 402; DOMAIN on GRADE_MODE_CD 141; NOT_NULL on SECTION_CRN 107.
+       [x] Reject file /u01/app/etl/rej/enrl_fact_20040315.bad written, value columns suppressed.
+[x] 03:45 — Release wf_reg_awd_fact_ld. Run ID 20040315-0423.
+[ ] 04:12 — Financial aid award load ABORTED. Session s_m_AWD_FACT_LOAD, error ORA-01652 unable to extend temp segment in tablespace TEMP01. Rows read 88,410 / written 0.
+       [x] Paged the on-call DBA at 04:14. Ticket OPS-11907 opened.
+       [ ] Restart pending tablespace extension. Restart point: session level, no partial commit present.
+[x] 04:20 — Release wf_reg_addr_dim_ld (masked address roll-up). Run ID 20040315-0424.
+[x] 04:38 — Record address dimension counts: read 47,006 / written 47,006 / rejected 0. Columns loaded: STU_KEY_HASH, PERM_POSTAL_PFX, PERM_CITY, PERM_STATE_CD, ADDR_TYPE_CD, EFF_DT. Suppressed at reader: PERM_ADDR_LINE_1, PERM_ADDR_LINE_2, MAIL_ADDR_LINE_1, MAIL_ADDR_LINE_2.
+[x] 04:41 — Token vault reconciliation JOB-TKV-0088 executed. Unmatched tokens 14, all queued for next-cycle issue. Vault TKV_NAME rows 214,882; vault TKV_ADDR rows 213,551.
+[x] 04:47 — Verify no unmasked column present in staging DDL. Audit script chk_mask_ddl.sh returned 0 findings across 11 staging tables.
+[x] 04:52 — Verify reject directory permissions 0640, owner etlprod, group regops.
+[x] 04:55 — Archive session logs to /u01/app/etl/log/arch/20040315/. Log volume 41 MB, 9 files.
+[ ] 05:00 — Batch close deferred. BAT-20040315-N held OPEN pending award load restart.
+[ ] Hand-off note for first shift: award fact load outstanding; downstream report REG-114 and REG-119 will read prior-day award data until reload completes. Notify the Records Custodian and the Financial Aid reporting analyst before 08:00.

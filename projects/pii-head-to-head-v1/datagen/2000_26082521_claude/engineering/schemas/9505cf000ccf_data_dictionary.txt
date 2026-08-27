@@ -1,0 +1,34 @@
+DATA DICTIONARY EXCERPT — PROD_ESCROW.TBL_PARTY_CONTACT
+Issued by the Data Governance Office. Applies to production and to the reporting replica.
+
+1. Purpose. TBL_PARTY_CONTACT holds repeating contact points for a party. One row per contact point. The table is child to TBL_PARTY_MASTER by PARTY_ID.
+
+2. Column register.
+
+  COLUMN                  TYPE            NULL   NOTE
+  CONTACT_ID              NUMBER(12)      NO     Surrogate key.
+  PARTY_ID                NUMBER(12)      NO     FK to TBL_PARTY_MASTER.
+  CONTACT_TYPE_CD         CHAR(3)         NO     HPH, MPH, WPH, EML, FAX, MAL.
+  CONTACT_VALUE           VARCHAR2(160)   NO     Format governed by CONTACT_TYPE_CD.
+  MAIL_ADDR_LINE_1        VARCHAR2(80)    YES    Populated for MAL rows only.
+  MAIL_ADDR_LINE_2        VARCHAR2(80)    YES
+  MAIL_CITY               VARCHAR2(40)    YES
+  MAIL_STATE_CD           CHAR(2)         YES
+  MAIL_POSTAL_CD          VARCHAR2(10)    YES
+  PREFERRED_IND           CHAR(1)         NO     Y/N. One Y per CONTACT_TYPE_CD.
+  DO_NOT_CONTACT_IND      CHAR(1)         NO     Y/N. Default N.
+  VERIFIED_BY_USER_ID     VARCHAR2(20)    YES    Network identifier of verifier.
+  VERIFIED_TS             TIMESTAMP(6)    YES
+  SOURCE_SYSTEM_CD        CHAR(4)         NO     ORD, PRT, IMP, MAN.
+  REC_STATUS_CD           CHAR(1)         NO     A/I/P.
+
+3. Operational notes.
+3.1 CONTACT_VALUE is the only column holding the contact point itself; the discrete mailing columns are retained solely for legacy address parsing and are frozen to new development.
+3.2 Rows sourced IMP originate from lender or exchange imports and are not authoritative until VERIFIED_TS is set.
+3.3 Wire instruction confirmation must not rely on a row where SOURCE_SYSTEM_CD equals EML or IMP. Confirmation procedure is stated in the wire policy and is not repeated here.
+
+4. Access restriction. The table is not granted to reporting roles. Access is by view: VW_PARTY_CONTACT_OPS returns rows for open files only; VW_PARTY_CONTACT_MKTG returns CONTACT_TYPE_CD EML and MAL where DO_NOT_CONTACT_IND is N. Direct table grants require written approval of the Records Custodian.
+
+5. Retention. Contact rows follow the retention of the parent party record. Rows carrying DO_NOT_CONTACT_IND equal to Y are exempt from purge and are retained indefinitely as suppression evidence.
+
+6. Downstream extracts. Two standing extracts exist: the escrow disbursement notice feed, restricted to MAL rows, and the post-closing satisfaction feed, restricted to EML rows and suppressed per clause 4. Ad hoc extracts expire ninety days from approval.

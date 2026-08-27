@@ -1,0 +1,66 @@
+ASHGROVE COUNTY HEALTH DEPARTMENT
+Office of Health Informatics — Data Governance Unit
+FILE: /etc/achd/dmp/masking-policy.conf
+REVISION 14 — effective 2021-03-01T00:00:00-06:00
+OWNER: the Records Custodian. CONCURRENCE: the Privacy Officer.
+
+1. SCOPE
+   1.1 Binds every extract crossing the ODS boundary.
+   1.2 Binds all non-production schema refreshes. No standing exemptions.
+   1.3 Exemption petitions route to the Privacy Officer. Open count: 0.
+
+2. CLASSIFICATION TIERS
+   2.1 TIER-A — SUPPRESS (column dropped at projection; not written to target)
+       2.1.1 ssn
+       2.1.2 ssn_last4
+       2.1.3 drivers_license_no
+       2.1.4 medicaid_case_no
+       2.1.5 payer_subscriber_id
+   2.2 TIER-B — TOKENISE (deterministic, salted per program, salt rotated annually)
+       2.2.1 patient_mrn            -> tkn_patient_mrn
+       2.2.2 client_id              -> tkn_client_id
+       2.2.3 elr_specimen_accession -> tkn_specimen
+       2.2.4 household_id           -> tkn_household
+       2.2.5 provider_npi           -> retained in clear (Tier-D, see 2.4)
+   2.3 TIER-C — MASK IN PLACE (format preserved, characters replaced)
+       2.3.1 patient_last_name      -> "**********"
+       2.3.2 patient_first_name     -> "**********"
+       2.3.3 patient_middle_initial -> "*"
+       2.3.4 guardian_name          -> "**********"
+       2.3.5 street_address_1       -> "«masked»"
+       2.3.6 street_address_2       -> "«masked»"
+       2.3.7 primary_phone          -> "***-***-****"
+       2.3.8 secondary_phone        -> "***-***-****"
+       2.3.9 email_address          -> "«masked»"
+       2.3.10 date_of_birth         -> generalised to birth_year_quinquennium
+       2.3.11 date_of_death         -> generalised to death_month
+   2.4 TIER-D — RETAIN
+       2.4.1 county_fips, zip3, sex_at_birth, race_code, ethnicity_code
+       2.4.2 provider_npi, facility_clia, reporting_lab_code
+       2.4.3 vaccine_cvx, vaccine_mvx, lot_expiry, dose_number
+       2.4.4 result_loinc, result_snomed, specimen_collect_date
+
+3. ENGINE PARAMETERS
+   3.1 engine = dmp-masker 2.4.7
+   3.2 tokenisation.algo = HMAC-SHA256, truncated 16 hex
+   3.3 tokenisation.vault = achd-tokvault-prod, HA pair
+   3.4 salt.rotation = annual, 0100 CST, 01 January
+   3.5 fail_mode = HARD_STOP. Partial writes prohibited.
+   3.6 zip3 collapse: any zip3 population under 20,000 folds to "000"
+
+4. ENFORCEMENT
+   4.1 Any target column not enumerated in Sections 2.1–2.4 is denied at bind time.
+   4.2 Denial emits event MASK-DENY-UNMAPPED to the audit stream.
+   4.3 Unmapped-column denials, rolling 30 days: 6.
+   4.4 Overrides recorded in the masking exception register. Entries: 0.
+
+5. VERIFICATION
+   5.1 Post-run scan samples 2,000 rows per target table.
+   5.2 Scan asserts null-or-placeholder on all Tier-A and Tier-C columns.
+   5.3 Last scan 2021-02-26T23:41:09-06:00. Tables scanned 11. Findings 0.
+   5.4 Next scheduled scan 2021-03-05T23:30:00-06:00.
+
+6. REVISION NOTE
+   6.1 Added guardian_name to Tier-C at request of the WIC Program Manager.
+   6.2 Moved birth_date handling from mask to generalisation per Section 2.3.10.
+   6.3 Prior revision 13 retired 2021-02-28. Retained per schedule GS-7, six years.

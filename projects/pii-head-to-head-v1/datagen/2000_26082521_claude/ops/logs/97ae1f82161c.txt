@@ -1,0 +1,43 @@
+MAPPING RULE REVIEW — ESCROW SUBLEDGER TO REPORTING MART
+Change ref CR-98-2211 | reviewed 1998-11-09 | reviewer: the Data Steward | signoff: the Records Custodian
+
+Section A — Source to target column mapping
+
+  [x] FILE_NO → F_ESCROW.FILE_NO — direct, char(12), key column
+  [x] ORDER_NO → F_ESCROW.ORDER_NO — direct, char(10)
+  [x] POLICY_NO → F_ESCROW.POLICY_NO — direct, char(14), null permitted pre-issue
+  [x] GRANTOR_NAME → D_PARTY.PARTY_TOKEN — tokenise, no clear-text landing zone
+  [x] GRANTEE_NAME → D_PARTY.PARTY_TOKEN — tokenise, same vault namespace
+  [x] BORR_SSN → not mapped — column dropped at stage 3
+  [x] COBORR_SSN → not mapped — column dropped at stage 3
+  [x] SELLER_TIN → not mapped — column dropped at stage 3
+  [x] BORR_DOB → D_PARTY.AGE_BAND_CD — derive band only, source column discarded
+  [x] PROP_ADDR_LINE1 / PROP_ADDR_LINE2 → D_PROPERTY.SITUS_TOKEN — tokenise
+  [x] PROP_CITY / PROP_ST / PROP_ZIP5 → D_PROPERTY, direct — approved for reporting
+  [x] ESCROW_ACCT_NO → F_ESCROW.ACCT_MASK — partial mask, last 0 of 12 retained
+  [x] DISBURSE_ACCT_NO / WIRE_ABA → not mapped
+  [x] PHONE_HM / PHONE_WK / PHONE_FAX / EMAIL_ADDR → not mapped
+  [x] CLOSE_DATE, RECORD_DATE, DISB_DATE → direct, date(8), century-explicit
+
+Section B — Rule conditions carried from the prior release
+
+  [x] tokenisation is deterministic within a vault namespace and across cycles
+  [x] token values are never derived from the underlying field content
+  [x] a dropped column is dropped at extract, not filtered at query time
+  [x] AGE_BAND_CD uses five-year bands; bands under 10 members collapse to OTHER
+  [x] ACCT_MASK width is fixed regardless of source length
+
+Section C — Verification performed
+
+  [x] copybook TEMASTR compared to mart DDL, column by column (68 source, 39 target)
+  [x] ran JOBID ESC0489 against November staging; 214,860 rows, 0 rule exceptions
+  [x] scanned target extents for residual class-P patterns; 0 hits
+  [x] confirmed reject files inherit the same mapping rules
+  [ ] confirm archive tapes cut before 1998-06 are not in scope for this mapping
+  [ ] re-run Section C checks after the county feed schema change lands (target 1999-01)
+
+Section D — Disposition
+
+  [x] approved for promotion to PROD on 1998-11-12, window 01:00–03:00
+  [x] backout: restore MSKPROF.CFG rev 11 and mart DDL snapshot 981031
+  [ ] post-promotion audit extract to be reviewed within five business days

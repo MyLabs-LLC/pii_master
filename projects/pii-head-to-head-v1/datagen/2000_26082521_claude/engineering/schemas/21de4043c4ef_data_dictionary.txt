@@ -1,0 +1,60 @@
+MEMORANDUM
+
+TO:       Enterprise Data Warehouse Team; Application Development — Loyalty; Pharmacy Systems Governance; Vendor Management
+FROM:     Office of the Records Custodian
+DATE:     December 6, 2011
+CC:       Office of the Privacy Officer; Internal Audit — Information Systems
+RE:       CUSTOMER_MEMBER Data Dictionary Excerpt; Restatement of Access, Retention, and Extract Conditions Applicable to the 2012 Cycle
+
+PART ONE — SCOPE AND CONSTRUCTION
+
+The excerpt set out in Part Two is furnished in satisfaction of the annual restatement obligation imposed by Article VII of the Information Handling Standard. It describes the physical schema of the CUSTOMER_MEMBER and MEMBER_CONTACT_PREF tables as those tables stand of the date hereof. It does not describe, and shall not be construed to describe, the several store-level operational tables which feed them. In the event of any inconsistency between the notations below and a control imposed by the Privacy Officer, the latter shall govern, and the undersigned shall be notified of the inconsistency forthwith.
+
+PART TWO — COLUMN INVENTORY
+
+CUSTOMER_MEMBER
+
+COLUMN NAME              | TYPE          | NULL | CLASS | OPERATIONAL NOTE
+-------------------------|---------------|------|-------|--------------------------------------------------
+MEMBER_SK                | NUMBER(12)    | NO   | U     | Surrogate key; never reused after purge.
+MEMBER_CARD_ALIAS        | VARCHAR2(24)  | NO   | R2    | Tokenized reference; underlying value not stored here.
+HOUSEHOLD_SK             | NUMBER(12)    | YES  | U     | Reassigned by quarterly householding run.
+SURNAME                  | VARCHAR2(40)  | NO   | R1    | Excluded from all datamart views.
+GIVEN_NAME               | VARCHAR2(40)  | NO   | R1    | Excluded from all datamart views.
+MIDDLE_INITIAL           | CHAR(1)       | YES  | R1    | Populated inconsistently across acquisition sources.
+BIRTH_DATE               | DATE          | YES  | R0    | Required where PHARMACY_LINK_IND is set.
+GENDER_CD                | CHAR(1)       | YES  | U     | Self-reported; unvalidated; not to be used for eligibility.
+ADDRESS_LINE_1           | VARCHAR2(60)  | YES  | R1    | Overwritten by hygiene job; no version history retained.
+ADDRESS_LINE_2           | VARCHAR2(60)  | YES  | R1    | As above.
+CITY_NAME                | VARCHAR2(40)  | YES  | R1    | As above.
+STATE_CD                 | CHAR(2)       | YES  | U     | Validated against CODE_XREF.
+POSTAL_CD                | VARCHAR2(10)  | YES  | R2    | Truncated to five positions on all extracts.
+PRIMARY_PHONE_NBR        | VARCHAR2(20)  | YES  | R0    | Suppression file applied before any outbound use.
+ALTERNATE_PHONE_NBR      | VARCHAR2(20)  | YES  | R0    | As above.
+EMAIL_ADDR               | VARCHAR2(120) | YES  | R0    | Extract conditioned on affirmative consent.
+ENROLL_DT                | DATE          | NO   | U     | Basis of the seven-year retention floor.
+LAST_ACTIVITY_DT         | DATE          | YES  | U     | Basis of dormancy computation.
+PHARMACY_LINK_IND        | CHAR(1)       | NO   | U     | Where set, row is excluded from marketing extracts.
+MEMBER_STATUS_CD         | CHAR(2)       | NO   | U     | AC, IN, SU, PU.
+
+MEMBER_CONTACT_PREF
+
+COLUMN NAME              | TYPE          | NULL | CLASS | OPERATIONAL NOTE
+-------------------------|---------------|------|-------|--------------------------------------------------
+MEMBER_SK                | NUMBER(12)    | NO   | U     | Foreign key to CUSTOMER_MEMBER.
+CHANNEL_CD               | CHAR(3)       | NO   | U     | MAI, EML, SMS, TEL.
+CONSENT_IND              | CHAR(1)       | NO   | U     | Null or absent in feed resolves to refusal.
+CONSENT_SOURCE_CD        | VARCHAR2(8)   | NO   | U     | Evidentiary basis; retained independently of the row.
+CONSENT_EFF_TS           | TIMESTAMP     | NO   | U     | Immutable once written; supersession by insert only.
+
+PART THREE — ACCESS RESTRICTION
+
+Class R0 columns are readable solely by the roles PHARM_OPS_READ and CRM_PII_READ, and solely from within the corporate or store network. Class R1 columns are additionally readable by fulfillment operations for the limited purpose of order dispatch. Class R2 columns are readable by analytics personnel in the aggregate. Class U columns are unrestricted within the enterprise. Grants are reviewed quarterly by Internal Audit — Information Systems and lapse automatically upon transfer or separation of the grantee.
+
+PART FOUR — RETENTION
+
+Rows not bearing PHARMACY_LINK_IND are purge-eligible thirty-six (36) months after LAST_ACTIVITY_DT, subject to a floor of seven (7) years from ENROLL_DT. Rows bearing that indicator are governed exclusively by the applicable state board of pharmacy schedule and are not subject to the loyalty purge under any circumstance whatsoever. Purge is effected by overwrite of all R0 and R1 columns; the residual row is preserved for aggregate reporting.
+
+PART FIVE — DOWNSTREAM EXTRACTS
+
+The nightly datamart file, the weekly circular-targeting file, and the monthly reconciliation file carry no column of class R0 or R1. The vendor file carries MEMBER_CARD_ALIAS, STATE_CD, and truncated POSTAL_CD only. Any variation requires prior written approval of the Privacy Officer, an executed handling addendum with the receiving party, and notice to the undersigned not less than ten (10) business days before the affected cycle.

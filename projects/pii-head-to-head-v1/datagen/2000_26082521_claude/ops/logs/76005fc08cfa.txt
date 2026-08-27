@@ -1,0 +1,60 @@
+BLUE RIDGE CONSOLIDATED SCHOOL DISTRICT
+VALIDATION EXCEPTION REGISTER — ETLSTU10
+JOB ID: ETLSTU10.19981012.0233        RUN DATE: 12-OCT-1998
+OPERATOR SHIFT: THIRD                 REGISTER PRINTED: 12-OCT-1998 04:11:52
+
+1.   RUN IDENTIFICATION
+
+1.1  Job stream ETLSTU10 initiated 12-OCT-1998 02:33:07 by the overnight scheduler under class B.
+1.2  Rule set in force: MRS-0417 Revision 4.
+1.3  Records read from SISPROD.STUDENT.MASTER: 41,207.
+1.4  Records passed to write: 40,988.
+1.5  Records held in the exception file SISWRK.EXCP.PUPACCT: 219.
+
+2.   EXCEPTION SUMMARY BY CONDITION
+
+     COND   FIELD LABEL             SEVERITY  COUNT
+     V101   DATE_OF_BIRTH           E             34
+     V102   GENDER_CODE             E              6
+     V103   RACE_ETHNIC_CODE        E             11
+     V104   STU_STATE_ID            W             77
+     V105   GRADE_LEVEL             E             19
+     V106   WITHDRAW_CODE           E              8
+     V107   ATT_DAYS_ABSENT         E             41
+     V108   FRPL_ELIG_CODE          W             12
+     V109   BUILDING_CODE           E              3
+     V110   RESIDENCE_ZIP           W              8
+                                    TOTAL        219
+
+3.   CONDITION DEFINITIONS AND DISPOSITION
+
+3.1  V101 — DATE_OF_BIRTH failed windowing under rule R03. The two-digit year component resolved outside the permitted enrolment age band. Disposition: hold; refer to the attendance centre clerk for source correction. Values are not reproduced in this register.
+
+3.2  V102 — GENDER_CODE absent from CODES.MASTER domain. Disposition: hold.
+
+3.3  V103 — RACE_ETHNIC_CODE absent from CODES.MASTER domain. Eight of the eleven exceptions carry a low-value byte in the source field. Disposition: hold.
+
+3.4  V104 — STU_STATE_ID unpopulated at read. Substitution performed under rule R01; assigned tokens are recorded in the vault only. Disposition: warn and continue.
+
+3.5  V105 — GRADE_LEVEL inconsistent with BUILDING_CODE grade span. Disposition: hold.
+
+3.6  V106 — WITHDRAW_CODE present while ENROLL_DATE indicates active status. Disposition: hold.
+
+3.7  V107 — ATT_DAYS_ABSENT exceeds the enrolled day count for the reporting period under rule R08. Disposition: hold.
+
+3.8  V108 — FRPL_ELIG_CODE unreadable in the source byte. Disposition: warn; the target position is written as space.
+
+3.9  V109 — BUILDING_CODE not found in the facilities table. Disposition: hold.
+
+3.10 V110 — RESIDENCE_ZIP shorter than five positions after truncation under rule R05. Disposition: warn; the target position is written as space.
+
+4.   SUPPRESSED FIELDS
+
+4.1  The suppression list at MRS-0417 clause 5.1 was applied at the SELECT stage. Labels SOC_SEC_NBR, MEDICAID_NBR, HOME_PHONE, EMERG_CONTACT_PHONE, RESIDENCE_STREET_1, GUARDIAN_1_SURNAME and GUARDIAN_1_EMPLOYER were not read and generate no exception conditions.
+4.2  Exception records carry the pupil key in tokenised form only. No suppressed label appears in SISWRK.EXCP.PUPACCT.
+
+5.   ACTION REQUIRED
+
+5.1  The 122 held records shall be corrected at source and resubmitted in the catch-up run scheduled 19-OCT-1998 02:30.
+5.2  Warning conditions require no action prior to transmission.
+5.3  This register is retained by the Records Custodian for the current fiscal year plus three.

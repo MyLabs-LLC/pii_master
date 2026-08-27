@@ -1,0 +1,27 @@
+MEMORANDUM
+
+TO:      Application Support Manager
+FROM:    Records Custodian
+DATE:    06 June 2011
+SUBJECT: Data Dictionary Excerpt — SHARE_ACCT_XREF, ahead of the July release
+
+1. The excerpt below covers only those columns affected by the pending release. The full dictionary entry is unchanged in all other respects.
+
+2. Columns:
+
+   XREF_ID            NUMBER(12)     NOT NULL    Surrogate key.
+   MEMBER_NBR         CHAR(10)       NOT NULL    Restricted display.
+   SHARE_ACCT_NBR     CHAR(14)       NOT NULL    Restricted; masked in all reporting layers.
+   SHARE_SUFFIX       CHAR(4)        NOT NULL    Product suffix, not member-identifying.
+   JOINT_OWNER_NAME   VARCHAR2(40)   NULL        Restricted; new in this release.
+   JOINT_OWNER_SSN    CHAR(9)        NULL        Restricted; encrypted; populated only where the joint owner is not an existing member.
+   BENEFICIARY_NAME   VARCHAR2(40)   NULL        Restricted; free-text, no validation.
+   REL_TYPE_CD        CHAR(2)        NOT NULL    Domain in CODE_TABLE 'RELTY'.
+   REL_EFF_DT         DATE           NOT NULL
+   REL_END_DT         DATE           NULL        Null implies current.
+
+3. Access to JOINT_OWNER_SSN is granted to the member services and compliance roles only. The reporting role must not be granted, and existing report definitions are to be reviewed before the release is promoted.
+
+4. Retention follows the parent share record: seven years from closure. Beneficiary columns are not purged separately.
+
+5. Two extracts require regression testing before promotion: the nightly marketing datamart load and the annual tax reporting file. Both currently select by position rather than by name and will break on the added columns.

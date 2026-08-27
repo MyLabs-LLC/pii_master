@@ -1,0 +1,20 @@
+MEMORANDUM
+
+TO:      Data Warehouse Team
+FROM:    ETL Operations
+DATE:    5 October 2021
+SUBJECT: Mapping rule changes for the statement rendering extract, effective 18 October
+
+The following mapping rules change with the October release. Please review against your downstream queries before the release window. All target columns continue to be written under masking profile mask_member_v4.
+
+1. Field FULL_NAME in CORE_MEMBER_EXTRACT is no longer carried into STMT_RENDER_STAGE. The rendering service now resolves the display name at print time from the token. Any query joining on STMT_RENDER_STAGE.FULL_NAME will return null after 18 October.
+
+2. The pair ADDR_LINE_1 and ADDR_LINE_2 is replaced by a single target column MAILING_ADDR_TOKEN. Mapping rule MAP_ADDR_V2 concatenates the source fields, submits them to the token vault, and writes only the returned reference. The source fields remain suppressed in all extracts.
+
+3. POSTAL_CODE now maps through the partial rule rather than being dropped. The first three characters are written to target column POSTAL_PREFIX. This is the change the branch analytics group requested in August.
+
+4. Field JOINT_OWNER_SSN, previously unmapped, is now bound to the tokenise rule. It was flowing through the unbound-field check and stopping the job. This binding removes the stoppage.
+
+5. Row counts on the extract will not change. The 18 October run should read and write the same volumes as the prior week, roughly 415,000 rows. If your reconciliation shows a variance greater than one percent, treat it as a defect and raise it the same morning.
+
+Job identifiers are unchanged: STMT_RENDER_EXTRACT continues to run at 03:40 with run ids in the form YYYYMMDD-0340. The change is being applied to the development instance on 11 October so the team has a week to test against it.

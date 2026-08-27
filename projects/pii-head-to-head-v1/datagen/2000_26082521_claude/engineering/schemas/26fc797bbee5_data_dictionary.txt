@@ -1,0 +1,27 @@
+TABLE CIS.ASSIST_ENRL — ENERGY ASSISTANCE ENROLLMENT
+Data dictionary excerpt prepared in support of the intergovernmental agreement with the County Community Action Office.
+Classification: Restricted. Custodianship vested in the Records Custodian.
+
+4.1 Key and control columns
+   (a) ENRL_ID — CHAR(10) — NOT NULL — Surrogate key; no intelligence embedded.
+   (b) CUST_ID — CHAR(10) — NOT NULL — Foreign key to CIS.CUST_MSTR; referential integrity enforced by program logic rather than by declared constraint.
+   (c) PROG_YR — SMALLINT — NOT NULL — Four-digit; remediated under the Year 2000 Plan.
+
+4.2 Columns bearing restricted personal data
+   (a) ENRL_SSN_TXT — CHAR(9) — NULLABLE — Furnished by the County under the agreement for matching purposes only. The utility shall not use this column for collection, credit scoring, or any purpose ancillary thereto. Access is limited to the Assistance Coordinator role and to the Records Custodian.
+   (b) ENRL_DOB_DT — DATE — NULLABLE — Populated only where age qualification is claimed.
+   (c) HH_MBR_CNT — SMALLINT — NULLABLE — Household member count; no member-level identifiers are stored in this table or in any child table.
+   (d) INCOME_VERIF_CD — CHAR(2) — NULLABLE — Denotes the class of documentation examined. The documents themselves are not imaged and are not retained by the utility.
+   (e) MAIL_ADDR_LINE_1 — PIC X(30) — NULLABLE — Where the enrollee directs correspondence elsewhere than the service premise.
+
+4.3 Benefit columns
+   (a) PLEDGE_AMT — DECIMAL(9,2) — NOT NULL — Default zero.
+   (b) PLEDGE_POST_DT — DATE — NULLABLE — Null until posting; not to be defaulted to a low date.
+   (c) ARREAR_FORGIV_AMT — DECIMAL(9,2) — NULLABLE.
+
+4.4 Access, retention and extract undertakings
+   (a) Object authority is granted by group profile only. Individual authorities, adopted authorities, and temporary elevations are prohibited and shall be reported as exceptions.
+   (b) Rows shall be retained for three (3) program years and thereafter purged, save where an audit by the County or the State remains open, in which event the purge shall be stayed and the stay documented in writing.
+   (c) One extract only is authorized against this table, namely the County Reconciliation Extract (EXT-CAP-05). That extract shall carry ENRL_ID, CUST_ID, PROG_YR, PLEDGE_AMT and PLEDGE_POST_DT, and shall carry no name column, no SSN_TXT column, and no DOB_DT column.
+   (d) Tape volumes are numbered, logged, and released to the County courier against signature. No transmission by dial-up or by facsimile is authorized.
+   (e) Any request for a further extract shall be submitted in writing to the Records Custodian and shall not be honored by Operations in the absence of countersignature.

@@ -1,0 +1,2437 @@
+[2026-08-25T22:43:32Z] Exit: 0 | Context: data freeze verify | Took: 1.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/quiet_freeze.py verify
+--- Output ---
+data matches the frozen snapshot
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-25T22:51:15Z] Exit: 0 | Context: priority feature cache build (2^17, 3 profiles, 16 corpora) | Took: 379.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_cache.py 30
+--- Output ---
+total rows: 657,560
+total read errors: 16
+cache size: 1.08 GB
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+catalogue: 58 collapsed labels (borrowed from quiet_cache)
+  caching 148775_pii2_train_98.81k ...
+    148775_pii2_train_98.81k: 10/75 chunks
+    148775_pii2_train_98.81k: 20/75 chunks
+    148775_pii2_train_98.81k: 30/75 chunks
+    148775_pii2_train_98.81k: 40/75 chunks
+    148775_pii2_train_98.81k: 50/75 chunks
+    148775_pii2_train_98.81k: 60/75 chunks
+    148775_pii2_train_98.81k: 70/75 chunks
+    148775_pii2_train_98.81k: 75/75 chunks
+    -> 148,775 rows, 61,943,046 nnz@train20k, 38,532,070 nnz@serve1k, 0 read errors, 356 MB
+  caching 151708_openpii_pii_train_151.71k ...
+    151708_openpii_pii_train_151.71k: 10/76 chunks
+    151708_openpii_pii_train_151.71k: 20/76 chunks
+    151708_openpii_pii_train_151.71k: 30/76 chunks
+    151708_openpii_pii_train_151.71k: 40/76 chunks
+    151708_openpii_pii_train_151.71k: 50/76 chunks
+    151708_openpii_pii_train_151.71k: 60/76 chunks
+    151708_openpii_pii_train_151.71k: 70/76 chunks
+    151708_openpii_pii_train_151.71k: 76/76 chunks
+    -> 151,708 rows, 21,788,489 nnz@train20k, 21,680,640 nnz@serve1k, 0 read errors, 146 MB
+  caching 15986_datax-dualjudge-trainset-5.36k ...
+    15986_datax-dualjudge-trainset-5.36k: 8/8 chunks
+    -> 15,986 rows, 7,292,247 nnz@train20k, 4,490,389 nnz@serve1k, 0 read errors, 44 MB
+  caching 21743_nemotron_train_20.80k ...
+    21743_nemotron_train_20.80k: 10/11 chunks
+    21743_nemotron_train_20.80k: 11/11 chunks
+    -> 21,743 rows, 5,224,092 nnz@train20k, 4,472,301 nnz@serve1k, 0 read errors, 32 MB
+  caching 23693_govdocs2-dualjudge-train80-12.86k ...
+    23693_govdocs2-dualjudge-train80-12.86k: 10/12 chunks
+    23693_govdocs2-dualjudge-train80-12.86k: 12/12 chunks
+    -> 23,693 rows, 11,440,167 nnz@train20k, 5,466,229 nnz@serve1k, 5 read errors, 64 MB
+  caching 41429_betterdataai_ner_silver_train_41.43k ...
+    41429_betterdataai_ner_silver_train_41.43k: 10/21 chunks
+    41429_betterdataai_ner_silver_train_41.43k: 20/21 chunks
+    41429_betterdataai_ner_silver_train_41.43k: 21/21 chunks
+    -> 41,429 rows, 5,173,091 nnz@train20k, 5,173,091 nnz@serve1k, 0 read errors, 37 MB
+  caching 42504_ai4privacy_pii_masking_train_42.50k ...
+    42504_ai4privacy_pii_masking_train_42.50k: 10/22 chunks
+    42504_ai4privacy_pii_masking_train_42.50k: 20/22 chunks
+    42504_ai4privacy_pii_masking_train_42.50k: 22/22 chunks
+    -> 42,504 rows, 3,781,184 nnz@train20k, 3,780,109 nnz@serve1k, 0 read errors, 26 MB
+  caching 85593_pii_trainset_85.59k ...
+    85593_pii_trainset_85.59k: 10/43 chunks
+    85593_pii_trainset_85.59k: 20/43 chunks
+    85593_pii_trainset_85.59k: 30/43 chunks
+    85593_pii_trainset_85.59k: 40/43 chunks
+    85593_pii_trainset_85.59k: 43/43 chunks
+    -> 85,593 rows, 30,689,160 nnz@train20k, 22,135,037 nnz@serve1k, 0 read errors, 170 MB
+  caching 10360_betterdataai_ner_silver_eval_10.36k ...
+    10360_betterdataai_ner_silver_eval_10.36k: 6/6 chunks
+    -> 10,360 rows, 1,290,618 nnz@train20k, 1,290,618 nnz@serve1k, 0 read errors, 9 MB
+  caching 10626_ai4privacy_pii_masking_eval_10.63k ...
+    10626_ai4privacy_pii_masking_eval_10.63k: 6/6 chunks
+    -> 10,626 rows, 944,162 nnz@train20k, 943,504 nnz@serve1k, 0 read errors, 7 MB
+  caching 20000_pii_holdout_20.00k ...
+    20000_pii_holdout_20.00k: 10/10 chunks
+    -> 20,000 rows, 7,212,467 nnz@train20k, 5,184,323 nnz@serve1k, 0 read errors, 41 MB
+  caching 30000_pii2_eval_25.15k ...
+    30000_pii2_eval_25.15k: 10/15 chunks
+    30000_pii2_eval_25.15k: 15/15 chunks
+    -> 30,000 rows, 12,018,890 nnz@train20k, 7,741,313 nnz@serve1k, 0 read errors, 67 MB
+  caching 38937_openpii_pii_eval_38.94k ...
+    38937_openpii_pii_eval_38.94k: 10/20 chunks
+    38937_openpii_pii_eval_38.94k: 20/20 chunks
+    -> 38,937 rows, 5,688,581 nnz@train20k, 5,659,729 nnz@serve1k, 0 read errors, 38 MB
+  caching 4000_datax-dualjudge-evalset-1.32k ...
+    4000_datax-dualjudge-evalset-1.32k: 2/2 chunks
+    -> 4,000 rows, 1,844,910 nnz@train20k, 1,134,809 nnz@serve1k, 0 read errors, 11 MB
+  caching 5617_nemotron_eval_5.36k ...
+    5617_nemotron_eval_5.36k: 3/3 chunks
+    -> 5,617 rows, 1,345,212 nnz@train20k, 1,153,369 nnz@serve1k, 0 read errors, 8 MB
+  caching 6589_govdocs2-dualjudge-eval20-3.53k ...
+    6589_govdocs2-dualjudge-eval20-3.53k: 4/4 chunks
+    -> 6,589 rows, 3,181,985 nnz@train20k, 1,536,689 nnz@serve1k, 11 read errors, 18 MB
+--------------
+
+[2026-08-25T22:52:58Z] Exit: 0 | Context: arm A/C: accumulate label x feature counts on the fit split | Took: 11.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py counts
+--- Output ---
+rows 531,431  fit 451,548  calib 79,883
+counts -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/cache/counts.npz  n_all=451,548 n_complete=399,266
+bootstrap: provisioning Python 3.13 venv (core deps: numpy, scikit-learn, mlflow)
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 0.84ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 90 packages in 11ms
+Installed 90 packages in 47ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 366ms
+Installed 1 package in 0.65ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-25T22:56:19Z] Exit: 0 | Context: arm A/C search: hash family (300 trials) | Took: 45.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py family --name hash --trials 300
+--- Output ---
+hash: 300 trials, best trial 228
+  macro_f2=0.4588 micro_f1=0.4562 gates 56/56 worst_recall=0.9028
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+scoring calB (63,881 rows) ...
+    hash/calB: 40,960/63,881 (5,586 docs/s)
+    hash/calB: 63,881/63,881 (5,850 docs/s)
+--------------
+
+[2026-08-25T22:57:05Z] Exit: 0 | Context: arm A/C search: tfidf family (300 trials) | Took: 45.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py family --name tfidf --trials 300
+--- Output ---
+tfidf: 300 trials, best trial 32
+  macro_f2=0.4562 micro_f1=0.4638 gates 56/56 worst_recall=0.9001
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+scoring calB (63,881 rows) ...
+    tfidf/calB: 40,960/63,881 (5,613 docs/s)
+    tfidf/calB: 63,881/63,881 (5,864 docs/s)
+--------------
+
+[2026-08-25T22:57:57Z] Exit: 0 | Context: arm A/C search: embeddingbag family (300 trials, ASL calibration) | Took: 51.1s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py embed --trials 300
+--- Output ---
+{"phase": "asl", "rank": 8, "loss": 0.050221074372529984}
+{"phase": "asl", "rank": 16, "loss": 0.047057464718818665}
+{"phase": "asl", "rank": 24, "loss": 0.04556742683053017}
+{"phase": "asl", "rank": 32, "loss": 0.042503878474235535}
+embed: 300 trials, best trial 48
+  macro_f2=0.4300 micro_f1=0.4073 gates 56/56
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+scoring calA+calB (79,883 rows) ...
+--------------
+
+[2026-08-25T22:58:46Z] Exit: 1 | Context: arm A/C: per-label fusion selection (100 trials) + materialise both windows | Took: 48.4s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_fusion.py --trials 100
+--- Output ---
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    fusion/recall: 40,960/79,883 (5,349 docs/s)
+    fusion/recall: 79,883/79,883 (5,839 docs/s)
+    fusion/hash: 40,960/79,883 (5,346 docs/s)
+    fusion/hash: 79,883/79,883 (5,834 docs/s)
+    fusion/tfidf: 40,960/79,883 (5,347 docs/s)
+    fusion/tfidf: 79,883/79,883 (5,841 docs/s)
+Traceback (most recent call last):
+  File "/home/lence/workspace/pii_master/training/h2h_fusion.py", line 218, in <module>
+    f"worst_recall={m['worst_priority_recall']:.4f}")
+               ^^^^^^
+  File "/home/lence/workspace/pii_master/training/h2h_fusion.py", line 149, in main
+    p = _prepare(profile=SELECTION_PROFILE)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lence/workspace/pii_master/training/h2h_fusion.py", line 126, in component_predictions
+    if isinstance(model, HashCueModel):
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+        key = id(model.weights)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lence/workspace/pii_master/training/h2h_priority.py", line 186, in score_embeddingbag
+    return {f"rank{r}": (bags[:, :r] @ factors[r][1].T).astype(np.float32) for r in RANKS}
+                                       ~~~~~~~^^^
+KeyError: 8
+--------------
+
+[2026-08-25T23:01:34Z] Exit: 0 | Context: arm A/C search: hash family (300 trials, per-trial operating points persisted) | Took: 45.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py family --name hash --trials 300
+--- Output ---
+hash: 300 trials, best trial 228
+  macro_f2=0.4588 micro_f1=0.4562 gates 56/56 worst_recall=0.9028
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+scoring calB (63,881 rows) ...
+    hash/calB: 40,960/63,881 (5,624 docs/s)
+    hash/calB: 63,881/63,881 (5,885 docs/s)
+--------------
+
+[2026-08-25T23:02:20Z] Exit: 0 | Context: arm A/C search: tfidf family (300 trials, per-trial operating points persisted) | Took: 45.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_priority.py family --name tfidf --trials 300
+--- Output ---
+tfidf: 300 trials, best trial 32
+  macro_f2=0.4562 micro_f1=0.4638 gates 56/56 worst_recall=0.9001
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+scoring calB (63,881 rows) ...
+    tfidf/calB: 40,960/63,881 (5,629 docs/s)
+    tfidf/calB: 63,881/63,881 (5,883 docs/s)
+--------------
+
+[2026-08-25T23:03:21Z] Exit: 0 | Context: arm A/C: per-label fusion selection (100 trials) + materialise both read windows | Took: 60.1s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=torch bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_fusion.py --trials 100
+--- Output ---
+fusion: 100 trials, best trial 71
+  macro_f2=0.4509 micro_f1=0.3482 gates 56/56 worst_recall=0.9995
+  materialised models/fusion_1000 (arm A) and models/fusion_12000 (arm C)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    fusion/recall: 40,960/79,883 (5,283 docs/s)
+    fusion/recall: 79,883/79,883 (5,819 docs/s)
+    fusion/hash: 40,960/79,883 (5,404 docs/s)
+    fusion/hash: 79,883/79,883 (5,894 docs/s)
+    fusion/tfidf: 40,960/79,883 (5,272 docs/s)
+    fusion/tfidf: 79,883/79,883 (5,817 docs/s)
+--------------
+
+[2026-08-25T23:16:06Z] Exit: 0 | Context: arm B search: docgate (250 trials, profile pinned deep) | Took: 1426.3s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_steady.py --family docgate --trials 250
+--- Output ---
+docgate: 250 trials, 125 feasible, 250 underlying fits, 1423s
+  best objective 0.9390 feasible=True
+    priority F0.5=0.0000 P=0.0000 R=0.0000 minR=0.0000
+    doc[real] P=0.9390 R=0.8575 sp=0.9518
+    doc[synth] P=0.9911 R=0.9365 sp=0.9295
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+2026/08/25 15:52:22 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/08/25 15:52:22 INFO mlflow.store.db.utils: Updating database tables
+2026/08/25 15:52:23 INFO mlflow.tracking.fluent: Experiment with name 'pii-head-to-head-v1' does not exist. Creating a new experiment.
+--------------
+
+[2026-08-25T23:39:19Z] Exit: 0 | Context: arm B search: tagcount (150 trials, profile pinned deep) | Took: 1393.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_steady.py --family tagcount --trials 150
+--- Output ---
+tagcount: 150 trials, 150 feasible, 0 underlying fits, 1387s
+  best objective 0.4224 feasible=True
+    priority F0.5=0.4224 P=0.4036 R=0.8960 minR=0.7748
+    doc[real] P=0.4699 R=0.9993 sp=0.0238
+    doc[synth] P=0.8940 R=0.9923 sp=0.0164
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 182ms
+Installed 93 packages in 57ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 464ms
+Installed 1 package in 0.62ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-25T23:59:09Z] Exit: 0 | Context: arm B search: tagdisc (250 trials, profile pinned deep) | Took: 1189.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_steady.py --family tagdisc --trials 250
+--- Output ---
+tagdisc: 250 trials, 250 feasible, 20 underlying fits, 1183s
+  best objective 0.7772 feasible=True
+    priority F0.5=0.7772 P=0.7713 R=0.9101 minR=0.8046
+    doc[real] P=0.4964 R=0.9952 sp=0.1259
+    doc[synth] P=0.8998 R=0.9982 sp=0.0700
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 0.69ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 93ms
+Installed 93 packages in 50ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 347ms
+Installed 1 package in 0.62ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T00:06:20Z] Exit: 0 | Context: arm B search: cascade (350 trials, profile pinned deep) | Took: 431.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_steady.py --family cascade --trials 350
+--- Output ---
+cascade: 350 trials, 332 feasible, 9 underlying fits, 429s
+  best objective 0.8221 feasible=True
+    priority F0.5=0.8221 P=0.8291 R=0.8774 minR=0.7979
+    doc[real] P=0.9382 R=0.8564 sp=0.9512
+    doc[synth] P=0.9910 R=0.9348 sp=0.9287
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:08:00Z] Exit: 0 | Context: arm B: materialise the winning cascade (refit + reproduction check) | Took: 76.6s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_materialize.py --rank 0 --out projects/pii-head-to-head-v1/models/cascade
+--- Output ---
+materialised cascade trial 337 -> projects/pii-head-to-head-v1/models/cascade
+  profile=deep heads=tagdisc score_mode=sum enabled_tags=57
+  reproduction drift 0.00000 (tolerance 0.02)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:08:03Z] Exit: 0 | Context: fixed evaluator: closed-form self-test before it produces a number | Took: 3.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_eval_selftest.py
+--- Output ---
+per-tag F0.5/F1/F2/F3 = 0.517241/0.545455/0.576923/0.588235  match closed form, ordered  OK
+macro F2 0.566239 = mean over gold-bearing tags; micro P/R 0.5714/0.5714 = pooled 4/7  OK
+document P/R/spec = 0.5/0.6/0.4 (TP3 FP3 FN2 TN2); every CI brackets its point estimate  OK
+priority tag at support 5 < 30: scoped with value None and its support  OK
+positive-only gold: precision-bearing metrics None (not 0.0); recall still measured; document scope still present  OK
+prevalence-1.0 corpus emits no document scope (absence, not a free pass)  OK
+
+ALL EVALUATOR CHECKS PASSED
+bootstrap: provisioning Python 3.13 venv (core deps: numpy, scikit-learn, mlflow)
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 90 packages in 197ms
+Installed 90 packages in 57ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 1ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 441ms
+Installed 1 package in 0.64ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T00:08:07Z] Exit: 0 | Context: arm A: one-core p95 latency through the model's own predict() | Took: 2.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_bench.py --arm A --cpus 1 --out projects/pii-head-to-head-v1/evaluations/latency_A.json
+--- Output ---
+arm A: p50=0.825 p95=1.157 p99=1.233 ms  1361 docs/s   5ms budget PASS
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+200 documents of >= 10,000 characters, cpu_budget=1
+--------------
+
+[2026-08-26T00:08:16Z] Exit: 0 | Context: arm B: one-core p95 latency through the model's own predict() | Took: 8.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_bench.py --arm B --cpus 1 --out projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+arm B: p50=3.227 p95=3.916 p99=4.094 ms  314 docs/s   5ms budget PASS
+  firing p95=4.038  silent p95=3.462  fire rate=0.370
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+200 documents of >= 10,000 characters, cpu_budget=1
+--------------
+
+[2026-08-26T00:08:22Z] Exit: 0 | Context: arm C: one-core p95 latency through the model's own predict() | Took: 5.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_bench.py --arm C --cpus 1 --out projects/pii-head-to-head-v1/evaluations/latency_C.json
+--- Output ---
+arm C: p50=3.822 p95=4.232 p99=4.495 ms  270 docs/s   5ms budget PASS
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+200 documents of >= 10,000 characters, cpu_budget=1
+--------------
+
+[2026-08-26T00:09:16Z] Exit: 0 | Context: arm A: score 8 sealed corpora, full F-beta family + per-tag tables | Took: 52.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm A --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_A.json
+--- Output ---
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.2485 microF1=0.2108 predrate=1.000  (2s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.5238 microF1=0.3477 predrate=1.000  (2s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.5512 microF1=0.4609 predrate=1.000  (11s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.4808 microF1=0.189 predrate=1.000  (16s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.5957 microF1=0.6178 predrate=1.000  (11s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=1.000  (2s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=1.000  (2s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.999  (3s)
+arm A: macro_f2=0.48000843822956085 micro_f1=0.36524890661239623 priority_macro_f05=0.2059641718864441
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_A.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    /hash: 12/12 (20,661 docs/s)
+    /recall: 12/12 (23,119 docs/s)
+    /tfidf: 12/12 (23,082 docs/s)
+    /hash: 12/12 (30,352 docs/s)
+    /recall: 12/12 (32,091 docs/s)
+    /tfidf: 12/12 (33,562 docs/s)
+    /hash: 12/12 (5,950 docs/s)
+    /recall: 12/12 (6,135 docs/s)
+    /tfidf: 12/12 (6,098 docs/s)
+    /hash: 12/12 (8,129 docs/s)
+    /recall: 12/12 (8,417 docs/s)
+    /tfidf: 12/12 (8,409 docs/s)
+    /hash: 12/12 (15,544 docs/s)
+    /recall: 12/12 (16,777 docs/s)
+    /tfidf: 12/12 (16,646 docs/s)
+    /hash: 12/12 (5,972 docs/s)
+    /recall: 12/12 (6,071 docs/s)
+    /tfidf: 12/12 (6,119 docs/s)
+    /hash: 12/12 (12,095 docs/s)
+    /recall: 12/12 (12,895 docs/s)
+    /tfidf: 12/12 (12,686 docs/s)
+    /hash: 12/12 (8,650 docs/s)
+    /recall: 12/12 (8,976 docs/s)
+    /tfidf: 12/12 (8,981 docs/s)
+    10360_betterdataai/hash: 10,360/10,360 (23,349 docs/s)
+    10360_betterdataai/recall: 10,360/10,360 (25,979 docs/s)
+    10360_betterdataai/tfidf: 10,360/10,360 (25,719 docs/s)
+    10626_ai4privacy_p/hash: 10,626/10,626 (29,022 docs/s)
+    10626_ai4privacy_p/recall: 10,626/10,626 (32,298 docs/s)
+    10626_ai4privacy_p/tfidf: 10,626/10,626 (32,990 docs/s)
+    20000_pii_holdout_/hash: 20,000/20,000 (7,478 docs/s)
+    20000_pii_holdout_/recall: 20,000/20,000 (7,582 docs/s)
+    20000_pii_holdout_/tfidf: 20,000/20,000 (7,589 docs/s)
+    30000_pii2_eval_25/hash: 30,000/30,000 (6,894 docs/s)
+    30000_pii2_eval_25/recall: 30,000/30,000 (7,001 docs/s)
+    30000_pii2_eval_25/tfidf: 30,000/30,000 (6,991 docs/s)
+    38937_openpii_pii_/hash: 38,937/38,937 (19,001 docs/s)
+    38937_openpii_pii_/recall: 38,937/38,937 (19,463 docs/s)
+    38937_openpii_pii_/tfidf: 38,937/38,937 (19,510 docs/s)
+    4000_datax-dualjud/hash: 4,000/4,000 (6,218 docs/s)
+    4000_datax-dualjud/recall: 4,000/4,000 (6,637 docs/s)
+    4000_datax-dualjud/tfidf: 4,000/4,000 (6,667 docs/s)
+    5617_nemotron_eval/hash: 5,617/5,617 (11,120 docs/s)
+    5617_nemotron_eval/recall: 5,617/5,617 (12,233 docs/s)
+    5617_nemotron_eval/tfidf: 5,617/5,617 (12,250 docs/s)
+    6589_govdocs2-dual/hash: 6,589/6,589 (7,357 docs/s)
+    6589_govdocs2-dual/recall: 6,589/6,589 (7,684 docs/s)
+    6589_govdocs2-dual/tfidf: 6,589/6,589 (7,715 docs/s)
+--------------
+
+[2026-08-26T00:09:20Z] Exit: 1 | Context: arm B: score 8 sealed corpora, full F-beta family + per-tag tables | Took: 4.1s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm B --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+{"phase": "verify", "checked": 96, "mismatched": 2, "examples": ["4000_datax-dualjudge-evalset-1.32k#data/corpus_sample_5k_v2/government/aa1bbda8bf8d753184ee27f17ec561da181adb9162dfc188e9c37c681471ad66.docx: only-direct=['sensitive_pii_gender_and_sex'] only-cache=['sensitive_pii_address', 'sensitive_pii_military_identification_number']", "4000_datax-dualjudge-evalset-1.32k#data/corpus_sample_5k/finance/727c26f30344a4c982378f6d045a7747c65492a9a8b4af4b830f7735f3f5b676.docx: only-direct=[] only-cache=['sensitive_pii_date_of_death', 'sensitive_pii_email', 'sensitive_pii_gender_and_sex']"]}
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+arm B: 2 of 96 sampled documents disagree between the cached features and the model's own predict(). The cached path is not the serving path.
+  4000_datax-dualjudge-evalset-1.32k#data/corpus_sample_5k_v2/government/aa1bbda8bf8d753184ee27f17ec561da181adb9162dfc188e9c37c681471ad66.docx: only-direct=['sensitive_pii_gender_and_sex'] only-cache=['sensitive_pii_address', 'sensitive_pii_military_identification_number']
+  4000_datax-dualjudge-evalset-1.32k#data/corpus_sample_5k/finance/727c26f30344a4c982378f6d045a7747c65492a9a8b4af4b830f7735f3f5b676.docx: only-direct=[] only-cache=['sensitive_pii_date_of_death', 'sensitive_pii_email', 'sensitive_pii_gender_and_sex']
+--------------
+
+[2026-08-26T00:12:21Z] Exit: 0 | Context: arm A: score 8 sealed corpora, full F-beta family + per-tag tables (verified at the arm's own read limit) | Took: 52.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm A --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_A.json
+--- Output ---
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.2485 microF1=0.2108 predrate=1.000  (2s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.5238 microF1=0.3477 predrate=1.000  (2s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.5512 microF1=0.4609 predrate=1.000  (11s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.4808 microF1=0.189 predrate=1.000  (16s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.5957 microF1=0.6178 predrate=1.000  (11s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=1.000  (2s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=1.000  (2s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.999  (3s)
+arm A: macro_f2=0.48000843822956085 micro_f1=0.36524890661239623 priority_macro_f05=0.2059641718864441
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_A.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    /hash: 12/12 (20,583 docs/s)
+    /recall: 12/12 (23,057 docs/s)
+    /tfidf: 12/12 (23,254 docs/s)
+    /hash: 12/12 (30,517 docs/s)
+    /recall: 12/12 (33,485 docs/s)
+    /tfidf: 12/12 (32,013 docs/s)
+    /hash: 12/12 (5,618 docs/s)
+    /recall: 12/12 (5,968 docs/s)
+    /tfidf: 12/12 (6,118 docs/s)
+    /hash: 12/12 (8,097 docs/s)
+    /recall: 12/12 (8,494 docs/s)
+    /tfidf: 12/12 (8,496 docs/s)
+    /hash: 12/12 (15,886 docs/s)
+    /recall: 12/12 (17,211 docs/s)
+    /tfidf: 12/12 (16,718 docs/s)
+    /hash: 12/12 (5,963 docs/s)
+    /recall: 12/12 (6,145 docs/s)
+    /tfidf: 12/12 (6,076 docs/s)
+    /hash: 12/12 (12,001 docs/s)
+    /recall: 12/12 (13,003 docs/s)
+    /tfidf: 12/12 (12,919 docs/s)
+    /hash: 12/12 (8,613 docs/s)
+    /recall: 12/12 (9,002 docs/s)
+    /tfidf: 12/12 (8,970 docs/s)
+    10360_betterdataai/hash: 10,360/10,360 (23,407 docs/s)
+    10360_betterdataai/recall: 10,360/10,360 (25,701 docs/s)
+    10360_betterdataai/tfidf: 10,360/10,360 (25,789 docs/s)
+    10626_ai4privacy_p/hash: 10,626/10,626 (29,092 docs/s)
+    10626_ai4privacy_p/recall: 10,626/10,626 (32,956 docs/s)
+    10626_ai4privacy_p/tfidf: 10,626/10,626 (33,320 docs/s)
+    20000_pii_holdout_/hash: 20,000/20,000 (7,486 docs/s)
+    20000_pii_holdout_/recall: 20,000/20,000 (7,580 docs/s)
+    20000_pii_holdout_/tfidf: 20,000/20,000 (7,594 docs/s)
+    30000_pii2_eval_25/hash: 30,000/30,000 (6,919 docs/s)
+    30000_pii2_eval_25/recall: 30,000/30,000 (6,969 docs/s)
+    30000_pii2_eval_25/tfidf: 30,000/30,000 (6,963 docs/s)
+    38937_openpii_pii_/hash: 38,937/38,937 (19,236 docs/s)
+    38937_openpii_pii_/recall: 38,937/38,937 (19,622 docs/s)
+    38937_openpii_pii_/tfidf: 38,937/38,937 (19,565 docs/s)
+    4000_datax-dualjud/hash: 4,000/4,000 (6,164 docs/s)
+    4000_datax-dualjud/recall: 4,000/4,000 (6,650 docs/s)
+    4000_datax-dualjud/tfidf: 4,000/4,000 (6,623 docs/s)
+    5617_nemotron_eval/hash: 5,617/5,617 (11,240 docs/s)
+    5617_nemotron_eval/recall: 5,617/5,617 (12,280 docs/s)
+    5617_nemotron_eval/tfidf: 5,617/5,617 (12,205 docs/s)
+    6589_govdocs2-dual/hash: 6,589/6,589 (7,343 docs/s)
+    6589_govdocs2-dual/recall: 6,589/6,589 (7,701 docs/s)
+    6589_govdocs2-dual/tfidf: 6,589/6,589 (7,711 docs/s)
+--------------
+
+[2026-08-26T00:12:39Z] Exit: 0 | Context: arm B: score 8 sealed corpora, full F-beta family + per-tag tables (verified at the arm's own read limit) | Took: 17.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm B --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.3122 microF1=0.6572 predrate=0.888  (1s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.7476 microF1=0.664 predrate=0.919  (1s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.7411 microF1=0.8177 predrate=0.957  (2s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.7822 microF1=0.6698 predrate=0.794  (3s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.6656 microF1=0.8478 predrate=0.978  (5s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=0.392  (0s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=0.946  (0s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.395  (1s)
+arm B: macro_f2=0.6497430324554443 micro_f1=0.7313086867332459 priority_macro_f05=0.7466956615447998
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_B.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:13:58Z] Exit: 0 | Context: arm C: score 8 sealed corpora, full F-beta family + per-tag tables (verified at the arm's own read limit) | Took: 77.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm C --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_C.json
+--- Output ---
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.2485 microF1=0.2108 predrate=1.000  (2s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.5242 microF1=0.3477 predrate=1.000  (2s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.5699 microF1=0.4606 predrate=1.000  (16s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.4659 microF1=0.1862 predrate=1.000  (28s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.5962 microF1=0.6181 predrate=1.000  (11s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=1.000  (4s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=1.000  (2s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.999  (8s)
+arm C: macro_f2=0.48092903196811676 micro_f1=0.36469988226890565 priority_macro_f05=0.20538650900125505
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_C.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    /hash: 12/12 (21,157 docs/s)
+    /recall: 12/12 (23,507 docs/s)
+    /tfidf: 12/12 (23,392 docs/s)
+    /hash: 12/12 (30,273 docs/s)
+    /recall: 12/12 (33,194 docs/s)
+    /tfidf: 12/12 (33,326 docs/s)
+    /hash: 12/12 (4,329 docs/s)
+    /recall: 12/12 (4,452 docs/s)
+    /tfidf: 12/12 (4,455 docs/s)
+    /hash: 12/12 (3,685 docs/s)
+    /recall: 12/12 (3,744 docs/s)
+    /tfidf: 12/12 (3,741 docs/s)
+    /hash: 12/12 (15,078 docs/s)
+    /recall: 12/12 (16,217 docs/s)
+    /tfidf: 12/12 (16,072 docs/s)
+    /hash: 12/12 (2,703 docs/s)
+    /recall: 12/12 (2,740 docs/s)
+    /tfidf: 12/12 (2,733 docs/s)
+    /hash: 12/12 (8,430 docs/s)
+    /recall: 12/12 (9,063 docs/s)
+    /tfidf: 12/12 (8,834 docs/s)
+    /hash: 12/12 (2,881 docs/s)
+    /recall: 12/12 (2,892 docs/s)
+    /tfidf: 12/12 (2,899 docs/s)
+    10360_betterdataai/hash: 10,360/10,360 (23,585 docs/s)
+    10360_betterdataai/recall: 10,360/10,360 (26,183 docs/s)
+    10360_betterdataai/tfidf: 10,360/10,360 (26,004 docs/s)
+    10626_ai4privacy_p/hash: 10,626/10,626 (28,916 docs/s)
+    10626_ai4privacy_p/recall: 10,626/10,626 (33,097 docs/s)
+    10626_ai4privacy_p/tfidf: 10,626/10,626 (32,804 docs/s)
+    20000_pii_holdout_/hash: 20,000/20,000 (4,521 docs/s)
+    20000_pii_holdout_/recall: 20,000/20,000 (4,558 docs/s)
+    20000_pii_holdout_/tfidf: 20,000/20,000 (4,562 docs/s)
+    30000_pii2_eval_25/hash: 30,000/30,000 (3,629 docs/s)
+    30000_pii2_eval_25/recall: 30,000/30,000 (3,649 docs/s)
+    30000_pii2_eval_25/tfidf: 30,000/30,000 (3,647 docs/s)
+    38937_openpii_pii_/hash: 38,937/38,937 (19,121 docs/s)
+    38937_openpii_pii_/recall: 38,937/38,937 (19,426 docs/s)
+    38937_openpii_pii_/tfidf: 38,937/38,937 (19,409 docs/s)
+    4000_datax-dualjud/hash: 4,000/4,000 (2,948 docs/s)
+    4000_datax-dualjud/recall: 4,000/4,000 (3,052 docs/s)
+    4000_datax-dualjud/tfidf: 4,000/4,000 (3,050 docs/s)
+    5617_nemotron_eval/hash: 5,617/5,617 (8,686 docs/s)
+    5617_nemotron_eval/recall: 5,617/5,617 (9,288 docs/s)
+    5617_nemotron_eval/tfidf: 5,617/5,617 (9,261 docs/s)
+    6589_govdocs2-dual/hash: 6,589/6,589 (2,818 docs/s)
+    6589_govdocs2-dual/recall: 6,589/6,589 (2,862 docs/s)
+    6589_govdocs2-dual/tfidf: 6,589/6,589 (2,869 docs/s)
+--------------
+
+[2026-08-26T00:14:00Z] Exit: 0 | Context: apply both declared policies; explode 3 arms x 8 corpora into 24 log rows | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_assemble.py
+--- Output ---
+decisions (both declared before the numbers):
+  headline        policy=pii-head-to-head-recall-gate           winner=arm-C
+  precision_view  policy=pii-head-to-head-precision-view        winner=None
+exploded 3 arms x 8 corpora -> 24 Experiment Log rows
+run.json -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/run.json (901,620 bytes, 24 commands)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:15:43Z] Exit: 0 | Context: render report tables from the recorded arms and decisions | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_tables.py
+--- Output ---
+tables -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/reports/_tables.md
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:18:00Z] Exit: 0 | Context: write the unabridged command archive | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp commands projects/pii-head-to-head-v1/runs/h2h-2026-08-25/ --txt projects/pii-head-to-head-v1/reports/26-08-25_head-to-head.commands.txt
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_head-to-head.commands.txt (26 commands, streamed)
+--------------
+
+[2026-08-26T00:18:02Z] Exit: 0 | Context: write the experiment-log workbook (24 rows + per-tag tab) | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_Experiment-Log.xlsx (168,352 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:18:11Z] Exit: 0 | Context: render the report PDF | Took: 1.0s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=reportlab bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/render_report.py projects/pii-head-to-head-v1/reports/26-08-25_head-to-head.md --run-json projects/pii-head-to-head-v1/run.json
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_head-to-head.pdf (19,074 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T00:47:18Z] Exit: 0 | Context: precision push: re-select arm B's per-tag thresholds at a ladder of lower recall floors (gate held fixed) | Took: 157.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_push.py --floors 0.75 0.72 0.70 0.68 0.65 --score-sealed
+--- Output ---
+arm B operating point: recall_floor=0.7506 margin=0.00370 min_support_fit=22 gate_threshold=161.7146
+fit 451,548  calibration 79,883
+refitting gate and 58 heads once (arm B's recorded hyperparameters) ...
+gate opens on 0.8172 of calibration rows
+  floor 0.75 -> calib priP=0.8299 priR=0.8769 macroP=0.7370 macroR=0.8443 microF1=0.7533 disabled=1
+  floor 0.72 -> calib priP=0.8374 priR=0.8717 macroP=0.7604 macroR=0.8363 microF1=0.7710 disabled=1
+  floor 0.70 -> calib priP=0.8408 priR=0.8694 macroP=0.7742 macroR=0.8320 microF1=0.7832 disabled=1
+  floor 0.68 -> calib priP=0.8448 priR=0.8673 macroP=0.7894 macroR=0.8273 microF1=0.7953 disabled=1
+  floor 0.65 -> calib priP=0.8506 priR=0.8649 macroP=0.8101 macroR=0.8210 microF1=0.8096 disabled=1
+
+scoring each ladder point on the eight sealed corpora ...
+  floor 0.75 -> sealed macroP=0.6164 macroR=0.6478 microF1=0.7326 macroF1=0.6240 priP=0.7485 priR=0.7617
+  floor 0.72 -> sealed macroP=0.6343 macroR=0.6404 microF1=0.7487 macroF1=0.6326 priP=0.7558 priR=0.7540
+  floor 0.70 -> sealed macroP=0.6419 macroR=0.6353 microF1=0.7595 macroF1=0.6352 priP=0.7587 priR=0.7503
+  floor 0.68 -> sealed macroP=0.6508 macroR=0.6315 microF1=0.7703 macroF1=0.6402 priP=0.7622 priR=0.7469
+  floor 0.65 -> sealed macroP=0.6632 macroR=0.6242 microF1=0.7830 macroF1=0.6455 priP=0.7698 priR=0.7418
+
+ladder -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/tuning/precision_push.json
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 0.61ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 188ms
+Installed 93 packages in 52ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 1ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 439ms
+Installed 1 package in 0.64ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T00:50:30Z] Exit: 0 | Context: precision push (corrected): threshold ladder anchored on arm B's exact cascade-trial selection parameters | Took: 139.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_push.py --score-sealed
+--- Output ---
+arm B operating point (cascade trial 337): recall_floor=0.750022 margin=0.005598 min_support_fit=24 gate_threshold=161.7146
+fit 451,548  calibration 79,883
+refitting gate and 58 heads once (arm B's recorded hyperparameters) ...
+gate opens on 0.8172 of calibration rows
+  floor 0.75 -> calib priP=0.8291 priR=0.8774 macroP=0.7354 macroR=0.8448 microF1=0.7522 disabled=1
+  floor 0.72 -> calib priP=0.8371 priR=0.8719 macroP=0.7592 macroR=0.8367 microF1=0.7696 disabled=1
+  floor 0.70 -> calib priP=0.8405 priR=0.8696 macroP=0.7730 macroR=0.8324 microF1=0.7821 disabled=1
+  floor 0.68 -> calib priP=0.8445 priR=0.8677 macroP=0.7870 macroR=0.8278 microF1=0.7944 disabled=1
+  floor 0.65 -> calib priP=0.8504 priR=0.8650 macroP=0.8093 macroR=0.8212 microF1=0.8088 disabled=1
+
+scoring each ladder point on the eight sealed corpora ...
+  floor 0.75 -> sealed macroP=0.6154 macroR=0.6482 microF1=0.7313 macroF1=0.6235 priP=0.7478 priR=0.7622
+  floor 0.72 -> sealed macroP=0.6325 macroR=0.6407 microF1=0.7471 macroF1=0.6317 priP=0.7556 priR=0.7544
+  floor 0.70 -> sealed macroP=0.6411 macroR=0.6357 microF1=0.7578 macroF1=0.6347 priP=0.7583 priR=0.7505
+  floor 0.68 -> sealed macroP=0.6491 macroR=0.6319 microF1=0.7694 macroF1=0.6394 priP=0.7618 priR=0.7473
+  floor 0.65 -> sealed macroP=0.6627 macroR=0.6244 microF1=0.7823 macroF1=0.6453 priP=0.7695 priR=0.7418
+
+ladder -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/tuning/precision_push.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T01:34:56Z] Exit: 0 | Context: maximise precision at a fixed recall floor: sweep selection beta 0.5 -> 0.0 across floors 0.75/0.70/0.65 | Took: 239.9s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_push.py --floors 0.75 0.70 0.65 --betas 0.5 0.25 0.1 0.0 --score-sealed
+--- Output ---
+arm B operating point (cascade trial 337): recall_floor=0.750022 margin=0.005598 min_support_fit=24 gate_threshold=161.7146
+fit 451,548  calibration 79,883
+refitting gate and 58 heads once (arm B's recorded hyperparameters) ...
+gate opens on 0.8172 of calibration rows
+  floor 0.75 beta 0.50 -> calib priP=0.8291 priR=0.8774 macroP=0.7354 macroR=0.8448 microF1=0.7522 disabled=1
+  floor 0.75 beta 0.25 -> calib priP=0.8311 priR=0.8660 macroP=0.7372 macroR=0.8357 microF1=0.7471 disabled=1
+  floor 0.75 beta 0.10 -> calib priP=0.8317 priR=0.8557 macroP=0.7375 macroR=0.8311 microF1=0.7440 disabled=1
+  floor 0.75 beta 0.00 -> calib priP=0.8317 priR=0.8484 macroP=0.7375 macroR=0.8137 microF1=0.7408 disabled=1
+  floor 0.70 beta 0.50 -> calib priP=0.8405 priR=0.8696 macroP=0.7730 macroR=0.8324 microF1=0.7821 disabled=1
+  floor 0.70 beta 0.25 -> calib priP=0.8448 priR=0.8464 macroP=0.7761 macroR=0.8164 microF1=0.7724 disabled=1
+  floor 0.70 beta 0.10 -> calib priP=0.8454 priR=0.8332 macroP=0.7765 macroR=0.8096 microF1=0.7674 disabled=1
+  floor 0.70 beta 0.00 -> calib priP=0.8455 priR=0.8199 macroP=0.7765 macroR=0.7848 microF1=0.7627 disabled=1
+  floor 0.65 beta 0.50 -> calib priP=0.8504 priR=0.8650 macroP=0.8093 macroR=0.8212 microF1=0.8088 disabled=1
+  floor 0.65 beta 0.25 -> calib priP=0.8564 priR=0.8328 macroP=0.8131 macroR=0.8007 microF1=0.7953 disabled=1
+  floor 0.65 beta 0.10 -> calib priP=0.8574 priR=0.8105 macroP=0.8138 macroR=0.7868 microF1=0.7838 disabled=1
+  floor 0.65 beta 0.00 -> calib priP=0.8574 priR=0.7960 macroP=0.8139 macroR=0.7536 microF1=0.7736 disabled=1
+
+scoring each ladder point on the eight sealed corpora ...
+  floor 0.75 beta 0.50 -> sealed macroP=0.6155 macroR=0.6482 microF1=0.7313 macroF1=0.6235 priP=0.7478 priR=0.7621
+  floor 0.75 beta 0.25 -> sealed macroP=0.6176 macroR=0.6420 microF1=0.7279 macroF1=0.6191 priP=0.7499 priR=0.7548
+  floor 0.75 beta 0.10 -> sealed macroP=0.6180 macroR=0.6395 microF1=0.7263 macroF1=0.6173 priP=0.7505 priR=0.7504
+  floor 0.75 beta 0.00 -> sealed macroP=0.6181 macroR=0.6359 microF1=0.7245 macroF1=0.6140 priP=0.7505 priR=0.7488
+  floor 0.70 beta 0.50 -> sealed macroP=0.6411 macroR=0.6357 microF1=0.7578 macroF1=0.6347 priP=0.7583 priR=0.7505
+  floor 0.70 beta 0.25 -> sealed macroP=0.6446 macroR=0.6251 microF1=0.7512 macroF1=0.6271 priP=0.7626 priR=0.7369
+  floor 0.70 beta 0.10 -> sealed macroP=0.6453 macroR=0.6214 microF1=0.7487 macroF1=0.6242 priP=0.7639 priR=0.7306
+  floor 0.70 beta 0.00 -> sealed macroP=0.6454 macroR=0.6154 microF1=0.7459 macroF1=0.6185 priP=0.7640 priR=0.7264
+  floor 0.65 beta 0.50 -> sealed macroP=0.6627 macroR=0.6244 microF1=0.7823 macroF1=0.6453 priP=0.7695 priR=0.7418
+  floor 0.65 beta 0.25 -> sealed macroP=0.6618 macroR=0.6004 microF1=0.7735 macroF1=0.6289 priP=0.7755 priR=0.7238
+  floor 0.65 beta 0.10 -> sealed macroP=0.6631 macroR=0.5926 microF1=0.7674 macroF1=0.6226 priP=0.7774 priR=0.7119
+  floor 0.65 beta 0.00 -> sealed macroP=0.6633 macroR=0.5847 microF1=0.7623 macroF1=0.6152 priP=0.7774 priR=0.7084
+
+ladder -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/tuning/precision_push.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T02:40:06Z] Exit: 0 | Context: gate diagnosis: separate weight overfitting / threshold transfer / gold shift as causes of the 20-point real-world recall gap | Took: 95.5s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_gate_diag.py
+--- Output ---
+arm B gate: alpha=7.21e-07 loss=modified_huber max_iter=28 neg_weight=3.7528
+fit rows with document gold: 432,903  real 33,637 (7.8%)  synthetic 399,266
+
+(c) has the gold shifted between the halves?
+    held-in real   prevalence 0.4640 (n=5,883)
+    sealed synth 10360_betterdataai_ner_silver_eval_10. prevalence 1.0000 (n=10,360)
+    sealed synth 10626_ai4privacy_pii_masking_eval_10.6 prevalence 1.0000 (n=10,626)
+    sealed synth 20000_pii_holdout_20.00k               prevalence 1.0000 (n=20,000)
+    sealed synth 30000_pii2_eval_25.15k                 prevalence 0.8383 (n=30,000)
+    sealed synth 38937_openpii_pii_eval_38.94k          prevalence 1.0000 (n=38,937)
+    sealed real  4000_datax-dualjudge-evalset-1.32k     prevalence 0.4783 (n=4,000)
+    sealed real  6589_govdocs2-dualjudge-eval20-3.53k   prevalence 0.5320 (n=6,549)
+
+(a)+(b) all recalls quoted at specificity 0.95, so they are comparable:
+     alpha  balance | AUC held-in AUC sealed    dAUC | R held-in R sealed@own R sealed@held-in
+----------------------------------------------------------------------------------------------
+  7.21e-07     none |      0.9583     0.8453 -0.1129 |    0.8487       0.4979           0.6504
+     1e-05     none |      0.9574     0.8439 -0.1136 |    0.8623       0.4775           0.6598
+    0.0001     none |      0.9595     0.8444 -0.1151 |    0.8462       0.4856           0.6463
+     0.001     none |      0.9598     0.8489 -0.1109 |    0.8560       0.4830           0.6626
+      0.01     none |      0.9403     0.8660 -0.0743 |    0.7330       0.5190           0.6359
+  7.21e-07    equal |      0.9467     0.8529 -0.0939 |    0.7886       0.5129           0.6544
+     1e-05    equal |      0.9470     0.8525 -0.0944 |    0.7864       0.5144           0.6583
+    0.0001    equal |      0.9470     0.8495 -0.0975 |    0.7784       0.5036           0.6472
+     0.001    equal |      0.9540     0.8569 -0.0971 |    0.8513       0.5164           0.6869
+      0.01    equal |      0.9434     0.8804 -0.0630 |    0.7707       0.5662           0.6848
+  7.21e-07   real2x |      0.9411     0.8579 -0.0832 |    0.7670       0.5236           0.6604
+     1e-05   real2x |      0.9369     0.8552 -0.0816 |    0.7601       0.5220           0.6559
+    0.0001   real2x |      0.9398     0.8560 -0.0838 |    0.7769       0.5151           0.6618
+     0.001   real2x |      0.9420     0.8584 -0.0836 |    0.7396       0.5199           0.6543
+      0.01   real2x |      0.9348     0.8750 -0.0598 |    0.7484       0.5490           0.6704
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/gate_diagnosis.json
+
+reading it: dAUC near 0 exonerates the weights (a). 'R sealed@own' near 'R held-in' with 'R sealed@held-in' far below convicts the threshold (b). Both low convicts the data (c).
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T02:43:30Z] Exit: 0 | Context: step 3: carve real-world corpora by source group so the search's held-in estimate stops being inflated by directory leakage | Took: 16.9s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_grouped_split.py
+--- Output ---
+source groups found per corpus:
+    15986_datax-dualjudge-trainset-5.36k           12 groups
+    23693_govdocs2-dualjudge-train80-12.86k       793 groups
+
+=== held-in carve: per-document (current)   (alpha=7.21e-07, balance=none)
+    fit 432,903   calibration 79,883
+    corpus     AUC held-in AUC sealed     dAUC R held-in  R sealed
+    govdocs2        0.9894     0.8434  -0.1460    0.9878    0.7477   (n_in=3,494)
+    datax           0.8977     0.8504  -0.0473    0.6203    0.5714   (n_in=2,389)
+
+=== held-in carve: grouped (fixed)   (alpha=7.21e-07, balance=none)
+    fit 433,149   calibration 79,676
+    corpus     AUC held-in AUC sealed     dAUC R held-in  R sealed
+    govdocs2        0.9864     0.8478  -0.1386    0.9856    0.7448   (n_in=3,594)
+    datax           0.8935     0.8431  -0.0504    0.6109    0.5923   (n_in=2,249)
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/grouped_split.json
+
+the fix works if the held-in AUC FALLS to meet the sealed one. A lower held-in number is the point: it is the honest one, and it is what lets a search stop preferring gates that memorise a directory.
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T02:48:42Z] Exit: 0 | Context: leave-one-corpus-out gate test: falsify every training-side explanation at once | Took: 0.0s
+Directory: /home/lence/workspace/pii_master
+$ true
+
+[2026-08-26T02:48:46Z] Exit: 0 | Context: render the gate-diagnosis PDF | Took: 3.0s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=reportlab bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/render_report.py projects/pii-head-to-head-v1/reports/26-08-25-1_gate-diagnosis.md --run-json projects/pii-head-to-head-v1/run.json
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25-1_gate-diagnosis.pdf (12,896 bytes)
+bootstrap: provisioning Python 3.13 venv (core deps: numpy, scikit-learn, mlflow)
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 90 packages in 17ms
+Installed 90 packages in 58ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 345ms
+Installed 1 package in 0.64ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T05:06:27Z] Exit: 0 | Context: datagen: 2,000 adversarial near-miss negatives across 10 classes via claude -p | Took: 2484.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_datagen.py --count 2000 --per-call 4 --workers 20 --timeout 420
+--- Output ---
+corpus -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/datagen/2000_26082521_claude
+  20/500 calls, 80 docs, 153s (7.9 calls/min)
+  40/500 calls, 160 docs, 251s (9.6 calls/min)
+  60/500 calls, 240 docs, 351s (10.2 calls/min)
+  80/500 calls, 320 docs, 435s (11.0 calls/min)
+  100/500 calls, 400 docs, 522s (11.5 calls/min)
+  120/500 calls, 480 docs, 634s (11.4 calls/min)
+  140/500 calls, 560 docs, 751s (11.2 calls/min)
+  160/500 calls, 640 docs, 846s (11.4 calls/min)
+  180/500 calls, 720 docs, 968s (11.2 calls/min)
+  200/500 calls, 800 docs, 1062s (11.3 calls/min)
+  220/500 calls, 880 docs, 1148s (11.5 calls/min)
+  240/500 calls, 960 docs, 1228s (11.7 calls/min)
+  260/500 calls, 1,040 docs, 1329s (11.7 calls/min)
+  280/500 calls, 1,120 docs, 1460s (11.5 calls/min)
+  300/500 calls, 1,200 docs, 1561s (11.5 calls/min)
+  320/500 calls, 1,280 docs, 1650s (11.6 calls/min)
+  340/500 calls, 1,360 docs, 1769s (11.5 calls/min)
+  360/500 calls, 1,440 docs, 1864s (11.6 calls/min)
+  380/500 calls, 1,520 docs, 1963s (11.6 calls/min)
+  400/500 calls, 1,600 docs, 2068s (11.6 calls/min)
+  420/500 calls, 1,680 docs, 2162s (11.7 calls/min)
+  440/500 calls, 1,760 docs, 2252s (11.7 calls/min)
+  460/500 calls, 1,840 docs, 2361s (11.7 calls/min)
+  480/500 calls, 1,920 docs, 2377s (12.1 calls/min)
+  500/500 calls, 2,000 docs, 2484s (12.1 calls/min)
+
+wrote 2,000 documents
+  by class: {'blank_intake_form': 200, 'security_guidance': 200, 'privacy_policy': 200, 'training_material': 200, 'vendor_questionnaire': 200, 'regulatory_text': 200, 'redacted_record': 200, 'data_dictionary': 200, 'system_log_config': 200, 'aggregate_statistics': 200}
+  by mode : {'llm': 1916, 'faker-fallback': 84}
+  bytes   : mean 3,052
+  manifest: /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/datagen/2000_26082521_claude/manifest.json
+
+NOT YET USABLE: run h2h_datagen_verify.py before any document of this corpus reaches training.
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T12:39:08Z] Exit: 0 | Context: verify the generated corpus: reject mislabelled negatives and shared tells; confirm adversarialness | Took: 4.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_datagen_verify.py --corpus projects/pii-head-to-head-v1/datagen/2000_26082521_claude
+--- Output ---
+scanning 2,000 documents from 2000_26082521_claude
+
+rejected 52 of 2,000 (2.6%)
+    tell:disclaimer                 13
+    identifier:iban                 13
+    identifier:ipv4                 10
+    identifier:street_address        9
+    identifier:ssn                   5
+    identifier:card                  5
+    identifier:email                 2
+  worst classes: {'system_log_config': 16, 'data_dictionary': 8, 'vendor_questionnaire': 6, 'privacy_policy': 5}
+  warnings (kept): {'echoes_class_name': 158}
+
+gate scores (threshold 161.7 — above it the gate FIRES):
+                                n       p10       p25       p50       p75       p90  % firing
+generated negatives         1,948    -777.2    -504.3    -179.6     137.3     376.9    23.3%
+real negatives (govdocs2)     400   -1068.9    -670.9    -317.1     -10.8     329.2    15.5%
+
+the current gate wrongly fires on 23.3% of the generated negatives.
+    Those are the documents worth adding: the ones it already gets right teach it nothing.
+
+-> projects/pii-head-to-head-v1/datagen/2000_26082521_claude/manifest_verified.json  (1,948 usable documents)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T12:39:51Z] Exit: 0 | Context: augment gate training with generated near-miss negatives; measure sealed real AUC vs held-out generated fire rate | Took: 31.0s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_gate_augment.py --corpus projects/pii-head-to-head-v1/datagen/2000_26082521_claude --weight 0.0 1.0 4.0 12.0
+--- Output ---
+generated corpus: 1,948 verified documents
+    1,556 added to training, 392 held out
+
+all recalls at specificity 0.95; AUC is threshold-free
+gen weight |  AUC real  AUC datax  AUC govdocs2  AUC synth |  R real |  held-out gen fire
+-----------------------------------------------------------------------------------------
+       0.0 |    0.8453     0.8504        0.8434     0.9658 |  0.4979 |              8.2%
+       1.0 |    0.8437     0.8471        0.8432     0.9645 |  0.4786 |              0.0%
+       4.0 |    0.8413     0.8388        0.8446     0.9654 |  0.4749 |              0.0%
+      12.0 |    0.8461     0.8461        0.8469     0.9647 |  0.4738 |              0.0%
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/gate_augment.json
+
+reading it: 'AUC real' rising is the result. 'held-out gen fire' falling while 'AUC real' stays flat means the gate learned the generator's style, not the concept — no gain, and it would look like one on any training metric.
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 245ms
+Installed 93 packages in 51ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 458ms
+Installed 1 package in 0.63ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T12:41:37Z] Exit: 0 | Context: separability check: generated vs real negatives, held-out AUC 1.0000 | Took: 0.0s
+Directory: /home/lence/workspace/pii_master
+$ true
+
+[2026-08-26T12:41:41Z] Exit: 0 | Context: render the datagen report PDF | Took: 2.9s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=reportlab bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/render_report.py projects/pii-head-to-head-v1/reports/26-08-26_datagen-near-miss-negatives.md --run-json projects/pii-head-to-head-v1/run.json
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26_datagen-near-miss-negatives.pdf (11,601 bytes)
+bootstrap: provisioning Python 3.13 venv (core deps: numpy, scikit-learn, mlflow)
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 0.58ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 90 packages in 16ms
+Installed 90 packages in 50ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 352ms
+Installed 1 package in 0.64ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T12:50:32Z] Exit: 0 | Context: feasibility probe: are the three document-level bars simultaneously reachable on sealed real documents? | Took: 20.3s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_feasibility.py
+--- Output ---
+
+=== arm B gate (as shipped)   (AUC 0.8453, 5,397 positives / 5,152 negatives)
+  all three bars simultaneously (P>=0.9, sp>=0.85, R>=0.85): NOT REACHABLE
+  best recall while holding P>=0.9 and sp>=0.85: 0.5370   (bar is 0.85, shortfall +0.3130)
+  best precision while holding R>=0.85: 0.7008   (bar is 0.9, shortfall +0.1992)
+  best specificity while holding R>=0.85: 0.6198   (bar is 0.85, shortfall +0.2302)
+  -> the reachable point closest to the policy holds P and sp and delivers recall 0.5370
+
+=== balanced + regularised gate   (AUC 0.8804, 5,397 positives / 5,152 negatives)
+  all three bars simultaneously (P>=0.9, sp>=0.85, R>=0.85): NOT REACHABLE
+  best recall while holding P>=0.9 and sp>=0.85: 0.6231   (bar is 0.85, shortfall +0.2269)
+  best precision while holding R>=0.85: 0.7664   (bar is 0.9, shortfall +0.1336)
+  best specificity while holding R>=0.85: 0.7285   (bar is 0.85, shortfall +0.1215)
+  -> the reachable point closest to the policy holds P and sp and delivers recall 0.6231
+
+=== ORACLE — fitted on the sealed set itself (upper bound)   (AUC 0.9998, 5,397 positives / 5,152 negatives)
+  all three bars simultaneously (P>=0.9, sp>=0.85, R>=0.85): REACHABLE
+  best recall while holding P>=0.9 and sp>=0.85: 0.9998   (bar is 0.85, shortfall -0.1498)
+  best precision while holding R>=0.85: 0.9996   (bar is 0.9, shortfall -0.0996)
+  best specificity while holding R>=0.85: 0.9996   (bar is 0.85, shortfall -0.1496)
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/doc_feasibility.json
+
+reading it: the ORACLE row is the ceiling for this feature space. A bar the oracle misses is not a tuning problem.
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 173ms
+Installed 93 packages in 52ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 2ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 443ms
+Installed 1 package in 0.66ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T12:55:15Z] Exit: 0 | Context: rebuild the cascade with the balanced+regularised gate; re-derive both operating points; score sealed | Took: 101.9s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_cascade_rebuild.py
+--- Output ---
+gate: alpha=0.01 balance=equal (real 33,637 of 432,903 fit rows)
+refitting 58 heads (arm B hyperparameters, unchanged) ...
+gate threshold -2.1337  (calibration real: P=0.9130 R=0.8106 sp=0.9331)
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/models/cascade_balanced  (57 enabled tags)
+
+metric                                 arm B   balanced     delta
+equal_corpus_doc_recall               0.7532     1.0000   +0.2468
+equal_corpus_doc_precision            0.8893     0.6187   -0.2707
+equal_corpus_doc_specificity          0.8832     0.0109   -0.8723
+macro_f2                              0.6497     0.6562   +0.0065
+micro_f1                              0.7313     0.6968   -0.0345
+priority_macro_f05                    0.7467     0.7302   -0.0165
+recall_macro_catalogue                0.6482     0.7355   +0.0873
+precision_macro_catalogue             0.6154     0.5835   -0.0319
+severity_recall_min                   0.6524     0.7609   +0.1085
+prediction_rate                       0.7836     0.9822   +0.1987
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_cascade_balanced.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T12:57:32Z] Exit: 0 | Context: cascade rebuild, corrected: arm B's absolute gate_shift not carried across a change of score scale | Took: 102.3s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_cascade_rebuild.py
+--- Output ---
+gate: alpha=0.01 balance=equal (real 33,637 of 432,903 fit rows)
+refitting 58 heads (arm B hyperparameters, unchanged) ...
+gate threshold 0.0620  (calibration real: P=0.9130 R=0.8106 sp=0.9331)
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/models/cascade_balanced  (57 enabled tags)
+
+metric                                 arm B   balanced     delta
+equal_corpus_doc_recall               0.7532     0.7975   +0.0442
+equal_corpus_doc_precision            0.8893     0.8956   +0.0062
+equal_corpus_doc_specificity          0.8832     0.8792   -0.0040
+macro_f2                              0.6497     0.6614   +0.0116
+micro_f1                              0.7313     0.7255   -0.0058
+priority_macro_f05                    0.7467     0.7434   -0.0033
+recall_macro_catalogue                0.6482     0.6938   +0.0456
+precision_macro_catalogue             0.6154     0.6182   +0.0027
+severity_recall_min                   0.6524     0.7221   +0.0697
+prediction_rate                       0.7836     0.8192   +0.0357
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_cascade_balanced.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T12:57:55Z] Exit: 1 | Context: apply both declared policies to the balanced-gate cascade | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_B.json --arms projects/pii-head-to-head-v1/evaluations/arm_cascade_balanced.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/headline_balanced.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | macro_f2 | micro_f1 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| arm-B-cascade_balanced | **blocked** | **FAIL** 29/55 (0.56) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6614 | 0.7255 | 3.9164 |
+
+NO FEASIBLE ARM
+  - arm-B-cascade_balanced: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/headline_balanced.json
+--------------
+
+[2026-08-26T12:58:55Z] Exit: 0 | Context: render the balanced-gate + feasibility report | Took: 2.9s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=reportlab bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/render_report.py projects/pii-head-to-head-v1/reports/26-08-26-1_balanced-gate-and-feasibility.md --run-json projects/pii-head-to-head-v1/run.json
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26-1_balanced-gate-and-feasibility.pdf (12,441 bytes)
+bootstrap: provisioning Python 3.13 venv (core deps: numpy, scikit-learn, mlflow)
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 1ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 90 packages in 16ms
+Installed 90 packages in 59ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 1ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 350ms
+Installed 1 package in 1ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T13:03:26Z] Exit: 0 | Context: assemble the full run record: every arm measured this session | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_assemble.py
+--- Output ---
+decisions (both declared before the numbers):
+  headline        policy=pii-head-to-head-recall-gate           winner=arm-C
+  precision_view  policy=pii-head-to-head-precision-view        winner=None
+exploded 16 arms x 8 corpora -> 128 Experiment Log rows
+run.json -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/run.json (3,054,909 bytes, 46 commands)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:03:42Z] Exit: 0 | Context: regenerate the experiment-log workbook with the full history (16 arms x 8 corpora) | Took: 5.1s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_Experiment-Log.xlsx (805,738 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:05:10Z] Exit: 0 | Context: re-score pii_holdout_20k through the staged bundle's own tagger.py | Took: 36.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/quiet_verify_bundle.py --bundle projects/pii-head-to-head-v1/package --corpus 20000_pii_holdout_20.00k --expected 0.8410728573799133 --metric priority_macro_f05 --out projects/pii-head-to-head-v1/package/models/verification.json
+--- Output ---
+priority_macro_f05: expected 0.8411, measured 0.8411, delta 0.00000 (tolerance 0.01) -> PASS
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+bundle loaded: {'n_labels': 58, 'score_mode': 'sum', 'read_window_chars': 12000, 'max_tokens': 2048, 'max_features': 1024, 'n_features': 262144, 'gate_threshold': 0.061996519565582275, 'n_enabled_tags': 57}
+  5000/20000
+  10000/20000
+  15000/20000
+  20000/20000
+--------------
+
+[2026-08-26T13:07:21Z] Exit: 0 | Context: render the final report PDF | Took: 1.1s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=reportlab bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/render_report.py projects/pii-head-to-head-v1/reports/26-08-26-2_final-champion-and-history.md --run-json projects/pii-head-to-head-v1/run.json
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26-2_final-champion-and-history.pdf (24,709 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:07:33Z] Exit: 0 | Context: seal the champion bundle: card, zip, checksums, post-packaging verification | Took: 1.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/package_champion.py projects/pii-head-to-head-v1/package/package.json
+--- Output ---
+wrote /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2/ — 26 files, 27.8 MB
+wrote /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2.zip — 27.6 MB
+  sha256  6d68e189443efa8dbd6180aef6da8b803fe02ae00fdb80c3a653fcec6f71d68e
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:48:18Z] Exit: 0 | Context: reassemble: state the correct reason a corpus cannot measure precision, and name the document-level metrics it does measure | Took: 1.6s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_assemble.py
+--- Output ---
+decisions (both declared before the numbers):
+  headline        policy=pii-head-to-head-recall-gate           winner=arm-C
+  precision_view  policy=pii-head-to-head-precision-view        winner=None
+exploded 16 arms x 8 corpora -> 128 Experiment Log rows
+run.json -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/run.json (3,066,328 bytes, 51 commands)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:48:36Z] Exit: 0 | Context: regenerate the workbook with corrected not-measurable notes | Took: 4.8s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_Experiment-Log.xlsx (800,563 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T13:49:04Z] Exit: 0 | Context: re-seal the bundle so its docs carry the corrected workbook; model bits unchanged | Took: 1.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/package_champion.py projects/pii-head-to-head-v1/package/package.json
+--- Output ---
+wrote /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2/ — 26 files, 27.8 MB
+wrote /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2.zip — 27.6 MB
+  sha256  b0a5cd20a4448c1c95c4de00f08f4f7cae750977abfc848a1b5eb779b209a2aa
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:18:36Z] Exit: 0 | Context: re-score arm A with the top-k ladder and severity-recall-mean | Took: 50.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm A --latency projects/pii-head-to-head-v1/evaluations/latency_A.json
+--- Output ---
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.2485 microF1=0.2108 predrate=1.000  (2s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.5238 microF1=0.3477 predrate=1.000  (2s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.5512 microF1=0.4609 predrate=1.000  (11s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.4808 microF1=0.189 predrate=1.000  (16s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.5957 microF1=0.6178 predrate=1.000  (11s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=1.000  (2s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=1.000  (2s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.999  (3s)
+arm A: macro_f2=0.48000843822956085 micro_f1=0.36524890661239623 priority_macro_f05=0.2059641718864441
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_A.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    10360_betterdataai/hash: 10,360/10,360 (23,251 docs/s)
+    10360_betterdataai/recall: 10,360/10,360 (25,551 docs/s)
+    10360_betterdataai/tfidf: 10,360/10,360 (25,455 docs/s)
+    10626_ai4privacy_p/hash: 10,626/10,626 (29,068 docs/s)
+    10626_ai4privacy_p/recall: 10,626/10,626 (33,032 docs/s)
+    10626_ai4privacy_p/tfidf: 10,626/10,626 (31,826 docs/s)
+    20000_pii_holdout_/hash: 20,000/20,000 (7,487 docs/s)
+    20000_pii_holdout_/recall: 20,000/20,000 (7,610 docs/s)
+    20000_pii_holdout_/tfidf: 20,000/20,000 (7,583 docs/s)
+    30000_pii2_eval_25/hash: 30,000/30,000 (6,910 docs/s)
+    30000_pii2_eval_25/recall: 30,000/30,000 (6,973 docs/s)
+    30000_pii2_eval_25/tfidf: 30,000/30,000 (6,954 docs/s)
+    38937_openpii_pii_/hash: 38,937/38,937 (19,263 docs/s)
+    38937_openpii_pii_/recall: 38,937/38,937 (19,592 docs/s)
+    38937_openpii_pii_/tfidf: 38,937/38,937 (19,487 docs/s)
+    4000_datax-dualjud/hash: 4,000/4,000 (6,181 docs/s)
+    4000_datax-dualjud/recall: 4,000/4,000 (6,662 docs/s)
+    4000_datax-dualjud/tfidf: 4,000/4,000 (6,635 docs/s)
+    5617_nemotron_eval/hash: 5,617/5,617 (11,293 docs/s)
+    5617_nemotron_eval/recall: 5,617/5,617 (12,288 docs/s)
+    5617_nemotron_eval/tfidf: 5,617/5,617 (12,249 docs/s)
+    6589_govdocs2-dual/hash: 6,589/6,589 (7,345 docs/s)
+    6589_govdocs2-dual/recall: 6,589/6,589 (7,731 docs/s)
+    6589_govdocs2-dual/tfidf: 6,589/6,589 (7,679 docs/s)
+--------------
+
+[2026-08-26T14:19:52Z] Exit: 0 | Context: re-score arm C with the top-k ladder and severity-recall-mean | Took: 75.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm C --latency projects/pii-head-to-head-v1/evaluations/latency_C.json
+--- Output ---
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.2485 microF1=0.2108 predrate=1.000  (2s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.5242 microF1=0.3477 predrate=1.000  (2s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.5699 microF1=0.4606 predrate=1.000  (16s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.4659 microF1=0.1862 predrate=1.000  (28s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.5962 microF1=0.6181 predrate=1.000  (11s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=1.000  (4s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=1.000  (2s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.999  (8s)
+arm C: macro_f2=0.48092903196811676 micro_f1=0.36469988226890565 priority_macro_f05=0.20538650900125505
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_C.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+    10360_betterdataai/hash: 10,360/10,360 (23,429 docs/s)
+    10360_betterdataai/recall: 10,360/10,360 (25,743 docs/s)
+    10360_betterdataai/tfidf: 10,360/10,360 (25,715 docs/s)
+    10626_ai4privacy_p/hash: 10,626/10,626 (28,823 docs/s)
+    10626_ai4privacy_p/recall: 10,626/10,626 (32,926 docs/s)
+    10626_ai4privacy_p/tfidf: 10,626/10,626 (32,734 docs/s)
+    20000_pii_holdout_/hash: 20,000/20,000 (4,506 docs/s)
+    20000_pii_holdout_/recall: 20,000/20,000 (4,542 docs/s)
+    20000_pii_holdout_/tfidf: 20,000/20,000 (4,537 docs/s)
+    30000_pii2_eval_25/hash: 30,000/30,000 (3,647 docs/s)
+    30000_pii2_eval_25/recall: 30,000/30,000 (3,666 docs/s)
+    30000_pii2_eval_25/tfidf: 30,000/30,000 (3,661 docs/s)
+    38937_openpii_pii_/hash: 38,937/38,937 (19,070 docs/s)
+    38937_openpii_pii_/recall: 38,937/38,937 (19,353 docs/s)
+    38937_openpii_pii_/tfidf: 38,937/38,937 (19,350 docs/s)
+    4000_datax-dualjud/hash: 4,000/4,000 (2,978 docs/s)
+    4000_datax-dualjud/recall: 4,000/4,000 (3,047 docs/s)
+    4000_datax-dualjud/tfidf: 4,000/4,000 (3,048 docs/s)
+    5617_nemotron_eval/hash: 5,617/5,617 (8,706 docs/s)
+    5617_nemotron_eval/recall: 5,617/5,617 (9,286 docs/s)
+    5617_nemotron_eval/tfidf: 5,617/5,617 (9,233 docs/s)
+    6589_govdocs2-dual/hash: 6,589/6,589 (2,783 docs/s)
+    6589_govdocs2-dual/recall: 6,589/6,589 (2,829 docs/s)
+    6589_govdocs2-dual/tfidf: 6,589/6,589 (2,827 docs/s)
+--------------
+
+[2026-08-26T14:23:58Z] Exit: 0 | Context: re-score the floor x beta ladder with the top-k ladder | Took: 245.7s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_precision_push.py --floors 0.75 0.70 0.65 --betas 0.5 0.25 0.1 0.0 --score-sealed
+--- Output ---
+arm B operating point (cascade trial 337): recall_floor=0.750022 margin=0.005598 min_support_fit=24 gate_threshold=161.7146
+fit 451,548  calibration 79,883
+refitting gate and 58 heads once (arm B's recorded hyperparameters) ...
+gate opens on 0.8172 of calibration rows
+  floor 0.75 beta 0.50 -> calib priP=0.8291 priR=0.8774 macroP=0.7354 macroR=0.8448 microF1=0.7522 disabled=1
+  floor 0.75 beta 0.25 -> calib priP=0.8311 priR=0.8660 macroP=0.7372 macroR=0.8357 microF1=0.7471 disabled=1
+  floor 0.75 beta 0.10 -> calib priP=0.8317 priR=0.8557 macroP=0.7375 macroR=0.8311 microF1=0.7440 disabled=1
+  floor 0.75 beta 0.00 -> calib priP=0.8317 priR=0.8484 macroP=0.7375 macroR=0.8137 microF1=0.7408 disabled=1
+  floor 0.70 beta 0.50 -> calib priP=0.8405 priR=0.8696 macroP=0.7730 macroR=0.8324 microF1=0.7821 disabled=1
+  floor 0.70 beta 0.25 -> calib priP=0.8448 priR=0.8464 macroP=0.7761 macroR=0.8164 microF1=0.7724 disabled=1
+  floor 0.70 beta 0.10 -> calib priP=0.8454 priR=0.8332 macroP=0.7765 macroR=0.8096 microF1=0.7674 disabled=1
+  floor 0.70 beta 0.00 -> calib priP=0.8455 priR=0.8199 macroP=0.7765 macroR=0.7848 microF1=0.7627 disabled=1
+  floor 0.65 beta 0.50 -> calib priP=0.8504 priR=0.8650 macroP=0.8093 macroR=0.8212 microF1=0.8088 disabled=1
+  floor 0.65 beta 0.25 -> calib priP=0.8564 priR=0.8328 macroP=0.8131 macroR=0.8007 microF1=0.7953 disabled=1
+  floor 0.65 beta 0.10 -> calib priP=0.8574 priR=0.8105 macroP=0.8138 macroR=0.7868 microF1=0.7838 disabled=1
+  floor 0.65 beta 0.00 -> calib priP=0.8574 priR=0.7960 macroP=0.8139 macroR=0.7536 microF1=0.7736 disabled=1
+
+scoring each ladder point on the eight sealed corpora ...
+  floor 0.75 beta 0.50 -> sealed macroP=0.6155 macroR=0.6482 microF1=0.7313 macroF1=0.6235 priP=0.7478 priR=0.7621
+  floor 0.75 beta 0.25 -> sealed macroP=0.6176 macroR=0.6420 microF1=0.7279 macroF1=0.6191 priP=0.7499 priR=0.7548
+  floor 0.75 beta 0.10 -> sealed macroP=0.6180 macroR=0.6395 microF1=0.7263 macroF1=0.6173 priP=0.7505 priR=0.7504
+  floor 0.75 beta 0.00 -> sealed macroP=0.6181 macroR=0.6359 microF1=0.7245 macroF1=0.6140 priP=0.7505 priR=0.7488
+  floor 0.70 beta 0.50 -> sealed macroP=0.6411 macroR=0.6357 microF1=0.7578 macroF1=0.6347 priP=0.7583 priR=0.7505
+  floor 0.70 beta 0.25 -> sealed macroP=0.6446 macroR=0.6251 microF1=0.7512 macroF1=0.6271 priP=0.7626 priR=0.7369
+  floor 0.70 beta 0.10 -> sealed macroP=0.6453 macroR=0.6214 microF1=0.7487 macroF1=0.6242 priP=0.7639 priR=0.7306
+  floor 0.70 beta 0.00 -> sealed macroP=0.6454 macroR=0.6154 microF1=0.7459 macroF1=0.6185 priP=0.7640 priR=0.7264
+  floor 0.65 beta 0.50 -> sealed macroP=0.6627 macroR=0.6244 microF1=0.7823 macroF1=0.6453 priP=0.7695 priR=0.7418
+  floor 0.65 beta 0.25 -> sealed macroP=0.6618 macroR=0.6004 microF1=0.7735 macroF1=0.6289 priP=0.7755 priR=0.7238
+  floor 0.65 beta 0.10 -> sealed macroP=0.6631 macroR=0.5926 microF1=0.7674 macroF1=0.6226 priP=0.7774 priR=0.7119
+  floor 0.65 beta 0.00 -> sealed macroP=0.6633 macroR=0.5847 microF1=0.7623 macroF1=0.6152 priP=0.7774 priR=0.7084
+
+ladder -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/tuning/precision_push.json
+bootstrap: provisioning Python 3.13 venv with extras: optuna
+Using CPython 3.13.14
+Creating virtual environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Activate with: source /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/activate
+Using CPython 3.13.14
+Resolved 146 packages in 0.80ms
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 93 packages in 189ms
+Installed 93 packages in 52ms
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + alembic==1.19.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.14.2
+ + attrs==26.1.0
+ + blinker==1.9.0
+ + cachetools==7.1.7
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.4.9
+ + click==8.4.2
+ + cloudpickle==3.1.2
+ + colorlog==6.12.0
+ + contourpy==1.3.3
+ + cryptography==49.0.0
+ + cycler==0.12.1
+ + databricks-sdk==0.125.0
+ + docker==7.2.0
+ + fastapi==0.141.1
+ + flask==3.1.3
+ + flask-cors==6.0.5
+ + fonttools==4.63.0
+ + frozenlist==1.8.0
+ + gitdb==4.0.12
+ + gitpython==3.1.58
+ + google-auth==2.56.3
+ + graphene==3.4.3
+ + graphql-core==3.2.11
+ + graphql-relay==3.2.0
+ + greenlet==3.5.4
+ + gunicorn==26.0.0
+ + h11==0.16.0
+ + huey==3.3.4
+ + idna==3.18
+ + importlib-metadata==9.0.0
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + mako==1.4.1
+ + markupsafe==3.0.3
+ + matplotlib==3.11.1
+ + mlflow==3.15.1
+ + mlflow-skinny==3.15.1
+ + mlflow-tracing==3.15.1
+ + multidict==6.7.1
+ + narwhals==2.24.0
+ + numpy==2.5.1
+ + opentelemetry-api==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + optuna==4.9.0
+ + packaging==26.3
+ + pandas==2.3.3
+ + pillow==12.3.0
+ + prettytable==3.18.0
+ + propcache==0.5.2
+ + protobuf==6.33.6
+ + pyarrow==25.0.0
+ + pyasn1==0.6.4
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ + pytz==2026.3.post1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + scikit-learn==1.9.0
+ + scipy==1.18.0
+ + six==1.17.0
+ + skops==0.14.0
+ + smmap==5.0.3
+ + sqlalchemy==2.0.51
+ + sqlparse==0.5.5
+ + starlette==1.4.1
+ + threadpoolctl==3.6.0
+ + tqdm==4.70.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.2
+ + tzdata==2026.3
+ + urllib3==2.7.0
+ + uvicorn==0.52.1
+ + wcwidth==0.8.2
+ + werkzeug==3.1.8
+ + yarl==1.24.5
+ + zipp==4.1.0
+Using Python 3.13.14 environment at: /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv
+Resolved 1 package in 1ms
+   Building sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+      Built sdlc-model-pipeline @ file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine
+Prepared 1 package in 431ms
+Installed 1 package in 0.65ms
+ + sdlc-model-pipeline==3.0.0 (from file:///home/lence/workspace/sdlc-model-pipeline/.claude/skills/sdlc-model-pipeline/engine)
+bootstrap: ready (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv, python 3.13.14)
+--------------
+
+[2026-08-26T14:25:29Z] Exit: 0 | Context: re-score the balanced-gate cascade with the top-k ladder | Took: 89.9s
+Directory: /home/lence/workspace/pii_master
+$ env EXTRAS=optuna bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_cascade_rebuild.py
+--- Output ---
+gate: alpha=0.01 balance=equal (real 33,637 of 432,903 fit rows)
+refitting 58 heads (arm B hyperparameters, unchanged) ...
+gate threshold 0.0620  (calibration real: P=0.9130 R=0.8106 sp=0.9331)
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/models/cascade_balanced  (57 enabled tags)
+
+metric                                 arm B   balanced     delta
+equal_corpus_doc_recall               0.7532     0.7975   +0.0442
+equal_corpus_doc_precision            0.8893     0.8956   +0.0062
+equal_corpus_doc_specificity          0.8832     0.8792   -0.0040
+macro_f2                              0.6497     0.6614   +0.0116
+micro_f1                              0.7313     0.7255   -0.0058
+priority_macro_f05                    0.7467     0.7434   -0.0033
+recall_macro_catalogue                0.6482     0.6938   +0.0456
+precision_macro_catalogue             0.6154     0.6182   +0.0027
+severity_recall_min                   0.6524     0.7221   +0.0697
+prediction_rate                       0.7836     0.8192   +0.0357
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_cascade_balanced.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:27:07Z] Exit: 0 | Context: re-score arm B: its ladder was computed before the empty-denominator fix | Took: 14.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score.py --arm B --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+  10360_betterdataai_ner_silver_eval_10.36k    n=10,360 macroF2=0.3122 microF1=0.6572 predrate=0.888  (1s)
+  10626_ai4privacy_pii_masking_eval_10.63k     n=10,626 macroF2=0.7476 microF1=0.664 predrate=0.919  (1s)
+  20000_pii_holdout_20.00k                     n=20,000 macroF2=0.7411 microF1=0.8177 predrate=0.957  (2s)
+  30000_pii2_eval_25.15k                       n=30,000 macroF2=0.7822 microF1=0.6698 predrate=0.794  (3s)
+  38937_openpii_pii_eval_38.94k                n=38,937 macroF2=0.6656 microF1=0.8478 predrate=0.978  (5s)
+  4000_datax-dualjudge-evalset-1.32k           n= 4,000 macroF2=None microF1=None predrate=0.392  (0s)
+  5617_nemotron_eval_5.36k                     n= 5,617 macroF2=None microF1=None predrate=0.946  (0s)
+  6589_govdocs2-dualjudge-eval20-3.53k         n= 6,589 macroF2=None microF1=None predrate=0.395  (1s)
+arm B: macro_f2=0.6497430324554443 micro_f1=0.7313086867332459 priority_macro_f05=0.7466956615447998
+  -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_B.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:27:29Z] Exit: 0 | Context: reassemble with the top-k ladder, severity mean and compare_vs | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_assemble.py
+--- Output ---
+decisions (both declared before the numbers):
+  headline        policy=pii-head-to-head-recall-gate           winner=arm-C
+  precision_view  policy=pii-head-to-head-precision-view        winner=None
+exploded 16 arms x 8 corpora -> 128 Experiment Log rows
+run.json -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/run.json (3,089,775 bytes, 59 commands)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:27:35Z] Exit: 0 | Context: regenerate the workbook with the complete column set | Took: 5.0s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_Experiment-Log.xlsx (800,758 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:28:01Z] Exit: 0 | Context: carry the ladder and severity mean into the per-corpus metrics the log rows read | Took: 1.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_assemble.py
+--- Output ---
+decisions (both declared before the numbers):
+  headline        policy=pii-head-to-head-recall-gate           winner=arm-C
+  precision_view  policy=pii-head-to-head-precision-view        winner=None
+exploded 16 arms x 8 corpora -> 128 Experiment Log rows
+run.json -> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/run.json (3,132,846 bytes, 61 commands)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-26T14:28:07Z] Exit: 0 | Context: regenerate the workbook | Took: 5.0s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-25_Experiment-Log.xlsx (871,294 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+

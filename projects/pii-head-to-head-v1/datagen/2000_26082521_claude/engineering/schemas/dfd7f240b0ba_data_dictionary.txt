@@ -1,0 +1,42 @@
+DATA DICTIONARY EXCERPT / EXTRACT LINEAGE ADDENDUM
+SOURCE: MBRDW.MBR_MASTER    TARGET: EXT_TPA_WEEKLY    JOB: EXT_TPA_02    REV 2021.05
+
+SOURCE COLUMN         TYPE           NULL  TRANSFORM TO TARGET FIELD
+--------------------  -------------  ----  -----------------------------------------
+MBR_ID                CHAR(12)       N     Pass-through to MEMBER_KEY.
+SSN_TIN               CHAR(9)        Y     Suppressed. Not selected by the job.
+NM_LAST               VARCHAR(40)    N     Pass-through to LAST_NAME.
+NM_FIRST              VARCHAR(30)    N     Pass-through to FIRST_NAME.
+DOB_DT                DATE           N     Converted to AGE_BAND_CD (five-year bands,
+                                           90+ collapsed). Raw date not emitted.
+GENDER_CD             CHAR(1)        Y     Pass-through; X mapped to U for vendor
+                                           schema compatibility.
+ADDR_LN_1             VARCHAR(60)    Y     Suppressed.
+ZIP_CD                CHAR(9)        Y     Truncated to three digits.
+EMAIL_ADDR            VARCHAR(120)   Y     Suppressed on this file; carried only on
+                                           EXT_WELLNESS_MONTHLY where consent is Y.
+GRP_NBR               CHAR(10)       N     Pass-through to GROUP_ID.
+PLAN_CD               CHAR(8)        N     Pass-through to BENEFIT_PLAN.
+COV_EFF_DT            DATE           N     Pass-through to EFF_DATE.
+COV_TERM_DT           DATE           Y     Pass-through; null emitted as high date.
+UNDW_RISK_SCORE       DEC(5,2)       Y     Suppressed. Internal use only.
+
+OPERATIONAL NOTES
+Run window is Saturday 02:00-04:30 local. The job selects from MBR_TPA_V rather than
+the base table; column additions to the base object do not propagate to the file
+until the view and the fixed-length record layout are both amended.
+
+Record layout is fixed at 412 bytes. Any width change requires a layout version bump
+and a two-week parallel run with the receiving trading partner.
+
+Transport is SFTP with PGP encryption at the file level. Keys rotate annually in
+the third quarter. Failed transmissions retain the staged file in the outbound
+directory for 72 hours, after which the cleanup script removes it.
+
+Reconciliation counts are written to EXT_AUDIT_CTL. A variance above 2% in the row
+count against the prior run halts the transmission and pages the on-call analyst.
+
+Retention of the source rows is unaffected by this extract. Retention of the
+transmitted file at the receiving party is governed by the business associate
+agreement and is not managed here. Requests to add a suppressed column to this file
+are directed to the Records Custodian and require privacy review before scheduling.

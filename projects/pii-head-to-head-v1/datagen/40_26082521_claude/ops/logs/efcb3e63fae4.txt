@@ -1,0 +1,36 @@
+CHANGE CONTROL RECORD — MAPPING RULE SET MAP_REG_V8
+CR NUMBER: REG-CR-2004-117 | RAISED: 2004-10-14 | TARGET IMPLEMENTATION: 2004-11-01
+REQUESTOR: THE RECORDS CUSTODIAN | REVIEWER: THE DATA STEWARD | APPROVER: THE UNIVERSITY REGISTRAR
+
+o SCOPE
+  > Add target column PRIOR_LAST_NAME to DW_REG.D_PERSON with directive M-PARTIAL. Estimated affected rows at first load: 56.
+  > Retire target column DRIVERS_LIC_NO from all staging and warehouse structures. Confirm rule 190 remains bypassed until structure drop is executed.
+  > Add target column EMAIL_ADDR_UNIV with directive M-FULL. Do not populate from EMAIL_ADDR_PERSONAL under any circumstance.
+  > Expand reference table REF_STATE to include territory codes. Estimated correction of 47 rows per nightly cycle.
+
+o PRE-IMPLEMENTATION CHECKLIST
+  > Confirm masking configuration REG_MASK.CFG advanced to revision 8 with the three directive changes above. Not started.
+  > Confirm revision 7 archived to REG_CFG_ARCHIVE with retention date recorded. Complete.
+  > Confirm test extract executed against SIS instance TEST_SIS_02, not PROD_SIS_01. Not started.
+  > Confirm test load reconciles: rows read equals rows loaded plus rows errored. Not started.
+  > Confirm masking audit report shows 0 unmasked rows across all M-FULL columns: SSN, TAX_ID, BANK_ACCT_NO, HOME_PHONE, CELL_PHONE, ADDR_LINE_1, ADDR_LINE_2, EMAIL_ADDR_PERSONAL, EMAIL_ADDR_UNIV, EMERGENCY_CONTACT_PHONE. Not started.
+  > Confirm no column carries a default value other than NULL or TOKEN. Not started.
+  > Confirm FERPA directory-information determination on file for PRIOR_LAST_NAME. Referred to the University Counsel liaison 2004-10-14.
+
+o IMPLEMENTATION WINDOW
+  > Freeze scheduler SCHED_REG_02 from 2004-11-01 01:30:00 CST. Resume no later than 04:30:00 CST.
+  > Execute structure changes in order: staging, warehouse, mapping rule set, masking configuration. Do not reorder.
+  > Execute one supervised run of REG_ETL_NIGHTLY under CR number before returning to normal numbering.
+  > Record run identifier, start timestamp, end timestamp, rows read, rows loaded, rows errored on this record.
+
+o BACK-OUT CHECKLIST
+  > Restore mapping rule set MAP_REG_V7 from REG_CFG_ARCHIVE.
+  > Restore masking configuration revision 7. Verify directive assignments before any load.
+  > Restore staging structures from the pre-window export. Export must be verified readable before the window opens.
+  > Confirm no partial load remains in DW_REG.D_PERSON. Row count must return to the pre-window figure recorded above.
+  > Notify the University Registrar within one hour of back-out initiation.
+
+o SIGN-OFF
+  > Reviewer initials and date: ______
+  > Approver initials and date: ______
+  > Post-implementation review due 2004-11-08. File with binder REG-ETL-2004-Q4.

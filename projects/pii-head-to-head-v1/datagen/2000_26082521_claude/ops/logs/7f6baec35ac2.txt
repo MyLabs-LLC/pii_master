@@ -1,0 +1,46 @@
+MAPPING RULE CHANGE RECORD
+Change reference: CHG-2021-0884
+Raised: 2021-07-14T11:02:00-05:00
+Applies to config set: cdp-masking-prod-v4.2.1 → v4.3.0
+Approving authority: Information Governance change board
+
+Clause 1. Background
+   (a) Two source columns, guardian_family_name and emergency_contact_name, have
+       been arriving in the paratransit booking extract since the upstream schema
+       release of 2021-06-11.
+   (b) Both columns were unmapped and therefore quarantined under the default
+       action, generating WARN-CFG-118 on every run and blocking 2,344 rows per
+       cycle from the analytics zone.
+
+Clause 2. Determination
+   (a) Both columns are classified Tier A as direct identifiers of a third party.
+   (b) Neither column has an approved analytical purpose. Neither is required for
+       booking fulfilment reporting.
+
+Clause 3. Rule amendments
+   (a) guardian_family_name — transform NULLIFY, output <empty>.
+   (b) emergency_contact_name — transform NULLIFY, output <empty>.
+   (c) guardian_contact_number — transform SUPPRESS, output ***-***-****, added
+       pre-emptively as the column is present in the upstream contract though not
+       yet populated.
+   (d) No change to the existing entries for passenger_given_name,
+       passenger_family_name, date_of_birth, residential_address_line_1,
+       residential_postcode, contact_mobile_number, contact_email_address,
+       concession_card_number or payment_card_pan.
+
+Clause 4. Implementation
+   (a) Config set v4.3.0 to load at 2021-07-19T00:00:00-05:00 on orchestrator
+       nodes 01 through 04.
+   (b) First run under the amended rules: job id ETL-PB-0507, run id
+       RUN-20210719-0230.
+   (c) Backfill of quarantined rows for the period 2021-06-11 to 2021-07-18 to be
+       executed as job id ETL-PB-0508, expected volume 84,384 rows.
+
+Clause 5. Verification
+   (a) The Platform Duty Engineer is to confirm that WARN-CFG-118 no longer
+       appears in the run log for the three named columns.
+   (b) The Records Custodian is to confirm, by sampling the output set, that both
+       amended columns render as zero-length and that no value appears in any log
+       sink or dead-letter payload.
+   (c) Verification outcome to be recorded against this change reference by
+       2021-07-23.

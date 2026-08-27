@@ -1,0 +1,47 @@
+REGIONAL TRANSIT AUTHORITY
+FARE SYSTEM DATA WAREHOUSE — SOURCE-TO-TARGET MAPPING RULES
+Document: STM-FARE-014
+Version: 2.6
+Issued: 2016-05-11
+Applies to job family: JOB-ETL-FARE-*
+
+1. PURPOSE
+
+   1.1  This document records the column-level mapping between the fare collection system (source) and the warehouse customer dimension (target), together with the masking rule identifier applied at load time.
+
+   1.2  Where a masking rule identifier is present, the mapping is executed after masking. No unmasked value reaches the target column.
+
+2. MAPPING TABLE — SOURCE FARECARD.ACCT_HOLDER TO WH.DIM_RIDER
+
+   SOURCE COLUMN            TARGET COLUMN            TYPE          RULE      NULLABLE
+   -------------------------------------------------------------------------------------
+   acct_ref                 rider_sk                 VARCHAR(32)   MSK-001   N
+   first_name               rider_given_name         VARCHAR(40)   MSK-004   Y
+   last_name                rider_family_name        VARCHAR(60)   MSK-004   Y
+   date_of_birth            rider_birth_year         NUMBER(4)     MSK-007   Y
+   ssn_last4                (not mapped)             —             MSK-002   —
+   mailing_addr_line_1      (not mapped)             —             MSK-002   —
+   mailing_addr_line_2      (not mapped)             —             MSK-002   —
+   mailing_city             rider_city               VARCHAR(40)   —         Y
+   mailing_postal_code      rider_postal_prefix      CHAR(3)       MSK-009   Y
+   mobile_phone             (not mapped)             —             MSK-002   —
+   email_address            (not mapped)             —             MSK-002   —
+   card_pan                 card_last4               CHAR(4)       MSK-011   Y
+   enrol_category_code      fare_category_code       CHAR(4)       —         N
+   enrol_start_dt           fare_category_start_dt   DATE          —         N
+   record_status            rider_status_code        CHAR(1)       —         N
+
+3. RULE REFERENCES
+
+   3.1  MSK-001 — deterministic tokenisation; referential integrity preserved across all FARECARD tables in the same run.
+   3.2  MSK-002 — suppress at extract; the column is not written to the staging file and the target column does not exist.
+   3.3  MSK-004 — full substitution to fixed-width replacement characters.
+   3.4  MSK-007 — generalisation to four-digit year.
+   3.5  MSK-009 — left three positions retained, remainder substituted.
+   3.6  MSK-011 — right four positions retained, remainder substituted.
+
+4. CHANGE CONTROL
+
+   4.1  Additions to Clause 2 require sign-off by the Records Custodian and the warehouse lead.
+   4.2  Any source column newly appearing in FARECARD.ACCT_HOLDER defaults to MSK-002 until classified.
+   4.3  Version 2.6 supersedes 2.5, which mapped mailing_city without restriction; that mapping is unchanged and is restated here for completeness.

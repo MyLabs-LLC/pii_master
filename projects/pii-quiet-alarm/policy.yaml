@@ -1,0 +1,123 @@
+# pii-quiet-alarm -- the shipping policy.
+#
+# The prior lineage (pii-priority-recall-v1) gated on per-tag recall and ranked
+# on macro F2. It shipped an artifact that flags 99.95% of genuinely PII-free
+# documents. This policy inverts the emphasis without abandoning detection:
+# the customer-facing false-alarm property becomes a HARD GATE, and the ranker
+# becomes precision-weighted.
+#
+# Derived from `$SKILL_DIR/profiles/sensitive-data.yaml`; the three things that
+# profile insists on are preserved -- the `ci_lower` basis, `min_support: 30`,
+# and severity recall as a *constraint* rather than something to optimise.
+name: pii-quiet-alarm-precision-gate
+
+constraints:
+  # ------------------------------------------------------------------ 1 & 2
+  # THE CUSTOMER GUARANTEE. "We do not want customers to think a document has
+  # PII when it does not." Both are judged only on the three corpora that hold
+  # genuine document-level negatives (10,003 of them); everywhere else in
+  # 2-eval prevalence is 1.0 and there is nothing to be wrong about, so those
+  # corpora are NOT_MEASURABLE here rather than a free pass.
+  #
+  # These two interact, and the interaction is deliberate. Precision depends on
+  # prevalence; specificity does not. On datax (prevalence 0.478) precision
+  # >= 0.90 at recall 0.75 implies specificity >= ~0.924, so precision is the
+  # binding bar there. On pii2 (prevalence 0.838) specificity is the binding
+  # bar. Carrying both means neither a low-prevalence nor a high-prevalence
+  # corpus can hide a noisy model.
+  - name: document-level precision >= 0.90 (conclusive)
+    metric: doc_precision
+    op: ">="
+    threshold: 0.90
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  - name: document-level specificity >= 0.85 (conclusive)
+    metric: doc_specificity
+    op: ">="
+    threshold: 0.85
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 3
+  # THE DETECTION FLOOR, two-sided protection against winning the precision
+  # bars by simply going quiet. Measurable wherever positives exist, which is
+  # all eight corpora.
+  - name: document-level recall >= 0.85 (conclusive)
+    metric: doc_recall
+    op: ">="
+    threshold: 0.85
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 4
+  # THE PRIORITY FLOOR. Relaxed from the prior lineage's 0.90 to 0.75 by
+  # explicit user decision, to buy precision headroom. Still per-tag, still
+  # per-corpus, still conclusive, still 30-instance minimum: a priority tag
+  # may not quietly die in exchange for a quieter model.
+  - name: priority tag recall >= 0.75 (conclusive)
+    metric: recall
+    op: ">="
+    threshold: 0.75
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 5
+  # THE SERVING CONSTRAINT. "Run very fast on a single cpu." Checked at
+  # selection, not after shipping.
+  - name: one-core p95 <= 5 ms
+    metric: p95_latency_ms
+    op: "<="
+    threshold: 5.0
+    severity: hard
+
+  # ------------------------------------------------------------------ advisory
+  # Reported on every arm, never gated. A tag at precision 0.93 / recall 0.12
+  # is *silent*; a tag predicted zero times in 30,000 documents is *unlearned*.
+  # Same F0.5, opposite remedies, and the prediction rate is what tells them
+  # apart -- which matters far more in a precision-first run, where "predict
+  # nothing" is the degenerate way to win.
+  - name: prediction rate
+    metric: prediction_rate
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+  - name: worst measurable priority recall
+    metric: severity_recall_min
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+preferences:
+  # 1. THE RANKER. Precision-weighted F0.5 over the 16 priority tags: precision
+  #    counts twice recall, macro-averaged so a dead rare tag cannot hide
+  #    behind a strong common one. Precision decides the champion; the recall
+  #    floors above are what stop that becoming "predict nothing".
+  #
+  #    Judged on the COLLAPSED catalogue (name components -> full_name,
+  #    street -> address). Two judges agree at F1 0.99 on whether a name is
+  #    present and 0.02-0.40 on which name tag it is, so the uncollapsed
+  #    distinction is mostly gold noise being scored as model error.
+  - metric: priority_macro_f05
+    min_relative_change: 0.0
+
+  # 2. The same question over the whole supported catalogue.
+  - metric: macro_f05
+    min_relative_change: 0.0
+
+  # 3. When quality is indistinguishable, take the faster model.
+  - metric: p95_latency_ms
+    greater_is_better: false

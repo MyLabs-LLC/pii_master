@@ -1,0 +1,22 @@
+BAYFIELD DRUG STORES, INC.
+EXCEPTION REGISTER — NIGHTLY CLAIMS EXTRACT
+Cycle 98-311  |  Register No. XR-98-311-02  |  Prepared 08-NOV-1998 06.12.44
+
+ARTICLE I. The Register records each condition raised by validation module VLD220 during the execution of job PHRXETL2, jobid JOB08106, commencing 07-NOV-1998 22.15.03 and concluding 08-NOV-1998 01.58.27.
+
+ARTICLE II. Counts of record are as follows: rows presented, 4,118,930; rows accepted, 4,118,116; rows rejected to PSD.REJECT.D981107, 814; rows suspended pending manual disposition, 0.
+
+ARTICLE III. Rejected rows are classified as follows, and no other classification shall be applied without written amendment:
+
+  ERR CODE  FIELD IN ERROR        CONDITION                    ROWS
+  --------  --------------------  ---------------------------  -----
+  V-0113    PAT_DOB               NOT NUMERIC AFTER SUPPRESS      12
+  V-0207    PAT_ZIP5              MASK LENGTH MISMATCH           341
+  V-0208    PAT_ADDR_LINE_1       RESIDUAL CONTENT DETECTED        3
+  V-0311    MBR_ID                TOKEN DOMAIN UNKNOWN           118
+  V-0312    CARDHOLDER_ID         TOKEN VAULT TIMEOUT            206
+  V-0440    PRESCRIBER_DEA_NBR    CHECK DIGIT FAILURE            134
+
+ARTICLE IV. Error V-0208, being an indication that Class A content survived the suppression exit, is deemed severity one. The three affected rows were written to the reject dataset with all positions of the offending field overwritten with low-values prior to any listing being produced, and no SYSOUT rendering of the field was generated.
+
+ARTICLE V. The Records Custodian is notified by this Register and shall record disposition on or before 10-NOV-1998.

@@ -1,0 +1,35 @@
+DATA DICTIONARY EXTRACT — STUDENT CORE
+System: Student Information System (SIS_PROD), Oracle 12c
+Schema owner: sis_core
+Scope of this extract: base demographic table only
+Revision: 2021-09-14
+
+I. Table STU_DEMOGRAPHIC
+   A. Grain and keys
+      1. One row per student, active or historical.
+      2. Primary key STU_ID_LOCAL. Unique index on STU_ID_STATE where populated.
+   B. Column inventory
+      1. STU_ID_LOCAL — NUMBER(9) — NOT NULL — district-assigned sequence value; never reused after withdrawal.
+      2. STU_ID_STATE — VARCHAR2(10) — NULL — remains null until the state assignment file returns from the nightly reconciliation job.
+      3. NAME_LEGAL_LAST — VARCHAR2(40) — NOT NULL — restricted column group PII_A.
+      4. NAME_LEGAL_FIRST — VARCHAR2(40) — NOT NULL — restricted column group PII_A.
+      5. NAME_PREFERRED — VARCHAR2(40) — NULL — maintained by counseling staff; suppressed from all state and vendor files.
+      6. BIRTH_DT — DATE — NOT NULL — restricted column group PII_A; truncated to birth year in the analytics replica.
+      7. GENDER_CD — CHAR(1) — NOT NULL — constrained to the state code set.
+      8. RACE_ETHNICITY_CD — VARCHAR2(3) — NULL — federal rollup derived at load; source responses held in a separate audit table.
+      9. ELL_FLG — CHAR(1) — NOT NULL — default 'N'.
+     10. IEP_FLG — CHAR(1) — NOT NULL — default 'N'; drives suppression rules in reporting.
+     11. SEC504_FLG — CHAR(1) — NOT NULL — default 'N'.
+     12. HOMELESS_STATUS_CD — VARCHAR2(2) — NULL — McKinney-Vento designation; restricted column group PII_B.
+     13. REC_STATUS_CD — CHAR(1) — NOT NULL — A, W, or D.
+     14. LAST_UPD_TS — TIMESTAMP — NOT NULL — set by trigger.
+     15. LAST_UPD_BY_USER_ID — VARCHAR2(20) — NOT NULL — directory account of the updating operator.
+   C. Access restriction
+      1. Column groups PII_A and PII_B are visible to the registrar role and to the Records Custodian only. All other roles read the masking view V_STU_DEMOGRAPHIC_MSK.
+      2. Ad hoc query access is granted per semester and expires automatically.
+   D. Retention
+      1. Permanent record elements are retained indefinitely under the state records schedule.
+      2. Non-permanent elements are purged five years after the exit date recorded in the enrollment table.
+   E. Downstream extracts
+      1. Nightly Ed-Fi ODS push, full domain.
+      2. Weekly rostering feed to the single sign-on vendor; identifiers, grade level, and building code only.

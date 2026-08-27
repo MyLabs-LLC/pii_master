@@ -1,0 +1,56 @@
+*
+*  MASKRULE.CFG   —  RESTRICTED FIELD HANDLING, TITLE & ESCROW APPLICATIONS
+*  GENERATION 34         EFFECTIVE 1998-10-01        REVIEW CYCLE: SEMI-ANNUAL
+*  MAINTAINED BY: DATA SERVICES, ON INSTRUCTION OF THE RECORDS CUSTODIAN
+*
+*  This member is read at bind time by the transform module and again by the
+*  report writer.  It carries no data of its own; it names columns and states
+*  the disposition applied to them before any extract leaves the production
+*  region.  Each stanza is keyed by column name as it appears in the copybook,
+*  not by the display label used on the escrow worksheet, and where the two
+*  differ the display label is carried in the LABEL keyword for the benefit of
+*  the exception listings.  Where a column is named here and does not appear
+*  in the source, the transform module raises an informational message and
+*  continues; where a column appears in the source and is not named here, the
+*  module abends.  That default is deliberate and is not to be relaxed.
+*
+
+[CLASS.NAME]
+  COLUMNS  = GRANTOR_NAME, GRANTEE_NAME, VESTING_TEXT, SELLER_NAME,
+             BUYER_NAME, TRUSTEE_NAME, SIGNER_NAME
+  ACTION   = VAULT-TOKEN
+  PATTERN  = <TKN:CLASS-NM>
+  REVERSIBLE = YES  (VAULT ACCESS BY WRITTEN REQUEST ONLY)
+
+[CLASS.GOVID]
+  COLUMNS  = BORROWER_TAX_ID, CO_BORROWER_TAX_ID, SELLER_TAX_ID,
+             DRIVERS_LIC_NBR, NOTARY_COMMISSION_NBR
+  ACTION   = OVERLAY
+  PATTERN  = *********
+  REVERSIBLE = NO
+
+[CLASS.LOCATION]
+  COLUMNS  = PROPERTY_STREET, PROPERTY_UNIT, MAILING_ADDR_LINE_1,
+             MAILING_ADDR_LINE_2, MAILING_ADDR_LINE_3
+  ACTION   = HIGH-ORDER-SUPPRESS
+  PATTERN  = <SUPPRESSED>
+  RETAIN   = PROPERTY_CITY, PROPERTY_STATE, PROPERTY_ZIP(5), APN
+
+[CLASS.CONTACT]
+  COLUMNS  = HOME_PHONE, WORK_PHONE, FAX_NBR, EMAIL_ADDR
+  ACTION   = OVERLAY
+  PATTERN  = ***-***-****   (EMAIL_ADDR EMITS <MASK>)
+
+[CLASS.FUNDS]
+  COLUMNS  = ESCROW_TRUST_ACCT, WIRE_ABA, WIRE_ACCT,
+             SELLER_PROCEEDS_ACCT, LENDER_LOAN_NBR
+  ACTION   = HASH-TRUNCATE
+  PATTERN  = <TKN:CLASS-FN>
+  NOTE     = CHECK DIGIT VALIDATED BEFORE HASHING; SEE R-041
+
+*
+*  BORROWER_DOB is handled by the date normaliser and not by this member.
+*  It is emitted as year of birth only to the actuarial feed and as <MASK>
+*  to every other consumer.  Requests to widen that disposition are to be
+*  referred upward and are not to be satisfied by local edit of this file.
+*

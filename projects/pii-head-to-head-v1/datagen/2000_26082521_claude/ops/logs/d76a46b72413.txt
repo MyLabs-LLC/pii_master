@@ -1,0 +1,26 @@
+ETL JOB OUTPUT -- ETL_CANDMSTR_NIGHTLY
+RUN ID 2016074-0037   NODE adp-etl-03   OPERATOR svc_adp_etl
+
+    START 2016-03-14T02:00:04Z    END 2016-03-14T03:14:52Z    ELAPSED 01:14:48
+
+    STAGE  DESCRIPTION          READ    INSERT  UPDATE  REJECT  MASKED  TOKEN
+    -----  -------------------  ------  ------  ------  ------  ------  ------
+    1      extract from source   48213       0       0       0       0       0
+    2      map to hr_staging     48213   48066       0     147       0       0
+    3      apply mask policy     48066       0   48066       0  312429   96118
+    4      referential check     48066   48062       0       4       0       0
+    5      load to hr_target     48062   41190    6872       0       0       0
+    -----  -------------------  ------  ------  ------  ------  ------  ------
+           TOTALS                48213   89318   54938     151  312429   96118
+
+    RETURN CODE ....... 4  (completed with exceptions)
+    EXCEPTIONS ........ 181 across 147 rows; see DQ extract 2016-03-14
+    VAULT CALLS ....... 96118 issued, 96104 resolved, 14 timed out
+    SUPPRESSED COLS ... 4  (written empty by policy revision 11)
+    CHECKPOINT ........ /var/adp/ckpt/2016074-0037.ckp retained
+    NEXT SCHEDULED .... 2016-03-15T02:00:00Z
+
+    Re-drive of the 14 quarantined rows is queued as run 2016074-0038 and
+    will execute after vault tv-prod-02 clears its maintenance flag. No
+    downstream feed was released; RPT_CLIENT_FEED remains held pending
+    sign-off by the Records Custodian.

@@ -1,0 +1,17 @@
+{
+  "metric": "doc_specificity",
+  "target": 0.9,
+  "verdict": "plausible",
+  "supported_target": 0.9545,
+  "ceiling": null,
+  "ceiling_method": "",
+  "agreement": 0.9545,
+  "agreement_source": "two independent judges (gemini, sonnet) over the same 946 datax documents: raw agreement 0.9545 on 'does this document contain PII', Cohen kappa 0.9080, judge-vs-judge F1 0.9487",
+  "baseline": 0.0005,
+  "terminal_slope": null,
+  "curve": [],
+  "notes": [
+    "Baseline is the frozen champion re-scored against corrected gold: it flags 99.95% of genuinely PII-free documents. Mechanism is a data defect, not a model ceiling: 6 of 8 training corpora contain zero labelled-clean documents, so the fitted model never saw a negative.",
+    "20,714 real-world judge-asserted PII-free training documents (datax 8,499 + govdocs2 12,215) are present in 1-train but invisible to the current loader, on top of pii2's 49,997 synthetic negatives."
+  ]
+}

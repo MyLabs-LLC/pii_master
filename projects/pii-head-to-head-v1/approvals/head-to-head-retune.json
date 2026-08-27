@@ -1,0 +1,39 @@
+{
+  "approved_at": "2026-08-25T22:43:25.857886+00:00",
+  "approved_by": "user",
+  "plan": {
+    "arms": {
+      "A": "priority fusion @ 1000 chars",
+      "B": "steady-aim cascade @ 12000 chars (deep)",
+      "C": "priority fusion @ 12000 chars"
+    },
+    "budget": {
+      "max_trials": 2000,
+      "max_wallclock_s": 28800
+    },
+    "editable_surfaces": [
+      "projects/pii-head-to-head-v1/**",
+      "training/h2h_cache.py",
+      "training/h2h_priority.py",
+      "training/h2h_steady.py",
+      "training/h2h_eval.py",
+      "training/h2h_bench.py"
+    ],
+    "modules": [
+      "tune",
+      "eval"
+    ],
+    "not_permitted": [
+      "promotion",
+      "packaging",
+      "deployment",
+      "edits to dist/ bundles",
+      "edits to existing training/*.py",
+      "edits to /home/lence/workspace/data/**"
+    ],
+    "operation": "head-to-head-retune",
+    "project": "projects/pii-head-to-head-v1",
+    "target": "3 arms x 8 sealed corpora, full metric family + per-tag tables"
+  },
+  "plan_sha256": "91dbb4a2742732d066358634330a82d6405af6aa57c05ac67e5a1ad895fd35ec"
+}

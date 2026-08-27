@@ -1,0 +1,22 @@
+RUN CLOSE-OUT NOTE — NIGHTLY CONCESSION ELIGIBILITY LOAD
+Job family: CONCESSION_ELIG | Job id: ETL-CE-0442 | Run id: RUN-20210614-0217
+Window: 2021-06-14T02:17:03-05:00 to 2021-06-14T02:41:56-05:00
+
+1. The run completed with status PARTIAL_SUCCESS. Masking config cdp-masking-prod-v4.2.1 was verified loaded at 02:17:05 prior to the first transform.
+
+2. Volumes: rows_read 1,284,406; rows_transformed 1,281,973; rows_rejected 2,433; rows_written 1,281,973.
+
+3. Extracted log lines are reproduced below without alteration.
+
+   02:19:44 INFO  stage=transform rule=NULLIFY cols=[passenger_given_name,passenger_family_name] applied=1,284,406
+   02:22:10 INFO  stage=transform rule=SUPPRESS cols=[date_of_birth,national_identity_number] applied=1,284,406
+   02:26:31 INFO  stage=transform rule=FPE_TOKEN col=concession_card_number applied=1,283,118 nulls=1,288
+   02:31:02 WARN  WARN-CFG-118 unmapped column observed col=guardian_family_name action=QUARANTINE rows=612
+   02:33:47 ERROR ERR-VAL-207 col=residential_postcode reason=length_out_of_range rows=1,821 sample=**???
+   02:38:15 INFO  dead_letter_write path=/dlq/ce/20210614/ rows=2,433 payload_mode=COLUMN_NAMES_ONLY
+
+4. The unmapped column at 02:31:02 arrived from an upstream schema change not notified through the change register. It was quarantined and did not reach the analytics zone. A mapping decision is required before the next full load.
+
+5. Dead-letter records carry column names, error codes and row keys in tokenised form only, in accordance with Clause 6.2 of the masking specification.
+
+6. Actions: the Platform Duty Engineer to raise a schema change ticket by 2021-06-15; the Records Custodian to confirm the tier assignment for the quarantined column.

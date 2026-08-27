@@ -1,0 +1,59 @@
+{
+  "approved_at": "2026-08-27T01:38:02.640845+00:00",
+  "approved_by": "user",
+  "plan": {
+    "budget": {
+      "max_trials": 1,
+      "note": "one deterministic rebuild; no hyperparameter search"
+    },
+    "editable_surfaces": [
+      "training/h2h_scorecard_catalogue.py",
+      "training/h2h_scorecard_rebuild.py",
+      "projects/pii-scorecard-60/"
+    ],
+    "feasibility": {
+      "ceiling": 0.6754,
+      "headroom": 0.0113,
+      "note": "ceiling is optimistic: oracle presence detection, every other tag held at its current F2",
+      "target": 0.6641,
+      "verdict": "plausible"
+    },
+    "forbidden_surfaces": [
+      "training/h2h_eval.py",
+      "training/quiet_select.py",
+      "training/quiet_data.py",
+      "projects/pii-quiet-alarm/cache",
+      "projects/pii-head-to-head-v1",
+      "/home/lence/workspace/data/2-eval",
+      "/home/lence/workspace/data/scorecard"
+    ],
+    "label_space": {
+      "dropped": [
+        "sensitive_pci_routing_number"
+      ],
+      "kept_off_scorecard": [
+        "sensitive_pci_swift_code"
+      ],
+      "n": 61,
+      "restored_from_collapse": [
+        "sensitive_pii_given_name",
+        "sensitive_pii_family_name",
+        "sensitive_pii_middle_name",
+        "sensitive_pii_street_number_and_name"
+      ],
+      "scorecard_tags": 60,
+      "source": "/home/lence/workspace/data/scorecard/Scorecard - GAIA Catalog(Rasool-PII-PCI-PHI).csv"
+    },
+    "modules": [
+      "classify",
+      "tune",
+      "eval"
+    ],
+    "operation": "taxonomy-rebuild-61-labels",
+    "priority_gate_set": "unchanged 16 tags; the four restored tags are NOT added, so the taxonomy change is not confounded with a policy change",
+    "project": "projects/pii-scorecard-60",
+    "promotion": "only if a declared gate is cleared",
+    "target": "rebuild the cascade on the scorecard's 61-label taxonomy and score it on the eight sealed corpora under the unchanged evaluator and the two unchanged policies; target macro_f2 >= 0.6641"
+  },
+  "plan_sha256": "57061b94e8087347bdc9915ade0d1a520e6bca467255db573c076a9bd003f9e0"
+}

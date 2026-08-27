@@ -1,0 +1,28 @@
+{
+  "candidate": "t0-c15",
+  "stage": "validate",
+  "proposal": "Benchmark three finalists over 12 read-depth arms (1k/2.5k/10k/20k), evaluating all eight hold-outs separately and measuring one-core end-to-end latency on a deterministic 1,000-document stratified sample.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "475d3c5",
+  "commit": "9a9c4b3",
+  "decision": "accepted; 1k fusion selected",
+  "evidence": {
+    "tests": "9 passed",
+    "ruff": "passed",
+    "finalists": ["hash_sgd", "hybrid_priority_001", "hybrid_priority"],
+    "read_depths_chars": [1000, 2500, 10000, 20000],
+    "latency_sample_documents": 1000,
+    "quality_holdout_corpora_per_arm": 8,
+    "selected_family": "hybrid_priority",
+    "selected_read_depth_chars": 1000,
+    "selected_p95_ms_one_core": 2.2000838999999996,
+    "selected_p95_speedup_vs_20k": 4.013232540813556,
+    "selected_equal_corpus_macro_f2": 0.48345749382010117,
+    "selected_equal_corpus_micro_f1": 0.38118396080534256,
+    "selected_priority_point_passes": 55,
+    "selected_measurable_priority_gates": 55,
+    "selected_worst_priority_recall": 0.9887766554433222,
+    "latency_gate_p95_ms": 5.0,
+    "latency_gate_pass": true
+  }
+}

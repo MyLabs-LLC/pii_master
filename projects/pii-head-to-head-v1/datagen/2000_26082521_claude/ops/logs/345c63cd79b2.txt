@@ -1,0 +1,83 @@
+# ------------------------------------------------------------------------------
+# FILE:     /opt/informatica/pc7/conf/dw_privacy/masking_policy.cfg
+# SYSTEM:   RXDW - Prescription Data Warehouse (Retail Pharmacy Operations)
+# REVISION: 11 (supersedes revision 10 of 2004-01-19)
+# EFFECTIVE:2004-04-14 00:00:00 CST
+# OWNER:    the Records Custodian, Office of Corporate Privacy
+# ------------------------------------------------------------------------------
+# This configuration is promulgated pursuant to the Corporate Information
+# Handling Standard (CIHS-002) and to such obligations as are imposed upon the
+# Company in its capacity as a covered entity under the Standards for Privacy of
+# Individually Identifiable Health Information, and is intended to give
+# operational effect to the minimum necessary principle by ensuring that no
+# element of protected health information, and no element of individually
+# identifiable financial information, is materialized in cleartext within any
+# non-production schema, extract file, spool area, reject queue, or operator
+# console listing under the control of the Data Warehouse Services group.
+#
+# Each stanza below binds a source column, identified by its physical name as it
+# appears in the governing copybook or table definition, to exactly one masking
+# transform. Where the transform is designated TOKENIZE, the value shall be
+# replaced by a referentially consistent surrogate drawn from the token vault,
+# such surrogate to be stable across all jobs sharing a vault domain so that
+# joins survive; where the transform is designated LITERAL, the value shall be
+# overwritten in its entirety by the stated placeholder; where the transform is
+# designated SUPPRESS, the column shall be propagated as NULL and the target
+# constraint relaxed accordingly. No transform may be disabled, overridden, or
+# bypassed by session parameter, and any attempt to do so shall cause the
+# workflow to abort with return code 88 and to raise an entry in the privacy
+# exception register. Deviations require the countersignature of the Records
+# Custodian and of the Director of Pharmacy Systems, recorded in change ticket
+# form prior to promotion.
+# ------------------------------------------------------------------------------
+
+[vault]
+domain              = RXDW_PROD_PHI
+algorithm           = FPE-A
+key_ref             = kms://rxdw/phi/2004q2
+consistency         = CROSS_JOB
+audit_sink          = /var/log/rxdw/tokenvault_access.log
+
+[rules.patient]
+PAT_LAST_NM         = LITERAL   "XXXXXXXXXX"
+PAT_FIRST_NM        = LITERAL   "XXXXXXXXXX"
+PAT_MID_INIT        = SUPPRESS
+PAT_DOB_DT          = LITERAL   "**/**/****"    ; year retained only in PAT_BIRTH_YR_DERIVED
+PAT_SSN_NBR         = LITERAL   "XXX-XX-XXXX"
+PAT_ADDR_LINE_1_TXT = SUPPRESS
+PAT_ADDR_LINE_2_TXT = SUPPRESS
+PAT_CITY_NM         = SUPPRESS
+PAT_ST_CD           = PASSTHRU                  ; geography above county permitted
+PAT_ZIP5_CD         = TRUNCATE  keep=3          ; per de-identification guidance
+PAT_ZIP4_CD         = SUPPRESS
+PAT_HOME_PHN_NBR    = LITERAL   "XXX-XXX-XXXX"
+PAT_MOBILE_PHN_NBR  = LITERAL   "XXX-XXX-XXXX"
+PAT_EMAIL_ADR_TXT   = LITERAL   "XXXXX@XXXXX.XXX"
+PAT_MRN_ID          = TOKENIZE  vault=RXDW_PROD_PHI
+
+[rules.eligibility]
+CARDHOLDER_ID_NBR   = TOKENIZE  vault=RXDW_PROD_PHI
+MBR_ID_NBR          = TOKENIZE  vault=RXDW_PROD_PHI
+GRP_NBR             = PASSTHRU
+PLAN_BIN_NBR        = PASSTHRU
+PCN_CD              = PASSTHRU
+MBR_RELATIONSHIP_CD = PASSTHRU
+
+[rules.tender]
+TENDER_ACCT_NBR     = LITERAL   "XXXXXXXXXXXX####"  ; last four suppressed at rev 11
+TENDER_EXP_DT       = SUPPRESS
+TENDER_HOLDER_NM    = LITERAL   "XXXXXXXXXX"
+
+[rules.prescriber]
+PRSCBR_LAST_NM      = LITERAL   "XXXXXXXXXX"
+PRSCBR_DEA_NBR      = TOKENIZE  vault=RXDW_PROD_PHI
+PRSCBR_NPI_NBR      = TOKENIZE  vault=RXDW_PROD_PHI  ; column reserved, not yet populated
+
+[rules.clinical]
+NDC_CD              = PASSTHRU
+GPI_CD              = PASSTHRU
+QTY_DISPENSED       = PASSTHRU
+DAYS_SUPPLY_QTY     = PASSTHRU
+RX_NBR              = TOKENIZE  vault=RXDW_PROD_PHI
+RX_FILL_NBR         = PASSTHRU
+SIG_TXT             = SUPPRESS  ; free text held to contain identifiers at rev 09

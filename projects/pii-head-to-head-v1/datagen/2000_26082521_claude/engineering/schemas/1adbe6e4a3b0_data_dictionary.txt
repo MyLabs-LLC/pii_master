@@ -1,0 +1,38 @@
+MEMBER AND CUSTOMER DATABASE — DICTIONARY EXTRACT
+Section 4: Applicant demographic and eligibility columns
+Source system: MBRMAST (AS/400), replicated to Oracle 7 instance PLCMNT for branch reporting
+
+IDENTIFIER COLUMNS
+  - MBR_ID
+      * NUMBER(9) in PLCMNT, PACKED(9,0) on the host
+      * NOT NULL, unique
+      * Use this column, not SSN_NBR, for every join written after the March cutover
+  - ALT_ID_NBR
+      * VARCHAR2(12), NULL allowed
+      * Holds the branch-assigned file number used before centralization
+      * Retained for lookup only; no new values are written
+  - SSN_NBR
+      * VARCHAR2(9), NOT NULL
+      * Restricted column. Grants are held by the PAYROLL and RECORDS roles; SELECT is not granted to the reporting role
+      * Any request for a report containing this column goes to the Records Custodian in writing
+
+NAME AND CONTACT COLUMNS
+  - LAST_NAME, FIRST_NAME, MID_INIT — VARCHAR2(25/15/1); last and first NOT NULL
+  - FORMER_NAME — VARCHAR2(25), NULL allowed; populated at the applicant's request for reference checking
+  - ADDR_LINE_1, ADDR_LINE_2, CITY, STATE_CD, ZIP_CD — standard address block; line 2 nullable
+  - HOME_PHONE, MSG_PHONE — VARCHAR2(10) each, NULL allowed
+  - CONTACT_PREF_CD — CHAR(1); edited against table CONTPREF
+
+ELIGIBILITY AND COMPLIANCE COLUMNS
+  - DOB_DT — DATE, NULL allowed; four-digit year following the Y2K remediation of November last year
+  - I9_VERIF_DT — DATE, NULL allowed; must be present before PLACEMENT_STAT can move to active
+  - I9_DOC_TYPE_CD — CHAR(2); document category only, never the document number
+  - WORK_AUTH_EXP_DT — DATE, NULL allowed; drives the expiring-authorization report run each Monday
+  - GENDER_CD, ETHNIC_CD, VET_STAT_CD, DISAB_SELF_ID_CD — CHAR(1) each, NULL allowed
+
+HANDLING NOTES
+  - The four self-identification columns are collected for EEO reporting and are held in a separate page range. They are excluded from every branch view and from the recruiter inquiry screens
+  - Aggregate counts only are released to the Compliance group; no row-level extract of these columns is authorized
+  - Retention: seven years from TERM_DT for the applicant record, four years from I9_VERIF_DT for the eligibility columns, whichever is longer
+  - Downstream extracts: MBEXT01 (payroll bureau, nightly), MBEXT03 (EEO aggregate, quarterly, counts only), MBEXT04 (branch scheduling, weekly, no demographic columns)
+  - Replication from the host to PLCMNT runs at 0200; the reporting instance is refreshed by full drop and reload, so no update authority is granted on it

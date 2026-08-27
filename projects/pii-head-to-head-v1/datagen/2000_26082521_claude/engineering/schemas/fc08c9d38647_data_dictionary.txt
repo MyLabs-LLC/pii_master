@@ -1,0 +1,97 @@
+PATIENT FINANCIAL SERVICES — DATA DICTIONARY EXCERPT
+FORM PFS-DD-04 (Rev. 03/2016)
+
+SECTION 1. DOCUMENT CONTROL
+  Excerpt No. ......... PFS-DD-04-B
+  Supersedes .......... PFS-DD-04-A (Rev. 08/2015)
+  Prepared by ......... Data Administration Analyst II
+  Reviewed by ......... the Records Custodian
+  Approved by ......... Director, Patient Financial Services
+  Classification ...... Internal — Restricted (Category 3)
+  Effective ........... 2016-04-01
+  Next review ......... 2017-04-01
+
+SECTION 2. OBJECT IDENTIFICATION
+  Environment ......... Production (BILLDB1)
+  Platform ............ Oracle 11gR2
+  Schema .............. PFS_CORE
+  Table ............... MEMBER_MASTER
+  Row count band ...... 1M–5M
+  Load method ......... Nightly ETL from ADT/HL7 interface; manual maintenance
+                        via Registration front end only. No direct DML.
+  Primary key ......... MBR_SK
+  Partitioning ........ Range on ACCT_OPEN_DT (annual)
+
+SECTION 3. COLUMN INVENTORY
+
+  COLUMN NAME            DATA TYPE      NULL  OPERATIONAL NOTE
+  ---------------------  -------------  ----  ---------------------------------
+  MBR_SK                 NUMBER(12)     N     Surrogate key. Sequence-assigned.
+                                              Never re-used after purge.
+  MRN_TXT                VARCHAR2(20)   N     Sourced from ADT A08. Immutable
+                                              after first commit. Category 3.
+  GUARANTOR_ACCT_NBR     VARCHAR2(18)   N     Column-level masking policy
+                                              GUAR_MASK_01 applies to all roles
+                                              outside PFS_BILL_RW.
+  MBR_LAST_NAME_TXT      VARCHAR2(60)   N     Category 3. Excluded from all
+                                              analytic extracts.
+  MBR_FIRST_NAME_TXT     VARCHAR2(60)   N     Category 3. See note 4.2.
+  MBR_MID_INIT_TXT       CHAR(1)        Y     Optional at registration.
+  MBR_DOB_DT             DATE           N     Category 3. Time component not
+                                              populated; do not use for age
+                                              computation in extracts — use
+                                              MBR_AGE_BAND_CD.
+  MBR_AGE_BAND_CD        CHAR(3)        Y     Derived nightly. Approved for
+                                              downstream reporting.
+  MBR_SSN_TXT            VARCHAR2(11)   Y     Category 4 (Highest). Encrypted at
+                                              rest (TDE). Read access limited to
+                                              two named role accounts. Every
+                                              SELECT audited via FGA policy
+                                              SSN_AUDIT. Collection discontinued
+                                              for new registrations 01/2016;
+                                              historical values retained pending
+                                              legal hold review.
+  MBR_ADDR_LINE_1_TXT    VARCHAR2(80)   Y     Category 3.
+  MBR_ADDR_LINE_2_TXT    VARCHAR2(80)   Y     Category 3.
+  MBR_POSTAL_CD          VARCHAR2(10)   Y     First three positions only are
+                                              released to Population Health.
+  MBR_HOME_PHONE_TXT     VARCHAR2(15)   Y     Category 3. Cleansed of formatting
+                                              characters on load.
+  MBR_MOBILE_PHONE_TXT   VARCHAR2(15)   Y     Category 3. Consent flag governs
+                                              use — see CONTACT_CONSENT_IND.
+  MBR_EMAIL_ADDR_TXT     VARCHAR2(120)  Y     Category 3. Populated only where
+                                              statement delivery preference is
+                                              electronic.
+  CONTACT_CONSENT_IND    CHAR(1)        N     Y/N/U. Default U.
+  PAYER_PLAN_CD          VARCHAR2(10)   Y     FK to REF_PAYER_PLAN.
+  SUBSCRIBER_ID_TXT      VARCHAR2(30)   Y     Category 3. As received on 270/271.
+  ACCT_OPEN_DT           DATE           N     Partition key.
+  ACCT_STATUS_CD         CHAR(2)        N     See REF_ACCT_STATUS.
+  BAD_DEBT_REFERRAL_DT   DATE           Y     Populated by collections interface.
+  LAST_UPDT_USER_ID      VARCHAR2(30)   N     Application user ID, not personal.
+  LAST_UPDT_TS           TIMESTAMP      N     System-assigned.
+
+SECTION 4. ACCESS RESTRICTION
+  4.1  Base table access is denied to all interactive users. Access is granted
+       through view V_MEMBER_MASTER_RPT, which omits Category 4 columns.
+  4.2  Requests for name or address columns require a completed Form IS-27
+       countersigned by the Privacy Office. Standing approvals expire annually.
+  4.3  Developer access in non-production is permitted only against de-identified
+       copies produced by job SCRUB_MBR_NIGHTLY.
+
+SECTION 5. RETENTION
+  5.1  Financial records: 7 years from ACCT_STATUS_CD transition to closed.
+  5.2  Minors: retained to age of majority plus 7 years, per State schedule.
+  5.3  Purge job PURGE_MBR_Q runs quarterly; suppressed for accounts flagged
+       LEGAL_HOLD_IND.
+
+SECTION 6. DOWNSTREAM EXTRACTS
+  EXT-101  Claims 837I generation ......... nightly, SFTP to clearinghouse
+  EXT-114  Statement vendor file .......... weekly, includes address columns
+  EXT-140  Decision Support load .......... nightly, Category 3 columns dropped
+  EXT-152  Bad debt agency placement ...... monthly, encrypted archive
+
+SECTION 7. SIGN-OFF
+  Data Administration Analyst II ....... initials ______  date ______
+  the Records Custodian ................ initials ______  date ______
+  Privacy Office designee .............. initials ______  date ______

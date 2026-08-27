@@ -1,0 +1,33 @@
+FORM OPS-22
+NIGHTLY LOAD — JOB OUTPUT EXTRACT
+Operations Control Desk
+
+SECTION 1 — HEADER
+1.1  Job identifier ....... ETL_MBR_LOAD_0114
+1.2  Run identifier ....... RUN-20110412-0231
+1.3  Operator role ........ the Duty Operator, second shift
+1.4  Cycle ................ NB-02, business date 11 APR 2011
+
+SECTION 2 — OUTPUT
+02:31:07  INFO   session s_mbr_stage_load initialised
+02:31:09  INFO   source qualifier MBR_MASTER: columns bound MEMBER_NBR, MEMBER_NAME_LAST, MEMBER_NAME_FIRST, DATE_OF_BIRTH, SSN_TXT, ADDR_LINE_1, POSTAL_CD, PHONE_HOME, EMAIL_ADDR, ACCT_NBR, OPEN_DT, STATUS_CD
+02:31:09  INFO   masking rule set MASK_RULESET_MDW v11.3 attached
+02:33:41  INFO   rows read ............ 149,038
+02:33:41  INFO   rows masked .......... 149,038
+02:41:12  WARN   column EMAIL_ADDR: 2,104 rows null at source; digest not computed
+02:44:58  WARN   column PHONE_MOBILE: not present in source layout; defaulted to (null)
+02:51:30  ERROR  transformation exp_validate: 41 rows failed rule set VAL_MBR_STD
+02:51:30  INFO   rejected rows routed to REJ_MBR_20110412 (values suppressed at write)
+02:58:44  INFO   rows written DW_MBR ... 148,997
+02:58:45  INFO   commit issued, session complete, return code 0
+02:58:45  INFO   elapsed 00:27:38
+
+SECTION 3 — CONTROL TOTALS
+3.1  Source count ......... 149,038
+3.2  Target count ......... 148,997
+3.3  Rejected ............. 41
+3.4  Variance ............. 0.027 per cent
+
+SECTION 4 — DISPOSITION
+4.1  Reject file referred to the Data Steward at 07:00 CST.
+4.2  No re-run required; cycle closed by the Duty Operator at 03:04 CST.

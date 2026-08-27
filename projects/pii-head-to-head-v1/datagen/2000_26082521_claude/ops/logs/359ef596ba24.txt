@@ -1,0 +1,36 @@
+ETL JOB OUTPUT — STATE REPORTING SUBMISSION EXTRACT
+Northfield Consolidated School District 214
+
+== RUN HEADER ==
+job_id=JOB-EDW-STATE-0207  run_id=20161004-0011  package=state_fall_housing_v2.dtsx
+host=etl03.int.d214  operator_role=the Batch Operations Analyst  ruleset=MAP-SIS-STATE-0311 v1.9
+
+== LOG EXTRACT ==
+2016-10-04T02:00:01-05:00 INFO  [init]      run_id=20161004-0011 acquired lock STATE_FALL
+2016-10-04T02:00:06-05:00 INFO  [config]    loaded masking profile MSK-STATE-0002 v1.4
+2016-10-04T02:00:06-05:00 INFO  [config]    columns declared SUPPRESS=6 BLOCK=3 TOKENIZE=4
+2016-10-04T02:01:18-05:00 INFO  [extract]   VW_STU_ENROLL_FALL rows=45,110 elapsed=00:01:12
+2016-10-04T02:01:19-05:00 INFO  [extract]   VW_STU_PROGRAM_FALL rows=12,884 elapsed=00:00:41
+2016-10-04T02:03:44-05:00 INFO  [tokenize]  field=STATE_TESTING_ID calls=45,110 ok=45,110 fail=0
+2016-10-04T02:04:02-05:00 INFO  [tokenize]  field=LOCAL_STUDENT_NUMBER calls=45,110 ok=45,108 fail=2
+2016-10-04T02:04:02-05:00 WARN  [tokenize]  vault collision, rows routed to quarantine reject_key=RK-0011-0001,RK-0011-0002
+2016-10-04T02:05:30-05:00 INFO  [mask]      field=DATE_OF_BIRTH rule=GENERALIZE(year) applied=45,110
+2016-10-04T02:05:31-05:00 INFO  [mask]      field=POSTAL_CODE rule=TRUNCATE(3) applied=45,110 nulled=39
+2016-10-04T02:05:33-05:00 INFO  [mask]      fields nullified: LAST_NAME FIRST_NAME MIDDLE_INITIAL STREET_ADDRESS_1 GUARDIAN_1_NAME GUARDIAN_1_EMAIL
+2016-10-04T02:06:10-05:00 ERROR [validate]  VE-1311 field=RACE_ETHNICITY_CODE rule=CODE_SET_MEMBERSHIP count=17 value=[MASKED]
+2016-10-04T02:06:10-05:00 ERROR [validate]  VE-1420 field=ENROLLMENT_ENTRY_DATE rule=ENTRY<=EXIT count=8 value=[MASKED]
+2016-10-04T02:06:11-05:00 ERROR [validate]  VE-1701 field=PROGRAM_EXIT_REASON rule=REQUIRED_IF_EXIT_DATE count=104 value=[MASKED]
+2016-10-04T02:06:12-05:00 WARN  [validate]  reject total=129 rate=0.29% threshold=0.50% PASS
+2016-10-04T02:07:55-05:00 INFO  [load]      target=state_sub.fall_housing rows_in=45,110 rows_out=44,981 rejected=129
+2016-10-04T02:08:20-05:00 INFO  [assert]    SSN column present in output? NO
+2016-10-04T02:08:20-05:00 INFO  [assert]    MEDICAID_ID column present in output? NO
+2016-10-04T02:08:20-05:00 INFO  [assert]    GUARDIAN_1_PHONE column present in output? NO
+2016-10-04T02:09:04-05:00 INFO  [package]   file written state_fall_20161004.txt bytes=6,411,772 checksum=sha1
+2016-10-04T02:09:05-05:00 INFO  [finish]    exit_code=4 lock released
+
+== RUN SUMMARY ==
+rows_read=57,994  rows_loaded=44,981  rows_rejected=129  rows_quarantined=131
+elapsed=00:09:04  exit_code=4 (COMPLETED WITH WARNINGS)
+quarantine=edw_stg.qtn_state_fall retention=30d
+follow_up=DQ-8903 assigned to the SIS Data Steward
+next_run=2016-10-05T02:00:00-05:00

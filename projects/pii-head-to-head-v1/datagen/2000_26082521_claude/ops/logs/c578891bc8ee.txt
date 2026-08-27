@@ -1,0 +1,49 @@
+BAYFIELD DRUG STORES, INC. — PHARMACY SYSTEMS DIVISION
+SCHEDULE B TO PSD-STD-0417
+SOURCE-TO-TARGET MAPPING RULES, MAIL SERVICE DATA MART (MART: DMPHRX)
+Issued 21-SEP-1998; in force from cycle 98-268 inclusive
+
+1. Application
+
+  1.1 This Schedule binds every mapping executed by jobs PHRXETL0 through PHRXETL7 inclusive, and every ad hoc extract requested under work order procedure WO-11.
+
+  1.2 A mapping rule not appearing in this Schedule confers no authority to move a field, and the field shall be treated as suppressed by default.
+
+2. Rules
+
+  2.1 The disposition column is determinative. Where a field appears in the source copybook PHRXCOPY.PATMSTR or PHRXCOPY.RXHDR but is absent below, Clause 1.2 applies.
+
+  SOURCE FIELD          SOURCE COPYBOOK   TARGET COLUMN         DISPOSITION
+  --------------------  ----------------  --------------------  ------------------
+  PAT_LAST_NM           PATMSTR           (none)                SUPPRESS
+  PAT_FIRST_NM          PATMSTR           (none)                SUPPRESS
+  PAT_DOB               PATMSTR           PAT_AGE_BAND_CD       DERIVE, THEN DROP
+  PAT_SEX_CD            PATMSTR           PAT_SEX_CD            PASS
+  PAT_SSN               PATMSTR           (none)                SUPPRESS
+  PAT_ADDR_LINE_1       PATMSTR           (none)                SUPPRESS
+  PAT_CITY              PATMSTR           (none)                SUPPRESS
+  PAT_STATE_CD          PATMSTR           PAT_STATE_CD          PASS
+  PAT_ZIP5              PATMSTR           PAT_ZIP3              TRUNCATE TO 3
+  PAT_HOME_PHONE        PATMSTR           (none)                SUPPRESS
+  PAT_EMAIL_ADR         PATMSTR           (none)                SUPPRESS
+  PAT_ACCT_NBR          PATMSTR           PAT_TKN               TOKENISE(ACT)
+  MBR_ID                RXHDR             MBR_TKN               TOKENISE(MBR)
+  RX_NBR                RXHDR             RX_TKN                TOKENISE(RXN)
+  REFILL_SEQ_NBR        RXHDR             REFILL_SEQ_NBR        PASS
+  NDC_CD                RXHDR             NDC_CD                PASS
+  QTY_DISPENSED         RXHDR             QTY_DISPENSED         PASS
+  DAYS_SUPPLY           RXHDR             DAYS_SUPPLY           PASS
+  PRESCRIBER_DEA_NBR    RXHDR             PRESCRIBER_TKN        TOKENISE(DEA)
+  STORE_NBR             RXHDR             STORE_NBR             PASS
+  PLAN_BIN              RXHDR             PLAN_BIN              PASS
+  PCN                   RXHDR             PCN                   PASS
+
+3. Derivation of PAT_AGE_BAND_CD
+
+  3.1 The derivation shall be performed within the extract step, in storage, and the source field shall not be written to any work file. Bands are: 01 (under 18), 02 (18–34), 03 (35–49), 04 (50–64), 05 (65 and over), 99 (indeterminate).
+
+  3.2 Where the derivation cannot be performed, band 99 shall be assigned and error V-0113 raised; under no circumstance shall the source field be carried forward for later derivation.
+
+4. Currency of this Schedule
+
+  4.1 Last verified against the target catalogue on 04-NOV-1998 at 19.22.51 by job PHRXCHK1, jobid JOB07903, returning: columns compared 22, mismatches 0, RC=0000.

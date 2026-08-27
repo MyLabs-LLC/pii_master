@@ -1,0 +1,62 @@
+MEMORANDUM
+
+TO:      Data Governance Committee; Manager of Core Systems
+FROM:    Records Custodian
+SUBJECT: Controlled Data Dictionary Excerpt — MEMBER_MASTER (Core Release 2016.2)
+DATE:    14 March 2016
+FILE:    DG-DD-2016-011
+
+1.0  PURPOSE
+1.1  This memorandum publishes the controlled excerpt of the MEMBER_MASTER table as constituted under Core Release 2016.2, superseding excerpt DG-DD-2015-047 in its entirety.
+1.2  All schema change requests affecting the columns enumerated in Clause 3.0 shall be routed through the Data Governance Committee prior to promotion into the production instance.
+
+2.0  SCOPE
+2.1  This excerpt covers MEMBER_MASTER only. Companion tables (SHARE_ACCT, LOAN_ACCT, CARD_SERVICE) are documented under separate cover.
+2.2  Columns designated Restricted in Clause 3.0 are governed by the institution's Gramm-Leach-Bliley safeguards program and by Regulation P notice obligations.
+
+3.0  COLUMN INVENTORY
+
+COLUMN NAME            DATATYPE       NULL   CLASSIFICATION / NOTE
+---------------------  -------------  -----  -----------------------------------
+MBR_NBR                NUMBER(10)     NO     Primary key; system-assigned
+MBR_STATUS_CD          CHAR(2)        NO     Domain per Appendix B
+MBR_LAST_NAME          VARCHAR2(40)   NO     Restricted
+MBR_FIRST_NAME         VARCHAR2(30)   NO     Restricted
+MBR_MIDDLE_INIT        CHAR(1)        YES    Restricted
+MBR_SSN_TIN            CHAR(9)        NO     Restricted; encrypted at rest
+MBR_DOB                DATE           NO     Restricted
+MBR_ADDR_LINE_1        VARCHAR2(50)   NO     Restricted
+MBR_ADDR_LINE_2        VARCHAR2(50)   YES    Restricted
+MBR_CITY               VARCHAR2(30)   NO     Restricted
+MBR_STATE_CD           CHAR(2)        NO     Restricted
+MBR_POSTAL_CD          VARCHAR2(10)   NO     Restricted
+MBR_HOME_PHONE         VARCHAR2(14)   YES    Restricted
+MBR_MOBILE_PHONE       VARCHAR2(14)   YES    Restricted; SMS consent flag req'd
+MBR_EMAIL_ADDR         VARCHAR2(80)   YES    Restricted
+MBR_DRIVERS_LIC_NBR    VARCHAR2(20)   YES    Restricted; CIP evidence
+MBR_ID_VERIF_CD        CHAR(3)        NO     BSA/CIP method code
+MBR_OPEN_DT            DATE           NO     Relationship inception
+MBR_CLOSE_DT           DATE           YES    Populated on termination
+MBR_BRANCH_CD          CHAR(4)        NO     Home branch of record
+MBR_ESTMT_FLAG         CHAR(1)        NO     Y/N; drives suppression logic
+MBR_OFAC_SCAN_DT       DATE           YES    Last screening timestamp
+MBR_LAST_MAINT_USR     VARCHAR2(12)   NO     Teller or system operator ID
+MBR_LAST_MAINT_TS      TIMESTAMP      NO     Audit trigger populated
+
+4.0  ACCESS RESTRICTION
+4.1  Columns marked Restricted are exposed only through role MBR_SVC_FULL and role COMPLIANCE_RO. Branch teller roles receive MBR_SSN_TIN masked to the final four positions by view V_MEMBER_TELLER.
+4.2  Direct table-level SELECT on MEMBER_MASTER is withdrawn from all interactive accounts. Analytical work shall be performed against the reporting views.
+4.3  Quarterly entitlement recertification is performed by the Records Custodian and evidenced to Internal Audit within ten business days of quarter close.
+
+5.0  RETENTION
+5.1  Rows bearing a populated MBR_CLOSE_DT are retained for five years from that date, after which the Restricted columns are overwritten by the purge utility and the row is retained in truncated form for statistical continuity.
+5.2  MBR_OFAC_SCAN_DT and MBR_ID_VERIF_CD are retained five years beyond relationship termination in satisfaction of BSA recordkeeping requirements, notwithstanding Clause 5.1.
+
+6.0  DOWNSTREAM EXTRACTS
+6.1  Nightly extract EXT-CORE-014 delivers MBR_NBR, MBR_STATUS_CD, MBR_BRANCH_CD and MBR_OPEN_DT to the data warehouse. No Restricted column is included.
+6.2  Extract EXT-STMT-003 delivers name and address columns to the statement print vendor under the executed service agreement; transmission is by SFTP with key rotation each June.
+6.3  Extract EXT-MKTG-009 delivers MBR_EMAIL_ADDR and MBR_MOBILE_PHONE to the marketing platform for members not bearing an opt-out indicator. Suppression logic is reviewed by Compliance semi-annually.
+6.4  No extract not enumerated above may be scheduled without written authorization of the Chief Information Officer.
+
+7.0  EFFECTIVE DATE
+7.1  This excerpt takes effect upon the promotion of Core Release 2016.2 and remains in force until superseded.

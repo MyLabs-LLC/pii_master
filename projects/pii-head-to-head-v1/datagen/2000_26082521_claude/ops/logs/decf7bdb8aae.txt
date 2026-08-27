@@ -1,0 +1,64 @@
+INTERNAL MEMORANDUM
+
+TO:      Overnight Operations
+FROM:    Data Services
+DATE:    2 May 2011
+REF:     DS-CFG-2011-018
+SUBJECT: Masking profile MASK_SHIPWH_STD — text of the deployed configuration
+
+The masking profile below was deployed to the shipment warehouse extract server at 2011-05-02 04:12:07 and is now in force for all downstream extracts. It is reproduced here so that Overnight Operations hold a copy that does not require console access to read.
+
+  [profile]
+  name            = MASK_SHIPWH_STD
+  version         = 6
+  applies_to      = EXTRACT_*, REPORT_*, VENDOR_FEED_*
+  default_action  = SUPPRESS
+
+  [field:SHP_RCPT_FORENAME]
+  action          = FULL_MASK
+  mask_char       = *
+  preserve_length = false
+  output_literal  = [MASKED]
+
+  [field:SHP_RCPT_SURNAME]
+  action          = FULL_MASK
+  output_literal  = [MASKED]
+
+  [field:SHP_RCPT_ADDR_1]
+  action          = SUPPRESS
+
+  [field:SHP_RCPT_ADDR_2]
+  action          = SUPPRESS
+
+  [field:SHP_RCPT_PC_SECTOR]
+  action          = PASS
+  note            = outward code and sector digit only
+
+  [field:SHP_RCPT_TEL]
+  action          = TOKEN_REF
+  vault           = B
+  output_format   = TKN-B-#########
+
+  [field:SHP_RCPT_EMAIL]
+  action          = TOKEN_REF
+  vault           = B
+  output_format   = TKN-B-#########
+
+  [field:SHP_POD_SIGNATORY]
+  action          = FULL_MASK
+  output_literal  = [MASKED]
+
+  [field:SHP_DRIVER_KEY]
+  action          = TOKEN_REF
+  vault           = C
+  output_format   = TKN-C-#########
+
+  [field:SHP_VEHICLE_REG]
+  action          = PARTIAL_MASK
+  retain_trailing = 3
+
+  [audit]
+  log_unmapped_fields = true
+  fail_on_unmapped    = true
+
+Two points for operations. First, fail_on_unmapped is deliberately set true: an extract that meets a column not named in the profile will abort rather than emit it. Do not switch this to false to clear a failed run. Second, any abort of this kind is to be raised as an incident against Data Services the same night, with the job identifier and the column name from the log line.

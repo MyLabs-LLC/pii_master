@@ -1,0 +1,18 @@
+DATA SERVICES — SHIFT HANDOVER AND RECONCILIATION NOTE
+PREPARED 1998-11-14 06:10   FOR THE ATTENTION OF THE INCOMING OPERATOR AND THE RECORDS CUSTODIAN
+
+The nightly feed completed within window and requires no restart. Condition code 0004 was returned by ESC0410P and is attributable solely to the reject count, which stood at 1,304 against an informational threshold of 1,000; the code is not to be treated as a failure and the downstream reporting jobs ESC0420P and ESC0455P were released on schedule at 03:04 and 03:31 respectively. Reconciliation for the cycle balances as follows, and the figures should be transcribed into the run book in the usual place:
+
+    READ FROM MASTER ............... 214,806
+    REJECTED AT VALIDATION ..........  1,304
+    WRITTEN TO TARGET .............. 213,502
+    ROWS WITH RESTRICTED COLUMNS
+      MASKED OR TOKENISED .......... 213,502
+    COLUMNS SUBJECT TO MASKING ..........  22
+    COLUMNS PASSED IN CLEAR .............  19
+
+Two matters carry forward. First, the electronic mail column continues to grow, standing at 3,118 populated rows this cycle against 2,704 a month ago. It is currently emitted as <MASK> under the contact class, which is correct, but it was added to the escrow worksheet without a corresponding entry in the data dictionary and the label on the screen reads only "e-mail". The Records Custodian has asked that a dictionary entry be raised before the next generation of MASKRULE.CFG is cut so that the column is named consistently as EMAIL_ADDR across the worksheet, the copybook and the masking member.
+
+Second, the branch-entered date subset remains the standing cause of rejects. The pivot window in the date normaliser was set to 30 during the September remediation and the six-digit picture clause on BORROWER_DOB in that subset has not yet been widened. Until the conversion is scheduled, roughly twelve hundred rows a cycle will hold and be re-presented, and the reject count will therefore continue to exceed the informational threshold every night. Raising the threshold has been proposed and declined, on the ground that it would suppress the signal for genuinely new failure modes such as the modulus failures now appearing on WIRE_ABA.
+
+Tape ESC0982 carrying the masked-column audit extract has gone to the vault. The extract contains column names, rule identifiers and counts only. The reject dataset remains on disk under the cycle-dated qualifier and is retained for fourteen days; it is to be worked from the maintenance transaction and not browsed directly, as the browse utility does not apply the masking member.

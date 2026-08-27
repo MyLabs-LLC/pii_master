@@ -1,0 +1,23 @@
+{
+  "candidate": "t0-c3",
+  "stage": "measure",
+  "proposal": "Measure the currently shipped rules-only detector at the fixed 20k read window on all eight eval corpora, one MLflow run per model x dataset arm, using the frozen evaluator.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "adb5abf",
+  "commit": "77ed4fa",
+  "decision": "accepted_as_baseline",
+  "evidence": {
+    "focused_tests": "12 passed",
+    "ruff": "passed",
+    "read_window_chars": 20000,
+    "workers": 32,
+    "arms": 8,
+    "equal_corpus_macro_f2": 0.09848674382796463,
+    "equal_corpus_micro_f1": 0.20002391391393876,
+    "measurable_priority_gates": 55,
+    "priority_point_passes": 2,
+    "priority_failures": 53,
+    "zero_recall_gates": 37,
+    "worst_priority_recall": 0.0
+  }
+}

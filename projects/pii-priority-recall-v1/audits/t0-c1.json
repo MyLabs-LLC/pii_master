@@ -1,0 +1,32 @@
+{
+  "candidate_id": "t0-c1",
+  "round": 0,
+  "surface": "training data ingestion and data-quality audit",
+  "targeted_mechanism": "eight source schemas and partial labels can create false negatives or train/eval leakage when blindly concatenated",
+  "expected_behavioral_effect": "all corpora become auditable, partial labels remain masked, and exact holdout overlaps are excluded from training before fitting",
+  "regression_risk": "text extraction failures or an overly broad coarse-label mapping could discard useful rows or add noisy positives",
+  "editable_files": [
+    "training/priority_data.py",
+    "training/audit_priority_data.py",
+    "tests/test_priority_data.py"
+  ],
+  "immutable_files": [
+    "/home/lence/workspace/data/2-eval/*",
+    "metric formulas",
+    "priority support threshold"
+  ],
+  "approval_record": "projects/pii-priority-recall-v1/approvals/full-loop-1000.json",
+  "status": "accepted",
+  "proposal_commit": "ac6f0cb",
+  "commit": "397ebc5",
+  "validation": {
+    "tests": "4 passed, 1 skipped",
+    "ruff": "clean after import-only autofix",
+    "git_diff_check": "clean",
+    "train_unique_text_hashes": 501168,
+    "eval_unique_text_hashes": 121179,
+    "cross_split_exact_hashes": 19668,
+    "training_rows_excluded_for_leakage": 22816
+  },
+  "decision": "keep: the fixed audit exposed material leakage and preserved partial-label masks without touching evaluation gold"
+}

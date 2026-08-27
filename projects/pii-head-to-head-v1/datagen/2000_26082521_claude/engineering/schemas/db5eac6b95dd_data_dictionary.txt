@@ -1,0 +1,28 @@
+SUPPLEMENTAL NUTRITION PROGRAM (WIC) — DATA DICTIONARY EXCERPT
+Table: PARTICIPANT_XREF | Database: WICLOCAL (SQL Server 2008 R2) | Rev. 1.4 | 2011-06-13
+
+COLUMNS
+PARTICIPANT_SK      | INT          | NOT NULL | surrogate key
+STATE_WIC_ID        | VARCHAR(10)  | NOT NULL | assigned by state system, unique
+LOCAL_CASE_NUM      | VARCHAR(8)   | NULL     | legacy clinic numbering, frozen
+PARTICIPANT_LNAME   | VARCHAR(35)  | NOT NULL | as printed on benefit instrument
+PARTICIPANT_FNAME   | VARCHAR(25)  | NOT NULL |
+DOB                 | DATE         | NOT NULL | drives category and certification end
+GUARDIAN_LNAME      | VARCHAR(35)  | NULL     | infant and child records only
+RESIDENCE_ZIP5      | CHAR(5)      | NOT NULL | clinic assignment
+CONTACT_PHONE       | CHAR(10)     | NULL     | digits only
+CATEGORY_CD         | CHAR(2)      | NOT NULL | PG, BF, PP, IN, CH
+CERT_END_DT         | DATE         | NOT NULL |
+INCOME_PROOF_CD     | CHAR(2)      | NOT NULL | documentation type, not amount
+REC_STATUS_CD       | CHAR(1)      | NOT NULL | A, T terminated, X transferred
+
+ACCESS: Restricted to WIC certifiers and the Clinic Supervisor by application
+role. No general department read. The Records Custodian approves any export.
+
+RETENTION: Three years following the end of the fiscal year in which the
+certification closed, per federal program rule, then destroyed on the Records
+Custodian's annual disposition authorization.
+
+EXTRACTS: Nightly upload of certification and issuance rows to the state WIC
+system. Monthly participation counts by category and clinic to the Program
+Manager; counts only, no name, DOB, or phone columns included.

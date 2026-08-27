@@ -1,0 +1,58 @@
+PIEDMONT VALLEY CREDIT UNION
+INFORMATION HANDLING STANDARD IH-2011.1
+Issued by the Office of the Compliance Officer
+Review cycle: annual, each first quarter
+
+1.0 PURPOSE AND AUTHORITY
+
+1.1 This standard implements the credit union's obligations under the Gramm-Leach-Bliley Act privacy and safeguards provisions, NCUA Rules and Regulations Part 748 and Part 749, and the disposal rule at 16 CFR Part 682.
+1.2 It establishes the inventory of information categories, the access matrix, the retention schedule and the mandatory disposal procedure.
+1.3 Departures from this standard require written waiver from the Chief Executive Officer countersigned by the Supervisory Committee Chair.
+
+2.0 INVENTORY OF CATEGORIES
+
+2.1 Category A — Identity. Field labels in scope: Legal Name; Prior Legal Name; Date of Birth; Place of Birth; Social Security Number; Individual Taxpayer Identification Number; Driver Licence Number; Passport Number; Photograph.
+2.2 Category B — Location and Contact. Field labels in scope: Residence Street Address; Mailing Address; Prior Address; Home Telephone; Mobile Telephone; Work Telephone; Electronic Mail Address; Emergency Contact Name; Emergency Contact Telephone.
+2.3 Category C — Account and Relationship. Field labels in scope: Member Number; Share Account Number; Share Draft Account Number; Certificate Number; Debit Card Number; Credit Card Number; Card Expiry; Card Verification Value; Personal Identification Number; Online Banking User Identifier; Password Hash; Security Question; Security Answer.
+2.4 Category D — Financial and Transactional. Field labels in scope: Ledger Balance; Available Balance; Transaction Date; Transaction Amount; Merchant Descriptor; Payee Name; ACH Company Identifier; Wire Beneficiary; Overdraft Count; Non-Sufficient Funds Count.
+2.5 Category E — Credit and Underwriting. Field labels in scope: Gross Monthly Income; Employer Name; Length of Employment; Consumer Report; Credit Score; Score Factor Code; Existing Obligations; Collateral Description; Vehicle Identification Number; Appraised Value; Loan-to-Value Ratio; Adverse Action Reason.
+2.6 Category F — Employment. Field labels in scope: Employee Number; Position Title; Compensation Rate; Withholding Election; Benefit Election; Disciplinary Record; Background Check Result; Bond Eligibility.
+2.7 Category G — Regulatory and Investigative. Field labels in scope: Customer Identification Program Result; Office of Foreign Assets Control Screening Result; Currency Transaction Report; Suspicious Activity Report; Subpoena Reference; Litigation Hold Reference.
+
+3.0 ACCESS MATRIX
+
+3.1 Access is granted by role, not by individual, and is provisioned by the Information Security Officer on written request of the department head.
+3.2 Role permissions:
+    - Teller: read Categories A (name only), B, C (masked), D.
+    - Member Services Representative: read and write Categories A, B, C (masked), D.
+    - Lending Officer: read Categories A, B, C, D, E; write Category E.
+    - Collections Officer: read Categories A, B, D, E.
+    - Human Resources Generalist: read and write Category F.
+    - BSA Officer: read all categories; write Category G.
+    - Compliance Officer: read all categories.
+    - Information Systems Administrator: administrative rights to systems; no business-purpose read authority; all access logged.
+    - External Auditor: read access, time-boxed, under executed confidentiality agreement.
+3.3 Unmasked display of Category C card and credential fields is restricted to the Card Services Supervisor and requires dual authorisation.
+3.4 Quarterly entitlement recertification is performed by each department head and evidenced to the Compliance Officer.
+
+4.0 RETENTION SCHEDULE
+
+4.1 Membership record: life of membership plus seven years.
+4.2 Closed-end loan file: five years after final payment, release of lien or charge-off, whichever is later.
+4.3 Open-end credit file: five years after account closure.
+4.4 Declined application and related notice: twenty-five months.
+4.5 Deposit account statements and item images: seven years.
+4.6 Wire and ACH records: five years.
+4.7 Category G filings and supporting documentation: five years from date of filing.
+4.8 Category F records: seven years after separation; claims files longer where applicable.
+4.9 Charter, bylaws, board minutes and general ledger: permanent.
+
+5.0 DISPOSAL PROCEDURE
+
+5.1 Records reaching end of retention are identified by the Records Custodian in the monthly Eligible-for-Destruction Report.
+5.2 The Compliance Officer clears the report against all open litigation holds and examination requests before release.
+5.3 Paper is shredded on premises to cross-cut particle size not exceeding 4mm by 40mm, or collected in locked consoles for destruction by the approved vendor under attendance.
+5.4 Microform is incinerated or pulverised. Optical media is shredded. Magnetic media is degaussed and then physically destroyed.
+5.5 Electronic records held in production systems are purged by the Database Administrator using an approved purge routine; backup media containing purged records expires on the normal rotation cycle and is not restored for business use.
+5.6 The Destruction Log is completed for every event and retains: Record Category; Medium; Date Range Covered; Volume; Method; Date of Destruction; Custodian Role; Witness Role; Vendor Certificate Reference.
+5.7 Destruction Logs and vendor certificates are retained for seven years.

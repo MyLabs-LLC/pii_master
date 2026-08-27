@@ -1,0 +1,17 @@
+KESTREL FREIGHT LOGISTICS LIMITED
+BATCH RUN NARRATIVE — INTERFACE CONSIGN9 TO WAREHOUSE MART
+Job KFL-CONS-XFRM-07 / Run 20040614-0300-11 / Prepared 2004-06-14 06:12
+
+The overnight transformation of the consignment master into the warehouse mart commenced at 03:00:11 on 14 June 2004 and reached its ordinary termination at 05:47:52, the elapsed duration being two hours forty-seven minutes and forty-one seconds, which falls within the window contemplated by the operational service schedule and requires no exception report. The job was invoked by the scheduler under the standing authority of the nightly batch calendar and not by manual intervention, and no operator override was recorded against the run identifier at any point in its execution.
+
+Of the 1,284,663 rows presented by the extract stage, 1,284,214 were accepted into the transformation stage and 449 were withheld. The withheld rows fall into three categories, which the Records Custodian is asked to note in the order set out below. First, 118 rows were withheld under error DTV-0417 by reason of a defect in the sector truncation applied to DELIVERY_POSTCODE, that field having been presented in a form which the truncation rule could not operate upon. Second, 312 rows were withheld under error DTV-0203, the fields NI_NUMBER and DRIVER_DOB having been found present in a feed from which the interface specification excludes them; both fields were suppressed to null before the rows were written to the quarantine store, so that the store contains the field names and the error codes but no value of any kind. Third, 19 rows were withheld under error DTV-0311 following a transient unavailability of the token vault which prevented the tokenisation of DRIVER_LICENCE_NO; these rows are to be re-presented in the run of 15 June 2004 and are not to be counted as processed for the purposes of the monthly reconciliation.
+
+The masking interceptor reports that CONSIGNEE_NAME, CONSIGNOR_SIGNATORY_NAME, DELIVERY_ADDR_LINE_1, DELIVERY_ADDR_LINE_2, CONTACT_TEL_DAY, CONTACT_TEL_MOBILE and CARD_PAN_ON_DELIVERY were rendered in masked form throughout, that CONTACT_EMAIL_ADDR and NEXT_OF_KIN_NAME were suppressed to null throughout, and that DRIVER_SURNAME, DRIVER_LICENCE_NO and PAYROLL_NO were replaced by tokens of the vault-issued format. No cleartext value of any enumerated field was written to the mart, to the audit sink, to the quarantine store or to any operator console, and the interceptor's assertion to that effect is recorded at sequence 4,118 of the audit file for this run.
+
+Counts for reconciliation:
+  rows read ................ 1,284,663
+  rows emitted ............. 1,284,214
+  rows quarantined .........       449
+  distinct fields masked ...        11
+  vault calls ..............   856,140
+  vault failures ...........        19

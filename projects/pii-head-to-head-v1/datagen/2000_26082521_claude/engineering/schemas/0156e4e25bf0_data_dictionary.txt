@@ -1,0 +1,84 @@
+MEMORANDUM
+
+TO:        Distribution List DG-11 (Data Governance Working Group; Pharmacy Systems; Loyalty Marketing; Internal Audit — Information Systems)
+FROM:      Office of the Records Custodian, Enterprise Information Governance
+DATE:      October 19, 2011
+FILE REF:  DG-2011-0417
+SUBJECT:   Data Dictionary Excerpt, CUST_MEMBER Subject Area, With Notation of Access Restriction, Retention Obligation, and Downstream Extract Disposition
+
+I.  PRELIMINARY STATEMENT
+
+The Records Custodian, having been requested by the Loyalty Marketing organization to certify the definitional content of the CUST_MEMBER subject area in advance of the fourth-quarter extract cycle, hereby circulates the excerpt set forth in Part II below. The excerpt is confined to those columns which are, or may reasonably be expected to be, implicated in an extract to a system of record other than the originating instance. Columns of a purely technical or audit character have been omitted as immaterial to the present inquiry.
+
+II.  COLUMN DEFINITIONS
+
+     CUST_MEMBER_ID
+        Type:            NUMBER(12)
+        Nullability:     NOT NULL
+        Note:            Immutable surrogate identifier. Shall not be reused following purge.
+
+     LEGAL_LAST_NAME
+        Type:            VARCHAR2(40)
+        Nullability:     NOT NULL
+        Access:          Restricted. CRM_PII_READ.
+        Note:            Suppressed in all datamart views. Not eligible for extract to third parties.
+
+     LEGAL_FIRST_NAME
+        Type:            VARCHAR2(40)
+        Nullability:     NOT NULL
+        Access:          Restricted. CRM_PII_READ.
+
+     PREFERRED_NAME
+        Type:            VARCHAR2(40)
+        Nullability:     NULL permitted
+        Access:          Restricted. Treated as equivalent to LEGAL_FIRST_NAME for all handling purposes.
+
+     DATE_OF_BIRTH
+        Type:            DATE
+        Nullability:     NULL permitted
+        Access:          Restricted, highest class. PHARM_OPS_READ and CRM_PII_READ only.
+        Note:            Where the member record is linked to a pharmacy patient record, this column is subject to the pharmacy retention schedule and may not be purged on the loyalty cycle.
+
+     RESIDENCE_ADDRESS_LINE_1 / RESIDENCE_ADDRESS_LINE_2
+        Type:            VARCHAR2(60) each
+        Nullability:     NULL permitted
+        Access:          Restricted.
+        Note:            Overwritten in place by the address hygiene process; prior values are not versioned.
+
+     RESIDENCE_POSTAL_CODE
+        Type:            VARCHAR2(10)
+        Nullability:     NULL permitted
+        Note:            Extracted at five-position granularity only.
+
+     CONTACT_PHONE_NBR
+        Type:            VARCHAR2(20)
+        Nullability:     NULL permitted
+        Access:          Restricted. Suppression list applied prior to any outbound file.
+
+     CONTACT_EMAIL_ADDR
+        Type:            VARCHAR2(120)
+        Nullability:     NULL permitted
+        Access:          Restricted. Extract conditioned upon EMAIL_CONSENT_IND.
+
+     EMAIL_CONSENT_IND
+        Type:            CHAR(1)
+        Nullability:     NOT NULL
+        Note:            Default is refusal. A null in the source feed shall be resolved to refusal.
+
+     PHARMACY_LINK_IND
+        Type:            CHAR(1)
+        Nullability:     NOT NULL
+        Note:            Where set, the row is excluded from all marketing extracts without exception.
+
+     LAST_ACTIVITY_DT
+        Type:            DATE
+        Nullability:     NULL permitted
+        Note:            Sole basis for dormancy and purge eligibility.
+
+III.  RETENTION AND DISPOSITION
+
+Rows not bearing PHARMACY_LINK_IND are eligible for purge thirty-six (36) months following LAST_ACTIVITY_DT. Rows bearing that indicator are retained in accordance with the applicable state board of pharmacy schedule and shall not be purged by the loyalty process under any circumstance. Upon purge, restricted columns are overwritten and the residual row is retained for aggregate reporting only.
+
+IV.  EXTRACTS
+
+The nightly file to the marketing datamart carries no restricted column. Any request to vary this condition shall be submitted in writing to the undersigned and shall be acted upon only with the concurrence of the Privacy Officer and of Internal Audit — Information Systems.

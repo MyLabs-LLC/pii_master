@@ -1,0 +1,131 @@
+{
+  "approval_gates_hit": 1,
+  "history": [
+    {
+      "approval_record": null,
+      "reason": "New combined-data recall-first loop requires approval before compute",
+      "round_no": 0,
+      "route": "awaiting_approval",
+      "stage": "measure"
+    },
+    {
+      "approval_record": "/home/lence/workspace/pii_master/projects/pii-priority-recall-v1/approvals/full-loop-1000.json",
+      "plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+      "round_no": 0,
+      "route": "awaiting_approval",
+      "stage": "measure"
+    },
+    {
+      "baseline": "current_rules",
+      "equal_corpus_macro_f2": 0.09848674382796463,
+      "measurable_priority_gates": 55,
+      "priority_point_passes": 2,
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "measure"
+    },
+    {
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "mine",
+      "worst_first": [
+        "iban",
+        "itin",
+        "patient_id",
+        "address",
+        "full_name",
+        "military_id",
+        "passport",
+        "password",
+        "pin",
+        "visa"
+      ]
+    },
+    {
+      "family": "hash_sgd",
+      "macro_f2": 0.4106814233868178,
+      "measurable_priority_gates": 54,
+      "priority_point_passes": 54,
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "propose",
+      "trials": 300,
+      "worst_priority_recall": 0.999230917131321
+    },
+    {
+      "holdout_priority_point_passes": 55,
+      "holdout_worst_priority_recall": 0.9966329966329966,
+      "reason": "correct feasible-region selection order",
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "validate"
+    },
+    {
+      "budget_trials": 1000,
+      "latency_gate_pass": true,
+      "macro_f2": 0.48345749382010117,
+      "macro_f2_target": 0.9,
+      "macro_f2_target_pass": false,
+      "priority_gate_pass": true,
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "propose"
+    },
+    {
+      "budget_trials": 1000,
+      "latency_gate_pass": true,
+      "macro_f2": 0.48345749382010117,
+      "macro_f2_target": 0.9,
+      "macro_f2_target_pass": false,
+      "priority_gate_pass": true,
+      "round_no": 0,
+      "route": "continue_loop",
+      "stage": "ship"
+    },
+    {
+      "accepted": "t1-c1",
+      "decision_file": "projects/pii-priority-recall-v1/decision_r1/decision.json",
+      "docs_per_s": 1007.3992578966912,
+      "feasible_arms": 2,
+      "hard_constraints": 2,
+      "hard_constraints_passed": 2,
+      "macro_f2": 0.4931731543924182,
+      "micro_f1": 0.4249105595117525,
+      "p95_latency_ms": 1.7168549,
+      "reason": "per-label gate-boundary thresholds; shared priority_target_index was the precision cap",
+      "round_no": 0,
+      "route": "budget_exhausted",
+      "scope_gates_measurable": 55,
+      "scope_gates_passed": 55,
+      "selected": "perlabel_v4",
+      "stage": "observe"
+    },
+    {
+      "note": "reopened: the 0.90 ceiling estimate was derived from arms that all shared the shared-target-index defect",
+      "round_no": 1,
+      "route": "continue_loop",
+      "stage": "validate"
+    },
+    {
+      "round_no": 1,
+      "route": "continue_loop",
+      "stage": "validate"
+    },
+    {
+      "evidence": "projects/pii-priority-recall-v1/feasibility_agreement.json",
+      "round_no": 1,
+      "route": "continue_loop",
+      "stage": "validate"
+    }
+  ],
+  "mlflow_parent_run_id": null,
+  "project": "pii-priority-recall-v1",
+  "renegotiated_target": 0.5138,
+  "round_no": 1,
+  "route": "target_infeasible",
+  "stage": "observe",
+  "stopped_reason": "label-agreement ceiling: two independent judges over the same 4,708 documents agree at macro F1 0.514 (weighted 0.469). perlabel_v4 sits at 0.4932 = 96% of that ceiling, which is why 5 model families x 1,000 trials all plateaued at 0.42-0.49. Collapsing the name taxonomy would raise the ceiling to 0.635 macro / 0.788 weighted, but that changes the evaluator and needs explicit approval.",
+  "trials_used": 1000,
+  "updated_at": "2026-08-25T16:06:16.040850+00:00",
+  "wallclock_s": 0.0
+}

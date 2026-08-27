@@ -1,0 +1,83 @@
+VALIDATION ERROR EXTRACT
+Source log: /opt/edw/logs/val/VAL-PAS-EDW-20110315.log
+Extract window: 2011-03-15 01:44:02 through 2011-03-15 03:09:58
+Job identifier: JOB-EDW-NIGHTLY-4471
+Validator build: EDWVAL 5.0.9
+
+  I. RUN CONTEXT
+     A. Input file: PAS_PL_FULL_20110314.dat
+     B. Rows presented to validator: 418,332
+     C. Rows passed: 411,906
+     D. Rows failed: 6,426
+     E. Rows suppressed by masking service before write: 0
+
+  II. ERROR CLASS SUMMARY
+      A. VAL-101 mandatory field absent .................. 2,914
+      B. VAL-118 domain value not in reference table ..... 1,502
+      C. VAL-204 date field fails calendar check .........   871
+      D. VAL-231 tokenisation returned no vault handle ...   663
+      E. VAL-260 field length exceeds target column ......   401
+      F. VAL-277 checksum mismatch on numeric identifier .    75
+
+  III. SELECTED ENTRIES
+
+       A. 2011-03-15 01:44:18  VAL-101  SRC_ROW 0000418
+          1. Field: PARTY_LAST_NM
+          2. Received: <absent>
+          3. Rule: 2.3 of MAP-PAS-EDW-0114, not nullable
+          4. Disposition: routed to VAL-QUEUE-A
+
+       B. 2011-03-15 01:47:52  VAL-204  SRC_ROW 0002265
+          1. Field: PARTY_DOB
+          2. Received: <masked by policy YEAR_ONLY>
+          3. Rule: day-of-month exceeds days in stated month
+          4. Disposition: routed to VAL-QUEUE-B for the Data Steward
+
+       C. 2011-03-15 01:59:30  VAL-231  SRC_ROW 0009104
+          1. Field: PARTY_SSN
+          2. Received: <not rendered, tokenise-on-read>
+          3. Detail: vault VLT-PARTY-01 returned RC=8, handle not issued
+          4. Disposition: row held, no clear value written to staging
+
+       D. 2011-03-15 02:11:07  VAL-118  SRC_ROW 0014877
+          1. Field: ADDR_STATE_CD
+          2. Received: <masked>
+          3. Rule: 3.4.1, value absent from REF_STATE_CD
+          4. Disposition: routed to VAL-QUEUE-A
+
+       E. 2011-03-15 02:26:44  VAL-260  SRC_ROW 0022019
+          1. Field: ADDR_LINE_2
+          2. Received length: 47; target length: 40
+          3. Rule: 3.2, no silent truncation permitted
+          4. Disposition: routed to VAL-QUEUE-C
+
+       F. 2011-03-15 02:38:15  VAL-101  SRC_ROW 0031560
+          1. Field: EMAIL_ADDR_TXT
+          2. Received: <absent>
+          3. Rule: conditional mandatory when PREF_CONTACT_METH_CD = E
+          4. Disposition: routed to VAL-QUEUE-A
+
+       G. 2011-03-15 02:51:03  VAL-277  SRC_ROW 0044912
+          1. Field: BANK_ROUTING_NBR
+          2. Received: <not rendered, tokenise-on-read>
+          3. Detail: check digit computation failed at extract boundary
+          4. Disposition: row held, EFT suppressed for the policy term
+
+       H. 2011-03-15 03:04:41  VAL-231  SRC_ROW 0051338
+          1. Field: HOME_PHONE_NBR
+          2. Received: <not rendered>
+          3. Detail: vault timeout at 4000 ms, retry 3 of 3 exhausted
+          4. Disposition: row held
+
+  IV. QUEUE DISPOSITION AT WINDOW CLOSE
+      A. VAL-QUEUE-A (correctable at source) ....... 4,416
+      B. VAL-QUEUE-B (steward review) .............. 1,272
+      C. VAL-QUEUE-C (length and format) ............. 401
+      D. Held for vault re-drive ..................... 337
+      E. Aged beyond 72 hours ......................... 12
+
+  V. NEXT ACTIONS
+     A. The ETL Operator re-drives held rows at 2011-03-15 22:00 CST.
+     B. The Records Custodian returns VAL-QUEUE-A extracts to Policy
+        Operations by close of business 2011-03-16.
+     C. Aged items escalate to the Data Steward on the standing 09:00 call.

@@ -1,0 +1,36 @@
+===============================================================================
+ NIGHTLY EXTRACT — NPI STAGING LAYER            CYCLE 2011-03-17
+ SERVER: ETLPRD02   REPOSITORY: PC_REP_PRD   FOLDER: TTL_ESCROW
+===============================================================================
+2011-03-17 01:00:02,441 INFO  [SCHED   ] JOB=ETL-8841 RUN_ID=20110317-010000 start
+2011-03-17 01:00:02,509 INFO  [SCHED   ] ruleset DPS-MASK-0042 rev 7 loaded, 25 field rules
+2011-03-17 01:00:03,118 INFO  [VAULT   ] token vault handshake ok, endpoint TKV-PRD-01
+2011-03-17 01:00:07,884 INFO  [ETL-8841.01] s_m_TTL_PARTY_STG begin
+2011-03-17 01:04:52,210 INFO  [ETL-8841.01] src rows read      1,204,776
+2011-03-17 01:04:52,211 INFO  [ETL-8841.01] tgt rows written   1,203,918
+2011-03-17 01:04:52,212 WARN  [ETL-8841.01] rows rejected            858
+2011-03-17 01:04:52,301 INFO  [MASK    ] applied TOKENIZE_FPE to BORROWER_FIRST_NAME, BORROWER_LAST_NAME, CO_BORROWER_FULL_NAME
+2011-03-17 01:04:52,302 INFO  [MASK    ] applied RETAIN_LAST_4 to BORROWER_SSN, ESCROW_ACCOUNT_NBR
+2011-03-17 01:04:52,304 INFO  [MASK    ] vault issues 2,411,077 / cache hits 1,996,340
+2011-03-17 01:04:52,880 INFO  [ETL-8841.02] s_m_ESCROW_DISB_STG begin
+2011-03-17 01:19:40,663 INFO  [ETL-8841.02] src rows read        612,004
+2011-03-17 01:19:40,664 INFO  [ETL-8841.02] tgt rows written     611,997
+2011-03-17 01:19:40,665 WARN  [ETL-8841.02] rows rejected              7
+2011-03-17 01:19:41,002 ERROR [MASK    ] rule FULL_SUPPRESS returned non-empty buffer for WIRE_ABA_RTN
+2011-03-17 01:19:41,003 ERROR [MASK    ] fail-closed engaged, column WIRE_ABA_RTN written as <SUPPRESSED>
+2011-03-17 01:19:41,441 INFO  [ETL-8841.03] s_m_PROPERTY_LOC_STG begin
+2011-03-17 01:33:11,097 INFO  [ETL-8841.03] src rows read        988,510
+2011-03-17 01:33:11,098 INFO  [ETL-8841.03] tgt rows written     988,510
+2011-03-17 01:33:11,099 INFO  [ETL-8841.03] PROPERTY_POSTAL_CODE truncated to 3, PROPERTY_ADDR_LINE_2 nulled
+2011-03-17 02:47:19,338 INFO  [ETL-8841.04] s_m_DM_SETTLEMENT_LOAD begin
+2011-03-17 03:09:44,780 INFO  [ETL-8841.04] tgt rows written   2,804,425
+2011-03-17 03:09:44,781 WARN  [ETL-8841.04] rows to reject file rej_8841_04.dat      1,190
+2011-03-17 03:10:02,556 INFO  [SCHED   ] JOB=ETL-8841 status COMPLETED WITH WARNINGS, elapsed 02:10:00
+
+OPERATOR NOTES
+1.  Reject volume at subjob .01 exceeds the standing threshold of 500 rows and
+    is referred to the Data Quality desk under standing instruction DQ-04.
+2.  The masking exception logged at 01:19:41 is raised to the Records Custodian
+    as an incident; no downstream consumer received the column.
+3.  Reject files are retained ninety days and are subject to the same field
+    rules as the target tables.

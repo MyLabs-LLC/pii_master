@@ -1,0 +1,50 @@
+MEMORANDUM
+
+TO:      Applications Development — Member Systems
+FROM:    Database Administration
+DATE:    09 April 1999
+SUBJECT: MBRMST excerpt, columns added under release 4.3
+
+Four columns are added to the Member Master this release. Definitions follow in
+the standard stanza format. Copybook member MBRMSTC has been updated; recompile
+before promotion.
+
+Column:       MBR_ALT_LAST_NAM
+Type:         CHAR(25)
+Null:         Yes
+Notes:        Prior or alternate surname, captured at the counter when a member
+              reports a change. The current surname remains in MBR_LAST_NAM.
+              Used by the duplicate detection job MBRD500 only. Not displayed on
+              the counter screen and not carried in any extract.
+
+Column:       MBR_DOB_VER_CD
+Type:         CHAR(1)
+Null:         No, default U
+Notes:        Indicates whether the date of birth in MBR_DOB_CYMD was verified
+              against presented documentation. Values V verified, S self
+              reported, U unknown. Required by the immunisation program.
+
+Column:       MBR_GUARD_ID
+Type:         CHAR(11)
+Null:         Yes
+Notes:        Self-referencing to MBR_ID. Populated where the member is a minor.
+              Access follows the parent row; no separate restriction applies, but
+              the column is excluded from MBRX010 along with MBR_HOH_ID.
+
+Column:       MBR_PRIV_REQ_CD
+Type:         CHAR(1)
+Null:         No, default N
+Notes:        Set to Y when a member submits a written request for restricted
+              handling. When Y, the row is suppressed from every extract without
+              exception, including MBRX040, and the counter screen displays a
+              handling indicator. Only the Records Custodian may reset this
+              column; the on-line maintenance program does not expose it.
+
+Retention for all four columns follows the parent row: twenty-four months on line
+past MBR_LAST_ACT_DT once inactive, then archive to MBRARC. MBR_ALT_LAST_NAM is
+cleared at archive rather than written to tape, on the instruction of the Records
+Custodian.
+
+Extract owners are asked to confirm in writing by 30 April that their job control
+has been reviewed against MBR_PRIV_REQ_CD. Jobs not confirmed will be held out of
+the May schedule.

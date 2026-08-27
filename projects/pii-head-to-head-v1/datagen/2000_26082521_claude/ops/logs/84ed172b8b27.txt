@@ -1,0 +1,39 @@
+==========================================================================
+ HLS DATA SERVICES - VALIDATION EXCEPTION REGISTER
+ SOURCE JOB : VALIDATE_CONTACT (STEP 040)      RUN : R2016-0311-0242
+ GENERATED  : 2016-03-11 03:08:10 UTC          FEED: CONSIGNEE_DAILY_V3
+ ROWS READ  : 418,332      PASSED : 411,904      FAILED : 6,428
+==========================================================================
+
+ERR_CODE  FIELD_LABEL              RULE_APPLIED         ROWS   DISPOSITION
+--------  -----------------------  -------------------  -----  -----------
+VAL-102   CONSIGNEE_POSTCODE       FORMAT_UK_OUTCODE    2,911  REJECT
+VAL-104   CONSIGNEE_TEL_MOBILE     LENGTH_RANGE_10_13   1,206  QUARANTINE
+VAL-104   CONSIGNEE_TEL_LANDLINE   LENGTH_RANGE_09_13     644  QUARANTINE
+VAL-118   CONSIGNEE_EMAIL          PATTERN_RFC_LOCAL      588  QUARANTINE
+VAL-121   CONSIGNEE_FULL_NAME      NOT_NULL               403  REJECT
+VAL-121   CONSIGNEE_ADDR_LINE_1    NOT_NULL               287  REJECT
+VAL-133   CONSIGNEE_DATE_OF_BIRTH  RANGE_1900_CURRENT     172  REJECT
+VAL-140   DRIVER_LICENCE_NO        TOKEN_LEN_16            121  HOLD
+VAL-140   DRIVER_NI_NUMBER         EXPECTED_NULL            58  HOLD
+VAL-151   SIGNATORY_NAME_POD       TOKEN_PREFIX_TKN         38  HOLD
+--------  -----------------------  -------------------  -----  -----------
+                                              TOTAL     6,428
+
+DISPOSITION KEY
+  REJECT      Row spooled to .rej, not loaded, source party notified T+1.
+  QUARANTINE  Row loaded with attribute nulled, flagged DQ_FLAG='Q'.
+  HOLD        Row withheld pending Records Custodian review.
+
+STANDING OBSERVATIONS
+  1. VAL-140 / VAL-151 indicate clear-text arriving where a surrogate is
+     required. Upstream file 07 remains non-compliant with DP-STD-014.
+     Raised as CHG-21501. Third consecutive week open.
+  2. VAL-133 volume stable week-on-week. Attribute is collected but not
+     used downstream; deletion at source requested 2016-02-18, no reply.
+  3. Exception register retains field labels and counts only. No attribute
+     values are written to this register or to the DQ dashboard.
+
+REVIEWED BY : DUTY DATA CUSTODIAN        2016-03-11 09:15
+COUNTERSIGN : (PENDING) RECORDS CUSTODIAN
+==========================================================================

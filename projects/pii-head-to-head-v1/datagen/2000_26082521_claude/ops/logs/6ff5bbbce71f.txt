@@ -1,0 +1,39 @@
+# masking configuration
+# file: mask-cfg-0114.properties
+# loaded by: EDW-MASK-SVC 2.1.4
+# last written: 2011-03-14T02:17:41-06:00
+
+mask.enabled                      = true
+mask.default.policy               = DENY
+mask.audit.sink                   = MASKAUD.EVENT_LOG
+
+  # column policies
+  mask.column.STG_PARTY.GIVEN_NAME       = PARTIAL_LEFT_1
+  mask.column.STG_PARTY.FAMILY_NAME      = PARTIAL_LEFT_1
+  mask.column.STG_PARTY.MIDDLE_INITIAL   = FULL
+  mask.column.STG_PARTY.BIRTH_DT         = YEAR_ONLY
+  mask.column.STG_PARTY.TAX_ID_TOKEN     = FULL
+  mask.column.STG_CONTACT.STREET_LINE_1  = FULL
+  mask.column.STG_CONTACT.STREET_LINE_2  = FULL
+  mask.column.STG_CONTACT.CITY_NAME      = NONE
+  mask.column.STG_CONTACT.POSTAL_CD      = TRUNCATE_3
+  mask.column.STG_CONTACT.PHONE_TOKEN_HOME   = FULL
+  mask.column.STG_CONTACT.PHONE_TOKEN_MOBILE = FULL
+  mask.column.STG_CONTACT.EMAIL_TOKEN    = FULL
+  mask.column.STG_POLICY.LICENSE_TOKEN   = FULL
+  mask.column.STG_POLICY.VIN_TOKEN       = LAST_4
+  mask.column.STG_POLICY.EFT_ACCT_TOKEN  = FULL
+  mask.column.STG_POLICY.EFT_ROUTING_TOKEN = FULL
+
+  # render patterns
+  mask.pattern.FULL                 = [MASKED]
+  mask.pattern.PARTIAL_LEFT_1       = X*
+  mask.pattern.LAST_4               = XXXXXXXXXXXXX####
+  mask.pattern.TRUNCATE_3           = ###XX
+  mask.pattern.YEAR_ONLY            = XXXX-XX-####
+
+  # role exemptions
+  mask.role.CLAIMS_ADJ.exempt       = STG_CONTACT.CITY_NAME
+  mask.role.UW_ANALYST.exempt       = STG_CONTACT.POSTAL_CD
+  mask.role.RECORDS_CUSTODIAN.exempt = NONE
+  mask.role.ETL_SERVICE.exempt      = NONE

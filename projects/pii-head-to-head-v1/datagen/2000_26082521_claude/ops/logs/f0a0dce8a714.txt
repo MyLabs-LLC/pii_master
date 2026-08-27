@@ -1,0 +1,65 @@
+BLUE RIDGE CONSOLIDATED SCHOOL DISTRICT
+OFFICE OF MANAGEMENT INFORMATION SERVICES
+MAPPING RULE SET MRS-0417
+STUDENT MASTER TO STATE PUPIL ACCOUNTING EXTRACT
+REVISION 4 — EFFECTIVE 01-SEP-1998 — SUPERSEDES REVISION 3 OF 14-MAR-1998
+
+1.  SCOPE
+1.1 This rule set governs field-level translation from STUDENT.MASTER (VSAM KSDS, library SISPROD) to the fixed-length submission file PUPACCT.EXTRACT transmitted to the State Department of Education under the quarterly pupil accounting cycle.
+1.2 The rule set is binding on job stream ETLSTU10 and on any ad hoc extract executed by the Data Processing Supervisor.
+1.3 Field labels enumerated at clause 3 constitute the complete authorised source inventory. Any source field not enumerated shall not be read, staged, or written.
+
+2.  SOURCE AND TARGET DECLARATION
+2.1 Source: SISPROD.STUDENT.MASTER, record length 812, key STU_LOCAL_ID.
+2.2 Target: PUPACCT.EXTRACT, record length 300, unlabelled, EBCDIC, blocked 6000.
+2.3 Staging: SISWRK.STG.PUPACCT, retained 3 generations.
+
+3.  FIELD MAPPING REGISTER
+
+    SEQ  SOURCE FIELD LABEL        TGT POS  LEN  RULE
+    010  STU_STATE_ID              001-010  010  R01
+    020  STU_LOCAL_ID              011-019  009  R01
+    030  LEGAL_SURNAME             020-044  025  R02
+    040  LEGAL_GIVEN_NAME          045-064  020  R02
+    050  MIDDLE_INITIAL            065-065  001  R02
+    060  DATE_OF_BIRTH             066-073  008  R03
+    070  GENDER_CODE               074-074  001  R04
+    080  RACE_ETHNIC_CODE          075-075  001  R04
+    090  RESIDENCE_ZIP             076-080  005  R05
+    100  RESIDENCE_STREET_1        ——       ——   R09 (SUPPRESS)
+    110  HOME_PHONE                ——       ——   R09 (SUPPRESS)
+    120  SOC_SEC_NBR               ——       ——   R09 (SUPPRESS)
+    130  MEDICAID_NBR              ——       ——   R09 (SUPPRESS)
+    140  GUARDIAN_1_SURNAME        ——       ——   R09 (SUPPRESS)
+    150  GUARDIAN_1_EMPLOYER       ——       ——   R09 (SUPPRESS)
+    160  EMERG_CONTACT_PHONE       ——       ——   R09 (SUPPRESS)
+    170  FRPL_ELIG_CODE            081-081  001  R06
+    180  IEP_FLAG                  082-082  001  R04
+    190  LEP_FLAG                  083-083  001  R04
+    200  ENROLL_DATE               084-091  008  R03
+    210  WITHDRAW_CODE             092-093  002  R04
+    220  GRADE_LEVEL               094-095  002  R04
+    230  HOMEROOM                  096-101  006  R07
+    240  ATT_DAYS_PRESENT          102-106  005  R08
+    250  ATT_DAYS_ABSENT           107-111  005  R08
+    260  BUILDING_CODE             112-115  004  R04
+    270  FILLER                    116-300  185  SPACES
+
+4.  TRANSFORMATION RULES
+4.1 R01 — Right-justify, zero-fill. Where STU_STATE_ID is unpopulated, substitute the token issued by the identity broker in the form TOK-nnnnnn and log at severity W.
+4.2 R02 — Trim, fold to upper case, truncate at declared length. Embedded apostrophes and hyphens are retained; all other punctuation is stripped.
+4.3 R03 — Convert from packed decimal to CCYYMMDD. Century determination follows the district Year 2000 windowing standard: values 00 through 30 resolve to 20nn, values 31 through 99 resolve to 19nn.
+4.4 R04 — Validate against the corresponding entry in CODES.MASTER. Reject the record on failure; do not default.
+4.5 R05 — Retain the first five positions only. Positions 6 through 9 of the postal field are discarded at read time and are not staged.
+4.6 R06 — Translate the eligibility indicator to the state single-character domain. The underlying application record and income declaration fields are not carried forward.
+4.7 R07 — Pass through unchanged.
+4.8 R08 — Numeric, right-justify, zero-fill; must not exceed the enrolled day count for the reporting period.
+
+5.  SUPPRESSION
+5.1 R09 — Fields marked SUPPRESS are excluded at the SELECT stage. They are not written to SISWRK.STG.PUPACCT and are not present in any checkpoint dataset.
+5.2 The Records Custodian shall countersign any request to alter the suppression list. Requests are logged under change register CR-98.
+5.3 Extracts produced prior to 01-SEP-1998 remain governed by Revision 3 until purge.
+
+6.  CHANGE CONTROL
+6.1 Amendments take effect at the first scheduled run following approval by the Director of Management Information Services.
+6.2 This revision was approved 24-AUG-1998 and distributed to the Records Custodian, the Data Processing Supervisor, and the Pupil Accounting Clerk of each attendance centre.

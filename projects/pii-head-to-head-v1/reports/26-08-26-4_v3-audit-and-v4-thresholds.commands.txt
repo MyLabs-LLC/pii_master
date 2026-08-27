@@ -1,0 +1,803 @@
+[2026-08-27T00:54:22Z] Exit: 1 | Context: reproduce v2 thresholds and diagnose the two failed tags | Took: 5.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector: MISMATCH
+  [0] sensitive_pci_bank_account_number: shipped=4.8126 reproduced=4.8132
+  [1] sensitive_pci_card_verification_value_cvv: shipped=3.7147 reproduced=3.7152
+  [2] sensitive_pci_credit_card: shipped=10.7203 reproduced=10.7205
+  [3] sensitive_pci_credit_card_expiration_date: shipped=8.8785 reproduced=8.8775
+  [4] sensitive_pci_credit_card_number: shipped=10.5218 reproduced=10.5209
+  [5] sensitive_pci_credit_score: shipped=3.1496 reproduced=3.1493
+  [6] sensitive_pci_financial_instrument_global_identifier_figi: shipped=7.4663 reproduced=7.4666
+  [7] sensitive_pci_iban: shipped=2.5737 reproduced=2.5718
+  [8] sensitive_pci_individual_taxpayer_identification_number_itin: shipped=8.9643 reproduced=8.9661
+  [9] sensitive_pci_last_four_credit_card_number_digits: shipped=9.9148 reproduced=9.9127
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+57 of 58 thresholds do not reproduce. The diagnosis rests on this selection being the one that produced v2; it is not. Nothing emitted.
+--------------
+
+[2026-08-27T00:55:10Z] Exit: 1 | Context: reproduce v2 thresholds and diagnose the two failed tags | Took: 5.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector: max |delta| = 7.44e-02 on a scale of 14.35 (float16 weight storage)
+  [37] sensitive_pii_immigration_and_citizenship_status: shipped=10.4970 reproduced=10.5713
+  [56] sensitive_pii_visa_number: shipped=10.7181 reproduced=10.7411
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+/home/lence/workspace/pii_master/training/h2h_thresholds_v4.py:186: RuntimeWarning: invalid value encountered in subtract
+  d = np.flatnonzero(np.abs(np.nan_to_num(thr_repro - shipped)) > TOLERANCE)
+2 of 58 thresholds differ by more than 0.01. The diagnosis rests on this being the selection that produced v2; it is not. Nothing emitted.
+--------------
+
+[2026-08-27T00:55:59Z] Exit: 0 | Context: reproduce v2 thresholds and diagnose the two failed tags | Took: 5.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector:
+  max |threshold delta| = 7.437e-02 on a scale of 14.35 (float16 weight storage; adjacent realisable cuts)
+  worst operating-point shift = 6.25e-03 (dP=+2.19e-03 dR=-6.25e-03 on sensitive_pii_immigration_and_citizenship_status)
+
+tags whose cap could not be estimated (-inf sentinel): 0 -> []
+tags whose threshold changes under the fix: 0
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/threshold_v4_diagnosis.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T00:56:21Z] Exit: 0 | Context: which branch did each tag take, and which missed the floor | Took: 5.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector:
+  max |threshold delta| = 7.437e-02 on a scale of 14.35 (float16 weight storage; adjacent realisable cuts)
+  worst operating-point shift = 6.25e-03 (dP=+2.19e-03 dR=-6.25e-03 on sensitive_pii_immigration_and_citizenship_status)
+
+selector branch taken, all 58 tags:
+  floor_met              57
+  below_min_support      1
+
+tags that did NOT meet the recall floor:
+
+tags whose cap could not be estimated (-inf sentinel): 0 -> []
+tags whose threshold changes under the fix: 0
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/threshold_v4_diagnosis.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T00:56:45Z] Exit: 0 | Context: what the declared rule chose for tags 44 and 51, and what it cost | Took: 5.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector:
+  max |threshold delta| = 7.437e-02 on a scale of 14.35 (float16 weight storage; adjacent realisable cuts)
+  worst operating-point shift = 6.25e-03 (dP=+2.19e-03 dR=-6.25e-03 on sensitive_pii_immigration_and_citizenship_status)
+
+selector branch taken, all 58 tags:
+  floor_met              57
+  below_min_support      1
+
+the two tags v3 overrode, as the declared rule chose them:
+  [44] sensitive_pii_military_identification_number
+      calibration positives=10556  eligible negatives=50,763
+      cap=-3.4006  chosen thr=-3.4008  [floor_met]
+      at that cut: P=0.2150 R=0.9992 F0.5=0.2550  fired on 51,997 of 66,867 gate-admitted calibration rows
+  [51] sensitive_pii_sexual_identity_and_orientation
+      calibration positives=142  eligible negatives=61,177
+      cap=-3.9634  chosen thr=-3.9635  [floor_met]
+      at that cut: P=0.0051 R=0.9225 F0.5=0.0064  fired on 29,069 of 66,867 gate-admitted calibration rows
+
+tags that did NOT meet the recall floor:
+
+tags whose cap could not be estimated (-inf sentinel): 0 -> []
+tags whose threshold changes under the fix: 0
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/threshold_v4_diagnosis.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T00:57:46Z] Exit: 0 | Context: which training source collapses the group-recall cap for tags 44 and 51 | Took: 8.7s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector:
+  max |threshold delta| = 7.437e-02 on a scale of 14.35 (float16 weight storage; adjacent realisable cuts)
+  worst operating-point shift = 6.25e-03 (dP=+2.19e-03 dR=-6.25e-03 on sensitive_pii_immigration_and_citizenship_status)
+
+selector branch taken, all 58 tags:
+  floor_met              57
+  below_min_support      1
+
+the two tags v3 overrode, as the declared rule chose them:
+  [44] sensitive_pii_military_identification_number
+      calibration positives=10556  eligible negatives=50,763
+      cap=-3.4006  chosen thr=-3.4008  [floor_met]
+      at that cut: P=0.2150 R=0.9992 F0.5=0.2550  fired on 51,997 of 66,867 gate-admitted calibration rows
+  [51] sensitive_pii_sexual_identity_and_orientation
+      calibration positives=142  eligible negatives=61,177
+      cap=-3.9634  chosen thr=-3.9635  [floor_met]
+      at that cut: P=0.0051 R=0.9225 F0.5=0.0064  fired on 29,069 of 66,867 gate-admitted calibration rows
+
+per-source-group behaviour for those two tags (which group sets the cap, and can it rank the tag at all):
+  [44] sensitive_pii_military_identification_number
+      148775_pii2_train_98.81k                     pos=    31 neg=13,293 AUC=0.6838 cap_q=  -3.4006  <-- SETS THE CAP
+      151708_openpii_pii_train_151.71k             pos= 7,864 neg=14,913 AUC=0.9648 cap_q=  10.3751
+      85593_pii_trainset_85.59k                    pos= 2,661 neg=10,132 AUC=0.9986 cap_q=  11.5725
+  [51] sensitive_pii_sexual_identity_and_orientation
+      148775_pii2_train_98.81k                     pos=    43 neg=13,281 AUC=0.8742 cap_q=  -3.9634  <-- SETS THE CAP
+      85593_pii_trainset_85.59k                    pos=    99 neg=12,694 AUC=0.9947 cap_q=   2.4259
+
+tags that did NOT meet the recall floor:
+
+tags whose cap could not be estimated (-inf sentinel): 0 -> []
+tags whose threshold changes under the fix: 0
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/threshold_v4_diagnosis.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T00:59:50Z] Exit: 0 | Context: corrected cap rule: which thresholds move, and emit models/cascade_v4 | Took: 9.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_thresholds_v4.py --emit
+--- Output ---
+calibration carve: 79,883 training rows, 66,867 admitted by the gate
+reproduction of the shipped v2 threshold vector:
+  max |threshold delta| = 7.437e-02 on a scale of 14.35 (float16 weight storage; adjacent realisable cuts)
+  worst operating-point shift = 6.25e-03 (dP=+2.19e-03 dR=-6.25e-03 on sensitive_pii_immigration_and_citizenship_status)
+
+selector branch taken, all 58 tags:
+  floor_met              57
+  below_min_support      1
+
+the two tags v3 overrode, as the declared rule chose them:
+  [44] sensitive_pii_military_identification_number
+      calibration positives=10556  eligible negatives=50,763
+      cap=-3.4006  chosen thr=-3.4008  [floor_met]
+      at that cut: P=0.2150 R=0.9992 F0.5=0.2550  fired on 51,997 of 66,867 gate-admitted calibration rows
+  [51] sensitive_pii_sexual_identity_and_orientation
+      calibration positives=142  eligible negatives=61,177
+      cap=-3.9634  chosen thr=-3.9635  [floor_met]
+      at that cut: P=0.0051 R=0.9225 F0.5=0.0064  fired on 29,069 of 66,867 gate-admitted calibration rows
+
+per-source-group behaviour for those two tags (which group sets the cap, and can it rank the tag at all):
+  [44] sensitive_pii_military_identification_number
+      148775_pii2_train_98.81k                     pos=    31 neg=13,293 AUC=0.6838 cap_q=  -3.4006  <-- SETS THE CAP
+      151708_openpii_pii_train_151.71k             pos= 7,864 neg=14,913 AUC=0.9648 cap_q=  10.3751
+      85593_pii_trainset_85.59k                    pos= 2,661 neg=10,132 AUC=0.9986 cap_q=  11.5725
+  [51] sensitive_pii_sexual_identity_and_orientation
+      148775_pii2_train_98.81k                     pos=    43 neg=13,281 AUC=0.8742 cap_q=  -3.9634  <-- SETS THE CAP
+      85593_pii_trainset_85.59k                    pos=    99 neg=12,694 AUC=0.9947 cap_q=   2.4259
+
+tags that did NOT meet the recall floor:
+
+tags left with no estimable cap at all under the corrected rule: 0 -> []
+tags whose threshold changes under the corrected cap: 5 of 58
+  [27] sensitive_pii_date_of_death
+      support=19185  cap_estimable=True
+      v2  thr=   -4.1289  P=0.4145 R=0.9994 F0.5=0.4694  fired=48834  [floor_met]
+      v4  thr=    9.5581  P=0.9862 R=0.9703 F0.5=0.9830  fired=18895  [floor_met]
+  [44] sensitive_pii_military_identification_number
+      support=10556  cap_estimable=True
+      v2  thr=   -3.4008  P=0.2150 R=0.9992 F0.5=0.2550  fired=51997  [floor_met]
+      v4  thr=   10.0263  P=0.9364 R=0.8262 F0.5=0.9121  fired=9321  [floor_met]
+  [47] sensitive_pii_password
+      support=1158  cap_estimable=True
+      v2  thr=   -1.4023  P=0.1094 R=0.9732 F0.5=0.1330  fired=11270  [floor_met]
+      v4  thr=    3.1141  P=0.8380 R=0.7772 F0.5=0.8251  fired=1225  [floor_met]
+  [49] sensitive_pii_phone_number
+      support=20276  cap_estimable=True
+      v2  thr=   13.1272  P=0.9589 R=0.9228 F0.5=0.9514  fired=20266  [floor_met]
+      v4  thr=   13.1848  P=0.9602 R=0.9215 F0.5=0.9522  fired=20204  [floor_met]
+  [57] sensitive_pii_zip_code
+      support=17477  cap_estimable=True
+      v2  thr=    9.8707  P=0.8547 R=0.9548 F0.5=0.8730  fired=20066  [floor_met]
+      v4  thr=   12.3253  P=0.9518 R=0.8722 F0.5=0.9347  fired=16372  [floor_met]
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/probe/threshold_v4_diagnosis.json
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/models/cascade_v4  (57 enabled tags)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:01:24Z] Exit: 0 | Context: score v3 through its own bundle runtime on the eight sealed corpora | Took: 17.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_bundle.py --bundle projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v3 --name v3_bundle --label pii-cascade-balanced-v3 (two thresholds swept on data/2-eval) --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+scoring projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v3
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.9s
+  20000_pii_holdout_20.00k                          20,000 docs    2.3s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.8s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                                   v3_bundle
+macro_f2                                    0.6657
+micro_f1                                    0.7533
+priority_macro_f05                          0.7587
+equal_corpus_doc_recall                     0.7975
+equal_corpus_doc_precision                  0.8956
+equal_corpus_doc_specificity                0.8792
+recall_macro_catalogue                      0.6887
+precision_macro_catalogue                   0.6258
+severity_recall_min                         0.7221
+prediction_rate                             0.8181
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:01:51Z] Exit: 0 | Context: score v2 through its own bundle runtime, same scorer, as the baseline | Took: 17.4s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_bundle.py --bundle projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2 --name v2_bundle --label pii-cascade-balanced-v2 (declared-rule thresholds) --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+scoring projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v2
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.9s
+  20000_pii_holdout_20.00k                          20,000 docs    2.4s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.9s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                                   v2_bundle
+macro_f2                                    0.6614
+micro_f1                                    0.7255
+priority_macro_f05                          0.7434
+equal_corpus_doc_recall                     0.7975
+equal_corpus_doc_precision                  0.8956
+equal_corpus_doc_specificity                0.8792
+recall_macro_catalogue                      0.6938
+precision_macro_catalogue                   0.6182
+severity_recall_min                         0.7221
+prediction_rate                             0.8192
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:02:18Z] Exit: 0 | Context: score v4 (corrected group-recall cap, training-only selection) sealed | Took: 17.2s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_bundle.py --model cascade_v4 --name v4_corrected_cap --label cascade v4: group-recall cap requires 10 tail events, selected on training carve only --verify 12 --latency projects/pii-head-to-head-v1/evaluations/latency_B.json
+--- Output ---
+scoring models/cascade_v4
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.9s
+  20000_pii_holdout_20.00k                          20,000 docs    2.4s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.8s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.3s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                            v4_corrected_cap
+macro_f2                                    0.6641
+micro_f1                                    0.7862
+priority_macro_f05                          0.8031
+equal_corpus_doc_recall                     0.7975
+equal_corpus_doc_precision                  0.8956
+equal_corpus_doc_specificity                0.8792
+recall_macro_catalogue                      0.6655
+precision_macro_catalogue                   0.6461
+severity_recall_min                         0.6410
+prediction_rate                             0.8168
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:02:34Z] Exit: 1 | Context: headline policy (recall gate, macro F2 ranker) over v2/v3/v4 | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json --arms projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json --arms projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/headline_v4.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | macro_f2 | micro_f1 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| v4_corrected_cap | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6641 | 0.7862 | 3.9164 |
+
+NO FEASIBLE ARM
+  - v4_corrected_cap: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/headline_v4.json
+--------------
+
+[2026-08-27T01:02:57Z] Exit: 1 | Context: headline policy (recall gate, macro F2 ranker) over v2/v3/v4 | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/headline_v4.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | macro_f2 | micro_f1 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| v2_bundle | **blocked** | **FAIL** 29/55 (0.56) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6614 | 0.7255 | 3.9164 |
+| v3_bundle | **blocked** | **FAIL** 29/55 (0.56) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6657 | 0.7533 | 3.9164 |
+| v4_corrected_cap | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6641 | 0.7862 | 3.9164 |
+
+NO FEASIBLE ARM
+  - v2_bundle: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v3_bundle: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v4_corrected_cap: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/headline_v4.json
+--------------
+
+[2026-08-27T01:03:05Z] Exit: 1 | Context: declared contra-view policy (precision-first) over v2/v3/v4 | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy_precision_view.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/precision_view_v4.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | document-level precision >= 0.90 (conclusive) | document-level specificity >= 0.85 (conclusive) | document-level recall >= 0.85 (conclusive) | priority tag recall >= 0.75 (conclusive) | one-core p95 <= 5 ms | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | priority_macro_f05 | macro_f05 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| v2_bundle | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 45/55 (0.56) | PASS | PASS | PASS | 0.7434 | 0.6183 | 3.9164 |
+| v3_bundle | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 45/55 (0.56) | PASS | PASS | PASS | 0.7587 | 0.6253 | 3.9164 |
+| v4_corrected_cap | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 44/55 (0.02) | PASS | PASS | PASS | 0.8031 | 0.6403 | 3.9164 |
+
+NO FEASIBLE ARM
+  - v2_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v3_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v4_corrected_cap: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/precision_view_v4.json
+--------------
+
+[2026-08-27T01:04:26Z] Exit: 0 | Context: measure v4 one-core p95 latency for itself rather than carrying arm B's | Took: 23.5s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh training/h2h_score_bundle.py --model cascade_v4 --name v4_corrected_cap --label cascade v4: group-recall cap requires 10 tail events, selected on training carve only --verify 12 --bench-out projects/pii-head-to-head-v1/evaluations/latency_v4.json --cpus 1
+--- Output ---
+scoring models/cascade_v4
+{"phase": "verify", "checked": 96, "mismatched": 0, "examples": []}
+benchmarking on 200 documents of >= 10,000 characters, cpu_budget=1
+  p50=3.2465 ms  p95=3.9696 ms  PASS against the 5 ms budget
+  10360_betterdataai_ner_silver_eval_10.36k         10,360 docs    0.6s
+  10626_ai4privacy_pii_masking_eval_10.63k          10,626 docs    0.8s
+  20000_pii_holdout_20.00k                          20,000 docs    2.2s
+  30000_pii2_eval_25.15k                            30,000 docs    2.9s
+  38937_openpii_pii_eval_38.94k                     38,937 docs    4.6s
+  4000_datax-dualjudge-evalset-1.32k                 4,000 docs    0.4s
+  5617_nemotron_eval_5.36k                           5,617 docs    0.2s
+  6589_govdocs2-dualjudge-eval20-3.53k               6,589 docs    0.7s
+
+metric                            v4_corrected_cap
+macro_f2                                    0.6641
+micro_f1                                    0.7862
+priority_macro_f05                          0.8031
+equal_corpus_doc_recall                     0.7975
+equal_corpus_doc_precision                  0.8956
+equal_corpus_doc_specificity                0.8792
+recall_macro_catalogue                      0.6655
+precision_macro_catalogue                   0.6461
+severity_recall_min                         0.6410
+prediction_rate                             0.8168
+
+-> /home/lence/workspace/pii_master/projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:04:42Z] Exit: 1 | Context: policy over v2/v3/v4 with v4 carrying its own measured latency | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/headline_v4.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | priority tag recall >= 0.90 (conclusive) | one-core p95 <= 5 ms | document-level precision *(advisory)* | document-level specificity *(advisory)* | document-level recall *(advisory)* | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | macro_f2 | micro_f1 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| v2_bundle | **blocked** | **FAIL** 29/55 (0.56) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6614 | 0.7255 | 3.9164 |
+| v3_bundle | **blocked** | **FAIL** 29/55 (0.56) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6657 | 0.7533 | 3.9164 |
+| v4_corrected_cap | **blocked** | **FAIL** 25/55 (0.02) | PASS | PASS 3/3 | PASS 3/3 | PASS 3/3 | PASS | PASS | 0.6641 | 0.7862 | 3.9696 |
+
+NO FEASIBLE ARM
+  - v2_bundle: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v3_bundle: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v4_corrected_cap: priority tag recall >= 0.90 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/headline_v4.json
+--------------
+
+[2026-08-27T01:04:44Z] Exit: 1 | Context: policy_precision_view over v2/v3/v4 with v4 carrying its own measured latency | Took: 0.7s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp decide --policy projects/pii-head-to-head-v1/policy_precision_view.yaml --arms projects/pii-head-to-head-v1/evaluations/arm_v2_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v3_bundle.json projects/pii-head-to-head-v1/evaluations/arm_v4_corrected_cap.json --suite projects/pii-head-to-head-v1/suite.yaml --out projects/pii-head-to-head-v1/decision/precision_view_v4.json
+--- Output ---
+| Corpus | Role | Gold | Rows | Leakage | Assessed |
+| --- | --- | --- | ---: | ---: | --- |
+| 30000_pii2_eval_25.15k | sealed | complete | 30,000 | 0 | yes |
+| 4000_datax-dualjudge-evalset-1.32k | adversarial | positive_only | 4,000 | 0 | yes |
+| 6589_govdocs2-dualjudge-eval20-3.53k | adversarial | positive_only | 6,589 | 0 | yes |
+| 20000_pii_holdout_20.00k | sealed | complete | 20,000 | 0 | yes |
+| 38937_openpii_pii_eval_38.94k | external | complete | 38,937 | 0 | yes |
+| 10626_ai4privacy_pii_masking_eval_10.63k | external | complete | 10,626 | 0 | yes |
+| 10360_betterdataai_ner_silver_eval_10.36k | external | complete | 10,360 | 0 | yes |
+| 5617_nemotron_eval_5.36k | external | partial | 5,617 | 0 | yes |
+
+| Arm | Verdict | document-level precision >= 0.90 (conclusive) | document-level specificity >= 0.85 (conclusive) | document-level recall >= 0.85 (conclusive) | priority tag recall >= 0.75 (conclusive) | one-core p95 <= 5 ms | prediction rate *(advisory)* | worst measurable priority recall *(advisory)* | priority_macro_f05 | macro_f05 | p95_latency_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| v2_bundle | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 45/55 (0.56) | PASS | PASS | PASS | 0.7434 | 0.6183 | 3.9164 |
+| v3_bundle | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 45/55 (0.56) | PASS | PASS | PASS | 0.7587 | 0.6253 | 3.9164 |
+| v4_corrected_cap | **blocked** | **FAIL** 1/3 (0.8353) | **FAIL** 2/3 (0.8398) | **FAIL** 1/3 (0.7051) | **FAIL** 44/55 (0.02) | PASS | PASS | PASS | 0.8031 | 0.6403 | 3.9696 |
+
+NO FEASIBLE ARM
+  - v2_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v2_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v3_bundle: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v3_bundle: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+  - v4_corrected_cap: document-level precision >= 0.90 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: document-level specificity >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k
+  - v4_corrected_cap: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k
+
+[mp] wrote projects/pii-head-to-head-v1/decision/precision_view_v4.json
+--------------
+
+[2026-08-27T01:05:11Z] Exit: 0 | Context: per-tag sealed comparison for the five tags whose thresholds moved | Took: 0.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/tagtable.py
+--- Output ---
+Per-tag, per-corpus. '-' = the tag is not measurable on that corpus (positive-only gold or under 30 instances).
+
+[27] sensitive_pii_date_of_death: not measurable on any corpus
+
+[44] sensitive_pii_military_identification_number: not measurable on any corpus
+
+[47] sensitive_pii_password: not measurable on any corpus
+
+[49] sensitive_pii_phone_number: not measurable on any corpus
+
+[51] sensitive_pii_sexual_identity_and_orientation: not measurable on any corpus
+
+[57] sensitive_pii_zip_code: not measurable on any corpus
+
+
+Headline metrics, all three arms:
+
+metric                                  v2        v3        v4
+macro_f2                            0.6614    0.6657    0.6641
+micro_f1                            0.7255    0.7533    0.7862
+priority_macro_f05                  0.7434    0.7587    0.8031
+macro_f05                           0.6183    0.6253    0.6403
+recall_macro_catalogue              0.6938    0.6887    0.6655
+precision_macro_catalogue           0.6182    0.6258    0.6461
+severity_recall_min                 0.7221    0.7221    0.6410
+prediction_rate                     0.8192    0.8181    0.8168
+equal_corpus_doc_recall             0.7975    0.7975    0.7975
+equal_corpus_doc_precision          0.8956    0.8956    0.8956
+equal_corpus_doc_specificity        0.8792    0.8792    0.8792
+p95_latency_ms                      3.9164    3.9164    3.9696
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:05:58Z] Exit: 1 | Context: per-tag sealed recall for the moved tags, and which gate pairs flipped | Took: 0.8s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/tagtable.py
+--- Output ---
+Per-tag recall on the sealed corpora, value (ci_low). The gate reads ci_low
+>= 0.9 with support >= 30; '-' = not measurable there.
+
+[27] sensitive_pii_date_of_death  (threshold moved)
+  not measurable on any sealed corpus
+
+[44] sensitive_pii_military_identification_number  (threshold moved)
+  corpus                                          sup                v2                v3                v4
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/tagtable.py", line 58, in <module>
+    f"{v['value']:>11.4f}({v['ci_low']:.3f})"
+      ^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to NoneType.__format__
+--------------
+
+[2026-08-27T01:06:11Z] Exit: 0 | Context: per-tag sealed recall for the moved tags, and which gate pairs flipped | Took: 0.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/tagtable.py
+--- Output ---
+Per-tag recall on the sealed corpora, value (ci_low). The gate reads ci_low
+>= 0.9 with support >= 30; '-' = not measurable there.
+
+[27] sensitive_pii_date_of_death  (threshold moved)
+  not measurable on any sealed corpus
+
+[44] sensitive_pii_military_identification_number  (threshold moved)
+  corpus                                          sup                v2                v3                v4
+  10360_betterdataai_ner_silver_eval_10.36k         0                 -                 -                 -
+  10626_ai4privacy_pii_masking_eval_10.63k          0                 -                 -                 -
+  20000_pii_holdout_20.00k                       4327     1.0000(1.000)     0.9609(0.955)     0.8343(0.823)
+  30000_pii2_eval_25.15k                            1                 -                 -                 -
+  38937_openpii_pii_eval_38.94k                 13763     0.9995(0.999)     0.9372(0.933)     0.7701(0.763)
+  4000_datax-dualjudge-evalset-1.32k                0                 -                 -                 -
+  5617_nemotron_eval_5.36k                          0                 -                 -                 -
+  6589_govdocs2-dualjudge-eval20-3.53k              0                 -                 -                 -
+
+[47] sensitive_pii_password  (threshold moved)
+  corpus                                          sup                v2                v3                v4
+  10360_betterdataai_ner_silver_eval_10.36k        50     0.6800(0.560)     0.6800(0.560)     0.1000(0.020)
+  10626_ai4privacy_pii_masking_eval_10.63k       1245     0.9855(0.978)     0.9855(0.978)     0.7173(0.692)
+  20000_pii_holdout_20.00k                        232     0.9741(0.953)     0.9741(0.953)     0.8793(0.836)
+  30000_pii2_eval_25.15k                          196     0.9643(0.934)     0.9643(0.934)     0.9592(0.929)
+  38937_openpii_pii_eval_38.94k                     0                 -                 -                 -
+  4000_datax-dualjudge-evalset-1.32k               12                 -                 -                 -
+  5617_nemotron_eval_5.36k                          0                 -                 -                 -
+  6589_govdocs2-dualjudge-eval20-3.53k              9                 -                 -                 -
+
+[49] sensitive_pii_phone_number  (threshold moved)
+  not measurable on any sealed corpus
+
+[51] sensitive_pii_sexual_identity_and_orientation  (NOT changed by the corrected cap)
+  not measurable on any sealed corpus
+
+[57] sensitive_pii_zip_code  (threshold moved)
+  not measurable on any sealed corpus
+
+
+Priority-gate pairs whose verdict CHANGED between v2 and v4 (ci_low >= 0.9, support >= 30):
+
+  PASS->FAIL  sensitive_pii_military_identification_number
+      on 20000_pii_holdout_20.00k  sup=4327
+      v2 recall 1.0000 (ci_low 1.0000)  ->  v4 recall 0.8343 (ci_low 0.8230)
+  PASS->FAIL  sensitive_pii_military_identification_number
+      on 38937_openpii_pii_eval_38.94k  sup=13763
+      v2 recall 0.9995 (ci_low 0.9991)  ->  v4 recall 0.7701 (ci_low 0.7628)
+  PASS->FAIL  sensitive_pii_password
+      on 10626_ai4privacy_pii_masking_eval_10.63k  sup=1245
+      v2 recall 0.9855 (ci_low 0.9783)  ->  v4 recall 0.7173 (ci_low 0.6916)
+  PASS->FAIL  sensitive_pii_password
+      on 20000_pii_holdout_20.00k  sup=232
+      v2 recall 0.9741 (ci_low 0.9526)  ->  v4 recall 0.8793 (ci_low 0.8362)
+
+  4 pair(s) changed verdict.
+
+
+Headline metrics, all three arms:
+
+metric                                  v2        v3        v4
+macro_f2                            0.6614    0.6657    0.6641
+micro_f1                            0.7255    0.7533    0.7862
+priority_macro_f05                  0.7434    0.7587    0.8031
+macro_f05                           0.6183    0.6253    0.6403
+recall_macro_catalogue              0.6938    0.6887    0.6655
+precision_macro_catalogue           0.6182    0.6258    0.6461
+severity_recall_min                 0.7221    0.7221    0.6410
+prediction_rate                     0.8192    0.8181    0.8168
+equal_corpus_doc_recall             0.7975    0.7975    0.7975
+equal_corpus_doc_precision          0.8956    0.8956    0.8956
+equal_corpus_doc_specificity        0.8792    0.8792    0.8792
+p95_latency_ms                      3.9164    3.9164    3.9696
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:07:21Z] Exit: 1 | Context: fold arms, data quality and both decisions into the run record | Took: 0.8s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=pyyaml bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py
+--- Output ---
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py", line 65, in <module>
+    "verdict": verdict_for(arm_file),
+               ~~~~~~~~~~~^^^^^^^^^^
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py", line 36, in verdict_for
+    row = next((a for a in d["arms"] if a["name"] == arm_name), None)
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py", line 36, in <genexpr>
+    row = next((a for a in d["arms"] if a["name"] == arm_name), None)
+                                        ~^^^^^^^^
+KeyError: 'name'
+--------------
+
+[2026-08-27T01:07:40Z] Exit: 0 | Context: fold arms, data quality and both decisions into the run record | Took: 0.9s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=pyyaml bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py
+--- Output ---
+-> projects/pii-head-to-head-v1/runs/26-08-26-4/run.json  (3 arms, 8 data-quality rows)
+   pii-cascade-balanced-v2          macro_f2=0.6614  micro_f1=0.7255  p95=3.9164ms
+      headline: BLOCKED - priority tag recall >= 0.90 (conclusive) 29/55 measurable scope(s) passed of 128; precision-view: BLOCKED - document-level precision >= 0.90 (conclusive) 1/3 measurable scope(s) passed of 3; document-level specificity >= 0.85 (conclusive) 2/3 measurable scope(s) passed of 3; document-level recall >= 0.85 (conclusive) 1/3 measurable scope(s) passed of 3; priority tag recall >= 0.75 (conclusive) 45/55 measurable scope(s) passed of 128
+   pii-cascade-balanced-v3          macro_f2=0.6657  micro_f1=0.7533  p95=3.9164ms
+      headline: BLOCKED - priority tag recall >= 0.90 (conclusive) 29/55 measurable scope(s) passed of 128; precision-view: BLOCKED - document-level precision >= 0.90 (conclusive) 1/3 measurable scope(s) passed of 3; document-level specificity >= 0.85 (conclusive) 2/3 measurable scope(s) passed of 3; document-level recall >= 0.85 (conclusive) 1/3 measurable scope(s) passed of 3; priority tag recall >= 0.75 (conclusive) 45/55 measurable scope(s) passed of 128
+   pii-cascade-v4-corrected-cap     macro_f2=0.6641  micro_f1=0.7862  p95=3.9696ms
+      headline: BLOCKED - priority tag recall >= 0.90 (conclusive) 25/55 measurable scope(s) passed of 128; precision-view: BLOCKED - document-level precision >= 0.90 (conclusive) 1/3 measurable scope(s) passed of 3; document-level specificity >= 0.85 (conclusive) 2/3 measurable scope(s) passed of 3; document-level recall >= 0.85 (conclusive) 1/3 measurable scope(s) passed of 3; priority tag recall >= 0.75 (conclusive) 44/55 measurable scope(s) passed of 128
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:09:18Z] Exit: 0 | Context: write the unabridged command archive | Took: 0.6s
+Directory: /home/lence/workspace/pii_master
+$ /home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/bin/mp commands projects/pii-head-to-head-v1/runs/26-08-26-4/run.json --txt projects/pii-head-to-head-v1/reports/26-08-26-4_v3-audit-and-v4-thresholds.commands.txt
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26-4_v3-audit-and-v4-thresholds.commands.txt (21 commands, streamed)
+--------------
+
+[2026-08-27T01:09:20Z] Exit: 0 | Context: append this run to the experiment-log workbook | Took: 1.8s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/runs/26-08-26-4/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-27_Experiment-Log.xlsx (49,537 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+warning: no data_quality assessment for data/2-eval (eight sealed corpora, equal-corpus aggregation) — the Data Quality Log will read "NOT ASSESSED". Add a data_quality entry to run.json (see conventions.md § Run reports).
+--------------
+
+[2026-08-27T01:09:52Z] Exit: 0 | Context: append this run to the experiment-log workbook (local run date, aggregate data-quality row added) | Took: 1.7s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/runs/26-08-26-4/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26_Experiment-Log.xlsx (49,643 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:11:39Z] Exit: 0 | Context: rebuild the run record with one arm per model x corpus, carrying per-tag detail | Took: 0.8s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=pyyaml bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/enrich.py
+--- Output ---
+-> projects/pii-head-to-head-v1/runs/26-08-26-4/run.json
+   24 arms (model x corpus), 1135 per-tag rows, 8 data-quality rows
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:11:42Z] Exit: 0 | Context: write the experiment-log workbook from the per-corpus arms | Took: 2.1s
+Directory: /home/lence/workspace/pii_master
+$ env WITH=openpyxl bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /home/lence/.claude/skills/sdlc-model-pipeline/scripts/write_experiment_log.py projects/pii-head-to-head-v1/runs/26-08-26-4/run.json --out projects/pii-head-to-head-v1/reports/
+--- Output ---
+wrote projects/pii-head-to-head-v1/reports/26-08-26_Experiment-Log.xlsx (169,551 bytes)
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:12:51Z] Exit: 1 | Context: track the three sealed evaluations and both decisions in MLflow | Took: 2.6s
+Directory: /home/lence/workspace/pii_master/projects/pii-head-to-head-v1
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py
+--- Output ---
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+2026/08/26 18:12:51 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/08/26 18:12:51 INFO mlflow.store.db.utils: Updating database tables
+2026/08/26 18:12:51 INFO mlflow.tracking.fluent: Experiment with name 'pii-head-to-head-v1' does not exist. Creating a new experiment.
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py", line 20, in <module>
+    RUN = json.loads((P / "runs/26-08-26-4/run.json").read_text())
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/lence/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lence/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lence/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'projects/pii-head-to-head-v1/runs/26-08-26-4/run.json'
+--------------
+
+[2026-08-27T01:13:26Z] Exit: 1 | Context: track the three sealed evaluations and both decisions in MLflow | Took: 2.0s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py
+--- Output ---
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py", line 81, in <module>
+    log_metrics(ev["metrics"])
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py", line 34, in log_metrics
+    mlflow.log_metric(k, m["value"])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/tracking/fluent.py", line 1228, in log_metric
+    return MlflowClient().log_metric(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        run_id,
+        ^^^^^^^
+    ...<7 lines>...
+        dataset_digest=dataset.digest if dataset is not None else None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/tracking/client.py", line 2371, in log_metric
+    return self._tracking_client.log_metric(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        run_id,
+        ^^^^^^^
+    ...<7 lines>...
+        model_id=model_id,
+        ^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/telemetry/track.py", line 30, in wrapper
+    result = func(*args, **kwargs)
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/client.py", line 387, in log_metric
+    self.store.log_metric(run_id, metric)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/store/tracking/sqlalchemy_store.py", line 1212, in log_metric
+    self._log_metrics(run_id, [metric])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/store/tracking/sqlalchemy_store.py", line 1238, in _log_metrics
+    _validate_metric(
+    ~~~~~~~~~~~~~~~~^
+        metric.key,
+        ^^^^^^^^^^^
+    ...<3 lines>...
+        path="" if is_single_metric else f"metrics[{idx}]",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/utils/validation.py", line 377, in _validate_metric
+    _validate_metric_name(key, append_to_json_path(path, "name"))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv/lib/python3.13/site-packages/mlflow/utils/validation.py", line 352, in _validate_metric_name
+    raise MlflowException(
+    ...<2 lines>...
+    )
+mlflow.exceptions.MlflowException: Invalid value "f1@1" for parameter 'name' supplied: Names may only contain alphanumerics, underscores (_), dashes (-), periods (.), spaces ( ), colon(:) and slashes (/).
+--------------
+
+[2026-08-27T01:13:43Z] Exit: 0 | Context: track the three sealed evaluations and both decisions in MLflow | Took: 6.3s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/track.py
+--- Output ---
+logged to sqlite:////home/lence/workspace/pii_master/projects/pii-head-to-head-v1/mlflow.db
+parent run: 7cc1e84f666e4539b472de2076e5da24
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+
+[2026-08-27T01:15:09Z] Exit: 0 | Context: verify every number quoted in the report against its source file | Took: 0.9s
+Directory: /home/lence/workspace/pii_master
+$ bash /home/lence/.claude/skills/sdlc-model-pipeline/scripts/run.sh /tmp/claude-1000/-home-lence-workspace-pii-master/34ee2a63-fd7d-4031-9fa7-fe92554ae9cd/scratchpad/check_report.py
+--- Output ---
+checked report against 3 arm files, the decision and the diagnosis
+
+1 MISMATCH(ES):
+  - reproduction shift (loose): report does not contain '-6.2e-03'
+bootstrap: up to date (/home/lence/.cache/sdlc-model-pipeline/99a0d9169811455a/venv)
+--------------
+

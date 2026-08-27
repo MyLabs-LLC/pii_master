@@ -1,0 +1,76 @@
+# reg-etl-mapping.conf
+# Office of the Registrar — Data Services
+# profile: REG-MAP-2016.3
+# last validated: 2016-08-29 16:02:11
+# owner role: Records Custodian
+
+[job]
+id                      = SIS-ETL-4471
+schedule                = 0 2 * * *
+source                  = SIS_PROD.STU_CORE
+target                  = ODS_REG.DIM_STUDENT
+batch_size              = 3500
+expected_row_count      = 61884
+
+[mapping.identity]
+STU_ID                  -> student_key
+STU_LAST_NAME           -> legal_surname
+STU_FIRST_NAME          -> legal_given_name
+STU_MIDDLE_INIT         -> legal_middle_initial
+STU_PREFERRED           -> preferred_given_name
+MAIDEN_NAME             -> former_surname
+SSN                     -> national_id_token        # vault lookup, no carry-forward
+TAX_ID_NUM              -> national_id_token
+DOB                     -> date_of_birth
+DOB                     -> age_band_at_term         # derived
+
+[mapping.contact]
+PERM_ADDR_LINE1         -> contact_perm_addr_line1
+PERM_ADDR_LINE2         -> contact_perm_addr_line2
+PERM_CITY               -> contact_perm_city
+PERM_STATE              -> contact_perm_state
+PERM_POSTAL             -> contact_perm_postal
+MAIL_ADDR_LINE1         -> contact_mail_addr_line1
+HOME_PHONE              -> contact_home_phone
+MOBILE_PHONE            -> contact_mobile_phone
+CAMPUS_EMAIL            -> contact_campus_email
+EMERG_CONTACT_NAME      -> emergency_contact_name
+EMERG_CONTACT_PHONE     -> emergency_contact_phone
+
+[mapping.demographic]
+ETHNICITY_CODE          -> demo_ethnicity_code
+GENDER_CODE             -> demo_gender_code
+VETERAN_STATUS          -> demo_veteran_status
+DISABILITY_FLAG         -> demo_disability_flag
+RESIDENCY_CODE          -> demo_residency_code
+
+[mapping.disclosure]
+FERPA_BLOCK_FLAG        -> disclosure_restriction_flag
+DIRECTORY_OPT_OUT       -> directory_suppression_flag
+
+[masking]
+policy                  = REG-MASK-07
+national_id_token       = full        ; ***-**-****
+date_of_birth           = full        ; ****-**-**
+contact_home_phone      = full        ; (***) ***-****
+contact_mobile_phone    = full        ; (***) ***-****
+contact_campus_email    = full        ; ****@****
+contact_perm_addr_line1 = full        ; [MASKED]
+contact_perm_addr_line2 = full        ; [MASKED]
+contact_perm_postal     = full        ; [MASKED]
+emergency_contact_name  = full        ; [MASKED]
+emergency_contact_phone = full        ; (***) ***-****
+legal_surname           = partial:P2  ; expose 0 chars to reporting roles
+exempt_roles            = records_custodian
+
+[validation]
+V-118 date_of_birth      format=YYYY-MM-DD        on_fail=defer
+V-204 national_id_token  required_if=demo_residency_code  on_fail=defer
+V-231 contact_perm_postal length=5                on_fail=defer
+V-260 contact_campus_email pattern=institutional  on_fail=defer
+V-311 disclosure_restriction_flag domain={Y,N}    on_fail=reject
+
+[quarantine]
+table                   = ODS_REG.QUARANTINE_STUDENT
+retain_days             = 30
+log_values              = false

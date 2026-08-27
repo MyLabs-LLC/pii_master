@@ -1,0 +1,62 @@
+MEMORANDUM
+
+DATE:            17 April 2016
+TO:              Members of the Data Stewardship Council
+FROM:            Office of the Data Governance Officer
+COPY TO:         The Records Custodian; Manager, Enterprise Data Services
+SUBJECT:         Ratification of masking policy MASKCFG-2016-03 as applied to the nightly Policy Administration extract (job identifier PADMIN_EXTR_NIGHTLY)
+CLASSIFICATION:  Internal — Restricted Distribution
+
+1.0  PURPOSE
+
+1.1  This memorandum is issued for the purpose of memorializing, and thereby placing beyond reasonable dispute, the configuration state of the enterprise masking layer as deployed to the production environment at 2016-04-16T23:41:07-04:00, and of soliciting the Council's ratification of the same at its next regular sitting.
+
+2.0  AUTHORITY
+
+2.1  This memorandum is issued pursuant to Section 4.3 of the Enterprise Information Handling Standard, which reserves to the Council the exclusive authority to approve any alteration to the disposition of an attribute classified as Restricted, and pursuant to the standing delegation recorded in Council minute 2015-11-04.
+
+3.0  CONFIGURATION OF RECORD
+
+3.1  The following is a verbatim excerpt from /opt/etl/conf/mask/maskcfg-2016-03.properties as it existed in production at the time stated in paragraph 1.1. No property not appearing below is to be inferred as having been set.
+
+     mask.policy.version=2016.03.1
+     mask.default.action=SUPPRESS
+     mask.field.MBR_FIRST_NAME.action=SUPPRESS
+     mask.field.MBR_LAST_NAME.action=SUPPRESS
+     mask.field.MBR_MIDDLE_INITIAL.action=SUPPRESS
+     mask.field.SSN.action=TOKENIZE
+     mask.field.SSN.display=***-**-****
+     mask.field.DATE_OF_BIRTH.action=GENERALIZE
+     mask.field.DATE_OF_BIRTH.granularity=YEAR_ONLY
+     mask.field.ADDR_LINE_1.action=SUPPRESS
+     mask.field.ADDR_LINE_2.action=SUPPRESS
+     mask.field.POSTAL_CODE.action=TRUNCATE
+     mask.field.POSTAL_CODE.retain=3
+     mask.field.EMAIL_ADDR.action=HASH
+     mask.field.EMAIL_ADDR.algorithm=SHA-256
+     mask.field.PHONE_HOME.action=MASK_LEFT
+     mask.field.PHONE_HOME.display=(***) ***-****
+     mask.field.DRIVER_LICENSE_NBR.action=TOKENIZE
+     mask.field.BANK_ROUTING_NBR.action=SUPPRESS
+     mask.field.BANK_ACCT_NBR.action=SUPPRESS
+     mask.field.MEMBER_ID.action=TOKENIZE
+     mask.token.vault.endpoint=vault-prd.internal:9443/tokens/v1
+     mask.token.format=TKN-[A-Z0-9]{16}
+     mask.audit.sink=/var/log/etl/mask-audit.log
+     mask.onfail.action=ABORT_JOB
+
+4.0  FINDINGS
+
+4.1  It is observed, and the Council's attention is respectfully directed to the fact, that the attribute BENEFICIARY_LAST_NAME is not enumerated above and is therefore governed solely by the default action recited at line two of the excerpt. The Office takes no position as to whether reliance upon a default is adequate for an attribute of this sensitivity; it observes only that reliance upon a default is not the same thing as a determination.
+
+4.2  The run of 2016-04-16 processed 1,284,507 rows, of which 1,284,489 rows were emitted with masking applied and 18 rows were quarantined under the provisions of paragraph 5.2 below.
+
+5.0  DIRECTIVES
+
+5.1  Enterprise Data Services shall, not later than 29 April 2016, submit a written disposition for BENEFICIARY_LAST_NAME and for the companion attributes BENEFICIARY_DATE_OF_BIRTH and BENEFICIARY_TAX_ID.
+
+5.2  The eighteen (18) quarantined rows shall be retained in the holding table STG.PADMIN_QUARANTINE for a period of ninety (90) days, unmasked access to which is reserved to the Records Custodian acting under dual control.
+
+6.0  EFFECT
+
+6.1  Nothing herein shall be construed as suspending, waiving, or modifying any obligation arising under the Standard pending the Council's ratification.

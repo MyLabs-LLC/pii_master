@@ -1,0 +1,71 @@
+MEMORANDUM
+
+TO:      Data Governance Committee
+FROM:    Records Custodian
+SUBJECT: Data Dictionary Excerpt — MEMBER_CONTACT_HIST
+DATE:    9 June 2016
+FILE:    DG-DD-2016-021
+
+1.0  BACKGROUND
+
+1.1  MEMBER_CONTACT_HIST retains the prior-value history of contact attributes maintained on MEMBER_MASTER. The table was created in response to Internal Audit finding IA-2015-08 concerning the absence of a demonstrable change trail on address of record.
+
+1.2  The table is append-only. Update and delete privileges are granted to no role, including the schema owner, outside of an approved maintenance window.
+
+2.0  STRUCTURE
+
+2.1  CONTACT_HIST_SEQ
+     2.1.1  Datatype: NUMBER(14)
+     2.1.2  Nullability: NOT NULL
+     2.1.3  Note: Sequence-generated key; gaps are expected and are not defects.
+
+2.2  MBR_NBR
+     2.2.1  Datatype: NUMBER(10)
+     2.2.2  Nullability: NOT NULL
+     2.2.3  Note: Foreign key to MEMBER_MASTER; indexed with CHANGE_TS.
+
+2.3  ATTRIBUTE_NAME
+     2.3.1  Datatype: VARCHAR2(30)
+     2.3.2  Nullability: NOT NULL
+     2.3.3  Note: Records the schema name of the altered column, drawn from the set MBR_ADDR_LINE_1, MBR_ADDR_LINE_2, MBR_CITY, MBR_STATE_CD, MBR_POSTAL_CD, MBR_HOME_PHONE, MBR_MOBILE_PHONE, MBR_EMAIL_ADDR.
+
+2.4  PRIOR_VALUE_ENC
+     2.4.1  Datatype: RAW(256)
+     2.4.2  Nullability: YES
+     2.4.3  Note: Restricted. Encrypted with the contact history key; null where the attribute was previously unpopulated.
+
+2.5  NEW_VALUE_ENC
+     2.5.1  Datatype: RAW(256)
+     2.5.2  Nullability: NOT NULL
+     2.5.3  Note: Restricted. Encrypted as above.
+
+2.6  CHANGE_CHANNEL_CD
+     2.6.1  Datatype: CHAR(3)
+     2.6.2  Nullability: NOT NULL
+     2.6.3  Note: Branch, contact centre, home banking or bulk maintenance.
+
+2.7  CHANGE_OPERATOR_ID
+     2.7.1  Datatype: VARCHAR2(12)
+     2.7.2  Nullability: NOT NULL
+     2.7.3  Note: Operator identifier; the reserved literal for member-initiated home banking changes is documented in Appendix C.
+
+2.8  CHANGE_TS
+     2.8.1  Datatype: TIMESTAMP
+     2.8.2  Nullability: NOT NULL
+     2.8.3  Note: Server time, not adjusted for daylight saving.
+
+3.0  ACCESS RESTRICTION
+
+3.1  Read access is limited to role COMPLIANCE_RO and to the Fraud Investigator role. Decryption of PRIOR_VALUE_ENC and NEW_VALUE_ENC requires a case reference recorded in the investigations log.
+
+3.2  Standing reporting access is not granted. Ad hoc requests are approved individually by the Records Custodian.
+
+4.0  RETENTION
+
+4.1  History rows are retained seven years from CHANGE_TS. The purge job runs on the first Sunday of each calendar quarter.
+
+4.2  Rows bearing an active investigations hold are exempt from purge until the hold is released in writing.
+
+5.0  DOWNSTREAM EXTRACTS
+
+5.1  No downstream extract of this table is authorized. Any request to establish one shall be treated as a new interface and subjected to vendor due diligence.

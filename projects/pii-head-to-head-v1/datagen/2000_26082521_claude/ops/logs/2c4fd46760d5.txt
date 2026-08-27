@@ -1,0 +1,34 @@
+CHD-ETL NIGHTLY OUTPUT — BATCH 2016-11-08
+Scheduler: chd-sched-p01
+Chain: CHD-ETL-VR-0431 → CHD-ETL-IMM-0198 → CHD-ETL-COM-0077 → CHD-WHS-PUB-0431
+
+Run checklist and output:
+
+- [x] 2016-11-08 01:00:00 CST — chain triggered by calendar rule NIGHTLY_ALL; no manual override recorded.
+- [x] 01:00:14 — CHD-ETL-VR-0431 landing read; rows=39,884; header signature matched vr_map_v11.cfg.
+- [x] 01:06:52 — masking pass complete; fields redacted=11, tokenised=2, hashed=8, generalised=2; unmasked-field assertions failed=0.
+- [x] 01:07:03 — staged rows=39,829; rejects=55 to `vr_reject_0431`.
+- [x] 01:07:05 — CHD-ETL-IMM-0198 started; rows read=18,910.
+- [x] 01:19:36 — `date_of_birth` generalisation applied rows=18,910; day/month positions discarded pre-write.
+- [x] 01:19:40 — staged rows=18,742; rejects=168.
+- [ ] 01:19:41 — WARN: `insurance_member_id` unrouted, fallback SUPPRESS_ON_UNROUTED applied rows=18,742; change record CHG-2016-0331 still open.
+- [x] 01:21:00 — CHD-ETL-COM-0077 (communicable disease feed) started; rows read=2,406.
+- [x] 01:24:18 — free-text columns `intake_notes`, `referral_reason` routed to scrub queue; enqueued=1,988; queue drained 01:31:44; bypass paths=0.
+- [x] 01:31:50 — staged rows=2,401; rejects=5 (E-2211 `residence_state` outside reference domain).
+- [x] 01:33:02 — CHD-WHS-PUB-0431 publish started; source staged rows=60,972.
+- [x] 01:47:29 — publish complete; warehouse rows inserted=60,972; updated=0; deleted=0.
+- [x] 01:47:31 — column-level audit run against the published set:
+    - `PX_LAST_NM`, `PX_FIRST_NM` — hash form only, cleartext occurrences=0
+    - `PX_DOB_YR` — year granularity only, full-date occurrences=0
+    - `PX_ID_TKN`, `PX_MRN_TKN` — token form only, vault handles resolved=0 (no downstream detokenisation configured)
+    - `PX_ZIP3` — three positions, longer occurrences=0
+    - phone, email and street targets — absent from the published schema
+- [x] 01:47:55 — chain marked SUCCEEDED WITH WARNINGS; exit code 0; warning count=1.
+- [x] 01:48:02 — run manifest written to /var/log/chd-etl/manifest/2016-11-08.mft.
+
+Post-run items:
+
+- [ ] Close CHG-2016-0331 (`insurance_member_id` vault route) or re-baseline the fallback as the permanent rule.
+- [ ] Return the 168 immunisation rejects to the submitting system owner with offsets only.
+- [ ] Confirm reject-file retention against the 90-day schedule at the next Records Custodian review.
+- [x] Nightly counts reconciled to source control totals; variance=0 rows.

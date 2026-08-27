@@ -1,0 +1,15 @@
+{
+  "candidate": "t0-c7",
+  "stage": "validate",
+  "proposal": "Load a saved candidate once per worker, predict all untouched eval documents, and persist one frozen-evaluator/MLflow arm per original hold-out corpus plus an equal-corpus summary.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "a241d02",
+  "commit": "87357c0",
+  "decision": "accepted",
+  "evidence": {
+    "focused_tests": "10 passed",
+    "worker_round_trip": "passed",
+    "ruff": "passed",
+    "holdout_arms": 8
+  }
+}

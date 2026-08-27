@@ -1,0 +1,81 @@
+CITY WATER, SEWER AND REFUSE UTILITY
+DATA DICTIONARY — SUBJECT AREA: MEMBER / ACCOUNT PARTIES
+SOURCE INSTANCE: CISPRD (Oracle 9.2.0.4) — EXCERPT PREPARED FOR THE RECORDS CUSTODIAN
+
+A. TABLE: CIS.ACCT_PARTY
+   Purpose: associates a natural or legal person with a utility account. Replaces the single-name field
+   used prior to the FY2002 conversion. Row count approx. 214,000.
+
+   1. Structural columns
+      a. PARTY_ID
+         Type ......... NUMBER(10)
+         Null ......... NO
+         Notes ........ Primary key. Sequence PARTY_SEQ, no reuse of retired values.
+      b. ACCT_NBR
+         Type ......... CHAR(12)
+         Null ......... NO
+         Notes ........ FK to CIS.ACCT_MSTR. Composite index with PARTY_ROLE_CD.
+      c. PARTY_ROLE_CD
+         Type ......... CHAR(2)
+         Null ......... NO
+         Notes ........ Domain: PR primary, SP spouse or co-applicant, LL landlord, AU authorized
+                        caller, GT guarantor, EX executor. Only one PR permitted per account; enforced
+                        by trigger TR_PARTY_ONE_PR, not by constraint.
+      d. EFF_DT / END_DT
+         Type ......... DATE / DATE
+         Null ......... NO / YES
+         Notes ........ Open row where END_DT is null. Rows are never deleted by application code.
+
+   2. Personal-data columns (restricted)
+      a. PARTY_LAST_NAME, PARTY_FIRST_NAME, PARTY_MI, PARTY_SUFFIX
+         Type ......... VARCHAR2(30), VARCHAR2(20), CHAR(1), VARCHAR2(4)
+         Null ......... NO, NO, YES, YES
+         Notes ........ Free text, upper case enforced at entry screen only. Business names are loaded
+                        into PARTY_LAST_NAME with PARTY_FIRST_NAME left blank; reporting must not
+                        assume a natural person.
+      b. TAX_ID_NBR
+         Type ......... CHAR(9)
+         Null ......... YES
+         Notes ........ Holds either individual or employer identifier depending on PARTY_CLASS_CD.
+                        Column-level SELECT granted to CIS_CREDIT and FIN_AR only. Never appears in a
+                        view, report, or extract. Entry screen displays trailing positions only.
+      c. BIRTH_DT
+         Type ......... DATE
+         Null ......... YES
+         Notes ........ Required for the low-income and senior rate classes and for medical certificate
+                        processing. Restricted to CIS_CREDIT and the Rate Assistance queue.
+      d. HOME_PHONE, ALT_PHONE, FAX_NBR
+         Type ......... CHAR(10) each
+         Null ......... YES
+         Notes ........ No area code separation. Blank and all-zero both occur in converted rows.
+      e. EMAIL_ADDR
+         Type ......... VARCHAR2(60)
+         Null ......... YES
+         Notes ........ Optional. Used for outage notice pilot only; not an accepted channel for
+                        billing notices under current ordinance.
+      f. MAIL_ADDR_LN1, MAIL_ADDR_LN2, MAIL_CITY, MAIL_STATE, MAIL_ZIP, MAIL_CNTRY
+         Type ......... VARCHAR2(40), VARCHAR2(40), VARCHAR2(28), CHAR(2), CHAR(9), CHAR(3)
+         Null ......... NO, YES, NO, NO, NO, YES
+         Notes ........ CASS certification applied in the print stream, not at entry. MAIL_ZIP stores
+                        five or nine positions unpunctuated.
+
+B. ACCESS RESTRICTION
+   1. Base table SELECT: roles CIS_CREDIT, FIN_AR, DBA_UTIL.
+   2. Service representatives use CIS.V_PARTY_CSR (excludes A.2.b and A.2.c).
+   3. Meter and field staff use CIS.V_PARTY_FIELD (name and service premise only).
+   4. Developer access to CISPRD is read-only and logged; test refreshes to CISTST are scrambled by
+      job SCRAM_PARTY prior to release of the instance.
+
+C. RETENTION
+   1. Closed party rows retained six years from END_DT, then archived and purged.
+   2. A.2.b purged at three years from account close regardless of party status.
+   3. Bankruptcy, litigation hold and lien accounts are exempt from purge; flag ACCT_HOLD_IND on
+      CIS.ACCT_MSTR suspends the job for the affected account.
+
+D. DOWNSTREAM EXTRACTS
+   1. EXT_PARTY_PRINT — nightly, print contractor, name and mailing columns.
+   2. EXT_PARTY_ASSIST — monthly, Community Services energy assistance, name and BIRTH_DT, secure
+      transfer, approval of the Records Custodian on file.
+   3. EXT_PARTY_COLL — monthly, collections vendor, name, mailing and phone columns.
+   4. No extract of any kind carries TAX_ID_NBR. Requests to that effect are referred to the City
+      Attorney.

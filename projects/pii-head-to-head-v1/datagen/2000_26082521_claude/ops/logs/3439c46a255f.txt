@@ -1,0 +1,31 @@
+MAPPING RULES — PHMCPY01 (VSAM, source) TO PHDW.PATIENT_DIM (DB2, target)
+Ruleset PHMAP17, effective 1998-10-01, reviewed 1999-01-12.09.40.00 by the Records Custodian.
+
+- PAT_ID_INTERNAL -> PATIENT_SK
+  - Rule: tokenise, do not carry the natural key forward.
+  - Target column type CHAR(16); value written is the vault token only.
+- PAT_LAST_NM, PAT_FIRST_NM, PAT_MID_INIT -> PATIENT_NAME_MASKED
+  - Rule: concatenate positions are not preserved; single fixed-width placeholder written.
+  - Length of source content is not to be inferred from the target; padding is constant.
+- PAT_DOB -> PATIENT_BIRTH_YEAR
+  - Rule: expand to CCYYMMDD via Y2KEXP4, then retain CCYY, then discard the source field.
+  - Rows failing expansion route to PHERR.REJ; they do not default.
+- PAT_SSN -> (no target column)
+  - Rule: dropped at the mapping layer. Column is not defined in PHDW.PATIENT_DIM.
+- PAT_ADDR_LINE_1, PAT_ADDR_LINE_2, PAT_CITY -> (no target column)
+  - Rule: dropped at the mapping layer.
+- PAT_ST -> PATIENT_STATE_CD
+  - Rule: pass through after table validation against PHREF.STATE_CD.
+- PAT_ZIP5 -> PATIENT_ZIP3
+  - Rule: retain first three positions; suppress the remainder. PAT_ZIP4 has no target.
+- PAT_HOME_PHN, PAT_WORK_PHN -> (no target column)
+  - Rule: dropped at the mapping layer.
+- PAT_GENDER_CD -> PATIENT_GENDER_CD
+  - Rule: pass through; unrecognised codes map to U.
+- MBR_ID, CARDHOLDER_ID, PERSON_CD, GRP_NBR -> COVERAGE_SK
+  - Rule: composite tokenise. All four source fields feed one token; none is carried in clear.
+- PLAN_CD, BIN_NBR, PCN_CD -> PLAN_CD, BIN_NBR, PCN_CD
+  - Rule: pass through; these identify the payer, not the individual.
+- Load control
+  - Target is insert-only; no update-in-place, so a corrected source row produces a new PATIENT_SK.
+  - Row counts must reconcile within the tolerance recorded in PHOPS.RECON_TOL before the dimension is published.

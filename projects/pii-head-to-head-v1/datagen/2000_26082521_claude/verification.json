@@ -1,0 +1,45 @@
+{
+ "n_input": 2000,
+ "n_kept": 1948,
+ "n_rejected": 52,
+ "reasons": {
+  "tell:disclaimer": 13,
+  "identifier:ipv4": 10,
+  "identifier:ssn": 5,
+  "identifier:email": 2,
+  "identifier:iban": 13,
+  "identifier:street_address": 9,
+  "identifier:card": 5
+ },
+ "per_class_rejected": {
+  "vendor_questionnaire": 6,
+  "system_log_config": 16,
+  "aggregate_statistics": 3,
+  "training_material": 2,
+  "data_dictionary": 8,
+  "blank_intake_form": 4,
+  "redacted_record": 3,
+  "regulatory_text": 1,
+  "privacy_policy": 5,
+  "security_guidance": 4
+ },
+ "warnings": {
+  "echoes_class_name": 158
+ },
+ "gate_threshold": 161.714621073105,
+ "generated_fire_rate": 0.23305954825462014,
+ "generated_score_percentiles": {
+  "p10": -777.1513000488281,
+  "p25": -504.26317596435547,
+  "p50": -179.59764099121094,
+  "p75": 137.25613403320312,
+  "p90": 376.9212890624999
+ },
+ "real_negative_score_percentiles": {
+  "p10": -1068.8560546874999,
+  "p25": -670.8551940917969,
+  "p50": -317.0934753417969,
+  "p75": -10.774192810058594,
+  "p90": 329.23483886718776
+ }
+}

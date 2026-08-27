@@ -1,0 +1,13 @@
+CUST_MSTR EXTENSION SEGMENT — WORKING NOTES, DATA ADMINISTRATION
+
+The extension segment was added in the 1996 release to carry eligibility and service-protection attributes that would not fit the original copybook. It is a dependent segment keyed on ACCT_KEY and is sparsely populated; roughly one account in eleven carries a row, so batch programs must not assume presence.
+
+    MED_CERT_IND        PIC X(01)     nullable    Y/N/spaces; life-support premise
+    MED_CERT_EXP_DT     PIC 9(08)     nullable    required when MED_CERT_IND set
+    SHUTOFF_PROT_IND    PIC X(01)     nullable    seasonal moratorium flag
+    LIHEAP_ELIG_IND     PIC X(01)     nullable    refreshed from state file
+    LANG_PREF_CD        PIC X(03)     nullable    drives notice print stream
+    DEPOSIT_WVR_CD      PIC X(02)     nullable    waiver reason code
+    CR_SCORE_CD         PIC X(01)     nullable    internal band, not a bureau score
+
+MED_CERT_IND and MED_CERT_EXP_DT are the only elements in the file that reflect a health circumstance, and they are excluded from every downstream extract without exception, including the collections feed and the marketing selection run. Update authority is confined to the two Customer Service leads and the Records Custodian. The disconnect suppression job reads MED_CERT_IND directly rather than through any copy, and any proposal to denormalize it into CUST_MSTR should be brought to Data Administration first. Retention follows the parent record; the purge job clears the entire segment rather than clearing element by element.

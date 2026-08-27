@@ -1,0 +1,81 @@
+{
+ "bundle_name": "pii-cascade-balanced-v3-repack",
+ "out_dir": "/home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist",
+ "entry_point": "tagger.py",
+ "model_card": "MODEL_CARD.md",
+ "readme": "README.md",
+ "run": "pii-head-to-head-v1/26-08-26-1",
+ "license": "proprietary - internal",
+ "files": [
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-head-to-head-v1/dist/pii-cascade-balanced-v3/models/model",
+   "dst": "models/model"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/tagger.py",
+   "dst": "tagger.py"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/runtime",
+   "dst": "runtime"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/examples",
+   "dst": "examples"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-head-to-head-v1/reports",
+   "dst": "docs"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-head-to-head-v1/package/stage_pii-cascade-balanced-v3-repack/MODEL_CARD.md",
+   "dst": "MODEL_CARD.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-head-to-head-v1/package/stage_pii-cascade-balanced-v3-repack/README.md",
+   "dst": "README.md"
+  },
+  {
+   "src": "/home/lence/workspace/pii_master/projects/pii-target-8070/package/HOW_TO_BUILD.md",
+   "dst": "HOW_TO_BUILD.md"
+  }
+ ],
+ "config": {
+  "read_window_chars": 12000,
+  "content_read_chars": null,
+  "n_labels": 58,
+  "score_mode": "sum",
+  "cpu_budget": 1
+ },
+ "requirements": [
+  "numpy>=1.24"
+ ],
+ "metadata": {
+  "architecture": "hashed n-gram cascade: document gate + per-tag linear heads",
+  "n_labels": 58,
+  "catalogue": "58 collapsed labels (given/family/middle_name folded into full_name; street_number_and_name into address)",
+  "evaluator": "training/h2h_eval.py (unchanged)",
+  "promoted": "no - did not clear its declared gate",
+  "sealed_metrics": {
+   "micro_f1": 0.753311288356781,
+   "precision_micro": 0.6633504152297973,
+   "macro_f05": 0.6252675354480743,
+   "macro_f2": 0.6656662881374359,
+   "recall_macro_catalogue": 0.6887247136660984,
+   "precision_macro_catalogue": 0.6257799386978149,
+   "severity_recall_min": 0.7221069250788007,
+   "equal_corpus_doc_recall": 0.7974565203069138,
+   "equal_corpus_doc_precision": 0.8955589153693518,
+   "equal_corpus_doc_specificity": 0.8791637100209538,
+   "p95_latency_ms": 3.916393668623641
+  }
+ },
+ "verification": {
+  "checked": "20000_pii_holdout_20.00k through the packaged tagger.py",
+  "n": 20000,
+  "metric": "micro_f1",
+  "expected": 0.8464778661727905,
+  "measured": 0.846451912188067,
+  "note": "measured through the bundle's own entry point; expected is the fixed evaluator's f1_micro on the same corpus"
+ }
+}

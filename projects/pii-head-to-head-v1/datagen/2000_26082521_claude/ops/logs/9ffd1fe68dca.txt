@@ -1,0 +1,42 @@
+VALIDATION ERROR DIGEST
+Run: ETL-2021-1104-0037 | Generated 2021-11-04 06:30 | Rule pack surveillance_v9
+
+I. Summary
+   A. Rows evaluated ......................... 41,171
+   B. Rows failing one or more rules ......... 569
+   C. Distinct rules triggered ............... 11
+   D. Rows held for manual review ............ 94
+   E. Rows auto-corrected and released ....... 475
+
+II. Detail by rule
+   A. V-014 — date_of_birth fails plausibility check
+      1. Occurrences: 211
+      2. Observed condition: derived birth_year_only outside accepted range
+      3. Field values in this report: [MASKED]
+      4. Disposition: auto-corrected to null, row released, flag dob_unusable set
+   B. V-007 — medical_record_number missing after tokenization
+      1. Occurrences: 168
+      2. Observed condition: source column blank on arrival; no token minted
+      3. Token column value: <null>
+      4. Disposition: row released; deduplication falls back to specimen_accession_token
+   C. V-022 — postal_code fails format check before truncation
+      1. Occurrences: 94
+      2. Observed condition: non-numeric characters in source column
+      3. Disposition: held for manual review by the Records Custodian
+   D. V-031 — sex_at_birth not in approved code set
+      1. Occurrences: 61
+      2. Disposition: mapped to code U, row released
+   E. V-009 — ordering_provider_npi fails checksum
+      1. Occurrences: 35
+      2. Disposition: row released, flag provider_unverified set
+   F. Rules V-002, V-011, V-018, V-025, V-037, V-041 — fewer than 10 occurrences each; all auto-corrected.
+
+III. Quarantine
+   A. Unmapped source column PT_SSN observed in 3 files, 37 rows.
+   B. Quarantined rows are stored with all identifier columns suppressed; only row hash, file name, and arrival timestamp are retained.
+   C. Action: submit map change request for dph_elr_map v4.3 or confirm with the submitting laboratory that the column should not be transmitted.
+
+IV. Follow-up
+   A. Owner: the ETL Operations Lead.
+   B. Manual review queue must be cleared within two business days.
+   C. Recurring V-022 volume to be raised at the next data quality meeting.

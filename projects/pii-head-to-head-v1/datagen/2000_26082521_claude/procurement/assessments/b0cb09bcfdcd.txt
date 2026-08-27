@@ -1,0 +1,102 @@
+REGIONAL TRANSIT AUTHORITY
+OFFICE OF INFORMATION SYSTEMS SECURITY
+VENDOR SECURITY ASSESSMENT QUESTIONNAIRE
+FORM ISS-114 (REV. 03/98) — RETURN WITHIN 30 CALENDAR DAYS
+
+RESPONDENT IDENTIFICATION
+
+  Supplier Legal Name .................. ______________________________
+  Trade Name(s), if any ................ ______________________________
+  Solicitation / Contract No. .......... ______________________________
+  Title of Certifying Officer .......... ______________________________
+  Title of Supplier Security Contact ... ______________________________
+  Date of Certification ................ ____ / ____ / ______
+
+INSTRUCTIONS
+
+1. Every clause shall be answered. Entries of "N/A" shall be accompanied by a
+   written explanation in the response box.
+2. Where the EVIDENCE REQUIRED column reads YES, the supplier shall attach
+   documentation sufficient to permit verification by the Authority's Records
+   Custodian. References to marketing literature are not accepted as evidence.
+3. Responses are incorporated by reference into any resulting contract.
+
+SECTION A — STORAGE OF PERSONAL INFORMATION
+                                                              EVIDENCE
+CLAUSE  QUESTION                                              REQUIRED
+------  --------------------------------------------------    --------
+A.1     Identify every physical location at which Authority      YES
+        personal information is stored, processed or staged.
+        Response: [                                        ]
+
+A.2     State the host platform(s) and operating system          YES
+        release levels on which such information resides.
+        Response: [                                        ]
+
+A.3     Are personal information files segregated from            NO
+        other clients' data at the logical volume level?
+        Response: [ ] Yes  [ ] No   Explain: [            ]
+
+A.4     Describe the access control package in use and the        YES
+        frequency of user entitlement recertification.
+        Response: [                                        ]
+
+A.5     State the retention period applied to each data
+        element listed in Attachment 1 (Data Element              YES
+        Inventory).
+        Response: [                                        ]
+
+SECTION B — ENCRYPTION
+
+B.1     State the algorithm and effective key length applied      YES
+        to personal information at rest. Indicate whether
+        single DES or Triple DES is employed.
+        Response: [                                        ]
+
+B.2     Describe key generation, key custody and key
+        recovery procedures. Identify by title, not by name,      YES
+        each individual holding key custodian duties.
+        Response: [                                        ]
+
+B.3     Are cryptographic modules validated to FIPS 140-1?        YES
+        Response: [ ] Yes  [ ] No   Level: [ ]1 [ ]2 [ ]3 [ ]4
+
+SECTION C — TRANSMISSION
+
+C.1     Describe all circuits over which personal information     YES
+        traverses the public switched telephone network.
+        Response: [                                        ]
+
+C.2     State the minimum session key length negotiated for       NO
+        browser-based transfers (40-bit / 128-bit).
+        Response: [                                        ]
+
+C.3     Are dial-in ports protected by dial-back or token         YES
+        authentication?
+        Response: [ ] Yes  [ ] No   Describe: [           ]
+
+SECTION D — DISPOSAL
+
+D.1     Describe the method of destruction applied to
+        magnetic media, including degaussing standards and        YES
+        overwrite passes.
+        Response: [                                        ]
+
+D.2     Describe destruction of printed output, microfiche        YES
+        and carbon-interleaved forms.
+        Response: [                                        ]
+
+D.3     Is a certificate of destruction issued to the             YES
+        Authority for each disposal event?
+        Response: [ ] Yes  [ ] No   Cycle: [              ]
+
+ATTACHMENT 1 — DATA ELEMENT INVENTORY (check all elements handled)
+
+  [ ] Surname            [ ] Given Name         [ ] Middle Initial
+  [ ] Social Security Number                    [ ] Date of Birth
+  [ ] Residence Address  [ ] Mailing Address    [ ] Telephone Number
+  [ ] Farecard Serial Number                    [ ] Employee Number
+  [ ] Reduced-Fare Permit Number                [ ] Disability Category
+  [ ] Bank Routing / Account Number             [ ] Credit Card Number
+
+Certifying Officer Signature: _______________________  Title: __________

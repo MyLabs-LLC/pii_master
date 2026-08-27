@@ -1,0 +1,24 @@
+MEMORANDUM
+
+DATE:  9 June 2016
+TO:    Enterprise Data Services — Mapping Authority
+FROM:  Office of the Data Governance Officer
+RE:    Addendum 7 to mapping specification MAP-EDW-PARTY-2016, effective upon publication
+
+The mapping entries set out below are hereby substituted for the corresponding entries as heretofore published, and the superseded entries are withdrawn. Deployment reference: MAPDEP-2016-0609-A, applied 2016-06-09T22:03:41-04:00.
+
+SOURCE COLUMN                          TARGET COLUMN                    TRANSFORM
+LEGACY_PMS.POLHLDR.PH_SURNAME       -> EDW.DIM_PARTY.PARTY_LAST_NAME    SUPPRESS_ON_EXPORT
+LEGACY_PMS.POLHLDR.PH_GIVEN         -> EDW.DIM_PARTY.PARTY_FIRST_NAME   SUPPRESS_ON_EXPORT
+LEGACY_PMS.POLHLDR.PH_SSN           -> EDW.DIM_PARTY.PARTY_TAX_TOKEN    TOKENIZE(vault:party_tax)
+LEGACY_PMS.POLHLDR.PH_BIRTH_DT      -> EDW.DIM_PARTY.PARTY_BIRTH_YEAR   GENERALIZE(YEAR)
+LEGACY_PMS.POLHLDR.PH_ADDR1         -> EDW.DIM_PARTY.ADDR_LINE_1        SUPPRESS_ON_EXPORT
+LEGACY_PMS.POLHLDR.PH_ZIP           -> EDW.DIM_PARTY.POSTAL_PREFIX      TRUNCATE(3)
+LEGACY_PMS.POLHLDR.PH_PHONE_H       -> EDW.DIM_PARTY.PHONE_HOME_MASKED  MASK_LEFT(7)
+LEGACY_PMS.BENEF.BN_SURNAME         -> EDW.DIM_PARTY.PARTY_LAST_NAME    SUPPRESS_ON_EXPORT
+
+The last-recited entry is added in satisfaction of Directive 5.1 of this Office's memorandum of 17 April 2016, the attribute BENEFICIARY_LAST_NAME having until now been governed by default only.
+
+Verification run VER_MAP_0609 read 41,772 rows and wrote 41,772 rows with zero rejections; the mask-audit sink recorded 292,404 attribute-level events, each comprising a timestamp, an attribute name and a transform outcome, and none comprising a value.
+
+Acknowledgement of receipt is requested in writing.

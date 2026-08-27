@@ -1,0 +1,49 @@
+; TTLETL MASKING PROFILE
+; FILE: PRODLIB.PARMLIB(PIISTD04)
+; PROFILE ID: PII-STD-04   EFFECTIVE 01 OCT 1998   SUPERSEDES PII-STD-03
+; OWNER: RECORDS CUSTODIAN, DATA SERVICES DIVISION
+
+[GLOBAL]
+VAULT=TKNVLT.PROD
+KEYRING=1998Q4
+CLEARTEXT_EGRESS=NO
+FAIL_ON_UNENROLLED=YES
+LOG_LEVEL=3
+AUDIT_DSN=TTL.AUDIT.MASKLOG
+
+[FIELDS]
+; FIELD             CLASS  METHOD     PATTERN        REVERSIBLE  RETAIN
+  BORR_LAST_NM      PII-N  TOKENISE   TKN(10)        Y           N
+  BORR_FIRST_NM     PII-N  TOKENISE   TKN(10)        Y           N
+  CO_BORR_LAST_NM   PII-N  TOKENISE   TKN(10)        Y           N
+  SELLER_LAST_NM    PII-N  TOKENISE   TKN(10)        Y           N
+  GRANTOR_NM        PII-N  TOKENISE   TKN(10)        Y           N
+  GRANTEE_NM        PII-N  TOKENISE   TKN(10)        Y           N
+  SSN_PRIM          PII-H  SUPPRESS   -              N           N
+  SSN_SPOUSE        PII-H  SUPPRESS   -              N           N
+  BUYER_TIN         PII-H  SUPPRESS   -              N           N
+  DOB_BORR          PII-H  SUPPRESS   -              N           N
+  DL_NBR            PII-H  SUPPRESS   -              N           N
+  DL_STATE          PII-L  PASS       -              -           Y
+  MAIL_ADDR_LN1     PII-A  MASK-FULL  ASTERISK       N           N
+  MAIL_ADDR_LN2     PII-A  MASK-FULL  ASTERISK       N           N
+  MAIL_CITY         PII-L  PASS       -              -           Y
+  MAIL_ZIP          PII-A  TRUNC-3    NNN            N           P
+  HOME_PHONE        PII-C  MASK-FULL  NNN-NNN-NNNN   N           N
+  WORK_PHONE        PII-C  MASK-FULL  NNN-NNN-NNNN   N           N
+  EMAIL_ADDR        PII-C  SUPPRESS   -              N           N
+  ESCROW_ACCT_NBR   FIN-A  TOKENISE   TKN(12)        Y           N
+  TRUST_ACCT_NBR    FIN-A  TOKENISE   TKN(12)        Y           N
+  WIRE_ABA_NBR      FIN-A  SUPPRESS   -              N           N
+  MARITAL_STAT      PII-L  PASS       -              -           Y
+  VESTING_TEXT      PII-N  SUPPRESS   -              N           N
+
+[EXCLUDE]
+FILE_NBR
+POLICY_NBR
+COMMIT_NBR
+CLOSING_DT
+EARNEST_AMT
+
+; CHANGE 04-C: VESTING_TEXT MOVED FROM PASS TO SUPPRESS PENDING PARSER
+; REVIEW. APPROVED BY ESCROW OPERATIONS SUPERVISOR, 24 SEP 1998.

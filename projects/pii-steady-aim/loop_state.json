@@ -1,0 +1,26 @@
+{
+  "approval_gates_hit": 0,
+  "history": [
+    {
+      "best_arm": "steady-cascade",
+      "decision_file": "projects/pii-steady-aim/decision/decision.json",
+      "feasible_arms": 0,
+      "packaged": "pii-steady-aim-cascade-v1",
+      "promotion": "refused_no_feasible_arm",
+      "round_no": 0,
+      "route": "continue_loop",
+      "selected": null,
+      "stage": "measure"
+    }
+  ],
+  "mlflow_parent_run_id": null,
+  "project": "pii-steady-aim",
+  "renegotiated_target": null,
+  "round_no": 1,
+  "route": "budget_exhausted",
+  "stage": "ship",
+  "stopped_reason": "Worst-group threshold rule cut failing priority pairs from 19 to 13 and lifted every remaining one substantially, at a cost of 0.076 priority macro F0.5. Still no feasible arm: doc gates fail on datax and 13 tag-corpus pairs remain under the 0.75 floor. Packaged on explicit request as the run's best artifact, NOT promoted to @champion.",
+  "trials_used": 1000,
+  "updated_at": "2026-08-25T22:21:53.917117+00:00",
+  "wallclock_s": 0.0
+}

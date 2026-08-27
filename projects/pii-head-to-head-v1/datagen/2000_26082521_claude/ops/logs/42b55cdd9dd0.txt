@@ -1,0 +1,35 @@
+MAPPING RULES REVIEW — CHANGE REQUEST CR-2004-0338
+Target: Concession Administration → Ridership Data Warehouse, mapping set MAP_CONC_TO_DW rev 11
+Review meeting 2004-04-19 10:00, Revenue Systems meeting room, second floor
+
+[ ] 1. CONFIRM THE SOURCE INVENTORY
+    [ ] Catalogue snapshot taken 2004-04-16 08:00 attached to the request.
+    [ ] Column count in CONCESSION_MASTER reconciles to the previous snapshot: 74 columns, 2 added since rev 10 (SECONDARY_EVIDENCE_TYPE, RENEWAL_CHANNEL_CODE).
+    [ ] Both new columns classified before the mapping is approved. Unclassified columns remain at default SUPPRESS.
+
+[ ] 2. CONFIRM EACH RESTRICTED COLUMN HAS A DISPOSITION
+    [ ] APPLICANT_SURNAME — tokenised upstream, mapped to DW column PASSENGER_TOKEN.
+    [ ] APPLICANT_GIVEN_NAME — not mapped.
+    [ ] APPLICANT_DATE_OF_BIRTH — not mapped; AGE_BAND mapped to DW column AGE_BAND_CODE.
+    [ ] APPLICANT_NATIONAL_ID — not mapped, not staged, not logged.
+    [ ] RESIDENTIAL_ADDR_LINE_1 / _2 — not mapped.
+    [ ] RESIDENTIAL_POSTCODE — truncated to 3, mapped to DW column POSTAL_DISTRICT.
+    [ ] DAYTIME_CONTACT_NUMBER / EVENING_CONTACT_NUMBER / EMAIL_CONTACT — not mapped.
+    [ ] PAYMENT_CARD_PAN / PAYMENT_CARD_EXPIRY / BANK_ACCOUNT_NUMBER / BANK_SORT_CODE — not mapped; the warehouse holds no payment instrument data under any circumstance.
+    [ ] CONCESSION_CARD_SERIAL — tokenised upstream, mapped to DW column CARD_TOKEN.
+    [ ] DISABILITY_ASSESSMENT_NOTES / CORRESPONDENCE_SUMMARY — not mapped; free text is out of scope for this warehouse.
+
+[ ] 3. CONFIRM DERIVED AND JOIN BEHAVIOUR
+    [ ] Join between fare transactions and concession records uses CARD_TOKEN only.
+    [ ] No composite key reconstructs an individual from POSTAL_DISTRICT + AGE_BAND_CODE + ROUTE_ID. Small-cell test applied: any aggregate group with fewer than 10 rows is suppressed at report layer, not at load layer.
+    [ ] Rev 11 aggregate output row count reviewed against rev 10: 8,412 → 8,455 for the 2004-04-12 cycle. Difference explained by two new route codes.
+
+[ ] 4. CONFIRM OPERATIONAL CONTROLS
+    [ ] Reject and quarantine writers emit reason code, row number and CARD_TOKEN only.
+    [ ] Job log at INFO level does not echo column values. Verified against JOB_CONC_LOAD_0413 output.
+    [ ] DEBUG level remains disabled in production; enabling it requires written authority from the Records Custodian and a same-day revert.
+
+[ ] 5. SIGN-OFF
+    [ ] Mapping owner initials and date.
+    [ ] Records Custodian initials and date.
+    [ ] Warehouse operations acceptance, with promotion window booked. Proposed promotion 2004-05-03, 01:00–03:00, fallback to rev 10 within the same window.

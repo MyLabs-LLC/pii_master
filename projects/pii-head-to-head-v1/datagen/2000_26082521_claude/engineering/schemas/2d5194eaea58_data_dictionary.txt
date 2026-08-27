@@ -1,0 +1,70 @@
+LAKESHORE MEMORIAL HOSPITAL SYSTEM
+              PATIENT FINANCIAL SERVICES -- DATA ADMINISTRATION
+        DATA DICTIONARY EXCERPT: SUBJECT AREA "GUARANTOR AND MEMBER"
+              ORACLE 7.3 INSTANCE PFSP   SCHEMA PFS_OWNER
+              ISSUE 12   SEPTEMBER 1999   SHEET 2 OF 6
+
+SECTION 1 -- COLUMN INVENTORY, TABLE PFS_MEMBER
+
+COLUMN NAME          DATA TYPE       NULL?  OPERATIONAL NOTE
+-------------------- --------------- -----  ---------------------------------------
+MEMBER_ID            NUMBER(10)      NOT    Sequence PFS_MEMBER_SEQ. Never reused.
+LEGACY_ACCT_NBR      VARCHAR2(12)    NULL   Carried from the pre-1996 system.
+MEDICAL_RECORD_NBR   VARCHAR2(9)     NOT    Join key to the clinical repository.
+MEMBER_LAST_NAME     VARCHAR2(30)    NOT    Trailing blanks trimmed on insert.
+MEMBER_FIRST_NAME    VARCHAR2(20)    NOT    Trailing blanks trimmed on insert.
+MEMBER_MIDDLE_NAME   VARCHAR2(20)    NULL   Entered in full when supplied.
+MEMBER_MAIDEN_NAME   VARCHAR2(30)    NULL   Used by the duplicate detection report.
+MEMBER_SSN           VARCHAR2(9)     NULL   Restricted column. See Section 2.
+MEMBER_DOB           DATE            NOT    Four digit year enforced since 06/1998.
+MEMBER_ADDR_LINE_1   VARCHAR2(35)    NOT    Address hygiene runs Sunday 0300.
+MEMBER_ADDR_LINE_2   VARCHAR2(35)    NULL
+MEMBER_CITY          VARCHAR2(25)    NOT
+MEMBER_STATE_CD      CHAR(2)         NOT    Validated against PFS_STATE_REF.
+MEMBER_POSTAL_CD     VARCHAR2(9)     NOT
+MEMBER_HOME_PHONE    VARCHAR2(10)    NULL   Restricted column. See Section 2.
+MEMBER_ALT_PHONE     VARCHAR2(10)    NULL   Restricted column. See Section 2.
+MEMBER_EMAIL_ADDR    VARCHAR2(50)    NULL   Added issue 11. Statement pilot only.
+EMPLOYER_NAME        VARCHAR2(40)    NULL   Free text. Not standardized.
+GUARANTOR_REL_CD     CHAR(2)         NOT    Domain held in PFS_REL_REF.
+INS_POLICY_NBR       VARCHAR2(20)    NULL   Primary coverage.
+INS_GROUP_NBR        VARCHAR2(15)    NULL
+FIN_CLASS_CD         CHAR(3)         NOT    Drives claim form selection.
+ACCOUNT_BALANCE      NUMBER(11,2)    NOT
+BAD_DEBT_FLAG        CHAR(1)         NOT    Default N. Set by the 120 day sweep.
+CREATE_USER          VARCHAR2(8)     NOT
+LAST_UPDATE_DTTM     DATE            NOT    Maintained by trigger PFS_MEMBER_TRG.
+
+SECTION 2 -- ACCESS RESTRICTION
+
+The columns marked restricted above are excluded from the general reporting view
+PFS_MEMBER_V. Direct table select is granted only to role PFS_FULL, which is held by the
+Records Custodian, the two collections supervisors, and the compliance analyst. Grants are
+recertified in January and July; the signed recertification sheet is filed with the
+Business Office Manager. Ad hoc query tools connect through the view and cannot see the
+restricted columns regardless of role. Any request to widen access is submitted in writing
+and approved by the Director of Patient Financial Services before the grant is issued.
+
+SECTION 3 -- RETENTION
+
+RECORD STATE            ON LINE     ARCHIVE       DISPOSITION
+----------------------- ----------  ------------  ------------------------------
+Open balance            Indefinite  None          Remains active
+Zero balance            84 months   Tape PFSARC   Purge after archive verify
+Bad debt referred       84 months   Tape PFSARC   Purge after agency closure
+Duplicate, merged away  6 months    None          Purge after merge audit signoff
+
+SECTION 4 -- DOWNSTREAM EXTRACTS
+
+JOB NAME    FREQUENCY   DESTINATION            COLUMNS WITHHELD
+----------  ----------  ---------------------  ----------------------------------
+PFSX0100    Nightly     Claims clearinghouse   MEMBER_EMAIL_ADDR, EMPLOYER_NAME
+PFSX0300    Weekly      Collection agency      MEMBER_EMAIL_ADDR
+PFSX0500    Monthly     Decision support mart  MEMBER_SSN and all name, address
+                                               and phone columns; replaced by a
+                                               one way hash of MEMBER_ID
+PFSX0700    Quarterly   State reporting        Per the current reporting spec
+
+Extract layouts are frozen at the start of each quarter. Changes to any withheld column
+list require a completed data release form and the countersignature of the Records
+Custodian. Operations retains extract job logs for eighteen months.

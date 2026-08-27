@@ -1,0 +1,44 @@
+SOURCE-TO-TARGET MAPPING RULES
+Interface: CIS v9.4 to Billing Data Warehouse
+Ruleset identifier: MAP-CIS-WH-03
+Effective: 2021-02-01
+Reviewed by: Data Steward, Revenue Systems
+
+1. GENERAL
+1.1 Each clause below states one source field, one target column, and the transform applied between them.
+1.2 Where a transform is stated as MASK(class), the class is resolved from masking.conf at run time.
+1.3 A source field with no clause in this document must not reach the target.
+
+2. IDENTITY FIELDS
+2.1 customer_full_name -> ACCT_HOLDER_NAME -- MASK(FULL)
+2.2 customer_first_name -> [not mapped] -- drop at boundary
+2.3 customer_last_name -> [not mapped] -- drop at boundary
+2.4 date_of_birth -> ACCT_HOLDER_DOB -- MASK(NULLOUT)
+2.5 national_id_number -> ACCT_HOLDER_NID_TKN -- MASK(TOKEN)
+2.6 taxpayer_reference -> ACCT_HOLDER_TAX_TKN -- MASK(TOKEN)
+
+3. CONTACT FIELDS
+3.1 service_address_line_1 -> SVC_ADDR_1 -- MASK(FULL)
+3.2 service_address_line_2 -> SVC_ADDR_2 -- MASK(FULL)
+3.3 service_address_postcode -> SVC_POSTCODE -- MASK(FULL)
+3.4 mailing_address_line_1 -> MAIL_ADDR_1 -- MASK(FULL)
+3.5 email_address -> CONTACT_EMAIL -- MASK(FULL)
+3.6 primary_phone -> CONTACT_PHONE_1 -- MASK(LAST4)
+3.7 alternate_phone -> CONTACT_PHONE_2 -- MASK(LAST4)
+
+4. FINANCIAL FIELDS
+4.1 account_number -> ACCT_TKN -- MASK(TOKEN), used as warehouse join key
+4.2 bank_account_number -> DD_ACCT_LAST4 -- MASK(LAST4)
+4.3 card_number_on_file -> CARD_LAST4 -- MASK(LAST4)
+4.4 arrears_balance -> ARREARS_AMT -- cast to decimal(12,2)
+
+5. OPERATIONAL FIELDS
+5.1 meter_serial -> METER_SERIAL -- passthrough
+5.2 tariff_code -> TARIFF_CD -- passthrough
+5.3 premises_geo_zone -> GEO_ZONE -- passthrough
+5.4 last_read_timestamp -> LAST_READ_TS -- normalise to UTC
+
+6. JOIN AND KEY RULES
+6.1 The warehouse joins on ACCT_TKN only. Joining on ACCT_HOLDER_NAME, SVC_POSTCODE, or any LAST4 column is prohibited.
+6.2 Token scope is per tenant and per calendar year. Tokens minted in 2021 do not resolve against 2020 extracts.
+6.3 Any new source field is treated as unmapped until a clause is added here and the corresponding binding exists in masking.conf.

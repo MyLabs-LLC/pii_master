@@ -1,0 +1,23 @@
+{
+ "task": "multi_label_document_tagging_with_document_gate",
+ "read_window_chars": 12000,
+ "max_tokens": 2048,
+ "max_features": 1024,
+ "n_features": 262144,
+ "n_labels": 58,
+ "n_enabled_tags": 57,
+ "score_mode": "sum",
+ "gate_threshold": 54.23126466730023,
+ "taxonomy_collapse": {
+  "sensitive_pii_given_name": "sensitive_pii_full_name",
+  "sensitive_pii_family_name": "sensitive_pii_full_name",
+  "sensitive_pii_middle_name": "sensitive_pii_full_name",
+  "sensitive_pii_street_number_and_name": "sensitive_pii_address"
+ },
+ "selection_order": [
+  "document gates (NOT met - see MODEL_CARD)",
+  "priority_macro_f05",
+  "macro_f05",
+  "one_core_p95_latency"
+ ]
+}

@@ -1,0 +1,24 @@
+APLMSTR / DATA DICTIONARY EXCERPT — PAGE 4 OF 11
+FILE: APPLICANT MASTER (VSAM KSDS APLMSTR.CLUSTER); propagated nightly to DB2 table STAFF.APPLICANT_MASTER
+CUSTODIAN: Records Custodian, Branch Operations Support
+
+[ ] APL_ID / CHAR(9) / NOT NULL — Agency-assigned applicant key, sequential within branch prefix. Not reused after purge.
+[ ] APL_LAST_NM / CHAR(25) / NOT NULL — Surname as shown on I-9 supporting document. Trailing blanks significant to the sort exit.
+[ ] APL_FIRST_NM / CHAR(15) / NOT NULL
+[ ] APL_MID_INIT / CHAR(1) / NULL — Blank where not supplied; do not substitute a period.
+[ ] SSN_NBR / CHAR(9) / NOT NULL — Restricted. Read access limited to Payroll and the Records Custodian under RACF profile APLSSN.READ. Suppressed at the copybook level in all branch-level reporting.
+[ ] BIRTH_DT / DATE / NOT NULL — Four-digit year following the 1997 conversion. Feeds the age-eligibility edit only; never printed on assignment paperwork or client-facing skill sheets.
+[ ] ADDR_LINE_1 / CHAR(30) / NOT NULL
+[ ] ADDR_LINE_2 / CHAR(30) / NULL
+[ ] CITY_NM / CHAR(20) / NOT NULL
+[ ] STATE_CD / CHAR(2) / NOT NULL
+[ ] ZIP_CD / CHAR(9) / NOT NULL — Right-padded with blanks where ZIP+4 is unavailable.
+[ ] HOME_PHON_NBR / CHAR(10) / NULL — Digits only; area code mandatory since release 6.0.
+[ ] MSG_PHON_NBR / CHAR(10) / NULL — Secondary daytime number for dispatch callbacks.
+[ ] EMAIL_ADDR / CHAR(40) / NULL — Added release 6.2. Populated on roughly one record in nine; not a dependable dispatch channel.
+[ ] ACTV_STAT_CD / CHAR(1) / NOT NULL — A=active, I=inactive, D=do-not-assign, P=pending purge.
+[ ] LAST_ASGN_DT / DATE / NULL — Drives the inactivity clock.
+
+RETENTION: Records held at ACTV_STAT_CD=I for 84 consecutive months are flagged P by the quarterly aging job and written to archive tape, then deleted from the online cluster. Archive tapes are held a further 36 months.
+
+EXTRACTS: Only APL_ID, APL_LAST_NM, APL_FIRST_NM, ACTV_STAT_CD and LAST_ASGN_DT pass to the branch dispatch download. Requests to add restricted columns route to the Records Custodian in writing.

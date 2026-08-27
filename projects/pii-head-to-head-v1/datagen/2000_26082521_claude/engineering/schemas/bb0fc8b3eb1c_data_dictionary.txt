@@ -1,0 +1,44 @@
+ST. AUGUSTA GENERAL HOSPITAL
+                  PATIENT ACCOUNTS / BILLING OFFICE (DEPT 7420)
+              DATA DICTIONARY EXCERPT -- TABLE PA_GUARANTOR_MSTR
+              DB2 SUBSYSTEM DSN2   CREATOR PACCT   PAGE 4 OF 17
+              EFFECTIVE 03 FEB 1998   MAINTAINED BY THE RECORDS CUSTODIAN
+
+COLUMN NAME       TYPE          NUL  OPERATIONAL NOTE
+----------------- ------------- ---  --------------------------------------------------
+GUAR_ACCT_KEY     CHAR(12)      N    Primary key. Assigned by ADT feed at registration.
+MED_REC_NBR       CHAR(9)       N    Cross-reference to medical records master.
+HIC_NBR           CHAR(12)      Y    Medicare. Read limited to RACF group PACCT#MCR.
+MBR_SSN_NBR       CHAR(9)       Y    Restricted. Collections leads and Records Custodian
+                                     only. Never printed on statements or dunning notices.
+MBR_LAST_NAM      VARCHAR(25)   N    Upper case forced by edit routine PAE0110.
+MBR_FRST_NAM      VARCHAR(15)   N    Upper case forced by edit routine PAE0110.
+MBR_MID_INIT      CHAR(1)       Y    Blank permitted. Not used in matching logic.
+MBR_BIRTH_DT      DATE          N    Century positions added under project Y2K-114.
+                                     Confirm expansion before any tape extract is cut.
+MBR_SEX_CD        CHAR(1)       N    Domain M / F / U. Edited against table PA_CD_SEX.
+MBR_ADDR_LN1      VARCHAR(30)   N    Standardized in the 0200 nightly postal cleanup step.
+MBR_ADDR_LN2      VARCHAR(30)   Y    Suite and apartment designations only.
+MBR_CITY_NAM      VARCHAR(20)   N    Populated by cleanup step; do not key over.
+MBR_ST_CD         CHAR(2)       N    Postal abbreviation. Foreign accounts carry ZZ.
+MBR_ZIP_CD        CHAR(9)       N    ZIP+4 stored unpunctuated, right justified.
+MBR_HOME_PHN      CHAR(10)      Y    Suppressed on all extracts leaving the department.
+MBR_WORK_PHN      CHAR(10)      Y    Suppressed on all extracts leaving the department.
+GUAR_EMPLR_NAM    VARCHAR(30)   Y    Free text. Not validated. Used for wage assignment.
+POLICY_NBR        CHAR(20)      Y    Primary carrier. Secondary held in PA_COB_DTL.
+GRP_NBR           CHAR(15)      Y    Carrier group. Required when POLICY_NBR present.
+ACCT_BAL_AMT      DECIMAL(9,2)  N    Signed. Credit balances reviewed monthly.
+LAST_PMT_DT       DATE          Y    Drives the 120-day bad debt referral selection.
+STMT_SUPPR_IND    CHAR(1)       N    Y suppresses statement production. Default N.
+ROW_UPD_TSTMP     TIMESTAMP     N    Set by trigger. Not updatable from CICS screens.
+UPD_USER_ID       CHAR(8)       N    TSO or CICS operator identifier of last change.
+
+ACCESS: Update authority is granted through RACF group PACCT#UPD by written request to
+the Records Custodian, countersigned by the Business Office Manager. Query authority on
+the restricted columns listed above is reviewed each quarter and revoked on transfer.
+
+RETENTION: Rows are retained on line for seven years following final zero balance, then
+migrated to the archive tape series PAARC and dropped from the active tablespace.
+
+EXTRACTS: The 4400 nightly job feeds the collection agency interface; the 4700 weekly job
+feeds the UB-92 claim editor. Both drop the phone and employer columns at unload time.

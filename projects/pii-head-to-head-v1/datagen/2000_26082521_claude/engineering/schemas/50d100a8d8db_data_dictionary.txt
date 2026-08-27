@@ -1,0 +1,18 @@
+DATA DICTIONARY EXCERPT — MEMBER/PARTY SUPPLEMENT (ORA.MBR_SUPP)
+Title Plant Support Database, Oracle 7.3
+
+1. MBR_ID — NUMBER(10) — NOT NULL — primary key, sequence MBR_SEQ.
+2. MBR_TYPE_CD — VARCHAR2(2) — NOT NULL — domain in MBR_TYPE_REF.
+3. MBR_LAST_NAME — VARCHAR2(35) — NOT NULL.
+4. MBR_FIRST_NAME — VARCHAR2(25) — NULL.
+5. SSN_TIN — VARCHAR2(9) — NULL — restricted; column-level grant absent from all end-user roles.
+6. BIRTH_DT — DATE — NULL — restricted.
+7. MAIL_ADDR_1 — VARCHAR2(40) — NULL.
+8. MAIL_POSTAL_CD — VARCHAR2(9) — NULL.
+9. PRIM_PHON_NBR — VARCHAR2(10) — NULL.
+10. ESCROW_ACCT_NBR — VARCHAR2(14) — NULL — restricted.
+11. LAST_TOUCH_DT — DATE — NOT NULL — drives clause 14.
+12. Restricted columns at 5, 6 and 10 are exposed only through MBR_SUPP_V, which returns nulls to sessions outside role ESCROW_ACCTG.
+13. No export utility privilege is granted on this schema. Extracts are produced by procedure P_MBR_EXTRACT, which writes name and mailing columns only.
+14. Rows untouched for the retention interval are moved to MBR_SUPP_ARCH and the restricted columns are nulled in the archive copy at move time.
+15. Downstream consumer: nightly feed to the branch statement print queue. That feed does not carry columns 5, 6 or 10, and no change to the feed layout may add them without sign-off of the Records Custodian.

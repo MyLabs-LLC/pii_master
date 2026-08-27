@@ -1,0 +1,805 @@
+{
+ "run_id": "pii-quiet-alarm-2026-08-25",
+ "project": "pii-quiet-alarm",
+ "date": "2026-08-25",
+ "task_type": "multi_label_document_tagging_with_document_gate",
+ "primary_metric": "priority_macro_f05",
+ "objective": "precision-first: document-level gates hard, priority macro F0.5 ranks",
+ "source_commit": "3ce3c8c",
+ "cpu_budget": {
+  "search": "all 32 cores",
+  "published_latency": "1 core"
+ },
+ "budget": {
+  "max_trials": 1000,
+  "trials_used": 1000,
+  "by_family": {
+   "docgate": 300,
+   "tagcount": 370,
+   "tagdisc": 147,
+   "cascade": 183,
+   "total": 1000
+  }
+ },
+ "approval": "approvals/full-loop-precision-1000.json",
+ "data_snapshot": {
+  "train_rows": 531431,
+  "train_negatives": 70600,
+  "eval_rows": 126129,
+  "eval_negatives": 10003
+ },
+ "arms": [
+  {
+   "model": "quiet-cascade",
+   "dataset": "10360_betterdataai_ner_silver_eval_10.36k",
+   "metrics": {
+    "priority_macro_f05": 0.4223356399408076,
+    "priority_macro_precision": 0.6324480452340738,
+    "priority_macro_recall": 0.3194342494510368,
+    "macro_f05": 0.43676213357607396,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.8581081081081081,
+    "n_measurable_tags": 10,
+    "tags_predicted_zero_times": 21,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 10360,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "metrics": {
+    "priority_macro_f05": 0.879993475144517,
+    "priority_macro_precision": 0.9289341592607634,
+    "priority_macro_recall": 0.7422745383810716,
+    "macro_f05": 0.8314753855705898,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.8893280632411067,
+    "n_measurable_tags": 24,
+    "tags_predicted_zero_times": 10,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 10626,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "20000_pii_holdout_20.00k",
+   "metrics": {
+    "priority_macro_f05": 0.941563333907219,
+    "priority_macro_precision": 0.96394885768137,
+    "priority_macro_recall": 0.8639220414583032,
+    "macro_f05": 0.8626888883961822,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.96365,
+    "n_measurable_tags": 46,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 20000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "30000_pii2_eval_25.15k",
+   "metrics": {
+    "priority_macro_f05": 0.9654441389170266,
+    "priority_macro_precision": 0.9655498857891446,
+    "priority_macro_recall": 0.966880693026549,
+    "macro_f05": 0.8232918747124451,
+    "doc_precision": 0.9782654040298694,
+    "doc_precision_ci_low": 0.976437593481808,
+    "doc_recall": 0.932442641854547,
+    "doc_recall_ci_low": 0.9295399419460019,
+    "doc_specificity": 0.8925994640280355,
+    "doc_specificity_ci_low": 0.8841475984333127,
+    "prediction_rate": 0.7990333333333334,
+    "n_measurable_tags": 51,
+    "tags_predicted_zero_times": 2,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 30000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "38937_openpii_pii_eval_38.94k",
+   "metrics": {
+    "priority_macro_f05": 0.9073061831329675,
+    "priority_macro_precision": 0.940364219909754,
+    "priority_macro_recall": 0.7989424739159069,
+    "macro_f05": 0.9286503660601093,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.9897013123764029,
+    "n_measurable_tags": 23,
+    "tags_predicted_zero_times": 15,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 38937,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "4000_datax-dualjudge-evalset-1.32k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.8089285714285714,
+    "doc_precision_ci_low": 0.7893482777726475,
+    "doc_recall": 0.7104025091479352,
+    "doc_recall_ci_low": 0.6905384213277574,
+    "doc_specificity": 0.8461907043603258,
+    "doc_specificity_ci_low": 0.8298993770963105,
+    "prediction_rate": 0.42,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 6,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 4000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "5617_nemotron_eval_5.36k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.9599430300872351,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 9,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 5617,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-cascade",
+   "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.854499274310595,
+    "doc_precision_ci_low": 0.8413636602458752,
+    "doc_recall": 0.675947187141217,
+    "doc_recall_ci_low": 0.6604334098737084,
+    "doc_specificity": 0.869168026101142,
+    "doc_specificity_ci_low": 0.8574225122349103,
+    "prediction_rate": 0.42100470481104874,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 21,
+    "p95_latency_ms": 3.925944755610544,
+    "docs_per_s": 317.52224359733475
+   },
+   "n_rows": 6589,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "10360_betterdataai_ner_silver_eval_10.36k",
+   "metrics": {
+    "priority_macro_f05": 0.4173139133865894,
+    "priority_macro_precision": 0.6168014829794405,
+    "priority_macro_recall": 0.3206272196558785,
+    "macro_f05": 0.4371584920032868,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.8638996138996139,
+    "n_measurable_tags": 10,
+    "tags_predicted_zero_times": 21,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 10360,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "metrics": {
+    "priority_macro_f05": 0.8802213327916167,
+    "priority_macro_precision": 0.9289727754564729,
+    "priority_macro_recall": 0.7429660329057634,
+    "macro_f05": 0.8315616393826201,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.8915866741953699,
+    "n_measurable_tags": 24,
+    "tags_predicted_zero_times": 10,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 10626,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "20000_pii_holdout_20.00k",
+   "metrics": {
+    "priority_macro_f05": 0.9420601391622181,
+    "priority_macro_precision": 0.9636886978414135,
+    "priority_macro_recall": 0.8668866824930646,
+    "macro_f05": 0.863937843246334,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.98175,
+    "n_measurable_tags": 46,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 20000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "30000_pii2_eval_25.15k",
+   "metrics": {
+    "priority_macro_f05": 0.955630123377769,
+    "priority_macro_precision": 0.9523345275455469,
+    "priority_macro_recall": 0.970270444817316,
+    "macro_f05": 0.8118292059017033,
+    "doc_precision": 0.9386664601564315,
+    "doc_precision_ci_low": 0.9359232501278579,
+    "doc_recall": 0.9639349477116387,
+    "doc_recall_ci_low": 0.9617082190146725,
+    "doc_specificity": 0.673469387755102,
+    "doc_specificity_ci_low": 0.660482374768089,
+    "prediction_rate": 0.8608666666666667,
+    "n_measurable_tags": 51,
+    "tags_predicted_zero_times": 2,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 30000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "38937_openpii_pii_eval_38.94k",
+   "metrics": {
+    "priority_macro_f05": 0.9073608233477712,
+    "priority_macro_precision": 0.9403642700236122,
+    "priority_macro_recall": 0.7991602386968206,
+    "macro_f05": 0.9287027491919231,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.9903947402213833,
+    "n_measurable_tags": 23,
+    "tags_predicted_zero_times": 15,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 38937,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "4000_datax-dualjudge-evalset-1.32k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.6066044508255564,
+    "doc_precision_ci_low": 0.5891522686733731,
+    "doc_recall": 0.8834291688447464,
+    "doc_recall_ci_low": 0.8698379508625196,
+    "doc_specificity": 0.47484427407762336,
+    "doc_specificity_ci_low": 0.453270244369909,
+    "prediction_rate": 0.6965,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 4000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "5617_nemotron_eval_5.36k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 0.9740074773010504,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 9,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 5617,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "quiet-nogate",
+   "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.6967448539971278,
+    "doc_precision_ci_low": 0.682691780404582,
+    "doc_recall": 0.8355338691159586,
+    "doc_recall_ci_low": 0.8229047072330654,
+    "doc_specificity": 0.5866231647634584,
+    "doc_specificity_ci_low": 0.5693311582381729,
+    "prediction_rate": 0.6384883897404765,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 16,
+    "p95_latency_ms": 3.969180493731983,
+    "docs_per_s": 292.6037028771609
+   },
+   "n_rows": 6589,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "10360_betterdataai_ner_silver_eval_10.36k",
+   "metrics": {
+    "priority_macro_f05": 0.22838722510295698,
+    "priority_macro_precision": 0.2183681606523807,
+    "priority_macro_recall": 1.0,
+    "macro_f05": 0.2338679371528956,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 10,
+    "tags_predicted_zero_times": 6,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 10360,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "metrics": {
+    "priority_macro_f05": 0.18421969854027648,
+    "priority_macro_precision": 0.15732992442199814,
+    "priority_macro_recall": 0.9997141418039635,
+    "macro_f05": 0.3909999431164057,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 24,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 10626,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "20000_pii_holdout_20.00k",
+   "metrics": {
+    "priority_macro_f05": 0.18526706660050432,
+    "priority_macro_precision": 0.15900468705328955,
+    "priority_macro_recall": 0.9994024789186262,
+    "macro_f05": 0.47439841701532415,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 46,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 20000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "30000_pii2_eval_25.15k",
+   "metrics": {
+    "priority_macro_f05": 0.04527178628366587,
+    "priority_macro_precision": 0.0381026933047967,
+    "priority_macro_recall": 0.999534432630314,
+    "macro_f05": 0.37823106274856544,
+    "doc_precision": 0.8383,
+    "doc_precision_ci_low": 0.8342,
+    "doc_recall": 1.0,
+    "doc_recall_ci_low": 1.0,
+    "doc_specificity": 0.0,
+    "doc_specificity_ci_low": 0.0,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 51,
+    "tags_predicted_zero_times": 1,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 30000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "38937_openpii_pii_eval_38.94k",
+   "metrics": {
+    "priority_macro_f05": 0.3854051735250479,
+    "priority_macro_precision": 0.3406412783287919,
+    "priority_macro_recall": 0.9999119903859212,
+    "macro_f05": 0.6040904926281867,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 23,
+    "tags_predicted_zero_times": 7,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 38937,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "4000_datax-dualjudge-evalset-1.32k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.47825,
+    "doc_precision_ci_low": 0.46324375,
+    "doc_recall": 1.0,
+    "doc_recall_ci_low": 1.0,
+    "doc_specificity": 0.0,
+    "doc_specificity_ci_low": 0.0,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 6,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 4000,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "5617_nemotron_eval_5.36k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": null,
+    "doc_precision_ci_low": null,
+    "doc_recall": null,
+    "doc_recall_ci_low": null,
+    "doc_specificity": null,
+    "doc_specificity_ci_low": null,
+    "prediction_rate": 1.0,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 5617,
+   "artifact": "evaluations/arms.json"
+  },
+  {
+   "model": "champion_1k",
+   "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "metrics": {
+    "priority_macro_f05": null,
+    "priority_macro_precision": null,
+    "priority_macro_recall": null,
+    "macro_f05": null,
+    "doc_precision": 0.5319669623738146,
+    "doc_precision_ci_low": 0.5204813560375161,
+    "doc_recall": 0.9982778415614236,
+    "doc_recall_ci_low": 0.9968427095292767,
+    "doc_specificity": 0.0016313213703099511,
+    "doc_specificity_ci_low": 0.0003262642740619902,
+    "prediction_rate": 0.998330550918197,
+    "n_measurable_tags": 0,
+    "tags_predicted_zero_times": 5,
+    "p95_latency_ms": 1.8137122606276534,
+    "docs_per_s": 863.6791697385771
+   },
+   "n_rows": 6589,
+   "artifact": "evaluations/arms.json"
+  }
+ ],
+ "data_quality": [
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0001,
+   "missing_rate": 0.0,
+   "real_synth_mix": "synthetic",
+   "contamination_risk": "shared upstream generators with pii_trainset_100k; exact cross-split hash audit found 0 surviving overlaps after training-side exclusion",
+   "dataset": "30000_pii2_eval_25.15k",
+   "gold": "complete",
+   "n_rows": 30000,
+   "role": "sealed",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0,
+   "missing_rate": 0.0,
+   "real_synth_mix": "real documents, machine-judged labels",
+   "contamination_risk": "dual-judge (gemini + sonnet) labels; 1,203 documents the judges disputed are excluded from the document-level headline",
+   "dataset": "4000_datax-dualjudge-evalset-1.32k",
+   "gold": "positive_only",
+   "n_rows": 4000,
+   "role": "adversarial",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.003,
+   "missing_rate": 0.0017,
+   "real_synth_mix": "real documents, machine-judged labels",
+   "contamination_risk": "dual-judge (gemini + opus) labels; 11 documents unreadable and excluded; 643 disputed documents reported as their own slice",
+   "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+   "gold": "positive_only",
+   "n_rows": 6589,
+   "role": "adversarial",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0188,
+   "missing_rate": 0.0,
+   "real_synth_mix": "synthetic",
+   "contamination_risk": "1,642-document overlap with pii_trainset_100k was removed from TRAINING, never from evaluation; 0 surviving overlaps",
+   "dataset": "20000_pii_holdout_20.00k",
+   "gold": "complete",
+   "n_rows": 20000,
+   "role": "sealed",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0,
+   "missing_rate": 0.0,
+   "real_synth_mix": "synthetic",
+   "contamination_risk": "public dataset; model may have seen upstream text",
+   "dataset": "38937_openpii_pii_eval_38.94k",
+   "gold": "complete",
+   "n_rows": 38937,
+   "role": "external",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0,
+   "missing_rate": 0.0,
+   "real_synth_mix": "synthetic",
+   "contamination_risk": "public dataset; NonCommercial licence",
+   "dataset": "10626_ai4privacy_pii_masking_eval_10.63k",
+   "gold": "complete",
+   "n_rows": 10626,
+   "role": "external",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0,
+   "missing_rate": 0.0,
+   "label_noise": 0.0,
+   "real_synth_mix": "synthetic, silver labels",
+   "contamination_risk": "silver labels are themselves model output; label noise is real but not directly measurable, so this corpus never decides a gate alone",
+   "dataset": "10360_betterdataai_ner_silver_eval_10.36k",
+   "gold": "complete",
+   "n_rows": 10360,
+   "role": "external",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  },
+  {
+   "leakage": 0,
+   "leakage_scanned": true,
+   "duplicate_rate": 0.0,
+   "missing_rate": 0.0,
+   "real_synth_mix": "synthetic",
+   "contamination_risk": "native document-type labels, not a PII catalogue",
+   "dataset": "5617_nemotron_eval_5.36k",
+   "gold": "partial",
+   "n_rows": 5617,
+   "role": "external",
+   "source": "projects/pii-quiet-alarm/suite.yaml"
+  }
+ ],
+ "commands": [
+  {
+   "context": "feasibility",
+   "command": "run.sh projects/pii-quiet-alarm/probe/precision_headroom.py",
+   "produces": "probe/precision_headroom.json"
+  },
+  {
+   "context": "feasibility",
+   "command": "run.sh projects/pii-quiet-alarm/probe/train_negatives.py",
+   "produces": "probe/train_negatives.json"
+  },
+  {
+   "context": "feasibility",
+   "command": "run.sh projects/pii-quiet-alarm/probe/doc_baseline_corrected.py",
+   "produces": "probe/doc_baseline_corrected.json"
+  },
+  {
+   "context": "feasibility",
+   "command": "mp feasibility --metric doc_specificity --target 0.90 --agreement 0.9545",
+   "produces": "probe/feasibility_doc_specificity.json"
+  },
+  {
+   "context": "feasibility",
+   "command": "mp feasibility --metric priority_macro_precision --target 0.90 --agreement 0.4582 --ceiling 0.5236",
+   "produces": "probe/feasibility_tag_precision.json"
+  },
+  {
+   "context": "data",
+   "command": "run.sh training/quiet_freeze.py freeze",
+   "produces": "data_snapshot.json"
+  },
+  {
+   "context": "data",
+   "command": "run.sh training/quiet_cache.py 30",
+   "produces": "cache/*.npz, cache/catalogue.json (log: cache_build2.log)"
+  },
+  {
+   "context": "data",
+   "command": "pytest tests/test_quiet_data.py -q",
+   "produces": "8 passed"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/tune_quiet.py --family docgate --trials 300",
+   "produces": "tuning/docgate/ (log: tune_docgate.log)"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/tune_quiet.py --family tagcount --trials 250 --seed 23",
+   "produces": "tuning/tagcount_v1/ (log: tune_tagcount.log) -- mis-specified objective, re-ranked"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/quiet_rerank.py --family tagcount",
+   "produces": "tuning/tagcount_v1/best.json"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/tune_quiet.py --family tagcount --trials 120 --seed 47",
+   "produces": "tuning/tagcount/ (log: tune_tagcount2.log)"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/quiet_merge_tagcount.py",
+   "produces": "tuning/tagcount/best.json (merged pool)"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/tune_quiet.py --family tagdisc --trials 120 --seed 53",
+   "produces": "tuning/tagdisc/ (log: tune_tagdisc.log)"
+  },
+  {
+   "context": "search",
+   "command": "run.sh training/tune_quiet.py --family cascade --trials 183 --seed 61",
+   "produces": "tuning/cascade/ (log: tune_cascade.log)"
+  },
+  {
+   "context": "ship",
+   "command": "run.sh training/quiet_materialize.py --rank 0 --out artifacts/quiet-cascade",
+   "produces": "artifacts/quiet-cascade/ (reproduction drift 0.00000)"
+  },
+  {
+   "context": "measure",
+   "command": "run.sh training/quiet_score_eval.py --model quiet-cascade=... --model quiet-nogate=... --baseline --cpus 1",
+   "produces": "evaluations/arms.json"
+  },
+  {
+   "context": "decide",
+   "command": "mp decide --policy policy.yaml --arms evaluations/arms.json --suite suite.yaml",
+   "produces": "decision/decision.json -- NO FEASIBLE ARM"
+  }
+ ],
+ "command_capture": "Commands were issued directly rather than through `mp run`, so no per-command stdout was captured. Captured logs that do exist: cache_build2.log, tune_docgate.log, tune_tagcount.log, tune_tagcount2.log, tune_tagdisc.log, tune_cascade.log. Every metric in the report traces to a JSON artifact or to mlflow.db; none is reconstructed from memory. This is a deviation from the run-record convention and is recorded as one.",
+ "verdict": "no feasible arm - promotion refused",
+ "run_summary": {
+  "selected": null,
+  "n_feasible": 0,
+  "n_arms": 3,
+  "reason": [
+   "quiet-cascade: document-level precision >= 0.90 (conclusive) FAILED at doc@4000_datax-dualjudge-evalset-1.32k",
+   "quiet-cascade: document-level specificity >= 0.85 (conclusive) FAILED at doc@4000_datax-dualjudge-evalset-1.32k",
+   "quiet-cascade: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+   "quiet-cascade: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k",
+   "quiet-nogate: document-level precision >= 0.90 (conclusive) FAILED at doc@4000_datax-dualjudge-evalset-1.32k",
+   "quiet-nogate: document-level specificity >= 0.85 (conclusive) FAILED at doc@4000_datax-dualjudge-evalset-1.32k",
+   "quiet-nogate: document-level recall >= 0.85 (conclusive) FAILED at doc@6589_govdocs2-dualjudge-eval20-3.53k",
+   "quiet-nogate: priority tag recall >= 0.75 (conclusive) FAILED at sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k",
+   "champion_1k: document-level precision >= 0.90 (conclusive) FAILED at doc@4000_datax-dualjudge-evalset-1.32k",
+   "champion_1k: document-level specificity >= 0.85 (conclusive) FAILED at doc@30000_pii2_eval_25.15k"
+  ]
+ },
+ "what_changed": "New precision-first lineage. Corrected the loader to admit judge-asserted document negatives (+20,639 real-world clean documents), corrected the document-level gold field, froze a taxonomy collapse, added a discriminative document gate in front of per-tag heads, and ranked on macro F0.5 instead of macro F2.",
+ "status": "complete"
+}

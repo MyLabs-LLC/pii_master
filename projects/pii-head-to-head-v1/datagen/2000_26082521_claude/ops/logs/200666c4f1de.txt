@@ -1,0 +1,45 @@
+TRANSIT AUTHORITY — DATA QUALITY UNIT
+VALIDATION EXCEPTION REPORT — FORM DQ-08
+
+1. REPORT HEADER
+   Report no. ......... DQ-EXC-2011-0612
+   Generated .......... 2011-06-12 05:11:04
+   Covering cycle ..... 2011-06-11 NIGHTLY-01
+   Jobs in scope ...... J2011162-0451, J2011162-0452, J2011162-0459
+
+2. VOLUME SUMMARY
+   Rows presented ..................... 1,537,908
+   Rows passing validation ............ 1,534,266
+   Rows held in exception queue ....... 3,642
+   Rows discarded ..................... 0
+
+3. EXCEPTION DETAIL
+   CODE    COLUMN                     COUNT   ACTION
+   V-101   DATE_OF_BIRTH              1,204   held, format not ISO
+   V-104   POSTAL_CODE                  886   held, length below minimum
+   V-118   CONCESSION_CARD_NO           509   held, check digit failed
+   V-121   CONTACT_EMAIL                402   held, no domain part
+   V-133   PATRON_REF                   318   held, token lookup miss
+   V-140   ELIGIBILITY_EXPIRY           197   held, precedes issue date
+   V-152   PARATRANSIT_MEMBER_ID        126   held, duplicate within batch
+   -----------------------------------------------------------------
+   Total                              3,642
+
+4. NOTES ON HANDLING
+   4.1  Exception queue records are stored with identifying columns already
+        under the treatments set out in MSK-REG-2011-017. Error text records
+        the column name and failure reason; the offending value is not
+        written to the queue, the log, or this report.
+   4.2  V-133 arises where the source key was created after the last vault
+        synchronisation. Resubmit after the 05:30 vault refresh.
+   4.3  V-152 requires manual adjudication by the Eligibility Officer before
+        resubmission. Do not auto-merge.
+
+5. ESCALATION
+   V-118 count has exceeded the 400-row trigger on four consecutive cycles.
+   Referred to the Manager, Fare Systems, for source-side investigation.
+   Reference: incident INC-2011-1177, raised 2011-06-12 05:20.
+
+6. SIGN-OFF
+   Compiled by ..... the Data Quality Analyst ....... 2011-06-12
+   Reviewed by ..... the Data Stewardship Unit ...... 2011-06-13

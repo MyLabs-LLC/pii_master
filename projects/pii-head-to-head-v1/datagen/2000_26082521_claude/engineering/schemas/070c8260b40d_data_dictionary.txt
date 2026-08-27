@@ -1,0 +1,54 @@
+MUNICIPAL UTILITIES — INFORMATION SERVICES
+DATA DICTIONARY SUPPLEMENT: RESTRICTED COLUMN REGISTER AND EXTRACT DISPOSITION
+ISSUE 2004-04 — SUPERSEDES ISSUE 2003-02
+
+I. SCOPE
+   A. Covers columns in CISPRD carrying personal data of account holders, applicants and members
+      of the assistance programs administered by this department.
+   B. Does not cover employee or vendor records, which are held in the Finance instance.
+
+II. REGISTER
+    A. CIS.CUST_MSTR
+       1. SSN_NBR — CHAR(9) — NULL — restricted class 1
+          a. Grant: CIS_CREDIT only.
+          b. Retention: 3 years from account close.
+          c. Extract disposition: prohibited.
+       2. DOB — DATE — NULL — restricted class 1
+          a. Grant: CIS_CREDIT, RATE_ASSIST.
+          b. Retention: with master record, 7 years.
+          c. Extract disposition: EXT_CUST_ASSIST only, on written authorization.
+       3. CUST_LAST_NAME, CUST_FIRST_NAME — VARCHAR2 — NOT NULL — restricted class 2
+          a. Grant: all CIS roles.
+          b. Extract disposition: print, collections, assistance.
+       4. PHONE_HOME, PHONE_WORK, EMAIL_ADDR — restricted class 2
+          a. Extract disposition: collections and outage notification only.
+       5. MAIL_ADDR_LN1 through MAIL_ZIP5 — restricted class 2
+          a. Extract disposition: print contractor, nightly.
+    B. CIS.PAY_PROFILE
+       1. BANK_ROUT_NBR — CHAR(9) — NULL — restricted class 1
+       2. BANK_ACCT_NBR — VARCHAR2(17) — NULL — restricted class 1
+          a. Both above: grant to FIN_AR only; encrypted at rest as of rev 04-2.
+          b. Retention: purged 90 days after cancellation of the automatic payment authorization.
+          c. Extract disposition: ACH origination file only. That file is written to the treasury
+             workstation and is not retained on the host beyond the settlement date.
+       3. CARD_LAST4 — CHAR(4) — NULL — retained for dispute research, 18 months.
+       4. AUTH_SIGNER_NAME — VARCHAR2(50) — NULL — restricted class 2.
+    C. CIS.MED_CERT
+       1. CERT_HOLDER_LAST_NAME, CERT_HOLDER_FIRST_NAME — restricted class 1
+       2. CERT_DIAG_TXT — VARCHAR2(200) — NULL — restricted class 1
+       3. CERT_PHYS_NAME, CERT_PHYS_PHONE — restricted class 1
+          a. Grant: RATE_ASSIST and the Records Custodian. Not visible to billing or field roles.
+          b. Retention: 2 years from certificate expiry, then purge with no archive.
+          c. Extract disposition: prohibited without opinion of the City Attorney. The table is
+             omitted from the warehouse load and from all test instance refreshes.
+
+III. STANDING INSTRUCTIONS
+     A. Any new column holding data of the classes above is registered here before promotion to
+        production. Unregistered columns are rejected at migration review.
+     B. Extract definitions are reviewed each January against this register. Findings go to the
+        Utilities Business Manager.
+     C. Requests from other departments for record-level data are received in writing and answered
+        by the Records Custodian. Verbal requests are not filled.
+     D. Restricted class 1 columns are excluded from the query tool catalog and from all printed
+        reports, including exception and audit listings, where the identifier is replaced by
+        CUST_ID.

@@ -1,0 +1,58 @@
+DATA DICTIONARY — MEMBER SERVICES SUBSYSTEM
+TABLE: STAFF.MEMBER_ELIG (DB2 for MVS, tablespace TSMBR03)
+EXCERPT COVERS SEGMENTS 2 AND 3 ONLY. SEGMENT 1 (KEY AND STATUS) DOCUMENTED SEPARATELY.
+REVIEW CYCLE: SEMI-ANNUAL, PAIRED WITH THE PAYROLL COPYBOOK WALKTHROUGH.
+
+SEGMENT 2 — IDENTITY AND CONTACT
+
+- MBR_NBR — DECIMAL(9,0), NOT NULL, unique index IXMBR01.
+  - Assigned by the enrollment transaction; independent of APL_ID in the applicant master.
+  - Cross-reference carried in STAFF.XREF_APL_MBR; do not join on name fields.
+- MBR_LAST_NM — VARCHAR(30), NOT NULL.
+  - Case is not normalized on input. Comparison logic must fold case before matching.
+- MBR_FIRST_NM — VARCHAR(20), NOT NULL.
+- MBR_SUFFIX_TX — CHAR(4), NULL.
+  - Free text. Historically abused for credentials; the 1998 cleanup moved those to CERT_CD.
+- MBR_MAIDEN_NM — VARCHAR(30), NULL.
+  - Retained solely to resolve prior-year earnings history. Not displayed on the inquiry panel.
+- TAX_ID_NBR — CHAR(9), NOT NULL.
+  - Restricted column. Masked to the low-order four positions on panel MB021 for all profiles except PAYRLADM.
+  - Column-level audit is on; every SELECT is journalled to SMF and reviewed monthly by the Records Custodian.
+  - Excluded from all ODBC-attached query tools without exception.
+- DOB_DT — DATE, NOT NULL.
+  - Restricted. Consumed by the benefits waiting-period calculation and the minor-employment edit.
+- ALT_ID_TYPE_CD — CHAR(2), NULL. Values: DL, ST, PP, MC, OT.
+- ALT_ID_NBR — VARCHAR(20), NULL.
+  - Restricted, same profile set as TAX_ID_NBR. Captured only where I-9 List B documentation was recorded.
+- RES_ADDR_LINE_1 — VARCHAR(35), NOT NULL.
+- RES_ADDR_LINE_2 — VARCHAR(35), NULL.
+- RES_CITY_NM — VARCHAR(25), NOT NULL.
+- RES_STATE_CD — CHAR(2), NOT NULL.
+- RES_POSTAL_CD — CHAR(10), NOT NULL.
+- MAIL_ADDR_SAME_IND — CHAR(1), NOT NULL, default Y.
+  - Where N, the mailing address is carried on STAFF.MEMBER_ADDR_ALT.
+- PRIM_PHON_NBR — CHAR(14), NULL. Formatted at entry; edit mask retained in the stored value.
+- PAGER_NBR — CHAR(14), NULL. Deprecated for new enrollments as of the fourth quarter.
+- EMAIL_ADDR — VARCHAR(60), NULL.
+- EMRG_CNTC_NM — VARCHAR(40), NULL.
+- EMRG_CNTC_PHON_NBR — CHAR(14), NULL.
+  - Both emergency-contact columns are restricted to branch supervisory profiles and are never extracted.
+
+SEGMENT 3 — ELIGIBILITY AND ASSIGNMENT
+
+- WORK_AUTH_CD — CHAR(1), NOT NULL. Reverification date carried in WORK_AUTH_EXPR_DT.
+- WORK_AUTH_EXPR_DT — DATE, NULL. Null permitted only where WORK_AUTH_CD indicates no expiry.
+- I9_COMPL_DT — DATE, NOT NULL.
+- BKGD_CHK_STAT_CD — CHAR(1), NOT NULL. Restricted; results themselves are not held in this table.
+- SKILL_GRP_CD — CHAR(4), NOT NULL.
+- PAY_RATE_AMT — DECIMAL(7,2), NOT NULL.
+- BILL_RATE_AMT — DECIMAL(7,2), NOT NULL. Never included in member-facing output.
+- ASGN_AVAIL_CD — CHAR(1), NOT NULL.
+- LAST_UPDT_TS — TIMESTAMP, NOT NULL, set by trigger.
+- LAST_UPDT_USER_ID — CHAR(8), NOT NULL.
+
+OPERATIONAL NOTES
+
+- Retention: eligibility rows are held four years past the last assignment end date, then summarized to STAFF.MEMBER_HIST and deleted. Identity columns in the summary are reduced to MBR_NBR and last name.
+- Downstream extracts: the client billing feed carries MBR_NBR, SKILL_GRP_CD and BILL_RATE_AMT only. The benefits carrier file carries the restricted identity columns and moves by scheduled transmission, not by tape courier.
+- Any new extract touching a restricted column requires a signed request on file with the Records Custodian before the job is promoted.

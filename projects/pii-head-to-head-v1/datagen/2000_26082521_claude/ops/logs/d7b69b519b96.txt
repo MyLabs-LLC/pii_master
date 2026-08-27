@@ -1,0 +1,59 @@
+NIGHTLY ETL RUN SUMMARY
+CYCLE D1999039          BANNER: ALL REGIONS          PREPARED 1999-02-09 06:00 CST
+DISTRIBUTION: Data Administration Group; Pharmacy Systems Supervisor; the Records Custodian
+
+  I. CYCLE DISPOSITION
+       A. Overall status ............... COMPLETED WITH EXCEPTIONS
+       B. Cycle elapsed ................ 04h 46m
+       C. Jobs scheduled ............... 14
+       D. Jobs completed normally ...... 12
+       E. Jobs restarted ............... 1  (RXW0412)
+       F. Jobs held .................... 1  (RXW0418, see IV.B)
+
+ II. VOLUMES BY JOB
+       A. RXW0407  host extract
+            1. Rows read ............... 1,902,554
+            2. Rows written ............ 1,902,554
+            3. Elapsed ................. 00h 51m
+       B. RXW0412  patient dimension load
+            1. Rows read ............... 1,902,554
+            2. Rows accepted ........... 1,847,821
+            3. Rows rejected ........... 4,194
+            4. Rows suspended .......... 50,539
+            5. Elapsed ................. 02h 34m incl. 22m operator hold
+       C. RXW0415  fill fact load
+            1. Rows read ............... 3,410,663
+            2. Rows accepted ........... 3,410,663
+            3. Elapsed ................. 01h 09m
+       D. RXW0418  dimension publish
+            1. Status .................. HELD, not started
+
+III. MASKING DISPOSITION
+       A. Fields governed .............. 34
+       B. Fields suppressed ............ 17
+            PAT_SSN, PAT_ADDR_LN1, PAT_ADDR_LN2, PAT_ZIP4,
+            PAT_HOME_PHONE, PAT_WORK_PHONE, SIG_TXT, ALLERGY_TXT,
+            COUNSEL_NOTE_TXT, GUARANTOR_LAST_NM, GUARANTOR_SSN,
+            PRESCRIBER_LAST_NM, PRESCRIBER_STATE_LIC_NBR,
+            HOUSE_ACCT_NBR, TENDER_CARD_NBR, TENDER_EXP_DT,
+            PAT_ALT_CONTACT_NM (single-run override)
+       C. Fields tokenized ............. 8
+       D. Fields generalized ........... 2  (PAT_DOB, PAT_ZIP5)
+       E. Unmasked patient-segment writes 0
+       F. Token vault calls ............ 12,441,308, failures 0
+
+ IV. OPEN ITEMS
+       A. VE-0311 suspense file VE0311.SUSP holds 50,539 rows on PAT_DOB
+          and ELIG_EFF_DT. Host-side remediation of 2-position year in
+          PATMSTR.CPY tracked under CR-98-0921. Suspense rows are not
+          eligible for publish and age out at 30 days.
+       B. RXW0418 remains held pending disposition of the single-run
+          override on PAT_ALT_CONTACT_NM. Release requires the standing
+          rule change under CR-99-0114 or written instruction from the
+          Records Custodian.
+       C. Token service latency above threshold for a fourth consecutive
+          cycle. Capacity review requested of the Pharmacy Systems
+          Supervisor for the week commencing 1999-02-15.
+
+  V. NEXT CYCLE
+       A. D1999040 scheduled 1999-02-10 01:15 CST, no ruleset change staged.

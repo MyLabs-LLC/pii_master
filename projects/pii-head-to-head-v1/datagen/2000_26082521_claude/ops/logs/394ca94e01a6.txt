@@ -1,0 +1,14 @@
+VALIDATION DIGEST — RUN-20210209-0044 — JOB ETL-CONS-NIGHT-0117
+Generated 02:43:51Z, 2021-02-09. Rows read 412,880. Rows written 411,904. Rows quarantined 976.
+
+1. VAL-0031, missing mandatory field, 402 rows. The consignee_family_name column arrived empty on rows sourced from the third-party linehaul feed. The feed supplies a single combined field and our mapping rule splits it on the last separator; where no separator is present the family-name output is empty and the row fails. The affected rows are held rather than dropped because the consignment can still be delivered and the operations team may complete the record manually. Quarantine entries carry the row identifier, the source file name and the failing field name only; no field content is copied into the quarantine table.
+
+2. VAL-0044, format not recognised, 288 rows. The recipient_contact_number column did not normalise to a national dialling format. Per the standing instruction the field is written as <null> and the row proceeds, so these rows appear in the written total and not in the quarantine total. They are counted here for completeness because the operations team tracks the rate month on month; it stood at 0.07 per cent in January and is unchanged.
+
+3. VAL-0052, value longer than target column, 84 rows. The delivery_address_line_1 column exceeded the sixty-character warehouse column after mapping. The transformation truncates and flags rather than failing, and the flag is what appears in this digest. The count fell from 611 in the preceding run following the separator-trimming change described in change note CHG-2021-0031.
+
+4. VAL-0067, tokenisation unavailable, 12 rows. The vault service returned a timeout while tokenising customer_account_ref. Rows are quarantined rather than written with the raw value, which is the intended fail-closed behaviour. These twelve rows should be resubmitted with the standing replay job once the vault service is confirmed healthy.
+
+5. VAL-0071, unexpected column present, 478 rows. The linehaul feed included a driver_date_of_birth column that is not declared in the CONS mapping. Because the column name matches the sensitive-name pattern list and has no entry in the CONS policy, the rows were rejected at the reader stage without being parsed. The feed owner has been asked to remove the column or to raise a change note adding it to the mapping and to the masking policy. Until one or the other happens this count will recur nightly.
+
+Digest closed. No further action required beyond items 4 and 5.

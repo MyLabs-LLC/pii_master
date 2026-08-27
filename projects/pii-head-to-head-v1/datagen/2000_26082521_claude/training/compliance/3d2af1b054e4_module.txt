@@ -1,0 +1,24 @@
+SESSION 5 — DATA EXPORTS AND THE COLUMN-LEVEL RULE
+County Health Department | Immunization and Surveillance Program | 2021 Refresher
+
+PURPOSE
+The workforce member shall recognize that restriction attaches at the column level, and that the removal of the Patient Name column alone does not render an export non-identifiable where other columns remain.
+
+THE STANDARD EXPORT CONTAINS THE FOLLOWING COLUMN HEADINGS, EACH OF WHICH IS RESTRICTED IN ITS ENTIRETY:
+
+Last Name | First Name | Middle Initial | Date of Birth | Sex | Race | Ethnicity | Street Address | City | ZIP Code | Telephone Number | Electronic Mail Address | Medical Record Number | Immunization Registry Identifier | Vaccine Lot | Administration Date | Administering Site | Reporting Provider | Case Identifier | Result Status
+
+HANDLING REQUIREMENTS — ALL MUST BE SATISFIED:
+• The export shall be generated only by a position classification holding the Registry Export role, and shall be logged automatically under the audit fields Requesting User, Query Parameters, Row Count, and Timestamp.
+• The export shall be written to encrypted Departmental storage only. Removable media, personal cloud storage, and personal devices are prohibited without exception.
+• The export shall be retained no longer than the period specified in the applicable records retention schedule, after which destruction shall be certified in writing.
+• Any onward transmission shall be preceded by an executed data use agreement and shall be effected through the Department's secure file transfer service.
+• The columns Date of Birth, Street Address, ZIP Code, and Telephone Number shall be suppressed or generalized in any product intended for external analytic use, and the resulting product shall be reviewed by the Privacy Officer prior to release.
+
+CONSEQUENCE STATEMENT
+An impermissible disclosure of a single export of the type described above may constitute a reportable breach affecting every row contained therein, triggering individual notification, notification to the Secretary, media notification where the affected count meets the statutory threshold, and civil monetary penalties assessed per affected record. Individual sanctions are imposed independently of, and in addition to, any penalty assessed against the Department.
+
+SCENARIO CHECK
+• A supervisor requests an export be electronically mailed to a personal account so that a report may be completed over a weekend. State the two prohibitions implicated and the permissible alternative.
+• An analyst removes the Last Name and First Name columns and forwards the remainder to an outside researcher. State why the remaining columns continue to constitute individually identifiable information.
+• A registry export is found on an unencrypted memory device in a shared work area. State the immediate custody, reporting, and preservation obligations.

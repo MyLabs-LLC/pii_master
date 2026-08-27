@@ -1,0 +1,54 @@
+DATA DICTIONARY EXCERPT — THIRD PARTY PLAN ENROLMENT
+SCHEMA PHRMCY_MBR . TABLE MBR_PLAN_ENRL . NCPDP 5.1 ALIGNED
+
+1.0 PURPOSE
+1.1 This excerpt documents the plan enrolment table used at claim
+    adjudication. Column naming follows the NCPDP 5.1 field names where a
+    direct correspondence exists.
+1.2 The table is written by the eligibility interface and by counter
+    maintenance. It is not writable from the office network.
+
+2.0 COLUMN INVENTORY
+
+ COLUMN NAME          | TYPE          | NULL | OPERATIONAL NOTE
+ ---------------------+---------------+------+----------------------------
+ PLAN_ENRL_ID         | NUMBER(12)    | NO   | Primary key.
+ PT_PROFILE_ID_FK     | NUMBER(12)    | NO   | Cascade on profile merge.
+ PAYER_BIN            | CHAR(6)       | NO   | Routing. Not restricted.
+ PROC_CTRL_NBR        | VARCHAR2(10)  | YES  | Routing. Not restricted.
+ GRP_NBR              | VARCHAR2(15)  | YES  | Restricted at the view.
+ CARDHOLDER_ID_NBR    | VARCHAR2(20)  | NO   | Restricted. Class 2.
+ PERSON_CD            | CHAR(3)       | YES  | Dependent sequence.
+ PT_RELTN_CD          | CHAR(1)       | YES  | Coded domain. Edit checked.
+ COB_SEQ_NBR          | NUMBER(1)     | NO   | Coordination of benefits.
+ PLAN_EFF_DT          | DATE          | NO   | Adjudication window start.
+ PLAN_TERM_DT         | DATE          | YES  | Null denotes open enrolment.
+ ELIG_VERIF_TS        | TIMESTAMP     | YES  | Last successful E1 response.
+ LAST_MAINT_USER_ID   | VARCHAR2(8)   | NO   | Operator id for audit.
+ REC_STAT_CD          | CHAR(1)       | NO   | Active, termed, or suspended.
+
+3.0 ACCESS RESTRICTION
+3.1 CARDHOLDER_ID_NBR and GRP_NBR are exposed in full only to the
+    adjudication service account and to roles PHRM_RPH and PHRM_TECH.
+3.2 All other consumers read through V_PLAN_ENRL_MASKED, which returns the
+    trailing four positions of CARDHOLDER_ID_NBR and suppresses GRP_NBR
+    entirely. Direct table grants to reporting accounts are prohibited.
+3.3 The audit trail on this table captures the reading account for every
+    unmasked select and is retained for six years.
+
+4.0 RETENTION
+4.1 A row terminated by PLAN_TERM_DT is held eighteen months against
+    claim reversal and audit recovery, then archived.
+4.2 Archived rows are recoverable only by the Records Custodian on written
+    request from the Pharmacy Systems Manager or from counsel.
+4.3 ELIG_VERIF_TS is not retained beyond the archive step and is dropped
+    at archive write.
+
+5.0 DOWNSTREAM EXTRACTS
+5.1 The nightly warehouse extract carries PAYER_BIN, PROC_CTRL_NBR,
+    COB_SEQ_NBR, PLAN_EFF_DT, PLAN_TERM_DT, and REC_STAT_CD.
+5.2 No extract, scheduled or ad hoc, carries CARDHOLDER_ID_NBR, GRP_NBR,
+    PERSON_CD, or PT_RELTN_CD. This clause admits no exception under the
+    90 day provision applied elsewhere in this dictionary.
+5.3 Plan level reporting supplied to a payer under contract is drawn from
+    the warehouse copy and never from this table.

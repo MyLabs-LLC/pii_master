@@ -1,0 +1,26 @@
+DATA DICTIONARY EXCERPT — CUSTMAST
+ESCROW ACCOUNTING SYSTEM (EAS), RELEASE 4.2
+VSAM KSDS, PRODUCTION CLUSTER PROD.EAS.CUSTMAST
+ISSUED BY THE OFFICE OF THE RECORDS CUSTODIAN — EFFECTIVE 11 MARCH 1998
+
+1. This excerpt states the leading fields of CUSTMAST only. The complete record layout is carried in copybook CUSTM01 of the production copy library and governs in the event of conflict.
+
+2. CUST-KEY. PIC 9(10) COMP-3. NOT NULL. Primary key. Assigned by the sequence routine at record creation. Not derived from and not reconcilable to any government-issued identifier.
+
+3. CUST-LAST-NM. PIC X(30). NOT NULL. Restricted, Class B. Upper case on input; embedded punctuation retained.
+
+4. CUST-FIRST-NM. PIC X(20). NULL permitted where CUST-TYPE-CD indicates a corporate or trust party.
+
+5. CUST-MID-INIT. PIC X(01). NULL permitted.
+
+6. CUST-TIN-SSN. PIC X(09). NULL permitted. Restricted, Class A. Nine digits, unformatted; punctuation stripped at edit. Field is display-suppressed at all terminals except those carrying the CMPL group profile. Excluded from every downstream extract without exception.
+
+7. CUST-BIRTH-DT. PIC 9(08), CCYYMMDD. NULL permitted. Restricted, Class A. Expanded from six-byte YYMMDD under the century remediation project, September 1997.
+
+8. CUST-ADDR-LN-1, CUST-ADDR-LN-2. PIC X(40). Line 1 NOT NULL. Restricted, Class B.
+
+9. CUST-HOME-PHON. PIC X(10). NULL permitted. Restricted, Class B.
+
+10. Retention: seven years from the CUST-LAST-ACTV-DT of the terminating file. Class A fields are overwritten with low-values at the fifth year by job EASPRG40.
+
+11. Extract authority: nightly extract EASX010 to the title plant index carries clauses 2, 3, 8 only. All other extracts require written authorization of the Records Custodian.

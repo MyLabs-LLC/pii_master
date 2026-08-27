@@ -1,0 +1,36 @@
+EXTRACT AND INTERFACE REGISTER — MEMBER AND APPLICANT DATA
+COMPANION TO THE APLMSTR AND MEMBER_ELIG DICTIONARY PAGES
+OWNER: RECORDS CUSTODIAN
+
+o EXT-01 BRANCH DISPATCH DOWNLOAD | daily 0530 | destination: branch file server, fixed-length flat file
+  - Columns: APL_ID, APL_LAST_NM, APL_FIRST_NM, SKILL_GRP_CD, ASGN_AVAIL_CD, MSG_PHON_NBR, LAST_ASGN_DT.
+  - MSG_PHON_NBR is the only contact column permitted; HOME_PHON_NBR was removed from this feed at the last review.
+  - File is overwritten each cycle. Branch retention of the prior copy is not authorized.
+
+o EXT-02 PAYROLL INTERFACE | weekly, Monday after timecard cutoff | destination: payroll bureau, scheduled transmission
+  - Columns: MBR_NBR, TAX_ID_NBR, MBR_LAST_NM, MBR_FIRST_NM, RES_ADDR_LINE_1, RES_ADDR_LINE_2, RES_CITY_NM, RES_STATE_CD, RES_POSTAL_CD, REG_HRS_QTY, OT_HRS_QTY, PAY_RATE_AMT.
+  - Carries restricted columns. Transmission log retained 24 months; the working dataset is deleted at end of job step.
+  - Reconciliation counts are checked against the control totals before the acknowledgement is filed.
+
+o EXT-03 CLIENT INVOICING FEED | weekly | destination: accounts receivable
+  - Columns: CLIENT_ID, PLCMT_ID, MBR_NBR, WEEK_END_DT, REG_HRS_QTY, OT_HRS_QTY, BILL_RATE_AMT.
+  - No name, address or identity column. Client-facing invoice detail resolves MBR_NBR to last name and first initial at print time only.
+
+o EXT-04 BENEFITS CARRIER FILE | monthly | destination: carrier, scheduled transmission
+  - Columns: MBR_NBR, TAX_ID_NBR, MBR_LAST_NM, MBR_FIRST_NM, DOB_DT, RES_ADDR_LINE_1, RES_CITY_NM, RES_STATE_CD, RES_POSTAL_CD, WORK_AUTH_CD, ASGN_STRT_DT.
+  - Highest-sensitivity feed in the register. Changes to the record layout require sign-off from the Records Custodian and the Payroll Manager.
+  - Carrier acknowledgement is required within five business days; unacknowledged cycles are escalated.
+
+o EXT-05 MARKETING MAILING SELECT | ad hoc, on written request | destination: mail house
+  - Columns: MBR_LAST_NM, MBR_FIRST_NM, mailing address columns, SKILL_GRP_CD.
+  - MBR_NBR is replaced by a run-specific sequence number. TAX_ID_NBR and DOB_DT are structurally unavailable to the selection view.
+  - Suppression against ACTV_STAT_CD=D and against the do-not-mail flag is mandatory and is verified by the control report before release.
+
+o EXT-06 ARCHIVE UNLOAD | quarterly, following the aging job | destination: tape library
+  - Full row image including restricted columns. Tapes are catalogued, held in the fire safe, and destroyed on schedule by the tape librarian against a signed list.
+
+STANDING ITEMS
+
+  - Every extract above is registered with a named job, a named destination and a retention interval. Unregistered extracts are not promoted to production.
+  - Additions of a restricted column to any existing feed are treated as a new extract, not a change, and re-enter the approval path from the beginning.
+  - The register is reconciled against the production job schedule each quarter; discrepancies are worked before the next benefits cycle.

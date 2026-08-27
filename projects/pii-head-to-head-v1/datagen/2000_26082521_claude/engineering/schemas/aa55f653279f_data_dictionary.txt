@@ -1,0 +1,97 @@
+MEMORANDUM
+
+TO:      Store Systems Steering Committee
+FROM:    Database Administration and the Records Custodian
+DATE:    22 January 1999
+SUBJECT: Data dictionary excerpt and handling standard — MBRMST and MBRXRF
+
+1. PURPOSE
+
+   This memo restates the definition of the member identity columns and sets out
+   the handling standard that applies to them. It supersedes the excerpt
+   circulated 12 November 1998 for the columns listed in section 3.
+
+2. FILES IN SCOPE
+
+   MBRMST  Member Master, one row per enrolled member, keyed on MBR_ID.
+   MBRXRF  Cross reference, one row per alternate identifier presented at the
+           counter, keyed on MBR_ID plus XRF_SEQ_NO.
+
+3. COLUMN DEFINITIONS
+
+   3.1 Identity columns, MBRMST
+
+       MBR_ID           CHAR(11)     not null   assigned, never reused
+       MBR_LAST_NAM     CHAR(25)     not null
+       MBR_FRST_NAM     CHAR(15)     not null
+       MBR_MID_INIT     CHAR(1)      null
+       MBR_DOB_CYMD     DEC(7,0)     not null   century digit present
+       MBR_GENDER_CD    CHAR(1)      not null
+       MBR_SSN          CHAR(9)      null       restricted, see 4.1
+       MBR_ADR_LN1      CHAR(30)     not null
+       MBR_ADR_LN2      CHAR(30)     null
+       MBR_CITY_NAM     CHAR(20)     not null
+       MBR_ST_CD        CHAR(2)      not null
+       MBR_ZIP_CD       CHAR(9)      not null
+       MBR_HOME_PHON    CHAR(10)     null
+       MBR_CARD_NO      CHAR(16)     null       restricted, see 4.1
+
+   3.2 Cross reference columns, MBRXRF
+
+       XRF_SEQ_NO       DEC(3,0)     not null
+       XRF_TYPE_CD      CHAR(2)      not null   SS, DL, TP, MR
+       XRF_VALUE        CHAR(20)     not null   restricted in all cases
+       XRF_ISSUER_CD    CHAR(4)      null       plan or agency code
+       XRF_ADD_DT_CYMD  DEC(7,0)     not null
+       XRF_STAT_CD      CHAR(1)      not null   A active / X withdrawn
+
+       XRF_VALUE carries whatever identifier the member presented. Because the
+       column can hold a tax identifier, a licence identifier or a plan
+       identifier depending on XRF_TYPE_CD, it is restricted without regard to
+       type. No program may display it in full on a counter screen; the display
+       routine MBRD220 masks all but the trailing four positions.
+
+4. HANDLING STANDARD
+
+   4.1 Restricted columns are readable only by RACF group PHRMSEC. Membership is
+       requested on form DP-114, approved by the Records Custodian, and certified
+       each quarter by the department head holding the request. Lapsed
+       certifications are revoked automatically on the first of the following
+       month.
+
+   4.2 All base table reads are journalled. The journal receiver is retained for
+       twelve months and is reviewed monthly by Internal Audit.
+
+   4.3 Restricted columns may not be keyed, indexed, or used as a sort argument
+       in any report distributed below district level.
+
+5. RETENTION
+
+   5.1 MBRMST rows are retained on line for twenty-four months past
+       MBR_LAST_ACT_DT once MBR_STAT_CD is set to I, then archived to MBRARC and
+       cleared.
+
+   5.2 MBRXRF rows follow the parent row. A row set to XRF_STAT_CD of X is
+       cleared at the next monthly cycle rather than archived.
+
+   5.3 Archive tapes are held in the off site vault for seven years and are then
+       destroyed on written instruction of the Records Custodian. Destruction is
+       logged on form DP-119.
+
+   5.4 Dispensing records are governed by the applicable state board of pharmacy
+       retention rule and by the pending federal administrative simplification
+       standards. Nothing in section 5 shortens that period.
+
+6. DOWNSTREAM EXTRACTS
+
+   6.1 MBRX010, weekly marketing. Excludes restricted columns, excludes
+       MBR_DOB_CYMD, and honours MBR_MKTG_OPT_CD.
+
+   6.2 MBRX040, mail order fulfilment. Carries address columns only. Leased line
+       transmission, no removable media.
+
+   6.3 MBRX070, third-party reconciliation. Carries MBR_ID and XRF_ISSUER_CD.
+       Does not carry XRF_VALUE.
+
+   6.4 Any new extract requires a completed form DP-118 and the countersignature
+       of the Records Custodian before the job is added to the schedule.

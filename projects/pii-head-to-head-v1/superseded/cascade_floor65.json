@@ -1,0 +1,7824 @@
+{
+ "extra": {
+  "derived_from": "arm B",
+  "gate_threshold": 161.714621073105,
+  "recall_floor": 0.65
+ },
+ "label": "steady-aim cascade, per-tag recall floor 0.65",
+ "metrics": {
+  "docs_per_s": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": null
+  },
+  "equal_corpus_doc_f1": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8137167813795889
+  },
+  "equal_corpus_doc_precision": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8893316936565911
+  },
+  "equal_corpus_doc_recall": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7532364600505762
+  },
+  "equal_corpus_doc_specificity": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8832064039830331
+  },
+  "f05_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6507849812507629
+  },
+  "f05_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7437835514545441
+  },
+  "f05_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7536112546920777
+  },
+  "f1_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6452978551387787
+  },
+  "f1_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7425386011600494
+  },
+  "f1_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7823159217834472
+  },
+  "f2_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6538967609405517
+  },
+  "f2_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7563079237937927
+  },
+  "f2_median": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7502378821372986
+  },
+  "f2_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8140159487724304
+  },
+  "f2_min": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.09720081678242423
+  },
+  "f3_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6628611743450165
+  },
+  "f3_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7680973052978516
+  },
+  "f3_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8253542423248291
+  },
+  "macro_f05": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6507849812507629
+  },
+  "macro_f2": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6538967609405517
+  },
+  "micro_f1": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7823159217834472
+  },
+  "p95_latency_ms": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": null
+  },
+  "precision_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6626961410045624
+  },
+  "precision_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7510552406311035
+  },
+  "precision_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7358934760093689
+  },
+  "prediction_rate": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7807024075371287
+  },
+  "priority_macro_f05": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.761540538072586
+  },
+  "priority_macro_f1": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.757680481672287
+  },
+  "priority_macro_f2": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7692552387714386
+  },
+  "priority_macro_f3": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7807223081588746
+  },
+  "priority_macro_precision": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7694843232631683
+  },
+  "priority_macro_recall": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7417969192777362
+  },
+  "recall_macro_catalogue": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6243908022131238
+  },
+  "recall_macro_support30": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.7312373518943787
+  },
+  "recall_micro": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.8371243357658387
+  },
+  "severity_recall_min": {
+   "ci_high": null,
+   "ci_low": null,
+   "value": 0.6030213066509792
+  }
+ },
+ "name": "cascade-floor65",
+ "per_corpus": {
+  "10360_betterdataai_ner_silver_eval_10.36k": {
+   "can_measure_precision": true,
+   "doc_fire_rate": 0.8882239382239382,
+   "f05_macro_catalogue": 0.2624799609184265,
+   "f05_macro_catalogue_ci": [
+    0.22592422366142273,
+    0.29152292013168335
+   ],
+   "f05_macro_support30": 0.4431563913822174,
+   "f05_micro": 0.7187968492507935,
+   "f05_micro_ci": [
+    0.7123228907585144,
+    0.7251187562942505
+   ],
+   "f1_macro_catalogue": 0.281780868768692,
+   "f1_macro_catalogue_ci": [
+    0.23907247185707092,
+    0.30461353063583374
+   ],
+   "f1_macro_support30": 0.4687170088291168,
+   "f1_micro": 0.7369195222854614,
+   "f1_micro_ci": [
+    0.7310263514518738,
+    0.7426811456680298
+   ],
+   "f2_macro_catalogue": 0.31710314750671387,
+   "f2_macro_catalogue_ci": [
+    0.2643478810787201,
+    0.3330187499523163
+   ],
+   "f2_macro_support30": 0.5191625952720642,
+   "f2_median": 0.36340850591659546,
+   "f2_micro": 0.7559797167778015,
+   "f2_micro_ci": [
+    0.7491983771324158,
+    0.7623220682144165
+   ],
+   "f2_min": 0.0,
+   "f3_macro_catalogue": 0.3367442786693573,
+   "f3_macro_catalogue_ci": [
+    0.27959737181663513,
+    0.35008907318115234
+   ],
+   "f3_macro_support30": 0.5489050149917603,
+   "f3_micro": 0.7625541687011719,
+   "f3_micro_ci": [
+    0.7552012205123901,
+    0.769212543964386
+   ],
+   "n_priority_measurable": 4,
+   "n_rows": 10360,
+   "n_tags_catalogue": 19,
+   "n_tags_f2_below_10pct": 9,
+   "n_tags_f2_zero": 8,
+   "n_tags_support30": 10,
+   "precision_macro_catalogue": 0.254209965467453,
+   "precision_macro_support30": 0.4329989552497864,
+   "precision_micro": 0.7072022557258606,
+   "prediction_rate": 0.8882239382239382,
+   "priority_macro_f05": 0.3790830075740814,
+   "priority_macro_f1": 0.3958198130130768,
+   "priority_macro_f2": 0.4360491931438446,
+   "priority_macro_f3": 0.4654563069343567,
+   "priority_macro_precision": 0.37372639775276184,
+   "priority_macro_recall": 0.5402758717536926,
+   "recall_macro_catalogue": 0.36974582076072693,
+   "recall_macro_support30": 0.6025170087814331,
+   "recall_micro": 0.7692438960075378,
+   "severity_recall_min": 0.36000001430511475,
+   "tags_predicted_zero_times": 26
+  },
+  "10626_ai4privacy_pii_masking_eval_10.63k": {
+   "can_measure_precision": true,
+   "doc_fire_rate": 0.9188782232260493,
+   "f05_macro_catalogue": 0.7626807689666748,
+   "f05_macro_catalogue_ci": [
+    0.7553820013999939,
+    0.7694743871688843
+   ],
+   "f05_macro_support30": 0.7626807689666748,
+   "f05_micro": 0.6896599531173706,
+   "f05_micro_ci": [
+    0.6851730942726135,
+    0.6944825053215027
+   ],
+   "f1_macro_catalogue": 0.7421186566352844,
+   "f1_macro_catalogue_ci": [
+    0.7340371012687683,
+    0.7494836449623108
+   ],
+   "f1_macro_support30": 0.7421186566352844,
+   "f1_micro": 0.7156467437744141,
+   "f1_micro_ci": [
+    0.7113638520240784,
+    0.7204268574714661
+   ],
+   "f2_macro_catalogue": 0.7388594746589661,
+   "f2_macro_catalogue_ci": [
+    0.7297418117523193,
+    0.7479109764099121
+   ],
+   "f2_macro_support30": 0.7388594746589661,
+   "f2_median": 0.756778359413147,
+   "f2_micro": 0.7436687350273132,
+   "f2_micro_ci": [
+    0.7388261556625366,
+    0.7489052414894104
+   ],
+   "f2_min": 0.48556429147720337,
+   "f3_macro_catalogue": 0.7443810105323792,
+   "f3_macro_catalogue_ci": [
+    0.7347394824028015,
+    0.7540332674980164
+   ],
+   "f3_macro_support30": 0.7443810105323792,
+   "f3_micro": 0.7535035014152527,
+   "f3_micro_ci": [
+    0.7483230829238892,
+    0.7590304017066956
+   ],
+   "n_priority_measurable": 10,
+   "n_rows": 10626,
+   "n_tags_catalogue": 24,
+   "n_tags_f2_below_10pct": 0,
+   "n_tags_f2_zero": 0,
+   "n_tags_support30": 24,
+   "precision_macro_catalogue": 0.7845062613487244,
+   "precision_macro_support30": 0.7845062613487244,
+   "precision_micro": 0.6733590960502625,
+   "prediction_rate": 0.9186900056465274,
+   "priority_macro_f05": 0.78400719165802,
+   "priority_macro_f1": 0.7512949705123901,
+   "priority_macro_f2": 0.7410401701927185,
+   "priority_macro_f3": 0.7474691867828369,
+   "priority_macro_precision": 0.8158855438232422,
+   "priority_macro_recall": 0.7666177153587341,
+   "recall_macro_catalogue": 0.7571637630462646,
+   "recall_macro_support30": 0.7571637630462646,
+   "recall_micro": 0.7636017799377441,
+   "severity_recall_min": 0.5586206912994385,
+   "tags_predicted_zero_times": 14
+  },
+  "20000_pii_holdout_20.00k": {
+   "can_measure_precision": true,
+   "doc_fire_rate": 0.958,
+   "f05_macro_catalogue": 0.7719606161117554,
+   "f05_macro_catalogue_ci": [
+    0.7466555833816528,
+    0.7837803959846497
+   ],
+   "f05_macro_support30": 0.80617755651474,
+   "f05_micro": 0.8327006101608276,
+   "f05_micro_ci": [
+    0.829454243183136,
+    0.835833728313446
+   ],
+   "f1_macro_catalogue": 0.7535406947135925,
+   "f1_macro_catalogue_ci": [
+    0.7341880202293396,
+    0.7669073343276978
+   ],
+   "f1_macro_support30": 0.8053504824638367,
+   "f1_micro": 0.8598125576972961,
+   "f1_micro_ci": [
+    0.8574239015579224,
+    0.8622500896453857
+   ],
+   "f2_macro_catalogue": 0.7581373453140259,
+   "f2_macro_catalogue_ci": [
+    0.7424716949462891,
+    0.7722097039222717
+   ],
+   "f2_macro_support30": 0.8211240172386169,
+   "f2_median": 0.8704816102981567,
+   "f2_micro": 0.8887495398521423,
+   "f2_micro_ci": [
+    0.8865823745727539,
+    0.8908804655075073
+   ],
+   "f2_min": 0.0,
+   "f3_macro_catalogue": 0.7689281702041626,
+   "f3_macro_catalogue_ci": [
+    0.7542058825492859,
+    0.7829604744911194
+   ],
+   "f3_macro_support30": 0.8358380794525146,
+   "f3_micro": 0.8988329172134399,
+   "f3_micro_ci": [
+    0.896700382232666,
+    0.9010168313980103
+   ],
+   "n_priority_measurable": 14,
+   "n_rows": 20000,
+   "n_tags_catalogue": 52,
+   "n_tags_f2_below_10pct": 1,
+   "n_tags_f2_zero": 1,
+   "n_tags_support30": 46,
+   "precision_macro_catalogue": 0.8059446811676025,
+   "precision_macro_support30": 0.815959095954895,
+   "precision_micro": 0.8155562281608582,
+   "prediction_rate": 0.95475,
+   "priority_macro_f05": 0.865779459476471,
+   "priority_macro_f1": 0.8669148683547974,
+   "priority_macro_f2": 0.8812509775161743,
+   "priority_macro_f3": 0.8914914727210999,
+   "priority_macro_precision": 0.8692050576210022,
+   "priority_macro_recall": 0.9065643548965454,
+   "recall_macro_catalogue": 0.8067939281463623,
+   "recall_macro_support30": 0.880824625492096,
+   "recall_micro": 0.9091476202011108,
+   "severity_recall_min": 0.746082603931427,
+   "tags_predicted_zero_times": 5
+  },
+  "30000_pii2_eval_25.15k": {
+   "can_measure_precision": true,
+   "doc_fire_rate": 0.7969666666666667,
+   "f05_macro_catalogue": 0.7855954170227051,
+   "f05_macro_catalogue_ci": [
+    0.781681478023529,
+    0.7894455194473267
+   ],
+   "f05_macro_support30": 0.8314141631126404,
+   "f05_micro": 0.6800991296768188,
+   "f05_micro_ci": [
+    0.6759429574012756,
+    0.6841055154800415
+   ],
+   "f1_macro_catalogue": 0.7858387231826782,
+   "f1_macro_catalogue_ci": [
+    0.7820928692817688,
+    0.7893819212913513
+   ],
+   "f1_macro_support30": 0.8314498662948608,
+   "f1_micro": 0.7343035340309143,
+   "f1_micro_ci": [
+    0.7305420637130737,
+    0.7378987073898315
+   ],
+   "f2_macro_catalogue": 0.7922633290290833,
+   "f2_macro_catalogue_ci": [
+    0.788144588470459,
+    0.7960787415504456
+   ],
+   "f2_macro_support30": 0.8374537229537964,
+   "f2_median": 0.9250349998474121,
+   "f2_micro": 0.7978965044021606,
+   "f2_micro_ci": [
+    0.793999433517456,
+    0.8016336560249329
+   ],
+   "f2_min": 0.0004397924349177629,
+   "f3_macro_catalogue": 0.7984333634376526,
+   "f3_macro_catalogue_ci": [
+    0.7938021421432495,
+    0.8027271628379822
+   ],
+   "f3_macro_support30": 0.8429027795791626,
+   "f3_micro": 0.8216146230697632,
+   "f3_micro_ci": [
+    0.817386269569397,
+    0.8255528807640076
+   ],
+   "n_priority_measurable": 15,
+   "n_rows": 30000,
+   "n_tags_catalogue": 54,
+   "n_tags_f2_below_10pct": 6,
+   "n_tags_f2_zero": 0,
+   "n_tags_support30": 51,
+   "precision_macro_catalogue": 0.7890193462371826,
+   "precision_macro_support30": 0.8351156115531921,
+   "precision_micro": 0.6482001543045044,
+   "prediction_rate": 0.7898333333333334,
+   "priority_macro_f05": 0.9341615438461304,
+   "priority_macro_f1": 0.9426155090332031,
+   "priority_macro_f2": 0.9549632668495178,
+   "priority_macro_f3": 0.9604290127754211,
+   "priority_macro_precision": 0.9299336075782776,
+   "priority_macro_recall": 0.9668815732002258,
+   "recall_macro_catalogue": 0.8500942587852478,
+   "recall_macro_support30": 0.8622379899024963,
+   "recall_micro": 0.8467860221862793,
+   "severity_recall_min": 0.7986624240875244,
+   "tags_predicted_zero_times": 2
+  },
+  "38937_openpii_pii_eval_38.94k": {
+   "can_measure_precision": true,
+   "doc_fire_rate": 0.9779130390117369,
+   "f05_macro_catalogue": 0.6712081432342529,
+   "f05_macro_catalogue_ci": [
+    0.6702219843864441,
+    0.672225832939148
+   ],
+   "f05_macro_support30": 0.8754888772964478,
+   "f05_micro": 0.8467997312545776,
+   "f05_micro_ci": [
+    0.8455030918121338,
+    0.84807288646698
+   ],
+   "f1_macro_catalogue": 0.6632103323936462,
+   "f1_macro_catalogue_ci": [
+    0.6620797514915466,
+    0.6642859578132629
+   ],
+   "f1_macro_support30": 0.8650569915771484,
+   "f1_micro": 0.8648972511291504,
+   "f1_micro_ci": [
+    0.8636335134506226,
+    0.8661049008369446
+   ],
+   "f2_macro_catalogue": 0.6631205081939697,
+   "f2_macro_catalogue_ci": [
+    0.6618102788925171,
+    0.6644525527954102
+   ],
+   "f2_macro_support30": 0.86493980884552,
+   "f2_median": 0.8354859352111816,
+   "f2_micro": 0.8837852478027344,
+   "f2_micro_ci": [
+    0.8824107050895691,
+    0.8852342963218689
+   ],
+   "f2_min": 0.0,
+   "f3_macro_catalogue": 0.6658190488815308,
+   "f3_macro_catalogue_ci": [
+    0.6644461154937744,
+    0.667227566242218
+   ],
+   "f3_macro_support30": 0.8684596419334412,
+   "f3_micro": 0.8902660012245178,
+   "f3_micro_ci": [
+    0.8887776732444763,
+    0.8918429017066956
+   ],
+   "n_priority_measurable": 9,
+   "n_rows": 38937,
+   "n_tags_catalogue": 30,
+   "n_tags_f2_below_10pct": 7,
+   "n_tags_f2_zero": 7,
+   "n_tags_support30": 23,
+   "precision_macro_catalogue": 0.6798004508018494,
+   "precision_macro_support30": 0.8866962790489197,
+   "precision_micro": 0.8351496458053589,
+   "prediction_rate": 0.9779130390117369,
+   "priority_macro_f05": 0.8446714878082275,
+   "priority_macro_f1": 0.8317572474479675,
+   "priority_macro_f2": 0.8329725861549377,
+   "priority_macro_f3": 0.838765561580658,
+   "priority_macro_precision": 0.8586710095405579,
+   "priority_macro_recall": 0.8492482900619507,
+   "recall_macro_catalogue": 0.6706854104995728,
+   "recall_macro_support30": 0.8748070001602173,
+   "recall_micro": 0.896842360496521,
+   "severity_recall_min": 0.6068165898323059,
+   "tags_predicted_zero_times": 18
+  },
+  "4000_datax-dualjudge-evalset-1.32k": {
+   "can_measure_precision": false,
+   "doc_fire_rate": 0.392,
+   "f05_macro_catalogue": null,
+   "f05_macro_support30": null,
+   "f05_micro": null,
+   "f1_macro_catalogue": null,
+   "f1_macro_support30": null,
+   "f1_micro": null,
+   "f2_macro_catalogue": null,
+   "f2_macro_support30": null,
+   "f2_median": null,
+   "f2_micro": null,
+   "f2_min": null,
+   "f3_macro_catalogue": null,
+   "f3_macro_support30": null,
+   "f3_micro": null,
+   "n_priority_measurable": 1,
+   "n_rows": 4000,
+   "n_tags_catalogue": 4,
+   "n_tags_f2_below_10pct": null,
+   "n_tags_f2_zero": null,
+   "n_tags_support30": 3,
+   "precision_macro_catalogue": null,
+   "precision_macro_support30": null,
+   "precision_micro": null,
+   "prediction_rate": 0.38575,
+   "priority_macro_f05": null,
+   "priority_macro_f1": null,
+   "priority_macro_f2": null,
+   "priority_macro_f3": null,
+   "priority_macro_precision": null,
+   "priority_macro_recall": 0.6257143020629883,
+   "recall_macro_catalogue": 0.560706615447998,
+   "recall_macro_support30": 0.6087198853492737,
+   "recall_micro": null,
+   "severity_recall_min": 0.6257143020629883,
+   "tags_predicted_zero_times": 9
+  },
+  "5617_nemotron_eval_5.36k": {
+   "can_measure_precision": false,
+   "doc_fire_rate": 0.9462346448282001,
+   "f05_macro_catalogue": null,
+   "f05_macro_support30": null,
+   "f05_micro": null,
+   "f1_macro_catalogue": null,
+   "f1_macro_support30": null,
+   "f1_micro": null,
+   "f2_macro_catalogue": null,
+   "f2_macro_support30": null,
+   "f2_median": null,
+   "f2_micro": null,
+   "f2_min": null,
+   "f3_macro_catalogue": null,
+   "f3_macro_support30": null,
+   "f3_micro": null,
+   "n_priority_measurable": 0,
+   "n_rows": 5617,
+   "n_tags_catalogue": 0,
+   "n_tags_f2_below_10pct": null,
+   "n_tags_f2_zero": null,
+   "n_tags_support30": 0,
+   "precision_macro_catalogue": null,
+   "precision_macro_support30": null,
+   "precision_micro": null,
+   "prediction_rate": 0.94587858287342,
+   "priority_macro_f05": null,
+   "priority_macro_f1": null,
+   "priority_macro_f2": null,
+   "priority_macro_f3": null,
+   "priority_macro_precision": null,
+   "priority_macro_recall": null,
+   "recall_macro_catalogue": null,
+   "recall_macro_support30": null,
+   "recall_micro": null,
+   "severity_recall_min": null,
+   "tags_predicted_zero_times": 12
+  },
+  "6589_govdocs2-dualjudge-eval20-3.53k": {
+   "can_measure_precision": false,
+   "doc_fire_rate": 0.401881924419487,
+   "f05_macro_catalogue": null,
+   "f05_macro_support30": null,
+   "f05_micro": null,
+   "f1_macro_catalogue": null,
+   "f1_macro_support30": null,
+   "f1_micro": null,
+   "f2_macro_catalogue": null,
+   "f2_macro_support30": null,
+   "f2_median": null,
+   "f2_micro": null,
+   "f2_min": null,
+   "f3_macro_catalogue": null,
+   "f3_macro_support30": null,
+   "f3_micro": null,
+   "n_priority_measurable": 2,
+   "n_rows": 6589,
+   "n_tags_catalogue": 10,
+   "n_tags_f2_below_10pct": null,
+   "n_tags_f2_zero": null,
+   "n_tags_support30": 6,
+   "precision_macro_catalogue": null,
+   "precision_macro_support30": null,
+   "precision_micro": null,
+   "prediction_rate": 0.38458036120807404,
+   "priority_macro_f05": null,
+   "priority_macro_f1": null,
+   "priority_macro_f2": null,
+   "priority_macro_f3": null,
+   "priority_macro_precision": null,
+   "priority_macro_recall": 0.5372763276100159,
+   "recall_macro_catalogue": 0.3555458188056946,
+   "recall_macro_support30": 0.5323911905288696,
+   "recall_micro": null,
+   "severity_recall_min": 0.5252525210380554,
+   "tags_predicted_zero_times": 21
+  }
+ },
+ "per_tag": {
+  "10360_betterdataai_ner_silver_eval_10.36k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 5,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": 0.0,
+    "support": 5,
+    "tp": 0
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 2,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": 0.0,
+    "support": 2,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 18,
+    "precision": 0.0,
+    "predicted": 18,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 2,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": 0.0,
+    "support": 2,
+    "tp": 0
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": 0.3128370940685272,
+    "f1": 0.33623188734054565,
+    "f2": 0.36340850591659546,
+    "f3": 0.373470664024353,
+    "fn": 93,
+    "fp": 136,
+    "precision": 0.2989690601825714,
+    "predicted": 194,
+    "recall": 0.38410595059394836,
+    "support": 151,
+    "tp": 58
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 28,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 28,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": 0.2508305609226227,
+    "f1": 0.32025447487831116,
+    "f2": 0.44281524419784546,
+    "f3": 0.507563054561615,
+    "fn": 103,
+    "fp": 538,
+    "precision": 0.21915820240974426,
+    "predicted": 689,
+    "recall": 0.5944882035255432,
+    "support": 254,
+    "tp": 151
+   },
+   "sensitive_pii_age": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 56,
+    "precision": 0.0,
+    "predicted": 56,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_area_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 20,
+    "precision": 0.0,
+    "predicted": 20,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": 0.35367870330810547,
+    "f1": 0.44394949078559875,
+    "f2": 0.5960924625396729,
+    "f3": 0.6729686856269836,
+    "fn": 88,
+    "fp": 661,
+    "precision": 0.3114583194255829,
+    "predicted": 960,
+    "recall": 0.7726098299026489,
+    "support": 387,
+    "tp": 299
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": 0.3101104497909546,
+    "f1": 0.38370564579963684,
+    "f2": 0.5031012892723083,
+    "f3": 0.5613225698471069,
+    "fn": 168,
+    "fp": 770,
+    "precision": 0.2749529182910919,
+    "predicted": 1062,
+    "recall": 0.634782612323761,
+    "support": 460,
+    "tp": 292
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 6296,
+    "precision": 0.0,
+    "predicted": 6296,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 19,
+    "precision": 0.0,
+    "predicted": 19,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": 0.6194030046463013,
+    "f1": 0.6194030046463013,
+    "f2": 0.6194030046463013,
+    "f3": 0.6194030046463013,
+    "fn": 51,
+    "fp": 51,
+    "precision": 0.6194030046463013,
+    "predicted": 134,
+    "recall": 0.6194030046463013,
+    "support": 134,
+    "tp": 83
+   },
+   "sensitive_pii_employment_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 17,
+    "precision": 0.0,
+    "predicted": 17,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 3,
+    "precision": 0.0,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": 0.924129068851471,
+    "f1": 0.8832094073295593,
+    "f2": 0.8457598686218262,
+    "f3": 0.8339725136756897,
+    "fn": 1525,
+    "fp": 344,
+    "precision": 0.9535825252532959,
+    "predicted": 7411,
+    "recall": 0.8225092887878418,
+    "support": 8592,
+    "tp": 7067
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 404,
+    "precision": 0.0,
+    "predicted": 404,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1445,
+    "precision": 0.0,
+    "predicted": 1445,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv6": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 9165,
+    "precision": 0.0,
+    "predicted": 9165,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_nationality": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": 0.5555555820465088,
+    "f1": 0.6666666865348816,
+    "f2": 0.8333333134651184,
+    "f3": 0.9090909361839294,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.5,
+    "predicted": 2,
+    "recall": 1.0,
+    "support": 1,
+    "tp": 1
+   },
+   "sensitive_pii_password": {
+    "f05": 0.02853519469499588,
+    "f1": 0.04358353465795517,
+    "f2": 0.09221311658620834,
+    "f3": 0.14681893587112427,
+    "fn": 32,
+    "fp": 758,
+    "precision": 0.02319587580859661,
+    "predicted": 776,
+    "recall": 0.36000001430511475,
+    "support": 50,
+    "tp": 18
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_phone_number": {
+    "f05": 0.7142857313156128,
+    "f1": 0.7096773982048035,
+    "f2": 0.7051281332969666,
+    "f3": 0.7036247253417969,
+    "fn": 14,
+    "fp": 13,
+    "precision": 0.717391312122345,
+    "predicted": 46,
+    "recall": 0.7021276354789734,
+    "support": 47,
+    "tp": 33
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1046,
+    "precision": 0.0,
+    "predicted": 1046,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 810,
+    "precision": 0.0,
+    "predicted": 810,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pii_state": {
+    "f05": 0.7074733376502991,
+    "f1": 0.6784982681274414,
+    "f2": 0.6518033146858215,
+    "f3": 0.6433656811714172,
+    "fn": 571,
+    "fp": 371,
+    "precision": 0.728205144405365,
+    "predicted": 1365,
+    "recall": 0.6351437568664551,
+    "support": 1565,
+    "tp": 994
+   },
+   "sensitive_pii_username": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pii_visa_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_zip_code": {
+    "f05": 0.2102803885936737,
+    "f1": 0.2686567008495331,
+    "f2": 0.3719008266925812,
+    "f3": 0.4265402555465698,
+    "fn": 18,
+    "fp": 80,
+    "precision": 0.18367347121238708,
+    "predicted": 98,
+    "recall": 0.5,
+    "support": 36,
+    "tp": 18
+   }
+  },
+  "10626_ai4privacy_pii_masking_eval_10.63k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": 0.9311741590499878,
+    "f1": 0.8679245114326477,
+    "f2": 0.8127208352088928,
+    "f3": 0.7958477139472961,
+    "fn": 117,
+    "fp": 9,
+    "precision": 0.978723406791687,
+    "predicted": 423,
+    "recall": 0.7796609997749329,
+    "support": 531,
+    "tp": 414
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": 0.8828996419906616,
+    "f1": 0.7599999904632568,
+    "f2": 0.6671348214149475,
+    "f3": 0.6410256028175354,
+    "fn": 59,
+    "fp": 1,
+    "precision": 0.9895833134651184,
+    "predicted": 96,
+    "recall": 0.6168830990791321,
+    "support": 154,
+    "tp": 95
+   },
+   "sensitive_pci_credit_card": {
+    "f05": 0.8261182904243469,
+    "f1": 0.8434622287750244,
+    "f2": 0.861549973487854,
+    "f3": 0.8677529096603394,
+    "fn": 66,
+    "fp": 104,
+    "precision": 0.8149465918540955,
+    "predicted": 562,
+    "recall": 0.8740457892417908,
+    "support": 524,
+    "tp": 458
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 222,
+    "precision": 0.0,
+    "predicted": 222,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": 0.8135190606117249,
+    "f1": 0.8485385179519653,
+    "f2": 0.886708676815033,
+    "f3": 0.9002066850662231,
+    "fn": 45,
+    "fp": 126,
+    "precision": 0.7917355298995972,
+    "predicted": 605,
+    "recall": 0.9141221642494202,
+    "support": 524,
+    "tp": 479
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 55,
+    "precision": 0.0,
+    "predicted": 55,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": 0.9422321915626526,
+    "f1": 0.8738622665405273,
+    "f2": 0.8147429823875427,
+    "f3": 0.7967749834060669,
+    "fn": 95,
+    "fp": 2,
+    "precision": 0.9940828680992126,
+    "predicted": 338,
+    "recall": 0.7795823812484741,
+    "support": 431,
+    "tp": 336
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": 0.5445882081985474,
+    "f1": 0.5807622671127319,
+    "f2": 0.6220839619636536,
+    "f3": 0.6371963024139404,
+    "fn": 85,
+    "fp": 146,
+    "precision": 0.5228758454322815,
+    "predicted": 306,
+    "recall": 0.6530612111091614,
+    "support": 245,
+    "tp": 160
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": 0.48856550455093384,
+    "f1": 0.5562130808830261,
+    "f2": 0.6456044316291809,
+    "f3": 0.6821481585502625,
+    "fn": 36,
+    "fp": 114,
+    "precision": 0.45192307233810425,
+    "predicted": 208,
+    "recall": 0.7230769395828247,
+    "support": 130,
+    "tp": 94
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 21,
+    "precision": 0.0,
+    "predicted": 21,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": 0.7176397442817688,
+    "f1": 0.781760036945343,
+    "f2": 0.8584626913070679,
+    "f3": 0.8874881267547607,
+    "fn": 206,
+    "fp": 1091,
+    "precision": 0.6804335117340088,
+    "predicted": 3414,
+    "recall": 0.9185448884963989,
+    "support": 2529,
+    "tp": 2323
+   },
+   "sensitive_pii_age": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 123,
+    "precision": 0.0,
+    "predicted": 123,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_area_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 116,
+    "precision": 0.0,
+    "predicted": 116,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 20,
+    "precision": 0.0,
+    "predicted": 20,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": 0.3623853325843811,
+    "f1": 0.46539029479026794,
+    "f2": 0.6502057909965515,
+    "f3": 0.7494071125984192,
+    "fn": 62,
+    "fp": 1027,
+    "precision": 0.31578946113586426,
+    "predicted": 1501,
+    "recall": 0.8843283653259277,
+    "support": 536,
+    "tp": 474
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": 0.7416081428527832,
+    "f1": 0.7521772980690002,
+    "f2": 0.763052225112915,
+    "f3": 0.7667474150657654,
+    "fn": 283,
+    "fp": 343,
+    "precision": 0.7347254157066345,
+    "predicted": 1293,
+    "recall": 0.7704784870147705,
+    "support": 1233,
+    "tp": 950
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 7464,
+    "precision": 0.0,
+    "predicted": 7464,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": 0.8971211910247803,
+    "f1": 0.826310396194458,
+    "f2": 0.7658601999282837,
+    "f3": 0.7476288080215454,
+    "fn": 297,
+    "fp": 41,
+    "precision": 0.9514793157577515,
+    "predicted": 845,
+    "recall": 0.7302452325820923,
+    "support": 1101,
+    "tp": 804
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": 0.9885529279708862,
+    "f1": 0.9909572601318359,
+    "f2": 0.9933733344078064,
+    "f3": 0.9941813945770264,
+    "fn": 8,
+    "fp": 21,
+    "precision": 0.9869565367698669,
+    "predicted": 1610,
+    "recall": 0.9949905872344971,
+    "support": 1597,
+    "tp": 1589
+   },
+   "sensitive_pii_employment_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 233,
+    "precision": 0.0,
+    "predicted": 233,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": 0.766766369342804,
+    "f1": 0.6941151022911072,
+    "f2": 0.6340397000312805,
+    "f3": 0.6162606477737427,
+    "fn": 2191,
+    "fp": 699,
+    "precision": 0.8242835402488708,
+    "predicted": 3978,
+    "recall": 0.5994515419006348,
+    "support": 5470,
+    "tp": 3279
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 951,
+    "precision": 0.0,
+    "predicted": 951,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1529,
+    "precision": 0.0,
+    "predicted": 1529,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 94,
+    "precision": 0.0,
+    "predicted": 94,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": 0.9279986619949341,
+    "f1": 0.8866720199584961,
+    "f2": 0.8488692045211792,
+    "f3": 0.836974561214447,
+    "fn": 235,
+    "fp": 49,
+    "precision": 0.9577586054801941,
+    "predicted": 1160,
+    "recall": 0.8254086375236511,
+    "support": 1346,
+    "tp": 1111
+   },
+   "sensitive_pii_ipv6": {
+    "f05": 0.625984251499176,
+    "f1": 0.6297029852867126,
+    "f2": 0.6334661245346069,
+    "f3": 0.6347305178642273,
+    "fn": 91,
+    "fp": 96,
+    "precision": 0.6235294342041016,
+    "predicted": 255,
+    "recall": 0.6359999775886536,
+    "support": 250,
+    "tp": 159
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 82,
+    "precision": 0.0,
+    "predicted": 82,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": 0.9615384936332703,
+    "f1": 0.9090909361839294,
+    "f2": 0.8620688915252686,
+    "f3": 0.8474576473236084,
+    "fn": 18,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 90,
+    "recall": 0.8333333134651184,
+    "support": 108,
+    "tp": 90
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 8867,
+    "precision": 0.0,
+    "predicted": 8867,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_nationality": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": 0.8184346556663513,
+    "f1": 0.7904077172279358,
+    "f2": 0.7642366886138916,
+    "f3": 0.7558939456939697,
+    "fn": 278,
+    "fp": 159,
+    "precision": 0.8382502794265747,
+    "predicted": 983,
+    "recall": 0.7477313876152039,
+    "support": 1102,
+    "tp": 824
+   },
+   "sensitive_pii_password": {
+    "f05": 0.21967124938964844,
+    "f1": 0.30765122175216675,
+    "f2": 0.5131860375404358,
+    "f3": 0.6602097153663635,
+    "fn": 93,
+    "fp": 5092,
+    "precision": 0.18449711799621582,
+    "predicted": 6244,
+    "recall": 0.925301194190979,
+    "support": 1245,
+    "tp": 1152
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": 0.8419958353042603,
+    "f1": 0.7074235677719116,
+    "f2": 0.6099397540092468,
+    "f3": 0.5831533670425415,
+    "fn": 64,
+    "fp": 3,
+    "precision": 0.9642857313156128,
+    "predicted": 84,
+    "recall": 0.5586206912994385,
+    "support": 145,
+    "tp": 81
+   },
+   "sensitive_pii_phone_number": {
+    "f05": 0.8501259088516235,
+    "f1": 0.7670454382896423,
+    "f2": 0.6987577080726624,
+    "f3": 0.6786193251609802,
+    "fn": 418,
+    "fp": 74,
+    "precision": 0.9162895679473877,
+    "predicted": 884,
+    "recall": 0.6596091389656067,
+    "support": 1228,
+    "tp": 810
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1700,
+    "precision": 0.0,
+    "predicted": 1700,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1582,
+    "precision": 0.0,
+    "predicted": 1582,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": 0.8915173411369324,
+    "f1": 0.8149559497833252,
+    "f2": 0.7505044341087341,
+    "f3": 0.7312278747558594,
+    "fn": 689,
+    "fp": 88,
+    "precision": 0.9510839581489563,
+    "predicted": 1799,
+    "recall": 0.7129166722297668,
+    "support": 2400,
+    "tp": 1711
+   },
+   "sensitive_pii_state": {
+    "f05": 0.8559803366661072,
+    "f1": 0.7639602422714233,
+    "f2": 0.6898044943809509,
+    "f3": 0.6681848168373108,
+    "fn": 606,
+    "fp": 83,
+    "precision": 0.9307178854942322,
+    "predicted": 1198,
+    "recall": 0.6478791236877441,
+    "support": 1721,
+    "tp": 1115
+   },
+   "sensitive_pii_username": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": 0.5709877014160156,
+    "f1": 0.5248227119445801,
+    "f2": 0.48556429147720337,
+    "f3": 0.47375160455703735,
+    "fn": 43,
+    "fp": 24,
+    "precision": 0.6065573692321777,
+    "predicted": 61,
+    "recall": 0.4625000059604645,
+    "support": 80,
+    "tp": 37
+   },
+   "sensitive_pii_visa_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 92,
+    "precision": 0.0,
+    "predicted": 92,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_zip_code": {
+    "f05": 0.8369336128234863,
+    "f1": 0.8676428198814392,
+    "f2": 0.9006913900375366,
+    "f3": 0.9122743010520935,
+    "fn": 124,
+    "fp": 337,
+    "precision": 0.8176407217979431,
+    "predicted": 1848,
+    "recall": 0.924159049987793,
+    "support": 1635,
+    "tp": 1511
+   }
+  },
+  "20000_pii_holdout_20.00k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": 0.9549548625946045,
+    "f1": 0.9322779774665833,
+    "f2": 0.9106528162956238,
+    "f3": 0.9036658406257629,
+    "fn": 61,
+    "fp": 16,
+    "precision": 0.970695972442627,
+    "predicted": 546,
+    "recall": 0.8967850804328918,
+    "support": 591,
+    "tp": 530
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": 0.9775752425193787,
+    "f1": 0.9554794430732727,
+    "f2": 0.9343602657318115,
+    "f3": 0.9275265336036682,
+    "fn": 24,
+    "fp": 2,
+    "precision": 0.9928825497627258,
+    "predicted": 281,
+    "recall": 0.9207921028137207,
+    "support": 303,
+    "tp": 279
+   },
+   "sensitive_pci_credit_card": {
+    "f05": 0.9887385368347168,
+    "f1": 0.9773634672164917,
+    "f2": 0.9662471413612366,
+    "f3": 0.962597668170929,
+    "fn": 157,
+    "fp": 13,
+    "precision": 0.9964702725410461,
+    "predicted": 3683,
+    "recall": 0.9589756727218628,
+    "support": 3827,
+    "tp": 3670
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": 0.9935101270675659,
+    "f1": 0.99309241771698,
+    "f2": 0.9926749467849731,
+    "f3": 0.9925358891487122,
+    "fn": 38,
+    "fp": 31,
+    "precision": 0.9937888383865356,
+    "predicted": 4991,
+    "recall": 0.9923969507217407,
+    "support": 4998,
+    "tp": 4960
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": 0.9864808320999146,
+    "f1": 0.9790356159210205,
+    "f2": 0.9717020988464355,
+    "f3": 0.9692818522453308,
+    "fn": 80,
+    "fp": 20,
+    "precision": 0.9915074110031128,
+    "predicted": 2355,
+    "recall": 0.9668737053871155,
+    "support": 2415,
+    "tp": 2335
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": 0.8694204092025757,
+    "f1": 0.8175410628318787,
+    "f2": 0.7715045809745789,
+    "f3": 0.7572900056838989,
+    "fn": 720,
+    "fp": 212,
+    "precision": 0.9078260660171509,
+    "predicted": 2300,
+    "recall": 0.7435897588729858,
+    "support": 2808,
+    "tp": 2088
+   },
+   "sensitive_pci_iban": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": 0.9618633985519409,
+    "f1": 0.9404129981994629,
+    "f2": 0.9198984503746033,
+    "f3": 0.9132576584815979,
+    "fn": 246,
+    "fp": 57,
+    "precision": 0.9767156839370728,
+    "predicted": 2448,
+    "recall": 0.9067121744155884,
+    "support": 2637,
+    "tp": 2391
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": 0.9862133264541626,
+    "f1": 0.9783931374549866,
+    "f2": 0.9706960320472717,
+    "f3": 0.9681571125984192,
+    "fn": 83,
+    "fp": 20,
+    "precision": 0.9914966225624084,
+    "predicted": 2352,
+    "recall": 0.9656314849853516,
+    "support": 2415,
+    "tp": 2332
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 6,
+    "precision": 0.0,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": 0.9901278018951416,
+    "f1": 0.9798850417137146,
+    "f2": 0.9698521494865417,
+    "f3": 0.9665533304214478,
+    "fn": 13,
+    "fp": 1,
+    "precision": 0.9970760345458984,
+    "predicted": 342,
+    "recall": 0.9632768630981445,
+    "support": 354,
+    "tp": 341
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": 0.5603448152542114,
+    "f1": 0.3513513505458832,
+    "f2": 0.25590550899505615,
+    "f3": 0.23465706408023834,
+    "fn": 47,
+    "fp": 1,
+    "precision": 0.9285714030265808,
+    "predicted": 14,
+    "recall": 0.21666666865348816,
+    "support": 60,
+    "tp": 13
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": 0.9493087530136108,
+    "f1": 0.9626168012619019,
+    "f2": 0.9763033986091614,
+    "f3": 0.9809523224830627,
+    "fn": 6,
+    "fp": 26,
+    "precision": 0.9406392574310303,
+    "predicted": 438,
+    "recall": 0.9856459498405457,
+    "support": 418,
+    "tp": 412
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": 0.6481481194496155,
+    "f1": 0.46666669845581055,
+    "f2": 0.3645833134651184,
+    "f3": 0.33980581164360046,
+    "fn": 15,
+    "fp": 1,
+    "precision": 0.875,
+    "predicted": 8,
+    "recall": 0.3181818127632141,
+    "support": 22,
+    "tp": 7
+   },
+   "sensitive_phi_medication": {
+    "f05": 0.5882353186607361,
+    "f1": 0.3636363744735718,
+    "f2": 0.2631579041481018,
+    "f3": 0.2409638613462448,
+    "fn": 7,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 2,
+    "recall": 0.2222222238779068,
+    "support": 9,
+    "tp": 2
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": 0.8807443380355835,
+    "f1": 0.9060324430465698,
+    "f2": 0.932815670967102,
+    "f3": 0.9420987963676453,
+    "fn": 318,
+    "fp": 978,
+    "precision": 0.8646554350852966,
+    "predicted": 7226,
+    "recall": 0.9515686631202698,
+    "support": 6566,
+    "tp": 6248
+   },
+   "sensitive_pii_age": {
+    "f05": 0.9519622921943665,
+    "f1": 0.9214833378791809,
+    "f2": 0.892895519733429,
+    "f3": 0.8837563395500183,
+    "fn": 713,
+    "fp": 136,
+    "precision": 0.9734271168708801,
+    "predicted": 5118,
+    "recall": 0.8748024702072144,
+    "support": 5695,
+    "tp": 4982
+   },
+   "sensitive_pii_area_code": {
+    "f05": 0.9609432816505432,
+    "f1": 0.9401018023490906,
+    "f2": 0.9201451539993286,
+    "f3": 0.913679838180542,
+    "fn": 736,
+    "fp": 182,
+    "precision": 0.975358784198761,
+    "predicted": 7386,
+    "recall": 0.9073047637939453,
+    "support": 7940,
+    "tp": 7204
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": 0.40000003576278687,
+    "f1": 0.3076923191547394,
+    "f2": 0.25,
+    "f3": 0.23529411852359772,
+    "fn": 7,
+    "fp": 2,
+    "precision": 0.5,
+    "predicted": 4,
+    "recall": 0.2222222238779068,
+    "support": 9,
+    "tp": 2
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": 0.68892902135849,
+    "f1": 0.7557755708694458,
+    "f2": 0.8369882702827454,
+    "f3": 0.8680819272994995,
+    "fn": 125,
+    "fp": 615,
+    "precision": 0.6505681872367859,
+    "predicted": 1760,
+    "recall": 0.9015747904777527,
+    "support": 1270,
+    "tp": 1145
+   },
+   "sensitive_pii_county": {
+    "f05": 0.6309563517570496,
+    "f1": 0.7204502820968628,
+    "f2": 0.8395277857780457,
+    "f3": 0.8884775638580322,
+    "fn": 23,
+    "fp": 275,
+    "precision": 0.5827010869979858,
+    "predicted": 659,
+    "recall": 0.9434889554977417,
+    "support": 407,
+    "tp": 384
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": 0.8821355700492859,
+    "f1": 0.9099923968315125,
+    "f2": 0.9396661520004272,
+    "f3": 0.9499920606613159,
+    "fn": 49,
+    "fp": 187,
+    "precision": 0.8644927740097046,
+    "predicted": 1380,
+    "recall": 0.9605475068092346,
+    "support": 1242,
+    "tp": 1193
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": 0.644293487071991,
+    "f1": 0.7432984709739685,
+    "f2": 0.8782550692558289,
+    "f3": 0.9348326325416565,
+    "fn": 4,
+    "fp": 3453,
+    "precision": 0.5917474627494812,
+    "predicted": 8458,
+    "recall": 0.9992014169692993,
+    "support": 5009,
+    "tp": 5005
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": 0.8700166344642639,
+    "f1": 0.818999171257019,
+    "f2": 0.7736336588859558,
+    "f3": 0.7596084475517273,
+    "fn": 713,
+    "fp": 213,
+    "precision": 0.9077122807502747,
+    "predicted": 2308,
+    "recall": 0.746082603931427,
+    "support": 2808,
+    "tp": 2095
+   },
+   "sensitive_pii_educational_level": {
+    "f05": 0.8069286346435547,
+    "f1": 0.8377193212509155,
+    "f2": 0.8709530234336853,
+    "f3": 0.8826247453689575,
+    "fn": 45,
+    "fp": 103,
+    "precision": 0.7876288890838623,
+    "predicted": 485,
+    "recall": 0.8946135640144348,
+    "support": 427,
+    "tp": 382
+   },
+   "sensitive_pii_email": {
+    "f05": 0.9869748950004578,
+    "f1": 0.9788020849227905,
+    "f2": 0.9707635045051575,
+    "f3": 0.9681131839752197,
+    "fn": 388,
+    "fp": 82,
+    "precision": 0.9924997687339783,
+    "predicted": 10933,
+    "recall": 0.9654773473739624,
+    "support": 11239,
+    "tp": 10851
+   },
+   "sensitive_pii_employment_date": {
+    "f05": 0.9933615326881409,
+    "f1": 0.9927065968513489,
+    "f2": 0.992052435874939,
+    "f3": 0.9918344616889954,
+    "fn": 42,
+    "fp": 31,
+    "precision": 0.9937987327575684,
+    "predicted": 4999,
+    "recall": 0.9916167855262756,
+    "support": 5010,
+    "tp": 4968
+   },
+   "sensitive_pii_employment_status": {
+    "f05": 0.6630242466926575,
+    "f1": 0.7032105922698975,
+    "f2": 0.7485828995704651,
+    "f3": 0.7650367021560669,
+    "fn": 125,
+    "fp": 254,
+    "precision": 0.6386913061141968,
+    "predicted": 703,
+    "recall": 0.7822299599647522,
+    "support": 574,
+    "tp": 449
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": 0.45315083861351013,
+    "f1": 0.5318559408187866,
+    "f2": 0.6436473727226257,
+    "f3": 0.6921413540840149,
+    "fn": 129,
+    "fp": 547,
+    "precision": 0.41245973110198975,
+    "predicted": 931,
+    "recall": 0.7485380172729492,
+    "support": 513,
+    "tp": 384
+   },
+   "sensitive_pii_full_name": {
+    "f05": 0.9508504867553711,
+    "f1": 0.914797842502594,
+    "f2": 0.8813793659210205,
+    "f3": 0.8707759976387024,
+    "fn": 1598,
+    "fp": 237,
+    "precision": 0.976506769657135,
+    "predicted": 10088,
+    "recall": 0.8604245185852051,
+    "support": 11449,
+    "tp": 9851
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": 0.6919317841529846,
+    "f1": 0.7815247774124146,
+    "f2": 0.8977702856063843,
+    "f3": 0.9446043372154236,
+    "fn": 12,
+    "fp": 1951,
+    "precision": 0.6428048610687256,
+    "predicted": 5462,
+    "recall": 0.9965938329696655,
+    "support": 3523,
+    "tp": 3511
+   },
+   "sensitive_pii_geolocation": {
+    "f05": 0.08772663027048111,
+    "f1": 0.13286934792995453,
+    "f2": 0.2737226188182831,
+    "f3": 0.4233017563819885,
+    "fn": 15,
+    "fp": 2726,
+    "precision": 0.07152588665485382,
+    "predicted": 2936,
+    "recall": 0.9333333373069763,
+    "support": 225,
+    "tp": 210
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": 0.9342632293701172,
+    "f1": 0.8972054123878479,
+    "f2": 0.8629754781723022,
+    "f3": 0.8521385788917542,
+    "fn": 686,
+    "fp": 149,
+    "precision": 0.9607170820236206,
+    "predicted": 3793,
+    "recall": 0.8415704369544983,
+    "support": 4330,
+    "tp": 3644
+   },
+   "sensitive_pii_income": {
+    "f05": 0.7692307829856873,
+    "f1": 0.5714285969734192,
+    "f2": 0.45454543828964233,
+    "f3": 0.42553192377090454,
+    "fn": 6,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 4,
+    "recall": 0.4000000059604645,
+    "support": 10,
+    "tp": 4
+   },
+   "sensitive_pii_ipv4": {
+    "f05": 0.9511384963989258,
+    "f1": 0.8891352415084839,
+    "f2": 0.834721028804779,
+    "f3": 0.8180333971977234,
+    "fn": 99,
+    "fp": 1,
+    "precision": 0.9975124597549438,
+    "predicted": 402,
+    "recall": 0.8019999861717224,
+    "support": 500,
+    "tp": 401
+   },
+   "sensitive_pii_ipv6": {
+    "f05": 0.9626216292381287,
+    "f1": 0.9115151762962341,
+    "f2": 0.8655616641044617,
+    "f3": 0.8512564897537231,
+    "fn": 73,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 376,
+    "recall": 0.8374164700508118,
+    "support": 449,
+    "tp": 376
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": 0.9322987198829651,
+    "f1": 0.9082443118095398,
+    "f2": 0.8853999972343445,
+    "f3": 0.8780384063720703,
+    "fn": 246,
+    "fp": 89,
+    "precision": 0.949055552482605,
+    "predicted": 1747,
+    "recall": 0.8707982897758484,
+    "support": 1904,
+    "tp": 1658
+   },
+   "sensitive_pii_mac_address": {
+    "f05": 0.969490110874176,
+    "f1": 0.9270632863044739,
+    "f2": 0.8881942629814148,
+    "f3": 0.8759521245956421,
+    "fn": 76,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 483,
+    "recall": 0.8640429377555847,
+    "support": 559,
+    "tp": 483
+   },
+   "sensitive_pii_marital_status": {
+    "f05": 0.6521739363670349,
+    "f1": 0.4285714626312256,
+    "f2": 0.3191489279270172,
+    "f3": 0.29411765933036804,
+    "fn": 8,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 3,
+    "recall": 0.27272728085517883,
+    "support": 11,
+    "tp": 3
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": 0.47654199600219727,
+    "f1": 0.5928718447685242,
+    "f2": 0.7843385338783264,
+    "f3": 0.8789578080177307,
+    "fn": 2,
+    "fp": 5938,
+    "precision": 0.4214167296886444,
+    "predicted": 10263,
+    "recall": 0.9995377659797668,
+    "support": 4327,
+    "tp": 4325
+   },
+   "sensitive_pii_nationality": {
+    "f05": 0.8517033457756042,
+    "f1": 0.8607594966888428,
+    "f2": 0.870010256767273,
+    "f3": 0.8731381893157959,
+    "fn": 24,
+    "fp": 31,
+    "precision": 0.8457711338996887,
+    "predicted": 201,
+    "recall": 0.876288652420044,
+    "support": 194,
+    "tp": 170
+   },
+   "sensitive_pii_passport_number": {
+    "f05": 0.9348102807998657,
+    "f1": 0.9004169702529907,
+    "f2": 0.8684646487236023,
+    "f3": 0.8583119511604309,
+    "fn": 656,
+    "fp": 156,
+    "precision": 0.9592369794845581,
+    "predicted": 3827,
+    "recall": 0.8483937978744507,
+    "support": 4327,
+    "tp": 3671
+   },
+   "sensitive_pii_password": {
+    "f05": 0.39501404762268066,
+    "f1": 0.5079007148742676,
+    "f2": 0.7111251354217529,
+    "f3": 0.8205689787864685,
+    "fn": 7,
+    "fp": 429,
+    "precision": 0.34403669834136963,
+    "predicted": 654,
+    "recall": 0.9698275923728943,
+    "support": 232,
+    "tp": 225
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": 0.9042553901672363,
+    "f1": 0.8994709253311157,
+    "f2": 0.8947370052337646,
+    "f3": 0.8931699991226196,
+    "fn": 31,
+    "fp": 26,
+    "precision": 0.9074733257293701,
+    "predicted": 281,
+    "recall": 0.8916084170341492,
+    "support": 286,
+    "tp": 255
+   },
+   "sensitive_pii_phone_number": {
+    "f05": 0.9638164043426514,
+    "f1": 0.942874550819397,
+    "f2": 0.922823429107666,
+    "f3": 0.9163278341293335,
+    "fn": 915,
+    "fp": 205,
+    "precision": 0.9783022999763489,
+    "predicted": 9448,
+    "recall": 0.9099231958389282,
+    "support": 10158,
+    "tp": 9243
+   },
+   "sensitive_pii_religion": {
+    "f05": 0.08823125809431076,
+    "f1": 0.13368010520935059,
+    "f2": 0.2756919264793396,
+    "f3": 0.4268394112586975,
+    "fn": 15,
+    "fp": 3316,
+    "precision": 0.07192835211753845,
+    "predicted": 3573,
+    "recall": 0.9448529481887817,
+    "support": 272,
+    "tp": 257
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": 0.04544838145375252,
+    "f1": 0.07067510485649109,
+    "f2": 0.1588430553674698,
+    "f3": 0.27191561460494995,
+    "fn": 8,
+    "fp": 3516,
+    "precision": 0.03671232983469963,
+    "predicted": 3650,
+    "recall": 0.9436619877815247,
+    "support": 142,
+    "tp": 134
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": 0.932191789150238,
+    "f1": 0.9065080285072327,
+    "f2": 0.8822014927864075,
+    "f3": 0.8743864893913269,
+    "fn": 422,
+    "fp": 144,
+    "precision": 0.950138509273529,
+    "predicted": 2888,
+    "recall": 0.8667087554931641,
+    "support": 3166,
+    "tp": 2744
+   },
+   "sensitive_pii_state": {
+    "f05": 0.9041579961776733,
+    "f1": 0.8738833665847778,
+    "f2": 0.84557044506073,
+    "f3": 0.836536169052124,
+    "fn": 947,
+    "fp": 366,
+    "precision": 0.9255340695381165,
+    "predicted": 4915,
+    "recall": 0.8276928663253784,
+    "support": 5496,
+    "tp": 4549
+   },
+   "sensitive_pii_username": {
+    "f05": 0.7566089034080505,
+    "f1": 0.652259349822998,
+    "f2": 0.5732044577598572,
+    "f3": 0.5509459376335144,
+    "fn": 147,
+    "fp": 30,
+    "precision": 0.8469387888908386,
+    "predicted": 196,
+    "recall": 0.530351459980011,
+    "support": 313,
+    "tp": 166
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": 0.8660714030265808,
+    "f1": 0.8960738778114319,
+    "f2": 0.9282296299934387,
+    "f3": 0.9394672513008118,
+    "fn": 10,
+    "fp": 35,
+    "precision": 0.847161591053009,
+    "predicted": 229,
+    "recall": 0.9509803652763367,
+    "support": 204,
+    "tp": 194
+   },
+   "sensitive_pii_visa_number": {
+    "f05": 0.9337520003318787,
+    "f1": 0.8955813050270081,
+    "f2": 0.8604088425636292,
+    "f3": 0.8492907285690308,
+    "fn": 699,
+    "fp": 147,
+    "precision": 0.9610596299171448,
+    "predicted": 3775,
+    "recall": 0.8384562134742737,
+    "support": 4327,
+    "tp": 3628
+   },
+   "sensitive_pii_zip_code": {
+    "f05": 0.9192901849746704,
+    "f1": 0.922935426235199,
+    "f2": 0.9266097545623779,
+    "f3": 0.9278410077095032,
+    "fn": 613,
+    "fp": 728,
+    "precision": 0.9168760180473328,
+    "predicted": 8758,
+    "recall": 0.9290755391120911,
+    "support": 8643,
+    "tp": 8030
+   }
+  },
+  "30000_pii2_eval_25.15k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": 0.9878516793251038,
+    "f1": 0.9840764999389648,
+    "f2": 0.9803299307823181,
+    "f3": 0.9790875315666199,
+    "fn": 7,
+    "fp": 3,
+    "precision": 0.9903846383094788,
+    "predicted": 312,
+    "recall": 0.9778481125831604,
+    "support": 316,
+    "tp": 309
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": 1.0,
+    "f1": 1.0,
+    "f2": 1.0,
+    "f3": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 309,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_credit_card": {
+    "f05": 0.9872204065322876,
+    "f1": 0.9919742941856384,
+    "f2": 0.9967741370201111,
+    "f3": 0.9983844757080078,
+    "fn": 0,
+    "fp": 5,
+    "precision": 0.9840764403343201,
+    "predicted": 314,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": 0.9531152844429016,
+    "f1": 0.9701727032661438,
+    "f2": 0.9878516793251038,
+    "f3": 0.9938886761665344,
+    "fn": 0,
+    "fp": 19,
+    "precision": 0.9420731663703918,
+    "predicted": 328,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": 0.9797083139419556,
+    "f1": 0.9872204661369324,
+    "f2": 0.9948486685752869,
+    "f3": 0.9974176287651062,
+    "fn": 0,
+    "fp": 8,
+    "precision": 0.9747633934020996,
+    "predicted": 317,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_credit_score": {
+    "f05": 1.0,
+    "f1": 1.0,
+    "f2": 1.0,
+    "f3": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 309,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 6,
+    "precision": 0.0,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": 1.0,
+    "f1": 1.0,
+    "f2": 1.0,
+    "f3": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 309,
+    "recall": 1.0,
+    "support": 309,
+    "tp": 309
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": 0.989847719669342,
+    "f1": 0.993630588054657,
+    "f2": 0.9974424839019775,
+    "f3": 0.9987195730209351,
+    "fn": 0,
+    "fp": 3,
+    "precision": 0.9873417615890503,
+    "predicted": 237,
+    "recall": 1.0,
+    "support": 234,
+    "tp": 234
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": 0.9942085146903992,
+    "f1": 0.9951691031455994,
+    "f2": 0.9961315989494324,
+    "f3": 0.9964528679847717,
+    "fn": 1,
+    "fp": 2,
+    "precision": 0.9935691356658936,
+    "predicted": 311,
+    "recall": 0.9967741966247559,
+    "support": 310,
+    "tp": 309
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": 0.9996262788772583,
+    "f1": 0.9990662336349487,
+    "f2": 0.9985069632530212,
+    "f3": 0.9983205795288086,
+    "fn": 1,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 535,
+    "recall": 0.9981343150138855,
+    "support": 536,
+    "tp": 535
+   },
+   "sensitive_phi_icd_10": {
+    "f05": 0.9966468214988708,
+    "f1": 0.9972041249275208,
+    "f2": 0.9977620244026184,
+    "f3": 0.997948169708252,
+    "fn": 1,
+    "fp": 2,
+    "precision": 0.9962756037712097,
+    "predicted": 537,
+    "recall": 0.9981343150138855,
+    "support": 536,
+    "tp": 535
+   },
+   "sensitive_phi_icd_code": {
+    "f05": 0.9996262788772583,
+    "f1": 0.9990662336349487,
+    "f2": 0.9985069632530212,
+    "f3": 0.9983205795288086,
+    "fn": 1,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 535,
+    "recall": 0.9981343150138855,
+    "support": 536,
+    "tp": 535
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": 0.9128154516220093,
+    "f1": 0.8107714653015137,
+    "f2": 0.7292485237121582,
+    "f3": 0.7055992484092712,
+    "fn": 258,
+    "fp": 2,
+    "precision": 0.9964221715927124,
+    "predicted": 559,
+    "recall": 0.6834355592727661,
+    "support": 815,
+    "tp": 557
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": 0.9809314012527466,
+    "f1": 0.9879962801933289,
+    "f2": 0.9951636791229248,
+    "f3": 0.9975759983062744,
+    "fn": 0,
+    "fp": 13,
+    "precision": 0.9762773513793945,
+    "predicted": 548,
+    "recall": 1.0,
+    "support": 535,
+    "tp": 535
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": 0.9743311405181885,
+    "f1": 0.9456140398979187,
+    "f2": 0.9185412526130676,
+    "f3": 0.909858226776123,
+    "fn": 59,
+    "fp": 3,
+    "precision": 0.9944649338722229,
+    "predicted": 542,
+    "recall": 0.9013378024101257,
+    "support": 598,
+    "tp": 539
+   },
+   "sensitive_phi_medication": {
+    "f05": 0.9836065769195557,
+    "f1": 0.9600000381469727,
+    "f2": 0.9374999403953552,
+    "f3": 0.930232584476471,
+    "fn": 27,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 324,
+    "recall": 0.9230769276618958,
+    "support": 351,
+    "tp": 324
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": 0.9987669587135315,
+    "f1": 0.9969230890274048,
+    "f2": 0.9950859546661377,
+    "f3": 0.9944751262664795,
+    "fn": 2,
+    "fp": 0,
+    "precision": 1.0,
+    "predicted": 324,
+    "recall": 0.9938650131225586,
+    "support": 326,
+    "tp": 324
+   },
+   "sensitive_pii_address": {
+    "f05": 0.7426196336746216,
+    "f1": 0.7626890540122986,
+    "f2": 0.783873438835144,
+    "f3": 0.7911988496780396,
+    "fn": 572,
+    "fp": 840,
+    "precision": 0.7298166751861572,
+    "predicted": 3109,
+    "recall": 0.7986624240875244,
+    "support": 2841,
+    "tp": 2269
+   },
+   "sensitive_pii_age": {
+    "f05": 0.8867153525352478,
+    "f1": 0.8947939276695251,
+    "f2": 0.903020977973938,
+    "f3": 0.9057971239089966,
+    "fn": 249,
+    "fp": 333,
+    "precision": 0.8814102411270142,
+    "predicted": 2808,
+    "recall": 0.9085903167724609,
+    "support": 2724,
+    "tp": 2475
+   },
+   "sensitive_pii_area_code": {
+    "f05": 0.8452761769294739,
+    "f1": 0.8027750253677368,
+    "f2": 0.7643431425094604,
+    "f3": 0.7523375153541565,
+    "fn": 1276,
+    "fp": 515,
+    "precision": 0.8762019276618958,
+    "predicted": 4160,
+    "recall": 0.7407031059265137,
+    "support": 4921,
+    "tp": 3645
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": 0.9598976373672485,
+    "f1": 0.9513742327690125,
+    "f2": 0.9430009126663208,
+    "f3": 0.9402424693107605,
+    "fn": 15,
+    "fp": 8,
+    "precision": 0.9656652212142944,
+    "predicted": 233,
+    "recall": 0.9375,
+    "support": 240,
+    "tp": 225
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": 0.752895712852478,
+    "f1": 0.7358490228652954,
+    "f2": 0.7195571660995483,
+    "f3": 0.7142857313156128,
+    "fn": 144,
+    "fp": 108,
+    "precision": 0.7647058963775635,
+    "predicted": 459,
+    "recall": 0.7090908885002136,
+    "support": 495,
+    "tp": 351
+   },
+   "sensitive_pii_county": {
+    "f05": 0.33898302912712097,
+    "f1": 0.37905237078666687,
+    "f2": 0.42986422777175903,
+    "f3": 0.44997039437294006,
+    "fn": 85,
+    "fp": 164,
+    "precision": 0.3166666626930237,
+    "predicted": 240,
+    "recall": 0.47204968333244324,
+    "support": 161,
+    "tp": 76
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": 0.7274019718170166,
+    "f1": 0.8068331480026245,
+    "f2": 0.905738353729248,
+    "f3": 0.9443248510360718,
+    "fn": 17,
+    "fp": 571,
+    "precision": 0.6826014518737793,
+    "predicted": 1799,
+    "recall": 0.9863454103469849,
+    "support": 1245,
+    "tp": 1228
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": 0.0012866228353232145,
+    "f1": 0.002055196790024638,
+    "f2": 0.005104273557662964,
+    "f3": 0.010098096914589405,
+    "fn": 8,
+    "fp": 6790,
+    "precision": 0.0010298661654815078,
+    "predicted": 6797,
+    "recall": 0.46666666865348816,
+    "support": 15,
+    "tp": 7
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": 0.9716060161590576,
+    "f1": 0.9820627570152283,
+    "f2": 0.9927470684051514,
+    "f3": 0.9963603615760803,
+    "fn": 0,
+    "fp": 8,
+    "precision": 0.9647576808929443,
+    "predicted": 227,
+    "recall": 1.0,
+    "support": 219,
+    "tp": 219
+   },
+   "sensitive_pii_educational_level": {
+    "f05": 0.7797896862030029,
+    "f1": 0.8066465258598328,
+    "f2": 0.835419237613678,
+    "f3": 0.8454717993736267,
+    "fn": 45,
+    "fp": 83,
+    "precision": 0.7628571391105652,
+    "predicted": 350,
+    "recall": 0.8557692170143127,
+    "support": 312,
+    "tp": 267
+   },
+   "sensitive_pii_email": {
+    "f05": 0.963708758354187,
+    "f1": 0.9538316130638123,
+    "f2": 0.9441548585891724,
+    "f3": 0.9409727454185486,
+    "fn": 735,
+    "fp": 338,
+    "precision": 0.9704079627990723,
+    "predicted": 11422,
+    "recall": 0.9378119707107544,
+    "support": 11819,
+    "tp": 11084
+   },
+   "sensitive_pii_employment_date": {
+    "f05": 0.9257813096046448,
+    "f1": 0.9045801162719727,
+    "f2": 0.8843283653259277,
+    "f3": 0.8777777552604675,
+    "fn": 35,
+    "fp": 15,
+    "precision": 0.9404761791229248,
+    "predicted": 252,
+    "recall": 0.8713235259056091,
+    "support": 272,
+    "tp": 237
+   },
+   "sensitive_pii_employment_status": {
+    "f05": 0.48125791549682617,
+    "f1": 0.5381882786750793,
+    "f2": 0.6103948354721069,
+    "f3": 0.6389709711074829,
+    "fn": 149,
+    "fp": 371,
+    "precision": 0.4495548903942108,
+    "predicted": 674,
+    "recall": 0.6703540086746216,
+    "support": 452,
+    "tp": 303
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": 0.1258992701768875,
+    "f1": 0.0710659921169281,
+    "f2": 0.049504950642585754,
+    "f3": 0.04495825245976448,
+    "fn": 326,
+    "fp": 40,
+    "precision": 0.25925925374031067,
+    "predicted": 54,
+    "recall": 0.04117647185921669,
+    "support": 340,
+    "tp": 14
+   },
+   "sensitive_pii_full_name": {
+    "f05": 0.9217578768730164,
+    "f1": 0.8773712515830994,
+    "f2": 0.8370630145072937,
+    "f3": 0.8244375586509705,
+    "fn": 1877,
+    "fp": 392,
+    "precision": 0.9539311528205872,
+    "predicted": 8509,
+    "recall": 0.8121873140335083,
+    "support": 9994,
+    "tp": 8117
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": 0.018635321408510208,
+    "f1": 0.02911534160375595,
+    "f2": 0.06653019785881042,
+    "f3": 0.11638316512107849,
+    "fn": 15,
+    "fp": 852,
+    "precision": 0.015028901398181915,
+    "predicted": 865,
+    "recall": 0.4642857015132904,
+    "support": 28,
+    "tp": 13
+   },
+   "sensitive_pii_geolocation": {
+    "f05": 0.008178438991308212,
+    "f1": 0.012873025611042976,
+    "f2": 0.030219782143831253,
+    "f3": 0.054862841963768005,
+    "fn": 26,
+    "fp": 1661,
+    "precision": 0.00657894741743803,
+    "predicted": 1672,
+    "recall": 0.29729729890823364,
+    "support": 37,
+    "tp": 11
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": 0.9808195233345032,
+    "f1": 0.9719222187995911,
+    "f2": 0.9631849527359009,
+    "f3": 0.9603073000907898,
+    "fn": 10,
+    "fp": 3,
+    "precision": 0.9868420958518982,
+    "predicted": 228,
+    "recall": 0.957446813583374,
+    "support": 235,
+    "tp": 225
+   },
+   "sensitive_pii_income": {
+    "f05": 0.9758132100105286,
+    "f1": 0.9531567692756653,
+    "f2": 0.9315287470817566,
+    "f3": 0.9245357513427734,
+    "fn": 21,
+    "fp": 2,
+    "precision": 0.991525411605835,
+    "predicted": 236,
+    "recall": 0.9176470637321472,
+    "support": 255,
+    "tp": 234
+   },
+   "sensitive_pii_ipv4": {
+    "f05": 0.9153439402580261,
+    "f1": 0.8770595788955688,
+    "f2": 0.8418492078781128,
+    "f3": 0.8307322859764099,
+    "fn": 76,
+    "fp": 21,
+    "precision": 0.9427793025970459,
+    "predicted": 367,
+    "recall": 0.8199052214622498,
+    "support": 422,
+    "tp": 346
+   },
+   "sensitive_pii_ipv6": {
+    "f05": 0.8206957578659058,
+    "f1": 0.8782816529273987,
+    "f2": 0.9445585608482361,
+    "f3": 0.9689309597015381,
+    "fn": 1,
+    "fp": 50,
+    "precision": 0.7863247990608215,
+    "predicted": 234,
+    "recall": 0.9945945739746094,
+    "support": 185,
+    "tp": 184
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": 0.9248269200325012,
+    "f1": 0.944444477558136,
+    "f2": 0.9649122953414917,
+    "f3": 0.9719335436820984,
+    "fn": 4,
+    "fp": 18,
+    "precision": 0.9121951460838318,
+    "predicted": 205,
+    "recall": 0.9790576100349426,
+    "support": 191,
+    "tp": 187
+   },
+   "sensitive_pii_marital_status": {
+    "f05": 0.9748428463935852,
+    "f1": 0.9447618722915649,
+    "f2": 0.9164820313453674,
+    "f3": 0.9074277877807617,
+    "fn": 28,
+    "fp": 1,
+    "precision": 0.9959839582443237,
+    "predicted": 249,
+    "recall": 0.8985507488250732,
+    "support": 276,
+    "tp": 248
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": 0.00010998437937814742,
+    "f1": 0.00017596340330783278,
+    "f2": 0.0004397924349177629,
+    "f3": 0.0008791981963440776,
+    "fn": 0,
+    "fp": 11364,
+    "precision": 8.798944327281788e-05,
+    "predicted": 11365,
+    "recall": 1.0,
+    "support": 1,
+    "tp": 1
+   },
+   "sensitive_pii_nationality": {
+    "f05": 0.8858944177627563,
+    "f1": 0.8933863043785095,
+    "f2": 0.9010059833526611,
+    "f3": 0.9035747647285461,
+    "fn": 128,
+    "fp": 167,
+    "precision": 0.8809693455696106,
+    "predicted": 1403,
+    "recall": 0.9061583280563354,
+    "support": 1364,
+    "tp": 1236
+   },
+   "sensitive_pii_passport_number": {
+    "f05": 0.9774109125137329,
+    "f1": 0.9825326800346375,
+    "f2": 0.9877084493637085,
+    "f3": 0.9894459247589111,
+    "fn": 2,
+    "fp": 6,
+    "precision": 0.9740259647369385,
+    "predicted": 231,
+    "recall": 0.9911894202232361,
+    "support": 227,
+    "tp": 225
+   },
+   "sensitive_pii_password": {
+    "f05": 0.5324602127075195,
+    "f1": 0.638225257396698,
+    "f2": 0.79642254114151,
+    "f3": 0.8681523203849792,
+    "fn": 9,
+    "fp": 203,
+    "precision": 0.47948718070983887,
+    "predicted": 390,
+    "recall": 0.954081654548645,
+    "support": 196,
+    "tp": 187
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": 0.9773217439651489,
+    "f1": 0.9836956858634949,
+    "f2": 0.9901531338691711,
+    "f3": 0.9923245310783386,
+    "fn": 1,
+    "fp": 5,
+    "precision": 0.9731183052062988,
+    "predicted": 186,
+    "recall": 0.9945054650306702,
+    "support": 182,
+    "tp": 181
+   },
+   "sensitive_pii_phone_number": {
+    "f05": 0.8746770024299622,
+    "f1": 0.8383252024650574,
+    "f2": 0.8048743605613708,
+    "f3": 0.7943095564842224,
+    "fn": 1492,
+    "fp": 597,
+    "precision": 0.9007151126861572,
+    "predicted": 6013,
+    "recall": 0.7840185165405273,
+    "support": 6908,
+    "tp": 5416
+   },
+   "sensitive_pii_religion": {
+    "f05": 0.04965859651565552,
+    "f1": 0.07619047164916992,
+    "f2": 0.1635991781949997,
+    "f3": 0.26490065455436707,
+    "fn": 14,
+    "fp": 762,
+    "precision": 0.04030226543545723,
+    "predicted": 794,
+    "recall": 0.695652186870575,
+    "support": 46,
+    "tp": 32
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": 0.030549898743629456,
+    "f1": 0.04633204638957977,
+    "f2": 0.09584664553403854,
+    "f3": 0.1488833725452423,
+    "fn": 36,
+    "fp": 705,
+    "precision": 0.02489626593887806,
+    "predicted": 723,
+    "recall": 0.3333333432674408,
+    "support": 54,
+    "tp": 18
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": 0.9751036763191223,
+    "f1": 0.9812108874320984,
+    "f2": 0.9873949289321899,
+    "f3": 0.9894736409187317,
+    "fn": 2,
+    "fp": 7,
+    "precision": 0.9710744023323059,
+    "predicted": 242,
+    "recall": 0.9915611743927002,
+    "support": 237,
+    "tp": 235
+   },
+   "sensitive_pii_state": {
+    "f05": 0.7511525750160217,
+    "f1": 0.7416611909866333,
+    "f2": 0.732406735420227,
+    "f3": 0.7293730974197388,
+    "fn": 1068,
+    "fp": 907,
+    "precision": 0.7576162219047546,
+    "predicted": 3742,
+    "recall": 0.7263643145561218,
+    "support": 3903,
+    "tp": 2835
+   },
+   "sensitive_pii_username": {
+    "f05": 0.8346840143203735,
+    "f1": 0.7744360566139221,
+    "f2": 0.7223001718521118,
+    "f3": 0.706447184085846,
+    "fn": 92,
+    "fp": 28,
+    "precision": 0.8803418874740601,
+    "predicted": 234,
+    "recall": 0.6912751793861389,
+    "support": 298,
+    "tp": 206
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": 0.9820627570152283,
+    "f1": 0.9887133836746216,
+    "f2": 0.9954546093940735,
+    "f3": 0.9977220892906189,
+    "fn": 0,
+    "fp": 5,
+    "precision": 0.9776785969734192,
+    "predicted": 224,
+    "recall": 1.0,
+    "support": 219,
+    "tp": 219
+   },
+   "sensitive_pii_visa_number": {
+    "f05": 0.9774109125137329,
+    "f1": 0.9825326800346375,
+    "f2": 0.9877084493637085,
+    "f3": 0.9894459247589111,
+    "fn": 2,
+    "fp": 6,
+    "precision": 0.9740259647369385,
+    "predicted": 231,
+    "recall": 0.9911894202232361,
+    "support": 227,
+    "tp": 225
+   },
+   "sensitive_pii_zip_code": {
+    "f05": 0.7913209199905396,
+    "f1": 0.8082046508789062,
+    "f2": 0.8258246183395386,
+    "f3": 0.831869900226593,
+    "fn": 815,
+    "fp": 1186,
+    "precision": 0.7804516553878784,
+    "predicted": 5402,
+    "recall": 0.8380043506622314,
+    "support": 5031,
+    "tp": 4216
+   }
+  },
+  "38937_openpii_pii_eval_38.94k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 3,
+    "precision": 0.0,
+    "predicted": 3,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card": {
+    "f05": 0.9849091172218323,
+    "f1": 0.9672831892967224,
+    "f2": 0.9502770900726318,
+    "f3": 0.9447405338287354,
+    "fn": 541,
+    "fp": 25,
+    "precision": 0.997020959854126,
+    "predicted": 8392,
+    "recall": 0.9392680525779724,
+    "support": 8908,
+    "tp": 8367
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": 0.9896366000175476,
+    "f1": 0.979016125202179,
+    "f2": 0.9686212539672852,
+    "f3": 0.9652050733566284,
+    "fn": 1054,
+    "fp": 84,
+    "precision": 0.9968457818031311,
+    "predicted": 26631,
+    "recall": 0.9618129730224609,
+    "support": 27601,
+    "tp": 26547
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": 0.9867194294929504,
+    "f1": 0.9729481339454651,
+    "f2": 0.9595559239387512,
+    "f3": 0.9551733732223511,
+    "fn": 438,
+    "fp": 33,
+    "precision": 0.9961190223693848,
+    "predicted": 8503,
+    "recall": 0.9508306980133057,
+    "support": 8908,
+    "tp": 8470
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": 0.7890260219573975,
+    "f1": 0.7099508047103882,
+    "f2": 0.6452815532684326,
+    "f3": 0.6262660622596741,
+    "fn": 3344,
+    "fp": 900,
+    "precision": 0.852313756942749,
+    "predicted": 6094,
+    "recall": 0.6083391904830933,
+    "support": 8538,
+    "tp": 5194
+   },
+   "sensitive_pci_iban": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 1,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 1,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": 0.9446697235107422,
+    "f1": 0.906840980052948,
+    "f2": 0.8719251155853271,
+    "f3": 0.8608763813972473,
+    "fn": 1150,
+    "fp": 190,
+    "precision": 0.9716925024986267,
+    "predicted": 6712,
+    "recall": 0.8501042723655701,
+    "support": 7672,
+    "tp": 6522
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": 0.9861721396446228,
+    "f1": 0.9714679718017578,
+    "f2": 0.9571959376335144,
+    "f3": 0.9525313377380371,
+    "fn": 464,
+    "fp": 32,
+    "precision": 0.9962246417999268,
+    "predicted": 8476,
+    "recall": 0.9479119777679443,
+    "support": 8908,
+    "tp": 8444
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": 0.8365503549575806,
+    "f1": 0.8849431276321411,
+    "f2": 0.9392784833908081,
+    "f3": 0.9589040875434875,
+    "fn": 315,
+    "fp": 3573,
+    "precision": 0.8071255087852478,
+    "predicted": 18525,
+    "recall": 0.9793672561645508,
+    "support": 15267,
+    "tp": 14952
+   },
+   "sensitive_pii_age": {
+    "f05": 0.9412791132926941,
+    "f1": 0.8963634967803955,
+    "f2": 0.8555393218994141,
+    "f3": 0.8427452445030212,
+    "fn": 2249,
+    "fp": 296,
+    "precision": 0.9738099575042725,
+    "predicted": 11302,
+    "recall": 0.8303281664848328,
+    "support": 13255,
+    "tp": 11006
+   },
+   "sensitive_pii_area_code": {
+    "f05": 0.9485430717468262,
+    "f1": 0.9145763516426086,
+    "f2": 0.8829581141471863,
+    "f3": 0.8728989958763123,
+    "fn": 2097,
+    "fp": 372,
+    "precision": 0.9726248979568481,
+    "predicted": 13589,
+    "recall": 0.8630664944648743,
+    "support": 15314,
+    "tp": 13217
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 3,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 3,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 3,
+    "fp": 4,
+    "precision": 0.0,
+    "predicted": 4,
+    "recall": 0.0,
+    "support": 3,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 142,
+    "precision": 0.0,
+    "predicted": 142,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 197,
+    "precision": 0.0,
+    "predicted": 197,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": 0.7608290910720825,
+    "f1": 0.8336428999900818,
+    "f2": 0.9218688011169434,
+    "f3": 0.9555789828300476,
+    "fn": 225,
+    "fp": 10701,
+    "precision": 0.7189642190933228,
+    "predicted": 38077,
+    "recall": 0.9918481111526489,
+    "support": 27601,
+    "tp": 27376
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": 0.7942908406257629,
+    "f1": 0.711822509765625,
+    "f2": 0.6448682546615601,
+    "f3": 0.625264048576355,
+    "fn": 3357,
+    "fp": 838,
+    "precision": 0.8607742190361023,
+    "predicted": 6019,
+    "recall": 0.6068165898323059,
+    "support": 8538,
+    "tp": 5181
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 2,
+    "precision": 0.0,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": 0.998910665512085,
+    "f1": 0.9985902309417725,
+    "f2": 0.99826979637146,
+    "f3": 0.9981631636619568,
+    "fn": 40,
+    "fp": 18,
+    "precision": 0.9991244673728943,
+    "predicted": 20559,
+    "recall": 0.9980564713478088,
+    "support": 20581,
+    "tp": 20541
+   },
+   "sensitive_pii_employment_date": {
+    "f05": 0.9892773628234863,
+    "f1": 0.9780918955802917,
+    "f2": 0.9671568870544434,
+    "f3": 0.9635658264160156,
+    "fn": 1104,
+    "fp": 83,
+    "precision": 0.9968773722648621,
+    "predicted": 26580,
+    "recall": 0.9600014686584473,
+    "support": 27601,
+    "tp": 26497
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 3,
+    "precision": 0.0,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 7,
+    "precision": 0.0,
+    "predicted": 7,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": 0.9484206438064575,
+    "f1": 0.9225040078163147,
+    "f2": 0.897966206073761,
+    "f3": 0.8900743126869202,
+    "fn": 3585,
+    "fp": 931,
+    "precision": 0.9665228128433228,
+    "predicted": 27810,
+    "recall": 0.8823201060295105,
+    "support": 30464,
+    "tp": 26879
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": 0.5325161218643188,
+    "f1": 0.6445980668067932,
+    "f2": 0.8164389729499817,
+    "f3": 0.8960651159286499,
+    "fn": 71,
+    "fp": 10880,
+    "precision": 0.4771995544433594,
+    "predicted": 20811,
+    "recall": 0.9929014444351196,
+    "support": 10002,
+    "tp": 9931
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1500,
+    "precision": 0.0,
+    "predicted": 1500,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": 0.8842666149139404,
+    "f1": 0.8386333584785461,
+    "f2": 0.7974787950515747,
+    "f3": 0.7846437692642212,
+    "fn": 3135,
+    "fp": 955,
+    "precision": 0.917551577091217,
+    "predicted": 11583,
+    "recall": 0.7722153663635254,
+    "support": 13763,
+    "tp": 10628
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 2,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": 0.0,
+    "support": 2,
+    "tp": 0
+   },
+   "sensitive_pii_ipv6": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": 0.9044107794761658,
+    "f1": 0.8573039174079895,
+    "f2": 0.8148613572120667,
+    "f3": 0.8016325831413269,
+    "fn": 1425,
+    "fp": 347,
+    "precision": 0.9388006925582886,
+    "predicted": 5670,
+    "recall": 0.7888263463973999,
+    "support": 6748,
+    "tp": 5323
+   },
+   "sensitive_pii_mac_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": 0.409915030002594,
+    "f1": 0.5252700448036194,
+    "f2": 0.730975329875946,
+    "f3": 0.8407227993011475,
+    "fn": 148,
+    "fp": 24462,
+    "precision": 0.35756492614746094,
+    "predicted": 38077,
+    "recall": 0.9892465472221375,
+    "support": 13763,
+    "tp": 13615
+   },
+   "sensitive_pii_nationality": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 3,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 3,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": 0.8855485916137695,
+    "f1": 0.8414384722709656,
+    "f2": 0.8015141487121582,
+    "f3": 0.7890347838401794,
+    "fn": 3070,
+    "fp": 960,
+    "precision": 0.9176177978515625,
+    "predicted": 11653,
+    "recall": 0.7769381403923035,
+    "support": 13763,
+    "tp": 10693
+   },
+   "sensitive_pii_password": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1223,
+    "precision": 0.0,
+    "predicted": 1223,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 10,
+    "precision": 0.0,
+    "predicted": 10,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_phone_number": {
+    "f05": 0.9573261737823486,
+    "f1": 0.9278088808059692,
+    "f2": 0.9000571966171265,
+    "f3": 0.8911719918251038,
+    "fn": 1800,
+    "fp": 303,
+    "precision": 0.9780704975128174,
+    "predicted": 13817,
+    "recall": 0.8824604749679565,
+    "support": 15314,
+    "tp": 13514
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1668,
+    "precision": 0.0,
+    "predicted": 1668,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 1374,
+    "precision": 0.0,
+    "predicted": 1374,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": 0.9108202457427979,
+    "f1": 0.8817791938781738,
+    "f2": 0.8545328378677368,
+    "f3": 0.8458210229873657,
+    "fn": 1098,
+    "fp": 417,
+    "precision": 0.931267499923706,
+    "predicted": 6067,
+    "recall": 0.8372851014137268,
+    "support": 6748,
+    "tp": 5650
+   },
+   "sensitive_pii_state": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 5,
+    "precision": 0.0,
+    "predicted": 5,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_username": {
+    "f05": 0.0,
+    "f1": 0.0,
+    "f2": 0.0,
+    "f3": 0.0,
+    "fn": 2,
+    "fp": 1,
+    "precision": 0.0,
+    "predicted": 1,
+    "recall": 0.0,
+    "support": 2,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 22,
+    "precision": 0.0,
+    "predicted": 22,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_visa_number": {
+    "f05": 0.8851079344749451,
+    "f1": 0.838268518447876,
+    "f2": 0.7961372137069702,
+    "f3": 0.7830190658569336,
+    "fn": 3161,
+    "fp": 930,
+    "precision": 0.9193548560142517,
+    "predicted": 11532,
+    "recall": 0.7703262567520142,
+    "support": 13763,
+    "tp": 10602
+   },
+   "sensitive_pii_zip_code": {
+    "f05": 0.8670969605445862,
+    "f1": 0.8931689858436584,
+    "f2": 0.9208576679229736,
+    "f3": 0.9304725527763367,
+    "fn": 773,
+    "fp": 2139,
+    "precision": 0.8505449891090393,
+    "predicted": 14312,
+    "recall": 0.9402904510498047,
+    "support": 12946,
+    "tp": 12173
+   }
+  },
+  "4000_datax-dualjudge-evalset-1.32k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 9,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 5,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 12,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 131,
+    "fp": 0,
+    "precision": null,
+    "predicted": 752,
+    "recall": 0.6257143020629883,
+    "support": 350,
+    "tp": 219
+   },
+   "sensitive_pii_age": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 71,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_area_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 25,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 10,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 68,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 171,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 288,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 447,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 5,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 79,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 224,
+    "fp": 0,
+    "precision": null,
+    "predicted": 595,
+    "recall": 0.6641679406166077,
+    "support": 667,
+    "tp": 443
+   },
+   "sensitive_pii_employment_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 14,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 176,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 48,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1118,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 302,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 369,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv6": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 5,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 645,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_nationality": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 19,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_password": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 7,
+    "fp": 0,
+    "precision": null,
+    "predicted": 48,
+    "recall": 0.4166666567325592,
+    "support": 12,
+    "tp": 5
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_phone_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 450,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 163,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 103,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_state": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 294,
+    "fp": 0,
+    "precision": null,
+    "predicted": 527,
+    "recall": 0.5362775921821594,
+    "support": 634,
+    "tp": 340
+   },
+   "sensitive_pii_username": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 16,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_visa_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_zip_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 496,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   }
+  },
+  "5617_nemotron_eval_5.36k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1298,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 220,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 811,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 33,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 9,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 235,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 6,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 802,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1472,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1279,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_age": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 342,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_area_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 24,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1012,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 657,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1539,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2284,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 19,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 319,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1557,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 36,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 533,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 638,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2475,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1361,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2142,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 12,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 101,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv6": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 36,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 15,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 115,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3225,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_nationality": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 23,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_password": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 825,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 234,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_phone_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 756,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3466,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 3388,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 652,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_state": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 564,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_username": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 102,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 75,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_visa_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 13,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_zip_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 323,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   }
+  },
+  "6589_govdocs2-dualjudge-eval20-3.53k": {
+   "sensitive_pci_bank_account_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 3,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 3,
+    "tp": 0
+   },
+   "sensitive_pci_card_verification_value_cvv": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_expiration_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_card_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_credit_score": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_financial_instrument_global_identifier_figi": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_iban": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_individual_taxpayer_identification_number_itin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_last_four_credit_card_number_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_routing_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pci_swift_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_health_plan_beneficiary_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 2,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": 0.0,
+    "support": 2,
+    "tp": 0
+   },
+   "sensitive_phi_icd_10": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_icd_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_condition": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_record_number_mrn": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 5,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medical_treatment": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_medication": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_phi_patient_id_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 423,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1090,
+    "recall": 0.5252525210380554,
+    "support": 891,
+    "tp": 468
+   },
+   "sensitive_pii_age": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 29,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_area_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 121,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_origin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_country_of_residence": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 44,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_county": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 56,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_birth_dob": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 20,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_date_of_death": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 362,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_driver_s_license_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_educational_level": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 49,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_email": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 420,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1001,
+    "recall": 0.6793892979621887,
+    "support": 1310,
+    "tp": 890
+   },
+   "sensitive_pii_employment_date": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_employment_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 203,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ethnicity": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 13,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_full_name": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 1449,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1993,
+    "recall": 0.5493001341819763,
+    "support": 3215,
+    "tp": 1766
+   },
+   "sensitive_pii_gender_and_sex": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 96,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_geolocation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 324,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_immigration_and_citizenship_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_income": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv4": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 4,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_ipv6": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_last_four_us_ssn_digits": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_mac_address": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_marital_status": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_military_identification_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 567,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_nationality": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_passport_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_password": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 8,
+    "fp": 0,
+    "precision": null,
+    "predicted": 22,
+    "recall": 0.1111111119389534,
+    "support": 9,
+    "tp": 1
+   },
+   "sensitive_pii_personal_identification_number_pin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 0,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_phone_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 626,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1078,
+    "recall": 0.602034330368042,
+    "support": 1573,
+    "tp": 947
+   },
+   "sensitive_pii_religion": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 63,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_sexual_identity_and_orientation": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 53,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_social_security_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 3,
+    "fp": 0,
+    "precision": null,
+    "predicted": 2,
+    "recall": 0.25,
+    "support": 4,
+    "tp": 1
+   },
+   "sensitive_pii_state": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 596,
+    "fp": 0,
+    "precision": null,
+    "predicted": 678,
+    "recall": 0.3905930519104004,
+    "support": 978,
+    "tp": 382
+   },
+   "sensitive_pii_username": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 61,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_vehicle_identification_number_vin": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_visa_number": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 0,
+    "fp": 0,
+    "precision": null,
+    "predicted": 1,
+    "recall": null,
+    "support": 0,
+    "tp": 0
+   },
+   "sensitive_pii_zip_code": {
+    "f05": null,
+    "f1": null,
+    "f2": null,
+    "f3": null,
+    "fn": 497,
+    "fp": 0,
+    "precision": null,
+    "predicted": 791,
+    "recall": 0.44777777791023254,
+    "support": 900,
+    "tp": 403
+   }
+  }
+ },
+ "scopes": {
+  "doc@30000_pii2_eval_25.15k": {
+   "doc_f1": {
+    "ci_high": 0.9566050171852112,
+    "ci_low": 0.9528425335884094,
+    "support": 25149,
+    "value": 0.9546659056626849
+   },
+   "doc_precision": {
+    "ci_high": 0.9812306761741638,
+    "ci_low": 0.9777074456214905,
+    "support": 23909,
+    "value": 0.979421974988498
+   },
+   "doc_recall": {
+    "ci_high": 0.9342185258865356,
+    "ci_low": 0.928059458732605,
+    "support": 25149,
+    "value": 0.9311304624438348
+   },
+   "doc_specificity": {
+    "ci_high": 0.9075495600700378,
+    "ci_low": 0.8905261158943176,
+    "support": 4851,
+    "value": 0.8985776128633272
+   }
+  },
+  "doc@4000_datax-dualjudge-evalset-1.32k": {
+   "doc_f1": {
+    "ci_high": 0.7618528008460999,
+    "ci_low": 0.729456901550293,
+    "support": 1913,
+    "value": 0.746337259408216
+   },
+   "doc_precision": {
+    "ci_high": 0.846574068069458,
+    "ci_low": 0.8101754784584045,
+    "support": 1568,
+    "value": 0.8284438775510204
+   },
+   "doc_recall": {
+    "ci_high": 0.700476348400116,
+    "ci_low": 0.6576043963432312,
+    "support": 1913,
+    "value": 0.6790381599581808
+   },
+   "doc_specificity": {
+    "ci_high": 0.8850096464157104,
+    "ci_low": 0.8563736081123352,
+    "support": 2087,
+    "value": 0.8711068519405846
+   }
+  },
+  "doc@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "doc_f1": {
+    "ci_high": 0.7520288825035095,
+    "ci_low": 0.727179765701294,
+    "support": 3484,
+    "value": 0.7401471790678659
+   },
+   "doc_precision": {
+    "ci_high": 0.8723654747009277,
+    "ci_low": 0.8474019169807434,
+    "support": 2631,
+    "value": 0.8601292284302546
+   },
+   "doc_recall": {
+    "ci_high": 0.6660054922103882,
+    "ci_low": 0.6330373287200928,
+    "support": 3484,
+    "value": 0.649540757749713
+   },
+   "doc_specificity": {
+    "ci_high": 0.8912277221679688,
+    "ci_low": 0.8682635426521301,
+    "support": 3065,
+    "value": 0.8799347471451876
+   }
+  },
+  "sensitive_pci_bank_account_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 5,
+    "value": null
+   }
+  },
+  "sensitive_pci_bank_account_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.8154425621032715,
+    "ci_low": 0.7419962286949158,
+    "support": 531,
+    "value": 0.7796609997749329
+   }
+  },
+  "sensitive_pci_bank_account_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9205160737037659,
+    "ci_low": 0.8714044094085693,
+    "support": 591,
+    "value": 0.8967850804328918
+   }
+  },
+  "sensitive_pci_bank_account_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 0.9936708807945251,
+    "ci_low": 0.9620253443717957,
+    "support": 316,
+    "value": 0.9778481125831604
+   }
+  },
+  "sensitive_pci_bank_account_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pci_bank_account_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_bank_account_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_bank_account_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 3,
+    "value": null
+   }
+  },
+  "sensitive_pci_credit_card_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 2,
+    "value": null
+   }
+  },
+  "sensitive_pci_credit_card_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.9370229244232178,
+    "ci_low": 0.8874045610427856,
+    "support": 524,
+    "value": 0.9141221642494202
+   }
+  },
+  "sensitive_pci_credit_card_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9734989404678345,
+    "ci_low": 0.9594098925590515,
+    "support": 2415,
+    "value": 0.9668737053871155
+   }
+  },
+  "sensitive_pci_credit_card_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 1.0,
+    "support": 309,
+    "value": 1.0
+   }
+  },
+  "sensitive_pci_credit_card_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.9553238749504089,
+    "ci_low": 0.9465649127960205,
+    "support": 8908,
+    "value": 0.9508306980133057
+   }
+  },
+  "sensitive_pci_credit_card_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_credit_card_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_credit_card_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.8167053461074829,
+    "ci_low": 0.73549884557724,
+    "support": 431,
+    "value": 0.7795823812484741
+   }
+  },
+  "sensitive_pci_iban@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 1.0,
+    "support": 309,
+    "value": 1.0
+   }
+  },
+  "sensitive_pci_iban@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_iban@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9177095293998718,
+    "ci_low": 0.8949564099311829,
+    "support": 2637,
+    "value": 0.9067121744155884
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 1.0,
+    "support": 234,
+    "value": 1.0
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.8580585718154907,
+    "ci_low": 0.842410683631897,
+    "support": 7672,
+    "value": 0.8501042723655701
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pci_individual_taxpayer_identification_number_itin@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9830508232116699,
+    "ci_low": 0.9406779408454895,
+    "support": 354,
+    "value": 0.9632768630981445
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9944030046463013,
+    "support": 536,
+    "value": 0.9981343150138855
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_health_plan_beneficiary_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 2,
+    "value": null
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": 0.4571191966533661,
+    "ci_low": 0.30463576316833496,
+    "support": 151,
+    "value": 0.38410595059394836
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9952152967453003,
+    "ci_low": 0.9736841917037964,
+    "support": 418,
+    "value": 0.9856459498405457
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 1.0,
+    "support": 535,
+    "value": 1.0
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_medical_record_number_mrn@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 28,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9846625924110413,
+    "support": 326,
+    "value": 0.9938650131225586
+   }
+  },
+  "sensitive_phi_patient_id_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_phi_patient_id_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_address@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": 0.6535432934761047,
+    "ci_low": 0.5314960479736328,
+    "support": 254,
+    "value": 0.5944882035255432
+   }
+  },
+  "sensitive_pii_address@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.9296164512634277,
+    "ci_low": 0.9074733257293701,
+    "support": 2529,
+    "value": 0.9185448884963989
+   }
+  },
+  "sensitive_pii_address@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9567468762397766,
+    "ci_low": 0.9463866949081421,
+    "support": 6566,
+    "value": 0.9515686631202698
+   }
+  },
+  "sensitive_pii_address@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 0.8131115436553955,
+    "ci_low": 0.7831749320030212,
+    "support": 2841,
+    "value": 0.7986624240875244
+   }
+  },
+  "sensitive_pii_address@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.9816597700119019,
+    "ci_low": 0.9771402478218079,
+    "support": 15267,
+    "value": 0.9793672561645508
+   }
+  },
+  "sensitive_pii_address@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": 0.677142858505249,
+    "ci_low": 0.5742856860160828,
+    "support": 350,
+    "value": 0.6257143020629883
+   }
+  },
+  "sensitive_pii_address@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_address@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": 0.5566778779029846,
+    "ci_low": 0.492704838514328,
+    "support": 891,
+    "value": 0.5252525210380554
+   }
+  },
+  "sensitive_pii_driver_s_license_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_driver_s_license_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.7547910809516907,
+    "ci_low": 0.7066076397895813,
+    "support": 1101,
+    "value": 0.7302452325820923
+   }
+  },
+  "sensitive_pii_driver_s_license_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.7621171474456787,
+    "ci_low": 0.7311164736747742,
+    "support": 2808,
+    "value": 0.746082603931427
+   }
+  },
+  "sensitive_pii_driver_s_license_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 1.0,
+    "support": 219,
+    "value": 1.0
+   }
+  },
+  "sensitive_pii_driver_s_license_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.6174747943878174,
+    "ci_low": 0.5963925719261169,
+    "support": 8538,
+    "value": 0.6068165898323059
+   }
+  },
+  "sensitive_pii_driver_s_license_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_driver_s_license_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_driver_s_license_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_full_name@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": 0.8308892250061035,
+    "ci_low": 0.8141264915466309,
+    "support": 8592,
+    "value": 0.8225092887878418
+   }
+  },
+  "sensitive_pii_full_name@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.6128016710281372,
+    "ci_low": 0.5868327021598816,
+    "support": 5470,
+    "value": 0.5994515419006348
+   }
+  },
+  "sensitive_pii_full_name@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.8665385842323303,
+    "ci_low": 0.8541357517242432,
+    "support": 11449,
+    "value": 0.8604245185852051
+   }
+  },
+  "sensitive_pii_full_name@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 0.8202946782112122,
+    "ci_low": 0.8044801950454712,
+    "support": 9994,
+    "value": 0.8121873140335083
+   }
+  },
+  "sensitive_pii_full_name@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.8859974145889282,
+    "ci_low": 0.8784138560295105,
+    "support": 30464,
+    "value": 0.8823201060295105
+   }
+  },
+  "sensitive_pii_full_name@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_full_name@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_full_name@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": 0.5667262673377991,
+    "ci_low": 0.5315707325935364,
+    "support": 3215,
+    "value": 0.5493001341819763
+   }
+  },
+  "sensitive_pii_military_identification_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_military_identification_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_military_identification_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9988444447517395,
+    "support": 4327,
+    "value": 0.9995377659797668
+   }
+  },
+  "sensitive_pii_military_identification_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pii_military_identification_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.9907741546630859,
+    "ci_low": 0.9875754117965698,
+    "support": 13763,
+    "value": 0.9892465472221375
+   }
+  },
+  "sensitive_pii_military_identification_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_military_identification_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_military_identification_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_passport_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pii_passport_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.7731397747993469,
+    "ci_low": 0.7223230600357056,
+    "support": 1102,
+    "value": 0.7477313876152039
+   }
+  },
+  "sensitive_pii_passport_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.859024703502655,
+    "ci_low": 0.8377571105957031,
+    "support": 4327,
+    "value": 0.8483937978744507
+   }
+  },
+  "sensitive_pii_passport_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9779735803604126,
+    "support": 227,
+    "value": 0.9911894202232361
+   }
+  },
+  "sensitive_pii_passport_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.7841313481330872,
+    "ci_low": 0.7695996761322021,
+    "support": 13763,
+    "value": 0.7769381403923035
+   }
+  },
+  "sensitive_pii_passport_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_passport_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_passport_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_password@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": 0.5,
+    "ci_low": 0.23999999463558197,
+    "support": 50,
+    "value": 0.36000001430511475
+   }
+  },
+  "sensitive_pii_password@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.9397590160369873,
+    "ci_low": 0.9100200533866882,
+    "support": 1245,
+    "value": 0.925301194190979
+   }
+  },
+  "sensitive_pii_password@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9913793206214905,
+    "ci_low": 0.943965494632721,
+    "support": 232,
+    "value": 0.9698275923728943
+   }
+  },
+  "sensitive_pii_password@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 0.9795918464660645,
+    "ci_low": 0.9234693646430969,
+    "support": 196,
+    "value": 0.954081654548645
+   }
+  },
+  "sensitive_pii_password@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_password@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 12,
+    "value": null
+   }
+  },
+  "sensitive_pii_password@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_password@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 9,
+    "value": null
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.634482741355896,
+    "ci_low": 0.48275861144065857,
+    "support": 145,
+    "value": 0.5586206912994385
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.9265734553337097,
+    "ci_low": 0.8566433787345886,
+    "support": 286,
+    "value": 0.8916084170341492
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9835164546966553,
+    "support": 182,
+    "value": 0.9945054650306702
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_personal_identification_number_pin@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_social_security_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 1,
+    "value": null
+   }
+  },
+  "sensitive_pii_social_security_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": 0.7320833206176758,
+    "ci_low": 0.694572925567627,
+    "support": 2400,
+    "value": 0.7129166722297668
+   }
+  },
+  "sensitive_pii_social_security_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.8780795931816101,
+    "ci_low": 0.855022132396698,
+    "support": 3166,
+    "value": 0.8667087554931641
+   }
+  },
+  "sensitive_pii_social_security_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9789029359817505,
+    "support": 237,
+    "value": 0.9915611743927002
+   }
+  },
+  "sensitive_pii_social_security_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.8463248610496521,
+    "ci_low": 0.8285381197929382,
+    "support": 6748,
+    "value": 0.8372851014137268
+   }
+  },
+  "sensitive_pii_social_security_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_social_security_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_social_security_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 4,
+    "value": null
+   }
+  },
+  "sensitive_pii_visa_number@10360_betterdataai_ner_silver_eval_10.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_visa_number@10626_ai4privacy_pii_masking_eval_10.63k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_visa_number@20000_pii_holdout_20.00k": {
+   "recall": {
+    "ci_high": 0.8493239879608154,
+    "ci_low": 0.8280506134033203,
+    "support": 4327,
+    "value": 0.8384562134742737
+   }
+  },
+  "sensitive_pii_visa_number@30000_pii2_eval_25.15k": {
+   "recall": {
+    "ci_high": 1.0,
+    "ci_low": 0.9779735803604126,
+    "support": 227,
+    "value": 0.9911894202232361
+   }
+  },
+  "sensitive_pii_visa_number@38937_openpii_pii_eval_38.94k": {
+   "recall": {
+    "ci_high": 0.7774485945701599,
+    "ci_low": 0.763421893119812,
+    "support": 13763,
+    "value": 0.7703262567520142
+   }
+  },
+  "sensitive_pii_visa_number@4000_datax-dualjudge-evalset-1.32k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_visa_number@5617_nemotron_eval_5.36k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  },
+  "sensitive_pii_visa_number@6589_govdocs2-dualjudge-eval20-3.53k": {
+   "recall": {
+    "ci_high": null,
+    "ci_low": null,
+    "support": 0,
+    "value": null
+   }
+  }
+ }
+}

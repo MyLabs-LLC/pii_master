@@ -1,0 +1,36 @@
+TRANSIT AUTHORITY — NIGHTLY BATCH CONTROL SHEET
+FORM OPS-31 / ETL JOB OUTPUT EXTRACT
+
+JOB IDENTIFICATION
+  Job name ......... PTA_ETL_FARECARD_REG_LOAD
+  Job id ........... J2011106-0447
+  Cycle ............ NIGHTLY-01
+  Started .......... 2011-04-16 02:04:09
+  Ended ............ 2011-04-16 02:37:52
+  Elapsed .......... 00:33:43
+  Return code ...... 4 (completed with warnings)
+
+STAGE OUTPUT
+  02:04:09  INFO   Session s_m_FARECARD_REG initialised
+  02:04:11  INFO   Masking policy MSK-REG-2011-017 attached
+  02:06:38  INFO   Read complete: 1,284,662 rows
+  02:11:02  INFO   Token vault TKV-PRD-02 bound, 3 columns enrolled
+  02:19:44  WARN   Column DATE_OF_BIRTH: 812 rows generalised to CCYY,
+                   source precision discarded
+  02:22:07  WARN   Column POSTAL_CODE: 47 rows short of mask width,
+                   padded and flagged
+  02:26:15  ERROR  Column CONTACT_EMAIL: 19 rows failed digest, null-loaded
+  02:31:50  INFO   Reject file written: rej/J2011106-0447.rej
+
+ROW ACCOUNTING
+  Read ............. 1,284,662
+  Masked ........... 1,284,662
+  Loaded ........... 1,283,784
+  Rejected ......... 878
+  Reject rate ...... 0.068%
+  Threshold ........ 0.500%  (not breached)
+
+DISPOSITION
+  Reject file retained 30 days. Rejected rows carry key column PATRON_REF in
+  tokenised form only; no clear values are written to the reject path.
+  Referred to the Duty Data Analyst for reprocessing in cycle NIGHTLY-02.

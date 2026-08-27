@@ -1,0 +1,68 @@
+# datamask.conf   Data Masking Ruleset R11-02
+# Owner        : the Records Custodian, Compliance and Records
+# Effective    : 2011-03-28   supersedes R10-09
+# Invoked by   : MASK_CND_REFRESH, MASK_TS_REFRESH
+# Notes        : ruleset is evaluated before any extract leaves ATSPRD.
+
+[global]
+ruleset.version           = R11-02
+source.schema             = ATSPRD
+target.schema             = ATSUAT02
+token.vault               = TKV_STAFF_01
+token.algorithm           = FPE-AES128
+token.length              = 16
+null.on.missing.rule      = false
+fail.on.unmapped.class    = true
+default.action            = SUPPRESS
+audit.table               = CTL_MASK_AUDIT
+log.column.values         = false
+
+[rules]
+RULE_ID  SOURCE_COLUMN         CLS   ACTION       OUTPUT_PATTERN
+-------  --------------------  ----  -----------  --------------------
+R11-001  CAND_FIRST_NM         PII   TOKENISE     TKN:XXXXXXXXXXXXXXXX
+R11-002  CAND_LAST_NM          PII   TOKENISE     TKN:XXXXXXXXXXXXXXXX
+R11-003  CAND_MIDDLE_INIT      PII   MASK_FULL    X
+R11-004  DATE_OF_BIRTH         SPII  SHIFT_DATE   OFFSET(-60..+60)
+R11-005  NATL_INS_NO           SPII  MASK_FULL    XXXXXXXXX
+R11-006  TAX_REF_NO            SPII  MASK_FULL    XXXXXXXXXX
+R11-007  HOME_ADDR_LN1         PII   SUPPRESS     [SUPPRESSED]
+R11-008  HOME_ADDR_LN2         PII   SUPPRESS     [SUPPRESSED]
+R11-009  POST_TOWN             PII   GENERALISE   REGION_CD
+R11-010  POSTAL_CODE           PII   MASK_FULL    XXXX XXX
+R11-011  HOME_PHONE_NO         PII   MASK_FULL    +XX XXXXXXXXXX
+R11-012  MOBILE_PHONE_NO       PII   MASK_FULL    +XX XXXXXXXXXX
+R11-013  EMAIL_ADDR_PERS       PII   MASK_FULL    XXXX@XXXX.XXX
+R11-014  EMAIL_ADDR_WORK       PII   MASK_FULL    XXXX@XXXX.XXX
+R11-015  BANK_SORT_CODE        SPII  MASK_FULL    XX-XX-XX
+R11-016  BANK_ACCT_NO          SPII  MASK_FULL    XXXXXXXX
+R11-017  PASSPORT_NO           SPII  NULLIFY      <NULL>
+R11-018  VISA_DOC_NO           SPII  NULLIFY      <NULL>
+R11-019  RTW_EXPIRY_DT         PII   SHIFT_DATE   OFFSET(-30..+30)
+R11-020  EMERG_CONTACT_NM      PII   SUPPRESS     [SUPPRESSED]
+R11-021  EMERG_CONTACT_PH      PII   SUPPRESS     [SUPPRESSED]
+R11-022  GENDER_CD             PII   RETAIN       AS_SOURCE
+R11-023  NATIONALITY_CD        PII   GENERALISE   BLOC_CD
+R11-024  DISABILITY_FLG        SPII  NULLIFY      <NULL>
+R11-025  PAY_RATE_HRLY         OPEN  GENERALISE   BAND_A..BAND_F
+R11-026  CV_DOC_BLOB           PII   NULLIFY      <NULL>
+R11-027  REC_NOTES_TXT         PII   SUPPRESS     [SUPPRESSED]
+
+[subset]
+subset.filter             = PLACEMENT_STATUS_CD IN ('A','P','L')
+subset.rows.expected      = 184226
+subset.rows.sampled       = 18500
+subset.ratio              = 0.10
+
+[exceptions]
+# Columns permitted to cross unaltered. Reviewed quarterly.
+exempt.column.1           = CAND_SURROGATE_KEY
+exempt.column.2           = BRANCH_CD
+exempt.column.3           = SECTOR_CD
+exempt.column.4           = REG_DATE
+exempt.review.next        = 2011-06-30
+
+[retention]
+token.vault.retain.days   = 2555
+masked.extract.purge.days = 30
+audit.row.retain.days     = 2555

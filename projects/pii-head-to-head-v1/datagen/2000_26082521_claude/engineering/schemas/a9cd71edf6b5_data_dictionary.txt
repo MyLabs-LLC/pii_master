@@ -1,0 +1,36 @@
+MEMORANDUM
+
+TO:      Revenue Cycle Applications Team
+FROM:    Data Governance Lead, Patient Financial Services
+DATE:    11 March 2021
+SUBJECT: Data Dictionary Excerpt — MBR_MASTER, Billing Schema Release 4.2
+
+1. This excerpt is issued for the March change window and supersedes the inventory circulated in November. Column-level controls stated below are binding on all reads, extracts and interface builds.
+
+2. Column inventory, table MBR_MASTER:
+
+COLUMN NAME          TYPE           NULL  OPERATIONAL NOTES
+MBR_KEY              BIGINT         N     Surrogate key, sequence generated.
+MRN                  CHAR(9)        N     Restricted; masked in every non-production copy.
+MBR_LAST_NAME        VARCHAR(40)    N     Restricted; role BILL_CSR_RO and above.
+MBR_FIRST_NAME       VARCHAR(30)    N     Restricted; as above.
+MBR_MIDDLE_INIT      CHAR(1)        Y     Populated on load where supplied.
+DOB                  DATE           N     Restricted; permitted in claim extracts only.
+SSN_TOKEN            CHAR(16)       Y     Vault token; source value is never persisted.
+ADDR_LINE_1          VARCHAR(60)    N     Restricted; standardised at nightly load.
+ADDR_LINE_2          VARCHAR(60)    Y     Restricted.
+POSTAL_CODE          CHAR(10)       N     First five positions only released to analytics.
+PHONE_PRIMARY        VARCHAR(20)    Y     Restricted; dialer suppression flag applies.
+EMAIL_ADDR           VARCHAR(120)   Y     Restricted; use governed by statement delivery flag.
+GUARANTOR_ACCT_ID    BIGINT         N     Foreign key to GUARANTOR_ACCT.
+COVERAGE_PLAN_CD     CHAR(6)        N     Validated against PLAN_REF.
+BILL_STATUS_CD       CHAR(2)        N     Drives worklist assignment.
+LAST_STMT_DT         DATE           Y     Null until first statement cycle.
+REC_CREATE_TS        TIMESTAMP      N     Set by trigger.
+REC_UPDATE_TS        TIMESTAMP      N     Set by trigger.
+
+3. Retention. Rows are retained ten years from the date of last financial activity, after which restricted columns are nulled and the surrogate key is preserved for ledger continuity.
+
+4. Downstream extracts. Only MBR_KEY, COVERAGE_PLAN_CD, BILL_STATUS_CD and POSTAL_CODE (truncated) may be published to the analytics warehouse. Any request to add a restricted column requires written approval from the Records Custodian before the interface is scheduled.
+
+5. Direct questions on this excerpt to the Records Custodian through the governance queue.

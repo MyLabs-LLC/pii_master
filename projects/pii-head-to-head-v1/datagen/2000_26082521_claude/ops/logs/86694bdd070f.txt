@@ -1,0 +1,24 @@
+================================================================================
+ NIGHTLY BATCH - CANDIDATE MASTER LOAD              RUN DATE  2011-04-12
+ SCHEDULER JOB ID  ETL_CND_MSTR_0412   CYCLE 003    NODE      APPSRV04
+ MAPPING PROFILE   CND->DIM v11.2      MASK RULESET R11-02
+================================================================================
+
+STEP  DESCRIPTION                 BEGIN     END       RC      READ     WRITE    REJ
+----  --------------------------  --------  --------  --  --------  --------  -----
+0010  EXTRACT ATS CANDIDATE       02:14:07  02:19:44   0    184226    184226      0
+0020  EXTRACT ATS APPLICATION     02:19:45  02:31:02   0    402118    402118      0
+0030  TOKENISE PII COLUMNS        02:31:03  02:44:18   0    184226    184226      0
+0040  APPLY MASK RULESET R11-02   02:44:19  02:51:37   0    184226    184226      0
+0050  VALIDATE MANDATORY FIELDS   02:51:38  02:58:09   4    184226    182993   1233
+0060  LOAD STG_CANDIDATE          02:58:10  03:06:55   0    182993    182993      0
+0070  MERGE INTO DIM_CANDIDATE    03:06:56  03:22:41   0    182993    182993      0
+0080  WRITE REJECT FILE           03:22:42  03:23:04   0      1233      1233      0
+0090  UPDATE AUDIT CTL TABLE      03:23:05  03:23:06   0         1         1      0
+
+MERGE BREAKDOWN   INSERT 1442   UPDATE 181551   UNCHANGED 0   DELETE 0
+COLUMNS IN SCOPE  46 TOTAL   9 CLASS PII   4 CLASS SPII   33 CLASS OPEN
+ELAPSED           01:09:00        MAX RC 4        ABEND NO
+REJECT FILE       /prd/etl/rej/CND_MSTR_20110412_003.rej
+AUDIT KEY         CTL_MASK_AUDIT ROW 20110412003
+OPERATOR ACTION   NONE. REJECTS CARRY FORWARD TO CYCLE 004.

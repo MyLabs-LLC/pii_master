@@ -1,0 +1,28 @@
+MAPPING RULESET ADDENDUM 2021-09 — achd-etl / crosswalk_elr_to_ods.map
+Issued 2021-09-13. Effective next scheduled run. Author: the Data Steward.
+
+  A. ADDITIONS
+     i.   src.PID-5.1  patient_last_name    -> tgt.person_name_last     [TIER-C]
+     ii.  src.PID-5.2  patient_first_name   -> tgt.person_name_first    [TIER-C]
+     iii. src.PID-7    date_of_birth        -> tgt.birth_year_quinq     [GENERALISE]
+     iv.  src.PID-11.5 postal_code          -> tgt.zip3                 [TRUNCATE 3]
+     v.   src.PID-13   primary_phone        -> tgt.<dropped>            [SUPPRESS]
+
+  B. AMENDMENTS
+     i.   guardian_email now bound to policy Tier-C. Closes the six
+          unmapped-column denials logged since 2021-06.
+     ii.  household_id retargeted from clear to tkn_household.
+     iii. medicaid_case_no removed from the projection list entirely.
+
+  C. UNCHANGED
+     i.   provider_npi, facility_clia, reporting_lab_code remain in clear.
+     ii.  result_loinc, result_snomed, specimen_collect_date remain in clear.
+
+  D. IMPACT
+     i.   Tables affected 3. Downstream views affected 7.
+     ii.  Backfill required: ods.elr_result_f, 2021-01-01 forward, 1,204,880 rows.
+     iii. Backfill window requested 2021-09-25T22:00 to 2021-09-26T04:00.
+
+  E. SIGN-OFF
+     i.   The Records Custodian — pending.
+     ii.  The Privacy Officer — concurred 2021-09-13.

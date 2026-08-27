@@ -1,0 +1,44 @@
+INTERNAL MEMORANDUM
+
+TO:      Depot Data Quality Leads (all sites)
+FROM:    Data Services, Validation Desk
+DATE:    19 September 2011
+REF:     DS-VAL-2011-231
+SUBJECT: Validation rejects, week ending 16 September 2011 — codes, counts and required action
+
+1. SUMMARY
+
+Across the seven depot feeds, 1,284,406 rows were presented to the validation stage in the reporting week. 1,271,918 rows passed and were promoted to staging. 12,488 rows were rejected and are held in the reject store. Rejected rows are retained for 30 days and are then purged whether or not they have been corrected.
+
+2. REJECT BREAKDOWN BY CODE
+
+  CODE     RULE                                          FIELD                     ROWS
+  -------  --------------------------------------------  ------------------------  ------
+  V-011    mandatory field empty                         CONSIGNEE_SURNAME          3,902
+  V-011    mandatory field empty                         CONSIGNEE_ADDR_LINE_1      2,617
+  V-014    field present but suppressed at source         SIGNATORY_DOB               811
+  V-014    field present but suppressed at source         DRIVER_NI_NUMBER            346
+  V-014    field present but suppressed at source         DRIVER_LICENCE_NUMBER       298
+  V-022    token reference malformed                     SHP_RCPT_TEL               1,455
+  V-022    token reference malformed                     SHP_RCPT_EMAIL             1,190
+  V-023    clear value found where token expected        SHP_RCPT_EMAIL               407
+  V-023    clear value found where token expected        SHP_RCPT_TEL                 233
+  V-031    postcode longer than sector granularity       CONSIGNEE_POSTCODE_OUT       684
+  V-040    unmapped column in header                     (header row)                 312
+  V-055    date not parseable                            BOOKING_DTM                  213
+                                                                                   ------
+                                                          TOTAL                     12,488
+
+3. COMMENTARY
+
+3.1 Codes V-014 and V-023 are the two that matter. V-014 means a depot extract writer is still emitting a column that was withdrawn under DS-MAP-2011-042. V-023 means an ingest stage has passed a clear value into a position that the schedule requires to be tokenised. In both cases the rejected rows are held in the reject store in the state they arrived in, and the store is treated as restricted until the rows are purged or corrected. Access to the reject store is by the Validation Desk queue only; leads are not to request row-level exports.
+
+3.2 The 312 V-040 rejects are all from one site and all from files written between 2011-09-13 08:00 and 2011-09-13 11:40. The header carried a column not named in the profile. The run aborted as designed.
+
+4. ACTION REQUIRED
+
+4.1 Sites carrying V-014 rejects to confirm by 30 September 2011 that the withdrawn columns have been removed from the extract writer, quoting the writer build number.
+
+4.2 Sites carrying V-023 rejects to check the ingest tokenisation step is enabled for the affected feed. Do not resubmit the rejected file until it is.
+
+4.3 V-011 rejects are ordinary completeness failures and are corrected through the usual depot amendment route.

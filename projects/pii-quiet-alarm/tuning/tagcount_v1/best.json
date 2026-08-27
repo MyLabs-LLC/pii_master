@@ -1,0 +1,1131 @@
+[
+ {
+  "number": 24,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.07756447109558004,
+   "partial_weight": 0.9951728379098197,
+   "min_df": 10,
+   "clip": 13.120609929497451,
+   "idf_power": 0.041122455903350175,
+   "score_mode": "top3",
+   "recall_floor": 0.7888095238951288,
+   "min_support_fit": 123
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "top3"
+  },
+  "metrics": {
+   "objective": 0.639840680828172,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.639840680828172,
+   "priority_macro_precision": 0.6330737327016327,
+   "priority_macro_recall": 0.8035859781756214,
+   "priority_min_recall": 0.7888411550383382,
+   "macro_f05": 0.5143009561261317,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.8980683503212443,
+   "doc_real_precision": 0.49670208867717114,
+   "doc_real_recall": 0.9606661941885187,
+   "doc_real_specificity": 0.10608525870484868,
+   "doc_synth_precision": 0.8997836203574711,
+   "doc_synth_recall": 0.9641263438725762,
+   "doc_synth_specificity": 0.09936068193926478
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.4032979113228289,
+   "doc_real_specificity": 0.7439147412951513,
+   "doc_synth_precision": 0.00021637964252896325,
+   "doc_synth_specificity": 0.7506393180607351
+  },
+  "doc": {
+   "real": {
+    "tp": 2711,
+    "fp": 2747,
+    "fn": 111,
+    "tn": 326,
+    "n": 5895,
+    "recall": 0.9606661941885187,
+    "precision": 0.49670208867717114,
+    "specificity": 0.10608525870484868,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 60712,
+    "fp": 6762,
+    "fn": 2259,
+    "tn": 746,
+    "n": 70479,
+    "recall": 0.9641263438725762,
+    "precision": 0.8997836203574711,
+    "specificity": 0.09936068193926478,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 40,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.5696526277716247,
+   "partial_weight": 0.6037933721041003,
+   "min_df": 5,
+   "clip": 8.58828064462901,
+   "idf_power": 0.2369897798592549,
+   "score_mode": "top3",
+   "recall_floor": 0.7605758856510568,
+   "min_support_fit": 16
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "top3"
+  },
+  "metrics": {
+   "objective": 0.6239614298193461,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.6239614298193461,
+   "priority_macro_precision": 0.6146061044465784,
+   "priority_macro_recall": 0.7775710048776494,
+   "priority_min_recall": 0.7605902498448526,
+   "macro_f05": 0.4997315240465405,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.7931001409649403,
+   "doc_real_precision": 0.5015220700152208,
+   "doc_real_recall": 0.9340892983699504,
+   "doc_real_specificity": 0.1474129515131793,
+   "doc_synth_precision": 0.9047733811324166,
+   "doc_synth_recall": 0.9538835336901114,
+   "doc_synth_specificity": 0.15796483750665957
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.39847792998477927,
+   "doc_real_specificity": 0.7025870484868206,
+   "doc_synth_specificity": 0.6920351624933404
+  },
+  "doc": {
+   "real": {
+    "tp": 2636,
+    "fp": 2620,
+    "fn": 186,
+    "tn": 453,
+    "n": 5895,
+    "recall": 0.9340892983699504,
+    "precision": 0.5015220700152208,
+    "specificity": 0.1474129515131793,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 60067,
+    "fp": 6322,
+    "fn": 2904,
+    "tn": 1186,
+    "n": 70479,
+    "recall": 0.9538835336901114,
+    "precision": 0.9047733811324166,
+    "specificity": 0.15796483750665957,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 16,
+  "family": "tagcount",
+  "params": {
+   "profile": "std",
+   "alpha": 0.1273149035587151,
+   "partial_weight": 0.09317831284174316,
+   "min_df": 7,
+   "clip": 15.675643590644128,
+   "idf_power": 0.7393053684039597,
+   "score_mode": "top6",
+   "recall_floor": 0.7560251523177149,
+   "min_support_fit": 137
+  },
+  "extra": {
+   "profile": "std",
+   "score_mode": "top6"
+  },
+  "metrics": {
+   "objective": 0.616869545201552,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.616869545201552,
+   "priority_macro_precision": 0.606520465440604,
+   "priority_macro_recall": 0.7609872259158585,
+   "priority_min_recall": 0.7560347602188606,
+   "macro_f05": 0.5054995765937094,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.744372749549801,
+   "doc_real_precision": 0.500724112961622,
+   "doc_real_recall": 0.9801559177888023,
+   "doc_real_specificity": 0.10250569476082004,
+   "doc_synth_precision": 0.9103053740072549,
+   "doc_synth_recall": 0.9046386431849581,
+   "doc_synth_specificity": 0.25239744272775705
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.399275887038378,
+   "doc_real_specificity": 0.7474943052391799,
+   "doc_synth_specificity": 0.597602557272243
+  },
+  "doc": {
+   "real": {
+    "tp": 2766,
+    "fp": 2758,
+    "fn": 56,
+    "tn": 315,
+    "n": 5895,
+    "recall": 0.9801559177888023,
+    "precision": 0.500724112961622,
+    "specificity": 0.10250569476082004,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 56966,
+    "fp": 5613,
+    "fn": 6005,
+    "tn": 1895,
+    "n": 70479,
+    "recall": 0.9046386431849581,
+    "precision": 0.9103053740072549,
+    "specificity": 0.25239744272775705,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 147,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.0668465980410424,
+   "partial_weight": 0.2629135746537298,
+   "min_df": 32,
+   "clip": 10.724464477343458,
+   "idf_power": 0.5642238428021326,
+   "score_mode": "sum",
+   "recall_floor": 0.7542548165614792,
+   "min_support_fit": 9
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "sum"
+  },
+  "metrics": {
+   "objective": 0.5539312303742225,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5539312303742225,
+   "priority_macro_precision": 0.5363867331870609,
+   "priority_macro_recall": 0.757494973654885,
+   "priority_min_recall": 0.7542552612975149,
+   "macro_f05": 0.5118190117016458,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.2622429268639666,
+   "doc_real_precision": 0.5503909643788011,
+   "doc_real_recall": 0.8979447200566973,
+   "doc_real_specificity": 0.3263911487146111,
+   "doc_synth_precision": 0.9374313940724479,
+   "doc_synth_recall": 0.9628876784551619,
+   "doc_synth_specificity": 0.46097496004262123
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.34960903562119894,
+   "doc_real_specificity": 0.5236088512853889,
+   "doc_synth_specificity": 0.38902503995737875
+  },
+  "doc": {
+   "real": {
+    "tp": 2534,
+    "fp": 2070,
+    "fn": 288,
+    "tn": 1003,
+    "n": 5895,
+    "recall": 0.8979447200566973,
+    "precision": 0.5503909643788011,
+    "specificity": 0.3263911487146111,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 60634,
+    "fp": 4047,
+    "fn": 2337,
+    "tn": 3461,
+    "n": 70479,
+    "recall": 0.9628876784551619,
+    "precision": 0.9374313940724479,
+    "specificity": 0.46097496004262123,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 96,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.0984755935876817,
+   "partial_weight": 0.354506853359806,
+   "min_df": 50,
+   "clip": 10.96520368616894,
+   "idf_power": 0.7783734631725462,
+   "score_mode": "sum",
+   "recall_floor": 0.7528653313441035,
+   "min_support_fit": 6
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "sum"
+  },
+  "metrics": {
+   "objective": 0.5508515680352759,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5508515680352759,
+   "priority_macro_precision": 0.5328588295061462,
+   "priority_macro_recall": 0.7557728092660797,
+   "priority_min_recall": 0.752895752895753,
+   "macro_f05": 0.5125129809377961,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.212562795423708,
+   "doc_real_precision": 0.5614574187884109,
+   "doc_real_recall": 0.9064493267186393,
+   "doc_real_specificity": 0.34982102180279856,
+   "doc_synth_precision": 0.9385833411411975,
+   "doc_synth_recall": 0.9544869860729542,
+   "doc_synth_specificity": 0.47615876398508256
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.3385425812115891,
+   "doc_real_specificity": 0.5001789781972015,
+   "doc_synth_specificity": 0.3738412360149174
+  },
+  "doc": {
+   "real": {
+    "tp": 2558,
+    "fp": 1998,
+    "fn": 264,
+    "tn": 1075,
+    "n": 5895,
+    "recall": 0.9064493267186393,
+    "precision": 0.5614574187884109,
+    "specificity": 0.34982102180279856,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 60105,
+    "fp": 3933,
+    "fn": 2866,
+    "tn": 3575,
+    "n": 70479,
+    "recall": 0.9544869860729542,
+    "precision": 0.9385833411411975,
+    "specificity": 0.47615876398508256,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 187,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.19139786103728135,
+   "partial_weight": 0.10637832545182364,
+   "min_df": 16,
+   "clip": 11.599704261217365,
+   "idf_power": 0.6991954230414963,
+   "score_mode": "top6",
+   "recall_floor": 0.7501555950023453,
+   "min_support_fit": 127
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "top6"
+  },
+  "metrics": {
+   "objective": 0.5496143465931582,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5496143465931582,
+   "priority_macro_precision": 0.5370716930381155,
+   "priority_macro_recall": 0.7661782589584373,
+   "priority_min_recall": 0.750165584845675,
+   "macro_f05": 0.4532470213405673,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.472733371889442,
+   "doc_real_precision": 0.5300954753009548,
+   "doc_real_recall": 0.9050318922749823,
+   "doc_real_specificity": 0.2632606573381061,
+   "doc_synth_precision": 0.9202888155692631,
+   "doc_synth_recall": 0.9168982547521876,
+   "doc_synth_specificity": 0.3339104954714971
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.3699045246990452,
+   "doc_real_specificity": 0.5867393426618939,
+   "doc_synth_specificity": 0.5160895045285029
+  },
+  "doc": {
+   "real": {
+    "tp": 2554,
+    "fp": 2264,
+    "fn": 268,
+    "tn": 809,
+    "n": 5895,
+    "recall": 0.9050318922749823,
+    "precision": 0.5300954753009548,
+    "specificity": 0.2632606573381061,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 57738,
+    "fp": 5001,
+    "fn": 5233,
+    "tn": 2507,
+    "n": 70479,
+    "recall": 0.9168982547521876,
+    "precision": 0.9202888155692631,
+    "specificity": 0.3339104954714971,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 226,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.16987992425755738,
+   "partial_weight": 0.002811975227809892,
+   "min_df": 20,
+   "clip": 11.653027286519027,
+   "idf_power": 0.783357731670761,
+   "score_mode": "sum",
+   "recall_floor": 0.7651673647361258,
+   "min_support_fit": 194
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "sum"
+  },
+  "metrics": {
+   "objective": 0.5458582760797356,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5458582760797356,
+   "priority_macro_precision": 0.5258919724321547,
+   "priority_macro_recall": 0.7674971504386512,
+   "priority_min_recall": 0.7651857088476807,
+   "macro_f05": 0.5116642799522392,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.181943614341197,
+   "doc_real_precision": 0.570317707176183,
+   "doc_real_recall": 0.9096385542168675,
+   "doc_real_specificity": 0.37064757565896517,
+   "doc_synth_precision": 0.938258790966849,
+   "doc_synth_recall": 0.9474520017150752,
+   "doc_synth_specificity": 0.47709110282365474
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.329682292823817,
+   "doc_real_specificity": 0.4793524243410348,
+   "doc_synth_specificity": 0.37290889717634523
+  },
+  "doc": {
+   "real": {
+    "tp": 2567,
+    "fp": 1934,
+    "fn": 255,
+    "tn": 1139,
+    "n": 5895,
+    "recall": 0.9096385542168675,
+    "precision": 0.570317707176183,
+    "specificity": 0.37064757565896517,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 59662,
+    "fp": 3926,
+    "fn": 3309,
+    "tn": 3582,
+    "n": 70479,
+    "recall": 0.9474520017150752,
+    "precision": 0.938258790966849,
+    "specificity": 0.47709110282365474,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 179,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.1368955908371603,
+   "partial_weight": 0.12318349401708276,
+   "min_df": 19,
+   "clip": 10.412071287197191,
+   "idf_power": 0.9390215013676207,
+   "score_mode": "sum",
+   "recall_floor": 0.7500341900909174,
+   "min_support_fit": 62
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "sum"
+  },
+  "metrics": {
+   "objective": 0.5446561997283424,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5446561997283424,
+   "priority_macro_precision": 0.5259211334368518,
+   "priority_macro_recall": 0.7543572855258276,
+   "priority_min_recall": 0.7500679754200881,
+   "macro_f05": 0.5130983975998958,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 1.179850302866343,
+   "doc_real_precision": 0.5704131497112395,
+   "doc_real_recall": 0.9099929128277817,
+   "doc_real_specificity": 0.37064757565896517,
+   "doc_synth_precision": 0.9380641687517816,
+   "doc_synth_recall": 0.9406711025710247,
+   "doc_synth_specificity": 0.47908897176345233
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.32958685028876056,
+   "doc_real_specificity": 0.4793524243410348,
+   "doc_synth_specificity": 0.37091102823654765
+  },
+  "doc": {
+   "real": {
+    "tp": 2568,
+    "fp": 1934,
+    "fn": 254,
+    "tn": 1139,
+    "n": 5895,
+    "recall": 0.9099929128277817,
+    "precision": 0.5704131497112395,
+    "specificity": 0.37064757565896517,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 59235,
+    "fp": 3911,
+    "fn": 3736,
+    "tn": 3597,
+    "n": 70479,
+    "recall": 0.9406711025710247,
+    "precision": 0.9380641687517816,
+    "specificity": 0.47908897176345233,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 186,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.22338772126047352,
+   "partial_weight": 0.09323349179835394,
+   "min_df": 18,
+   "clip": 11.83713434904945,
+   "idf_power": 0.718314307558524,
+   "score_mode": "mean",
+   "recall_floor": 0.7501489429789813,
+   "min_support_fit": 126
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5424538016431142,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5424538016431142,
+   "priority_macro_precision": 0.519880412995998,
+   "priority_macro_recall": 0.7572653655614758,
+   "priority_min_recall": 0.750165584845675,
+   "macro_f05": 0.50593796055069,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9352910108559209,
+   "doc_real_precision": 0.6037931930371525,
+   "doc_real_recall": 0.8235294117647058,
+   "doc_real_specificity": 0.5037422713960299,
+   "doc_synth_precision": 0.949726600192988,
+   "doc_synth_recall": 0.9377967635895889,
+   "doc_synth_specificity": 0.5836441129461908
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.2962068069628475,
+   "doc_real_recall": 0.026470588235294135,
+   "doc_real_specificity": 0.3462577286039701,
+   "doc_synth_specificity": 0.2663558870538092
+  },
+  "doc": {
+   "real": {
+    "tp": 2324,
+    "fp": 1525,
+    "fn": 498,
+    "tn": 1548,
+    "n": 5895,
+    "recall": 0.8235294117647058,
+    "precision": 0.6037931930371525,
+    "specificity": 0.5037422713960299,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 59054,
+    "fp": 3126,
+    "fn": 3917,
+    "tn": 4382,
+    "n": 70479,
+    "recall": 0.9377967635895889,
+    "precision": 0.949726600192988,
+    "specificity": 0.5836441129461908,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 139,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.07709682634429377,
+   "partial_weight": 0.2911083412710342,
+   "min_df": 31,
+   "clip": 9.99457417314194,
+   "idf_power": 0.4025068582117121,
+   "score_mode": "mean",
+   "recall_floor": 0.7566992591281032,
+   "min_support_fit": 7
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5418316726045072,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5418316726045072,
+   "priority_macro_precision": 0.5189462099683047,
+   "priority_macro_recall": 0.7617344889758478,
+   "priority_min_recall": 0.7567023764206863,
+   "macro_f05": 0.5012183527436164,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9609927399604339,
+   "doc_real_precision": 0.5980824047680746,
+   "doc_real_recall": 0.817859673990078,
+   "doc_real_specificity": 0.49528148389196225,
+   "doc_synth_precision": 0.9487982943532756,
+   "doc_synth_recall": 0.9328421019199314,
+   "doc_synth_specificity": 0.5777836973894512
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.3019175952319254,
+   "doc_real_recall": 0.032140326009922005,
+   "doc_real_specificity": 0.35471851610803773,
+   "doc_synth_specificity": 0.27221630261054874
+  },
+  "doc": {
+   "real": {
+    "tp": 2308,
+    "fp": 1551,
+    "fn": 514,
+    "tn": 1522,
+    "n": 5895,
+    "recall": 0.817859673990078,
+    "precision": 0.5980824047680746,
+    "specificity": 0.49528148389196225,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58742,
+    "fp": 3170,
+    "fn": 4229,
+    "tn": 4338,
+    "n": 70479,
+    "recall": 0.9328421019199314,
+    "precision": 0.9487982943532756,
+    "specificity": 0.5777836973894512,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 193,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.3035901680095475,
+   "partial_weight": 0.10048139354988642,
+   "min_df": 14,
+   "clip": 11.868872843300899,
+   "idf_power": 0.7463980092564066,
+   "score_mode": "mean",
+   "recall_floor": 0.753239705388992,
+   "min_support_fit": 119
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5409573613100584,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5409573613100584,
+   "priority_macro_precision": 0.5181513150847987,
+   "priority_macro_recall": 0.7587469294855762,
+   "priority_min_recall": 0.7532616487455197,
+   "macro_f05": 0.5042104749903239,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9666319035373739,
+   "doc_real_precision": 0.5958376156217883,
+   "doc_real_recall": 0.8217576187101346,
+   "doc_real_specificity": 0.48812235600390497,
+   "doc_synth_precision": 0.9488919332742365,
+   "doc_synth_recall": 0.9349383049340172,
+   "doc_synth_specificity": 0.5776505061267981
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.30416238437821175,
+   "doc_real_recall": 0.028242381289865337,
+   "doc_real_specificity": 0.361877643996095,
+   "doc_synth_specificity": 0.27234949387320184
+  },
+  "doc": {
+   "real": {
+    "tp": 2319,
+    "fp": 1573,
+    "fn": 503,
+    "tn": 1500,
+    "n": 5895,
+    "recall": 0.8217576187101346,
+    "precision": 0.5958376156217883,
+    "specificity": 0.48812235600390497,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58874,
+    "fp": 3171,
+    "fn": 4097,
+    "tn": 4337,
+    "n": 70479,
+    "recall": 0.9349383049340172,
+    "precision": 0.9488919332742365,
+    "specificity": 0.5776505061267981,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 132,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.09255760613088541,
+   "partial_weight": 0.20797505826009763,
+   "min_df": 42,
+   "clip": 10.054130152827572,
+   "idf_power": 0.5341545278038048,
+   "score_mode": "mean",
+   "recall_floor": 0.7501766726437665,
+   "min_support_fit": 6
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5408988519513742,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5408988519513742,
+   "priority_macro_precision": 0.5183907404387864,
+   "priority_macro_recall": 0.7566441660200134,
+   "priority_min_recall": 0.750176736092229,
+   "macro_f05": 0.5041103083244579,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9299787505435237,
+   "doc_real_precision": 0.6048767697954903,
+   "doc_real_recall": 0.8175053153791637,
+   "doc_real_specificity": 0.5095997396680768,
+   "doc_synth_precision": 0.9500363460140538,
+   "doc_synth_recall": 0.9339537247304315,
+   "doc_synth_specificity": 0.5880394246137454
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.2951232302045097,
+   "doc_real_recall": 0.03249468462083627,
+   "doc_real_specificity": 0.34040026033192317,
+   "doc_synth_specificity": 0.2619605753862546
+  },
+  "doc": {
+   "real": {
+    "tp": 2307,
+    "fp": 1507,
+    "fn": 515,
+    "tn": 1566,
+    "n": 5895,
+    "recall": 0.8175053153791637,
+    "precision": 0.6048767697954903,
+    "specificity": 0.5095997396680768,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58812,
+    "fp": 3093,
+    "fn": 4159,
+    "tn": 4415,
+    "n": 70479,
+    "recall": 0.9339537247304315,
+    "precision": 0.9500363460140538,
+    "specificity": 0.5880394246137454,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 191,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.18420755162217262,
+   "partial_weight": 0.09322774425890078,
+   "min_df": 14,
+   "clip": 11.991982408325342,
+   "idf_power": 0.7914718290285299,
+   "score_mode": "mean",
+   "recall_floor": 0.7501759062745028,
+   "min_support_fit": 105
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5405741269740711,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5405741269740711,
+   "priority_macro_precision": 0.5182033251585216,
+   "priority_macro_recall": 0.7564352616167257,
+   "priority_min_recall": 0.7502095557418273,
+   "macro_f05": 0.5039231070637277,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9174994037617662,
+   "doc_real_precision": 0.6068965517241379,
+   "doc_real_recall": 0.810772501771793,
+   "doc_real_specificity": 0.5177351122681418,
+   "doc_synth_precision": 0.9509938924619696,
+   "doc_synth_recall": 0.93220688888536,
+   "doc_synth_specificity": 0.5970964304741609
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.2931034482758621,
+   "doc_real_recall": 0.039227498228206925,
+   "doc_real_specificity": 0.33226488773185814,
+   "doc_synth_specificity": 0.25290356952583903
+  },
+  "doc": {
+   "real": {
+    "tp": 2288,
+    "fp": 1482,
+    "fn": 534,
+    "tn": 1591,
+    "n": 5895,
+    "recall": 0.810772501771793,
+    "precision": 0.6068965517241379,
+    "specificity": 0.5177351122681418,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58702,
+    "fp": 3025,
+    "fn": 4269,
+    "tn": 4483,
+    "n": 70479,
+    "recall": 0.93220688888536,
+    "precision": 0.9509938924619696,
+    "specificity": 0.5970964304741609,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 249,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.19129906906093908,
+   "partial_weight": 0.0366319682310697,
+   "min_df": 9,
+   "clip": 13.7753556504599,
+   "idf_power": 0.690007831390758,
+   "score_mode": "mean",
+   "recall_floor": 0.7598258800604042,
+   "min_support_fit": 165
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5399317995117459,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5399317995117459,
+   "priority_macro_precision": 0.5166975389339097,
+   "priority_macro_recall": 0.7638223934083493,
+   "priority_min_recall": 0.7598357398330905,
+   "macro_f05": 0.4993788804609957,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9333088543080762,
+   "doc_real_precision": 0.6032079936891928,
+   "doc_real_recall": 0.8128986534372785,
+   "doc_real_specificity": 0.5089489098600716,
+   "doc_synth_precision": 0.9503071362582862,
+   "doc_synth_recall": 0.9311111464007241,
+   "doc_synth_specificity": 0.5916355887053809
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.29679200631080727,
+   "doc_real_recall": 0.03710134656272146,
+   "doc_real_specificity": 0.3410510901399284,
+   "doc_synth_specificity": 0.25836441129461907
+  },
+  "doc": {
+   "real": {
+    "tp": 2294,
+    "fp": 1509,
+    "fn": 528,
+    "tn": 1564,
+    "n": 5895,
+    "recall": 0.8128986534372785,
+    "precision": 0.6032079936891928,
+    "specificity": 0.5089489098600716,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58633,
+    "fp": 3066,
+    "fn": 4338,
+    "tn": 4442,
+    "n": 70479,
+    "recall": 0.9311111464007241,
+    "precision": 0.9503071362582862,
+    "specificity": 0.5916355887053809,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 233,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.1792835172412473,
+   "partial_weight": 0.0020463382480893147,
+   "min_df": 12,
+   "clip": 12.645476872754275,
+   "idf_power": 0.7942779539540418,
+   "score_mode": "mean",
+   "recall_floor": 0.7537893539242998,
+   "min_support_fit": 174
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5391191619624052,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5391191619624052,
+   "priority_macro_precision": 0.5163967432029761,
+   "priority_macro_recall": 0.7594913415079159,
+   "priority_min_recall": 0.75380346378337,
+   "macro_f05": 0.5013453881778372,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.918475908812404,
+   "doc_real_precision": 0.606292966684294,
+   "doc_real_recall": 0.8125442948263643,
+   "doc_real_specificity": 0.5154572079401236,
+   "doc_synth_precision": 0.9510156477791817,
+   "doc_synth_recall": 0.9323339314922742,
+   "doc_synth_specificity": 0.597229621736814
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.293707033315706,
+   "doc_real_recall": 0.03745570517363572,
+   "doc_real_specificity": 0.33454279205987636,
+   "doc_synth_specificity": 0.25277037826318594
+  },
+  "doc": {
+   "real": {
+    "tp": 2293,
+    "fp": 1489,
+    "fn": 529,
+    "tn": 1584,
+    "n": 5895,
+    "recall": 0.8125442948263643,
+    "precision": 0.606292966684294,
+    "specificity": 0.5154572079401236,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58710,
+    "fp": 3024,
+    "fn": 4261,
+    "tn": 4484,
+    "n": 70479,
+    "recall": 0.9323339314922742,
+    "precision": 0.9510156477791817,
+    "specificity": 0.597229621736814,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ },
+ {
+  "number": 234,
+  "family": "tagcount",
+  "params": {
+   "profile": "fast",
+   "alpha": 0.18251230916307692,
+   "partial_weight": 0.022811519093885638,
+   "min_df": 10,
+   "clip": 12.665442864637857,
+   "idf_power": 0.8042355944439741,
+   "score_mode": "mean",
+   "recall_floor": 0.7536218870751654,
+   "min_support_fit": 176
+  },
+  "extra": {
+   "profile": "fast",
+   "score_mode": "mean"
+  },
+  "metrics": {
+   "objective": 0.5387792997292149,
+   "feasible": 0.0,
+   "priority_macro_f05": 0.5387792997292149,
+   "priority_macro_precision": 0.5160049275156137,
+   "priority_macro_recall": 0.76009976847299,
+   "priority_min_recall": 0.7536484134422279,
+   "macro_f05": 0.501194944921567,
+   "n_priority_measurable": 16.0,
+   "total_deficit": 0.9180174774990537,
+   "doc_real_precision": 0.6063970393867301,
+   "doc_real_recall": 0.8128986534372785,
+   "doc_real_specificity": 0.5154572079401236,
+   "doc_synth_precision": 0.951031512128769,
+   "doc_synth_recall": 0.9326515380095599,
+   "doc_synth_specificity": 0.597229621736814
+  },
+  "feasible": true,
+  "deficits": {
+   "doc_real_precision": 0.29360296061326996,
+   "doc_real_recall": 0.03710134656272146,
+   "doc_real_specificity": 0.33454279205987636,
+   "doc_synth_specificity": 0.25277037826318594
+  },
+  "doc": {
+   "real": {
+    "tp": 2294,
+    "fp": 1489,
+    "fn": 528,
+    "tn": 1584,
+    "n": 5895,
+    "recall": 0.8128986534372785,
+    "precision": 0.6063970393867301,
+    "specificity": 0.5154572079401236,
+    "prevalence": 0.47871077184054284
+   },
+   "synth": {
+    "tp": 58730,
+    "fp": 3024,
+    "fn": 4241,
+    "tn": 4484,
+    "n": 70479,
+    "recall": 0.9326515380095599,
+    "precision": 0.951031512128769,
+    "specificity": 0.597229621736814,
+    "prevalence": 0.8934718142992948
+   }
+  },
+  "rerank": {
+   "criterion": "priority_macro_f05 subject to priority_min_recall >= 0.75",
+   "doc_floors_applied": false
+  }
+ }
+]

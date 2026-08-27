@@ -1,0 +1,53 @@
+VALIDATION EXCEPTION REPORT
+Office of the University Registrar — Data Quality Unit
+
+RUN HEADER
+Report number ............... DQ-2011-0417-06
+Job identifier .............. ETL_REG_SIS2ODS_0417
+Run sequence ................ 00612
+Run start ................... 2011-04-18 02:15:07
+Run end ..................... 2011-04-18 02:41:53
+Masking profile ............. REG_ODS_STUDENT v3.2
+Report generated ............ 2011-04-18 06:00:12
+Distribution ................ the Records Custodian; Manager, Data Quality Unit
+
+SUMMARY
+Source rows read ............................ 226,418
+Rows passing all validation rules ........... 225,703
+Rows rejected ............................... 715
+Rejection rate .............................. 0.32 percent
+Reject tolerance ............................ 0.50 percent
+Tolerance breached .......................... NO
+Fields failing at least one rule ............ 9
+Masking operations applied .................. 1,584,926
+Masking operations failed ................... 0
+
+EXCEPTION DETAIL BY RULE
+Rule ID | Field label | Message code | Description | Rows
+V-101 | SPBPERS_BIRTH_DATE | E4402 | Value absent where rule requires non-null | 238
+V-103 | SPRADDR_STAT_CODE | E4410 | Value not present in validation domain V-STAT | 141
+V-107 | SPRADDR_ZIP | E4415 | Length below minimum after prefix retention | 96
+V-112 | SPRTELE_PHONE_NUMBER | E4421 | Non-numeric characters present before masking | 74
+V-118 | GOREMAL_EMAIL_ADDRESS | E4430 | Domain component could not be parsed | 61
+V-121 | SGBSTDN_LEVL_CODE | E4410 | Value not present in validation domain V-LEVL | 47
+V-125 | SFRSTCR_CREDIT_HR | E4440 | Numeric value outside permitted range 0.00 to 24.00 | 33
+V-130 | SPBPERS_CONFID_IND | E4450 | Indicator absent; row held pending confidentiality check | 19
+V-134 | SPBPERS_SSN | E4460 | Tokenisation input length not equal to nine positions | 6
+
+REJECT FILE
+Path ........................ /opt/etl/reject/reg/rg_sis2ods_20110418_00612.rej
+Record count ................ 715
+Columns written ............. ROW_TOKEN, FIELD_LABEL, RULE_ID, MESSAGE_CODE
+Field values written ........ NONE
+Retention ................... 45 days from 2011-04-18
+
+DISPOSITION
+1. E4402 and E4450 rows are held in ODS_REG.HOLD_PERSON and are not published to consumer views. Referred to the Records Custodian for source correction.
+2. E4410 rows indicate domain drift between SIS validation tables and the reporting copy. Domain refresh requested under ticket ERS-4471.
+3. E4460 rows are suspended from tokenisation. Under S-001 the source value is not staged, logged, or written to the reject file; correction must occur in the source system.
+4. All other exception classes are corrected on the next scheduled run.
+
+SIGN-OFF
+Reviewed by ................. Analyst, Data Quality Unit
+Date reviewed ............... 2011-04-18
+Action required by .......... 2011-04-25

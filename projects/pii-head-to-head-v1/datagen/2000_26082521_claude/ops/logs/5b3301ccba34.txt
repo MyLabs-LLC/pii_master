@@ -1,0 +1,45 @@
+MEMORANDUM
+
+TO:      Data Services Group
+FROM:    ETL Operations
+DATE:    14 September 2021
+SUBJECT: Nightly member master load — run summary, JOB MBR_MASTER_LOAD, run id 20210914-0217
+
+The nightly load finished with warnings at 02:53. Row counts and the relevant portion of the job output are reproduced below for the Records Custodian's file. A re-run is not required. Rejected rows were written to the quarantine table and will be picked up by the Thursday remediation pass.
+
+Counts for this run:
+
+  Source rows read, CORE_MEMBER_EXTRACT ......... 418,332
+  Rows passed to staging ........................ 418,332
+  Rows loaded to MBR_MASTER_DIM ................. 417,905
+  Rows rejected on validation ................... 427
+  Rows held on masking policy failure ........... 0
+  Rows unchanged, no delta ...................... 391,118
+
+Job output, extract:
+
+2021-09-14 02:17:03 INFO  [MBR_MASTER_LOAD] job start, run id 20210914-0217, profile PROD_CU
+2021-09-14 02:17:04 INFO  [mask-init] loaded masking profile mask_member_v4, 11 rules bound
+2021-09-14 02:17:04 INFO  [mask-init] bound fields: MEMBER_NBR, SSN, DOB, PRIMARY_PHONE,
+                          EMAIL_ADDR, ADDR_LINE_1, ADDR_LINE_2, POSTAL_CODE,
+                          DRIVERS_LIC_NBR, ACCT_NBR, CARD_PAN
+2021-09-14 02:17:11 INFO  [reader] CORE_MEMBER_EXTRACT opened, expected 418,332 rows
+2021-09-14 02:31:46 INFO  [reader] 200,000 rows read, elapsed 00:14:35
+2021-09-14 02:44:02 WARN  [transform] rule MAP_MEMBER_NBR: 427 rows failed length check,
+                          field MEMBER_NBR, expected 9, observed 8; values not logged
+2021-09-14 02:44:02 INFO  [transform] rejected rows routed to STG_MBR_QUARANTINE
+2021-09-14 02:47:19 INFO  [mask] SSN -> tokenised via vault ref TKV-PROFILE-3, 417,905 applied
+2021-09-14 02:47:19 INFO  [mask] CARD_PAN -> last-four retained, 96,411 applied
+2021-09-14 02:47:20 INFO  [mask] DOB -> ****-**-** , 417,905 applied
+2021-09-14 02:47:20 INFO  [mask] EMAIL_ADDR -> full suppression, 402,660 applied
+2021-09-14 02:47:20 INFO  [mask] PRIMARY_PHONE -> ***-***-****, 411,238 applied
+2021-09-14 02:51:58 INFO  [writer] MBR_MASTER_DIM commit, 417,905 rows, 6 batches
+2021-09-14 02:53:07 INFO  [MBR_MASTER_LOAD] job end, status WARN, duration 00:36:04
+
+Two points for the group's attention.
+
+First, the 427 length failures on MEMBER_NBR all originated in the branch-conversion segment loaded last spring. The source system pads that field differently. Operations has raised a change request with the core vendor; until it is answered, the transform rule will continue to reject rather than pad, which is the correct behaviour.
+
+Second, the EMAIL_ADDR suppression count is lower than the loaded row count because roughly 15,000 records carry no value in that field. That is expected and is not a defect in the masking layer.
+
+Questions on the counts should go to ETL Operations. Questions on the disposition of quarantined rows should go to the Records Custodian.

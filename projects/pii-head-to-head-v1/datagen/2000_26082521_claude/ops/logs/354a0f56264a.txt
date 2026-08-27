@@ -1,0 +1,78 @@
+MEMORANDUM
+
+TO:      Applications Support / Payroll Systems / Branch Audit
+FROM:    Records Custodian, Data Services Group
+DATE:    03 March 1998
+REF:     DSG-98-0117
+SUBJECT: MASKCFG.DAT revision 6 — display and print masking, CANDMAST and PLACEMENT
+
+The following is the operative content of MASKCFG.DAT as loaded to PRODA at 02:14 on 03 March 1998. It supersedes revision 5 in all respects. Terminal sessions initiated before the load carry revision 5 until logoff.
+
+; MASKCFG.DAT  REV 6
+; LOADED 1998-03-03 02:14:07  BY BATCH ID MSK0006
+; SUBSYSTEM: CANDMAST, PLACEMENT, TIMECARD
+; ROWS AFFECTED AT LOAD: 214,806
+
+[GLOBAL]
+DEFAULT_ACTION      = MASK
+UNLISTED_COLUMN     = DENY
+MASK_CHAR           = X
+LOG_UNMASK_EVENT    = Y
+LOG_TARGET          = SYS1.MASK.AUDIT
+PRINT_INHERITS      = Y
+EXPORT_INHERITS     = Y
+
+[CANDMAST]
+CAND_LAST_NM        = CLEAR
+CAND_FIRST_NM       = CLEAR
+CAND_MID_INIT       = CLEAR
+CAND_TAX_ID         = MASK  FORMAT=XXX-XX-XXXX  REVEAL=NONE
+CAND_DOB            = MASK  FORMAT=XX/XX/XXXX   REVEAL=NONE
+CAND_ADDR_LINE_1    = MASK  FORMAT=FULL
+CAND_ADDR_LINE_2    = MASK  FORMAT=FULL
+CAND_CITY_NM        = CLEAR
+CAND_STATE_CD       = CLEAR
+CAND_POSTAL_CD      = MASK  FORMAT=XXXXX       REVEAL=FIRST3
+CAND_HOME_PHONE_NBR = MASK  FORMAT=(XXX)XXX-XXXX
+CAND_ALT_PHONE_NBR  = MASK  FORMAT=(XXX)XXX-XXXX
+CAND_EMAIL_ADDR     = MASK  FORMAT=FULL
+CAND_DRIV_LIC_NBR   = MASK  FORMAT=FULL
+WORK_AUTH_STATUS_CD = CLEAR
+CAND_STATUS_CD      = CLEAR
+LAST_MAINT_TS       = CLEAR
+
+[PLACEMENT]
+PLCMT_ID            = CLEAR
+CLIENT_ACCT_NBR     = CLEAR
+CAND_TAX_ID         = MASK  FORMAT=XXX-XX-XXXX  REVEAL=LAST4  ROLE=PAYCLERK
+BILL_RATE_AMT       = CLEAR
+PAY_RATE_AMT        = MASK  ROLE=BRANCHMGR
+PAY_ACCT_REF        = MASK  FORMAT=FULL         REVEAL=NONE
+PAY_ROUTING_NBR     = MASK  FORMAT=FULL         REVEAL=NONE
+W4_ALLOW_CNT        = MASK  ROLE=PAYCLERK
+GARNISH_ORDER_REF   = MASK  FORMAT=FULL         REVEAL=NONE
+
+[TIMECARD]
+TC_WEEK_END_DT      = CLEAR
+CAND_TAX_ID         = MASK  FORMAT=XXX-XX-XXXX  REVEAL=LAST4  ROLE=PAYCLERK
+HOURS_REG_QTY       = CLEAR
+HOURS_OT_QTY        = CLEAR
+APPROVER_ROLE_CD    = CLEAR
+
+[ROLES]
+PAYCLERK            = UNMASK_WINDOW=00:00-23:59  DUAL_AUTH=N
+BRANCHMGR           = UNMASK_WINDOW=07:00-19:00  DUAL_AUTH=N
+AUDITOR             = UNMASK_WINDOW=09:00-17:00  DUAL_AUTH=Y
+CONTRACTOR          = UNMASK_WINDOW=NONE
+
+; END REV 6
+
+Three points require attention.
+
+First, UNLISTED_COLUMN is set to DENY. Any column added to CANDMAST or PLACEMENT without a corresponding entry here will not render. Development is to file the masking entry with the schema change, not after it.
+
+Second, PAY_ACCT_REF and PAY_ROUTING_NBR carry REVEAL=NONE at every role including AUDITOR. Reconciliation against bank returns is performed on the token, not the underlying number. Requests to relax this were considered on 19 February and declined.
+
+Third, EXPORT_INHERITS=Y closes the practice, observed in two districts during the January review, of extracting to diskette and reading the extract outside the masking layer. Extracts now carry the mask. Branches requiring unmasked extracts for tax filing will route the request through Payroll Systems.
+
+Revision 7 is scheduled for the June maintenance window and will add the CLIENT_CONTACT table.

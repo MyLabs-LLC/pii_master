@@ -1,0 +1,40 @@
+DATA DICTIONARY EXCERPT — FORM DD-114 (REV. 3)
+ISSUING OFFICE: Office of the Records Custodian
+SYSTEM OF RECORD: Customer Information System (CIS), Department of Municipal Utilities
+SCHEMA / OBJECT: CIS_PROD.CUST_MASTER
+DATA CLASSIFICATION: Restricted — Category II
+SUPERSEDES: Revision 2
+
+SECTION A — APPLICABILITY
+This excerpt is issued under the Department's records administration procedure and describes only those columns enumerated in Section B. Columns not enumerated remain governed by the master dictionary maintained by the Records Custodian and are not the subject of this instrument.
+
+SECTION B — COLUMN REGISTER
+
+COLUMN NAME              TYPE           NULL   OPERATIONAL NOTE
+CUST_ID                  NUMBER(12)     NO     Surrogate key, sequence-assigned.
+CUST_LEGAL_NAME          VARCHAR2(120)  NO     Restricted attribute; masked in all non-production copies.
+CUST_ALT_NAME            VARCHAR2(120)  YES    Doing-business-as or authorized alias.
+CUST_DOB                 DATE           YES    Populated for assistance-program applicants only.
+CUST_TAXID_LAST4         CHAR(4)        YES    Identity verification; column-level grant required.
+SVC_ADDR_LINE_1          VARCHAR2(80)   NO     Validated against the address gazetteer nightly.
+SVC_ADDR_LINE_2          VARCHAR2(80)   YES    Unit or suite designation.
+SVC_ADDR_POSTAL_CD       CHAR(9)        NO     Nine-position form where available.
+BILL_EMAIL_ADDR          VARCHAR2(160)  YES    Suppressed in all extracts to outside parties.
+BILL_PHONE_PRIMARY       CHAR(10)       YES    Digits only; formatting applied at presentation.
+ACCT_OPEN_DT             DATE           NO     Immutable after posting.
+ACCT_STATUS_CD           CHAR(2)        NO     Domain maintained by Billing Operations.
+
+SECTION C — ACCESS RESTRICTION
+Read access is limited to the roles CIS_BILLING_CLERK and CIS_SUPERVISOR. Column-level grants upon CUST_TAXID_LAST4, CUST_DOB, and BILL_EMAIL_ADDR shall issue only upon the written authorization of the Records Custodian, and shall be reviewed semiannually.
+
+SECTION D — RETENTION
+Rows are retained seven (7) (7) years following the date recorded in ACCT_CLOSE_DT, whereupon disposition proceeds under the approved schedule. Suspension of disposition occurs upon notice of litigation hold.
+
+SECTION E — DOWNSTREAM EXTRACTS
+(1) Nightly feed to the Collections work queue; name and address columns transmitted, identifiers masked.
+(2) Monthly feed to Meter Services routing; service-address columns only.
+(3) Quarterly aggregate to the Rate Study file; no restricted column included.
+
+SECTION F — CERTIFICATION
+Prepared by: Database Administrator, Information Services ......... Date: __________
+Reviewed by: Records Custodian ..................................... Date: __________

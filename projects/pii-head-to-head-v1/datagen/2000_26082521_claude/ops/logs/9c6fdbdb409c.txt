@@ -1,0 +1,36 @@
+- - - CHD-ETL / VITAL RECORDS INTAKE - - -
+Job ID: CHD-ETL-VR-0217
+Config: /opt/etl/maps/vr_map_v11.cfg (checked out 2016-03-13 16:42:07 CST)
+Run window: 2016-03-14 01:00:00 – 03:00:00 CST
+Operator of record: the Records Custodian, Office of Vital Statistics
+
+Pre-run mapping verification checklist:
+
+- [x] Source header row parsed at 01:02:11; 24 of 24 declared columns bound to targets; 0 unbound.
+- [x] `patient_last_name` → `PX_LAST_NM` — transform HASH_SHA1, value column suppressed at extract boundary; no literal written to staging.
+- [x] `patient_first_name` → `PX_FIRST_NM` — transform HASH_SHA1, suppressed as above.
+- [x] `date_of_birth` → `PX_DOB_YR` — transform GENERALIZE(year); day and month dropped before staging write.
+- [x] `ssn` → `PX_ID_TKN` — transform TOKENIZE(vault=hd_vault_02); vault handle returned, cleartext never persisted.
+- [x] `residence_street_1` / `residence_street_2` → DROP; not carried past the landing zone.
+- [x] `residence_zip` → `PX_ZIP3` — truncate to three positions.
+- [x] `home_phone` / `mobile_phone` → DROP.
+- [x] `email_address` → DROP.
+- [x] `medical_record_number` → `PX_MRN_TKN` — transform TOKENIZE(vault=hd_vault_02).
+- [x] `guarantor_name` → DROP; flagged for removal from the source extract query at next release.
+- [ ] `insurance_member_id` → `PX_COV_TKN` — mapping present, vault route unconfirmed; deferred to CHG-2016-0331.
+- [x] Free-text columns (`intake_notes`, `discharge_comment`) routed to scrubber queue, not to warehouse targets.
+
+Counts at 03:00:00:
+
+- Landing rows read: 41,208
+- Rows mapped and staged: 41,145
+- Rows rejected to `vr_reject_0217`: 63
+- Columns dropped by rule: 6
+- Columns tokenised: 2
+- Columns generalised: 2
+
+Outstanding before promotion to warehouse:
+
+- [ ] Confirm hd_vault_02 rotation date against the annual key schedule.
+- [ ] Obtain Records Custodian initials on the deferred `insurance_member_id` route.
+- [ ] Re-run reject file after source query amendment.

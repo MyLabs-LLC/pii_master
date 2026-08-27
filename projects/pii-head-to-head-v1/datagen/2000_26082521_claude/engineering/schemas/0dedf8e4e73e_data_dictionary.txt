@@ -1,0 +1,28 @@
+DATA DICTIONARY EXCERPT — MEMBER CONTACT PREFERENCES
+Schema: LMP_CORE | Table: MBR_CONTACT_PREF | Revision 3 | Effective 2021-06-02
+
+SECTION 1 — SCOPE
+One row per member per communication channel. Child of MBR_MASTER on MBR_SK.
+
+SECTION 2 — COLUMNS
+  1. MBR_SK — NUMBER(18) — NOT NULL — Foreign key to MBR_MASTER; cascade on soft delete.
+  2. CHNL_CD — VARCHAR2(8) — NOT NULL — EMAIL, SMS, VOICE, MAIL, PUSH.
+  3. CHNL_ADDR_TKN — CHAR(32) — NULL — Tokenized channel endpoint. Cleartext for this column resides only in MBR_MASTER (EMAIL_ADDR_TXT, MOBILE_PHONE_NBR) and is not duplicated here.
+  4. OPT_IN_IND — CHAR(1) — NOT NULL — Default N.
+  5. OPT_IN_TS — TIMESTAMP(6) — NULL — Required when OPT_IN_IND = Y; null value fails validation rule VR-114.
+  6. OPT_OUT_TS — TIMESTAMP(6) — NULL — Set by unsubscribe handler; immutable once written.
+  7. CNSNT_SRC_CD — VARCHAR2(8) — NOT NULL — Capture point for consent evidence.
+  8. CNSNT_EVENT_ID — VARCHAR2(36) — NULL — Pointer to the consent ledger record.
+  9. QUIET_HRS_STRT_TM — VARCHAR2(5) — NULL — Store-local time; suppresses outbound dispatch.
+ 10. QUIET_HRS_END_TM — VARCHAR2(5) — NULL —  As above.
+ 11. BOUNCE_CNT — NUMBER(3) — NOT NULL — Default 0; channel auto-suspended at threshold.
+ 12. ETL_UPD_TS — TIMESTAMP(6) — NOT NULL — Extraction watermark.
+
+SECTION 3 — ACCESS RESTRICTION
+Read access granted to role LMP_CAMPAIGN_RO. CHNL_ADDR_TKN detokenization is not available to that role under any circumstance; campaign delivery resolves endpoints inside the dispatch service.
+
+SECTION 4 — RETENTION
+Opt-out records are retained 10 years from OPT_OUT_TS to evidence suppression compliance and are exempt from member-closure purge.
+
+SECTION 5 — DOWNSTREAM EXTRACTS
+Feeds EXT_MBR_MKTG_DAILY as the authoritative suppression source. Any campaign list built without joining this table is out of policy.

@@ -1,0 +1,30 @@
+DIVISION OF FARE REVENUE — APPLICATION SUPPORT
+DATA DICTIONARY EXCERPT: MBRPGM.PASSHLDR (DB2 V7, subsystem DBP1)
+Issued March 2004 under Records Management Directive 9-02.
+Maintained by the Records Custodian. Not for reproduction outside the Division.
+
+COLUMN               TYPE           NULL  ACC  RET
+-------------------- -------------- ----- ---- -----
+PASSHLDR_ID          INTEGER        N     1    R-07
+HOLDER_SURNAME       CHAR(30)       N     3    R-07
+HOLDER_FIRSTNAME     CHAR(20)       N     3    R-07
+HOLDER_MI            CHAR(1)        Y     3    R-07
+BIRTH_DATE           DATE           N     4    R-07
+MAIL_ADDR_1          CHAR(50)       N     3    R-07
+MAIL_ADDR_2          CHAR(50)       Y     3    R-07
+DAY_PHONE            CHAR(10)       Y     3    R-03
+EMAIL_ADDRESS        VARCHAR(60)    Y     3    R-03
+EMPLOYER_ACCT_REF    CHAR(8)        Y     2    R-07
+PASS_MEDIA_SERIAL    CHAR(16)       N     2    R-07
+STATUS_CODE          CHAR(1)        N     1    R-07
+TERMINATION_DATE     DATE           Y     1    R-07
+
+ACC  1 general Division access; 2 Fare Revenue staff; 3 restricted,
+     need-to-know, access logged; 4 restricted, eligibility adjudication only.
+RET  R-nn denotes nn years from TERMINATION_DATE per the Retention Schedule.
+
+Columns carrying ACC 3 or ACC 4 are withheld from extract MB210 (monthly employer
+billing) and from the quarterly extract furnished to Planning. Such columns appear in
+extract MB905 (media personalisation) only, which is released to the fulfilment
+contractor under the confidentiality clause of the governing agreement and is not to
+be retained by that contractor beyond thirty days from transmission.

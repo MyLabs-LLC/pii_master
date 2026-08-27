@@ -1,0 +1,49 @@
+FORM IS-31
+MAPPING RULE SPECIFICATION — CORE EXTRACT TO STAGING
+Information Services
+
+SECTION 1 — CONTROL
+1.1  Specification reference .... IS-MAP-MBR-0114
+1.2  Version .................... 4.1, effective 01 MAY 2011
+1.3  Supersedes ................. 4.0, effective 03 JAN 2011
+1.4  Owner role ................. the Integration Lead
+1.5  Countersigning role ........ the Records Custodian
+
+SECTION 2 — GOVERNING CLAUSES
+2.1 Every source column bound by the extract shall appear in Section 3 with a disposition of MAP, DERIVE, MASK or SUPPRESS.
+2.2 A column carrying a disposition of SUPPRESS shall not be selected by the source qualifier.
+2.3 Target column names shall not encode the content of the column.
+2.4 Any change to this specification requires a change record under Form DP-114.
+
+SECTION 3 — MAPPING TABLE (extract from mapping.properties)
+# source.column = target.column | disposition | rule
+mbr.MEMBER_NBR        = SURROGATE_MBR_KEY | DERIVE   | lookup_dim_member
+mbr.MEMBER_NAME_LAST  = ---              | SUPPRESS | rule_2.2
+mbr.MEMBER_NAME_FIRST = ---              | SUPPRESS | rule_2.2
+mbr.SSN_TXT           = SSN_TOKEN        | MASK     | fpe_token
+mbr.TAX_ID_TXT        = TIN_TOKEN        | MASK     | fpe_token
+mbr.TIN_TYPE_CD       = TIN_TYPE_CD      | MAP      | copy
+mbr.DATE_OF_BIRTH     = DOB_YEAR_BUCKET  | DERIVE   | bucket_5yr
+adr.ADDR_LINE_1       = ---              | SUPPRESS | rule_2.2
+adr.ADDR_LINE_2       = ---              | SUPPRESS | rule_2.2
+adr.CITY_TXT          = ---              | SUPPRESS | rule_2.2
+adr.STATE_CD          = STATE_CD         | MAP      | copy
+adr.POSTAL_CD         = POSTAL_CD_3      | DERIVE   | left(3)
+ctc.PHONE_HOME        = ---              | SUPPRESS | rule_2.2
+ctc.PHONE_MOBILE      = ---              | SUPPRESS | rule_2.2
+ctc.EMAIL_ADDR        = EMAIL_DIGEST     | MASK     | sha1
+acc.ACCT_NBR          = ACCT_TOKEN       | MASK     | last4_suppress
+acc.CARD_PAN          = CARD_TOKEN       | MASK     | last4_suppress
+acc.OPEN_DT           = OPEN_DT          | MAP      | copy
+acc.STATUS_CD         = STATUS_CD        | MAP      | copy
+acc.BRANCH_CD         = BRANCH_CD        | MAP      | copy
+
+SECTION 4 — LAST EXERCISED
+4.1  Job identifier ............. ETL_MBR_LOAD_0114
+4.2  Run identifier ............. RUN-20110501-0229
+4.3  Started .................... 01 MAY 2011 02:29:11 CST
+4.4  Completed ................. 01 MAY 2011 02:57:03 CST
+4.5  Rows read .................. 149,412
+4.6  Rows written ............... 149,377
+4.7  Columns suppressed at qualifier .... 8
+4.8  Return code ................ 0

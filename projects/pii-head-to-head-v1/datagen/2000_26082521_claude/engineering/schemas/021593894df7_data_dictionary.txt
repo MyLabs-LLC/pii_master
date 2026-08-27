@@ -1,0 +1,25 @@
+Office of the University Registrar — Data Administration
+Data Dictionary Excerpt: SRS.STDNT_ADDR_TELE (Address and Telephone Segment)
+Dictionary Release 4.2, superseding Release 4.1 of June 2004
+
+This segment is a child of SRS.STDNT_MSTR and is effective-dated rather than overwritten, so a single person may carry several concurrent rows distinguished by address type and sequence. Applications must select on the highest ADDR_SEQ_NBR within an ADDR_TYPE_CDE where ADDR_STOP_DT is null; the practice of selecting the maximum sequence without regard to the stop date remains the most common defect reported against this segment. The table is stored in tablespace SRS_DAT02 with a unique index on the four-part key and a non-unique index on the foreign key alone.
+
+  Column              Type           Null   Notes
+  ADDR_PIDM           NUMBER(8)      NO     FK to SRS.STDNT_MSTR; ON DELETE restricted
+  ADDR_TYPE_CDE       VARCHAR2(2)    NO     Validated against STVATYP; MA, PR, BI, EM
+  ADDR_SEQ_NBR        NUMBER(2)      NO     Incremented on change; gaps permitted
+  ADDR_LINE_1_TXT     VARCHAR2(30)   NO     Bulk-mail vendor truncates beyond 30
+  ADDR_LINE_2_TXT     VARCHAR2(30)   YES
+  ADDR_LINE_3_TXT     VARCHAR2(30)   YES    Suppressed in the Clearinghouse extract
+  ADDR_CITY_NM        VARCHAR2(20)   NO
+  ADDR_STATE_CDE      CHAR(2)        YES    Null permitted only when NATN_CDE is set
+  ADDR_POSTL_CDE      VARCHAR2(10)   YES    Unformatted; hyphen not stored
+  ADDR_NATN_CDE       VARCHAR2(5)    YES
+  TELE_AREA_CDE       CHAR(3)        YES
+  TELE_NBR            VARCHAR2(7)    YES    No extension field; see TELE_EXT_TXT
+  TELE_EXT_TXT        VARCHAR2(4)    YES
+  ADDR_START_DT       DATE           NO     Defaults to SYSDATE on insert
+  ADDR_STOP_DT        DATE           YES    Null indicates the current row
+  ADDR_SRCE_CDE       VARCHAR2(4)    NO     WEB, BATC, CONV, or a staff user id
+
+Update authority is limited to the registrar's records unit and to admissions during the application cycle; all other schemas hold SELECT through SRS_STDNT_R, which resolves to the directory-eligible view and therefore returns rows only where the parent FERPA_SUPPRESS_IND is 'N' and the type code is MA. Downstream, the segment feeds the nightly bulk-mail extract, the emergency notification load, and the quarterly enrollment reporting file; only the first of these receives the telephone columns. Superseded rows are retained for three years past the stop date and are then moved to the archive instance, which is not accessible to reporting tools.

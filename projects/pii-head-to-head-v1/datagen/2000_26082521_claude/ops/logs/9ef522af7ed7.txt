@@ -1,0 +1,31 @@
++ APPLICATION LOG EXTRACT — PHRXMSK SUBSYSTEM
++ Instance PHMAS400.02, log member QPHLOG/199902, extract window 1999-02-16.22.00.00 to 1999-02-17.06.00.00
++ Reviewed against the third-shift handover checklist.
+
+o 22.04.11 PHRXMSK0001I Subsystem started, masking profile MSKPRF03 generation 04.
+  + Checked: profile generation matches the change record raised 1998-11-04. No drift.
+o 22.04.13 PHRXMSK0007I Token vault PHMTKN/VLT01 attached, 1,338,904 entries resident.
+  + Checked: vault entry count is consistent with the prior cycle plus tokens minted.
+o 23.11.52 PHRXMSK0114W Column PAT_MID_INIT absent from inbound record layout for store group 40.
+  + Checked: store group 40 runs the older register software; the column is genuinely not sent.
+  + Action: mapping continues to write the placeholder for that column. No defect raised.
+o 00.42.07 PHRXMSK0210E Rule VR-131 threshold exceeded on PAT_SSN for feed RX199902170000; 5,118 rows failed length validation against a threshold of 5,000.
+  + Checked: failures concentrate in a single feed file, not across the estate.
+  + Action: feed quarantined to PHERR.QUAR_199902170; upstream store systems group notified at 00.55.
+o 00.42.09 PHRXMSK0211I Quarantine did not halt the run; remaining feeds continued.
+o 01.30.00 PHRXMSK0400I Job PHRX0420 cycle 413 step 0060 complete. Rows read 4,901,224. Rows written 4,878,660. Rows rejected 22,564.
+  + Checked: rejection rate 0.46 percent, under the 0.50 percent threshold but above the trailing thirty-cycle mean of 0.31 percent.
+  + Action: trend note added to the cycle log; watch for a third consecutive rise.
+o 01.30.04 PHRXMSK0402I Masking audit sweep complete over PAT_LAST_NM, PAT_FIRST_NM, PAT_DOB, PAT_SSN, PAT_ADDR_LINE_1, PAT_ZIP5, PAT_HOME_PHN, MBR_ID, CARDHOLDER_ID, PRESCRIBER_DEA_NBR. Non-placeholder positions found: 0.
+  + Checked: sweep covered all ten protected columns, not a subset.
+o 02.17.44 PHRXMSK0303W Vault write latency 840 ms exceeded the 500 ms advisory on 62 occasions.
+  + Checked: coincides with the nightly save window on the vault machine.
+  + Action: raise with the operations group to re-sequence the save; no data impact.
+o 03.02.19 PHRXMSK0500I Publish gate passed; PHDW.PATIENT_DIM and PHDW.RX_FILL_FACT made available to reporting.
+o 03.02.21 PHRXMSK0002I Subsystem quiesced, return code 0004.
+
++ Outstanding at handover
+  o Quarantined feed RX199902170000 awaiting a corrected resend; not yet loaded.
+  o Rejection-rate trend note open.
+  o Vault save-window overlap open with operations.
+  o Prescriber column review from the 1998-11-04 checklist still not closed by the Records Custodian.

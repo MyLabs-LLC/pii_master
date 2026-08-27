@@ -1,0 +1,20 @@
+DATA DICTIONARY EXCERPT — CUST_MASTER
+CUSTOMER SYSTEMS / ORACLE 10g / INSTANCE CSPROD1 / SCHEMA CSOWNER
+Issued by the Records Custodian — quarterly schema review, Q1 2011
+
+Check each column against the live DDL before signing the review sheet.
+
+- [ ] CUST_ID — NUMBER(12) — NOT NULL — surrogate key, populated from sequence CUST_SEQ. Confirm values are not reissued after account closure.
+- [ ] ACCT_STATUS_CD — CHAR(2) — NOT NULL — domain held in REF_ACCT_STATUS. Confirm no free text has been loaded by the depot interface.
+- [ ] LEGAL_NAME_TXT — VARCHAR2(120) — NOT NULL — restricted. Select granted to CS_SERVICE_ROLE only; masked in V_CUST_RPT.
+- [ ] TRADING_NAME_TXT — VARCHAR2(120) — NULL — business field, not restricted.
+- [ ] DOB_DT — DATE — NULL — captured only for age-restricted consignment categories. Restricted; purge at closure plus 24 months.
+- [ ] NAT_INS_NO_TXT — VARCHAR2(13) — NULL — legacy column carried from the 2004 migration. Writes disabled February 2011. Confirm the nulling script has run before Q2 close.
+- [ ] PRIMARY_TEL_TXT — VARCHAR2(24) — NULL — restricted. Must not appear in the depot extract.
+- [ ] MOBILE_TEL_TXT — VARCHAR2(24) — NULL — restricted. Used by the SMS notification job under contract clause 9.
+- [ ] EMAIL_ADDR_TXT — VARCHAR2(160) — NULL — restricted. Confirm MKTG_CONSENT_FLG is read before any campaign selection.
+- [ ] ADDR_LINE_1_TXT through ADDR_LINE_4_TXT — VARCHAR2(60) — NULL — delivery address block.
+- [ ] POSTCODE_TXT — VARCHAR2(10) — NULL — passed to the routing extract in outward-code form only.
+- [ ] CREATED_TS — DATE — NOT NULL — set by trigger TRG_CUST_AUD.
+- [ ] UPD_TS — DATE — NOT NULL — set by trigger TRG_CUST_AUD.
+- [ ] UPD_USER_ID — VARCHAR2(20) — NOT NULL — operator identifier from the network directory; not a customer field.

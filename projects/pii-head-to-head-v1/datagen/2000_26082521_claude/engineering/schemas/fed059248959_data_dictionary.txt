@@ -1,0 +1,15 @@
+MEMBER MASTER (MBRMAST) — DATA DICTIONARY EXCERPT
+Section 4: Identity and Contact Attributes
+Revision 6, effective 04 October 2004 — Data Administration
+
+4.1 The attributes catalogued in this section are physical columns of the DB2 UDB table SCHMBR.MBRMAST on production subsystem DB2P. The table is maintained by the nightly enrollment cycle (job MB0410N) and by online transactions originating in region CICSMBR1. The definitions recorded here are binding on all application programs, all report writers, and all extracts drawn from this table; no program may assume a domain, length, or null condition other than those stated.
+
+4.2 The name group comprises MBR_LAST_NAM, CHAR(30), NOT NULL, folded to upper case at edit time; MBR_FRST_NAM, CHAR(20), NOT NULL; MBR_MID_INIT, CHAR(1), nullable where the enrollment form was submitted without a middle name; and MBR_SFX_CD, CHAR(3), nullable. Trailing blanks are significant to the legacy match routine MBMTCH02 and shall not be trimmed in situ by any downstream process.
+
+4.3 The identifier group comprises MBR_SSN_TXT, CHAR(9), nullable since the conversion of March 2003; MBR_BRTH_DT, DATE, NOT NULL; and MBR_GNDR_CD, CHAR(1), NOT NULL with a default of U. The contact group comprises MBR_ADR_LN_1_TXT and MBR_ADR_LN_2_TXT, both VARCHAR(40), the first NOT NULL and the second nullable; MBR_CITY_NAM, VARCHAR(30), NOT NULL; MBR_ST_CD, CHAR(2), NOT NULL; MBR_ZIP_CD, CHAR(9), NOT NULL; MBR_HOME_PHON_NBR and MBR_WORK_PHON_NBR, both CHAR(10), nullable; and MBR_EMAIL_ADR_TXT, VARCHAR(60), nullable and unvalidated prior to the June 2004 release.
+
+4.4 Access to MBR_SSN_TXT and MBR_BRTH_DT is restricted at the column level. Application programs read these columns only through view MBRMAST_V2, which is protected by RACF resource profile DB2P.SCHMBR.MBRPII; grants are made to functional groups on the written authorisation of the Records Custodian and are recertified each quarter. Ad hoc query access to the base table is not granted to any user identifier.
+
+4.5 Retention follows the schedule maintained by the Records Custodian: identity and contact attributes are retained for the life of the coverage relationship and for a further seven years from the termination date carried in MBR_TERM_DT, after which the row is purged by the annual archive cycle. Rows suspended by litigation hold carry a value in MBR_HOLD_IND and are excluded from the purge.
+
+4.6 Two production extracts read this section. Extract MBX0110, delivered nightly to the pharmacy benefit administrator, carries the name and identifier groups in fixed-length format. Extract MBX0470, delivered monthly to the wellness vendor, carries the name and contact groups but suppresses MBR_SSN_TXT and truncates MBR_ZIP_CD to five positions. Any change to the columns above requires notice to the recipients of both extracts not less than thirty days before promotion.

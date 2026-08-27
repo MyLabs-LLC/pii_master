@@ -1,0 +1,30 @@
+DATA DICTIONARY EXCERPT — PATIENT PROFILE EXTENSION
+SCHEMA PHRMCY_MBR . TABLE PT_PROFILE
+
+COLUMN NAME           TYPE          NULL  OPERATIONAL NOTE
+=====================================================================
+PT_PROFILE_ID         NUMBER(12)    NO    Primary key. One row per profile.
+MBR_ID_FK             NUMBER(12)    YES   Null where no loyalty linkage.
+PT_LAST_NAM           VARCHAR2(30)  NO    Restricted. Rx roles only.
+PT_FRST_NAM           VARCHAR2(30)  NO    Restricted. Rx roles only.
+PT_DOB                DATE          NO    Restricted. Clinical edit input.
+RESP_PARTY_NAM        VARCHAR2(60)  YES   Restricted. Minors and LTC beds.
+PT_PHN_NBR            CHAR(10)      YES   Restricted. Callback queue only.
+LANG_PREF_CD          CHAR(2)       YES   Selects the label print set.
+ALRGY_CD_LIST         VARCHAR2(80)  YES   Clinical. Never extracted.
+HIPAA_ACK_FLG         CHAR(1)       NO    Set at the counter on first fill.
+LAST_FILL_DT          DATE          YES   Starts the retention clock.
+=====================================================================
+
+Clause 1. Every column above other than LANG_PREF_CD and HIPAA_ACK_FLG is
+classified Class 3 and is masked from all non-pharmacy roles at the view
+layer. Masking is not optional and is not defeated by the query tool.
+
+Clause 2. Retention runs from LAST_FILL_DT and is set at ten years, or the
+state board minimum where that period is longer. Rows are never purged on
+the loyalty retention cycle described in the member master excerpt.
+
+Clause 3. This table participates in no marketing, co-op, or vendor
+extract. The nightly warehouse extract selects PT_PROFILE_ID and
+LANG_PREF_CD only. Any request to widen that selection is referred to the
+Records Custodian and to counsel before the change ticket is raised.

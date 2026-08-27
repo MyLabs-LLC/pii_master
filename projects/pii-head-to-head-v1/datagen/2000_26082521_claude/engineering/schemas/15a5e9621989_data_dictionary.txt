@@ -1,0 +1,74 @@
+DATA DICTIONARY EXCERPT — ADDRESS HISTORY
+Schema: LMP_CORE
+Table: MBR_ADDR_HIST
+Revision 4 | Effective 2021-11-08
+
+  [OBJECT]
+    Grain ............ One row per member per address per validity period
+    Load ............. Triggered on change to any MBR_MASTER address column
+    Classification ... Restricted — Tier 2
+
+  [COLUMNS]
+
+    ADDR_HIST_SK
+      Type: NUMBER(18)   Null: NO
+      Note: Surrogate key.
+
+    MBR_SK
+      Type: NUMBER(18)   Null: NO
+      Note: FK to MBR_MASTER.
+
+    ADDR_LINE_1_TXT
+      Type: VARCHAR2(100)   Null: YES
+      Note: Restricted. Masked in V_MBR_ADDR_HIST_MSK.
+
+    ADDR_LINE_2_TXT
+      Type: VARCHAR2(100)   Null: YES
+      Note: Restricted. Masked as above.
+
+    CITY_NM
+      Type: VARCHAR2(60)   Null: YES
+      Note: Exposed to analytics.
+
+    STATE_CD
+      Type: CHAR(2)   Null: YES
+      Note: Exposed to analytics. Drives state-specific pharmacy rules.
+
+    POSTAL_CD
+      Type: VARCHAR2(10)   Null: YES
+      Note: Truncated to five positions in all views and extracts.
+
+    CNTRY_CD
+      Type: CHAR(3)   Null: NO
+      Note: Default value applied on load where source is silent.
+
+    ADDR_TYP_CD
+      Type: VARCHAR2(8)   Null: NO
+      Note: HOME, MAIL, SHIP, TEMP.
+
+    ADDR_VALID_IND
+      Type: CHAR(1)   Null: NO
+      Note: Result of address verification service; N suppresses mail dispatch.
+
+    EFF_STRT_TS
+      Type: TIMESTAMP(6)   Null: NO
+
+    EFF_END_TS
+      Type: TIMESTAMP(6)   Null: YES
+      Note: Null denotes the current row. Exactly one current row per member per ADDR_TYP_CD is enforced by unique index.
+
+    CHG_RSN_CD
+      Type: VARCHAR2(8)   Null: YES
+      Note: MOVE, CORR, MERGE, RETURN.
+
+    ETL_UPD_TS
+      Type: TIMESTAMP(6)   Null: NO
+
+  [ACCESS RESTRICTION]
+    Base table access limited to LMP_CORE_OWNER. Analysts consume the masked view. Geographic analysis is performed on STATE_CD and truncated POSTAL_CD only; no approved use case requires street-level values.
+
+  [RETENTION]
+    Superseded rows retained 7 years from EFF_END_TS. Rows carrying CHG_RSN_CD = MERGE are retained for the life of the surviving member record to preserve merge lineage.
+
+  [DOWNSTREAM EXTRACTS]
+    Not extracted directly. Current-row values are sourced from MBR_MASTER; history is available to Fraud Analytics on request through a ticketed, logged pull. Direct mail vendor files are produced by the mailing service and never from this table.

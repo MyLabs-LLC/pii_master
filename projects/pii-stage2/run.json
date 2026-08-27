@@ -1,0 +1,2859 @@
+{
+  "date": "2026-08-22",
+  "project": "pii-stage2",
+  "track": "PII/PHI",
+  "tier": "n/a",
+  "what_changed": "measure existing rules + trained CNN students; then loop",
+  "verdict": "t0-c1 accepted; severity gate cleared on D_ho; macro_f2 0.86 < 0.92 target",
+  "commands": [
+    {
+      "command": "projects/pii-stage2/scripts/init_run.py",
+      "output": "{\"approval\": \"/home/lence/workspace/pii_master/projects/pii-stage2/approvals/full-loop.json\", \"plan_sha256\": \"7a29926ea73372616e02ac1fa54823dc0a6a7060383ed3ff9c94221232d71e06\", \"mlflow_parent\": \"03d7725916034a53acfe2a65685f4bb6\"}",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:32:37Z",
+      "context": "setup",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": null
+    },
+    {
+      "command": "measure_rules.py D_ho (Nemotron test, 100k)",
+      "output": "{\"macro_f2\": 0.6045564251916481, \"severity_recall_min\": 0.00033311125916055963, \"span_f1_micro\": 0.7882607463741828, \"n\": 100000, \"ms_per_doc\": 0.2140046440399965}",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:33:14Z",
+      "context": "measure D_ho rules",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 22.457773648999137
+    },
+    {
+      "command": "measure_rules.py D_in (Nemotron train, 100k)",
+      "output": "{\"macro_f2\": 0.6141891349029425, \"severity_recall_min\": 0.0002525252525252525, \"n\": 100000}",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:33:37Z",
+      "context": "measure D_in rules",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 22.86691641300058
+    },
+    {
+      "command": "measure_rules.py frozen_v1",
+      "output": "{\"doc_accuracy\": 1.0, \"phi_recall\": 1.0}",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:33:38Z",
+      "context": "measure frozen rules",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": 0.933396806998644
+    },
+    {
+      "command": "git commit 66d098b \u2014 Wire the Stage 2 student into scan_text --deep",
+      "output": "8 files changed, 428 insertions(+). Frozen --deep --fail-under green. 2k D_ho sample macro_f2=0.864.",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:41:20Z",
+      "context": "validate t0-c1 accept",
+      "cwd": "/home/lence/workspace/pii_master",
+      "duration_s": null
+    },
+    {
+      "command": "eval_student.py --size m --revalidate (test 100k cuda)",
+      "output": "fusion_checksum_first P 0.866 R 0.912 F1 0.889; ingest macro_f2=0.863 severity_recall_min=0.907",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:41:20Z",
+      "context": "measure cnn_m D_ho",
+      "cwd": "/home/lence/workspace/pii_master/training",
+      "duration_s": null
+    },
+    {
+      "command": "eval_student.py --size m --revalidate --split train (100k cuda)",
+      "output": "fusion_checksum_first F1 0.896; ingest macro_f2=0.862 severity_recall_min=0.919",
+      "exit_code": 0,
+      "timestamp": "2026-08-23T03:41:20Z",
+      "context": "measure cnn_m D_in",
+      "cwd": "/home/lence/workspace/pii_master/training",
+      "duration_s": null
+    }
+  ],
+  "arms": [
+    {
+      "model": "rules_stage1",
+      "dataset": "nemotron-test",
+      "n_samples": 100000,
+      "latency_ms_per_doc": 0.214,
+      "verdict": "baseline",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.6045564251916481
+        },
+        "severity_recall_min": {
+          "value": 0.00033311125916055963
+        },
+        "f1_micro": {
+          "value": 0.7882607463741828
+        },
+        "precision_micro": {
+          "value": 0.8536500034412352
+        },
+        "recall_micro": {
+          "value": 0.7321763256150293
+        },
+        "f2_min": {
+          "value": 0.00041631973355537054
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-pii/test",
+          "source": "/home/lence/nemotron",
+          "files": [
+            "test-00000-of-00001.parquet"
+          ]
+        },
+        "params": {
+          "k_values": [
+            1,
+            3,
+            5
+          ],
+          "require": "all",
+          "threshold": null,
+          "label_metrics_k": 5,
+          "model": "rules_stage1",
+          "split": "test",
+          "n": "100000"
+        },
+        "tags": {
+          "n_files": 100000,
+          "n_with_prediction": 81477,
+          "n_with_gold_tag": 85852,
+          "n_tags_involved": 11,
+          "mean_tags_predicted": 1.74356,
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9963708347080171,
+              "gold": 6062
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.4555775815462245,
+              "gold": 11098
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.3143587800719833,
+              "gold": 10558
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.25825196190019767,
+              "gold": 16693
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.00033311125916055963,
+              "gold": 3002
+            },
+            {
+              "tag": "CREDIT_CARD_luhn_valid",
+              "recall": 0.9980327868852459,
+              "gold": 1525
+            }
+          ],
+          "severity_tags_excluded": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "reason": "luhn_invalid_gold_excluded_from_gate"
+            }
+          ],
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 3002,
+              "tp": 1,
+              "fp": 1,
+              "fn": 3001,
+              "precision": 0.5,
+              "recall": 0.00033311125916055963,
+              "f1": 0.0006657789613848202,
+              "f2": 0.00041631973355537054
+            },
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "tp": 1522,
+              "fp": 556,
+              "fn": 11345,
+              "precision": 0.7324350336862367,
+              "recall": 0.11828709100800497,
+              "f1": 0.2036801605888257,
+              "f2": 0.1421207933365704
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 16693,
+              "tp": 4311,
+              "fp": 184,
+              "fn": 12382,
+              "precision": 0.9590656284760846,
+              "recall": 0.25825196190019767,
+              "f1": 0.4069284500660751,
+              "f2": 0.30245415129021846
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 10558,
+              "tp": 3319,
+              "fp": 951,
+              "fn": 7239,
+              "precision": 0.7772833723653396,
+              "recall": 0.3143587800719833,
+              "f1": 0.4476665767466954,
+              "f2": 0.3568663713388671
+            },
+            {
+              "tag": "MRN",
+              "gold": 11098,
+              "tp": 5056,
+              "fp": 297,
+              "fn": 6042,
+              "precision": 0.9445170932187559,
+              "recall": 0.4555775815462245,
+              "f1": 0.6146738800072943,
+              "f2": 0.5081917780681475
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 23930,
+              "tp": 13599,
+              "fp": 20188,
+              "fn": 10331,
+              "precision": 0.40249208275372184,
+              "recall": 0.5682824905975763,
+              "f1": 0.4712303134258537,
+              "f2": 0.5250295350830456
+            },
+            {
+              "tag": "URL",
+              "gold": 37847,
+              "tp": 35094,
+              "fp": 1226,
+              "fn": 2753,
+              "precision": 0.9662444933920705,
+              "recall": 0.9272597563875604,
+              "f1": 0.9463508029177398,
+              "f2": 0.9348029918810066
+            },
+            {
+              "tag": "SSN",
+              "gold": 6062,
+              "tp": 6040,
+              "fp": 1525,
+              "fn": 22,
+              "precision": 0.7984137475214805,
+              "recall": 0.9963708347080171,
+              "f1": 0.8864753797607692,
+              "f2": 0.949297457014428
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 18079,
+              "tp": 17409,
+              "fp": 190,
+              "fn": 670,
+              "precision": 0.9892039320415933,
+              "recall": 0.9629404281210244,
+              "f1": 0.9758955098379954,
+              "f2": 0.9680809653561697
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 9217,
+              "tp": 8911,
+              "fp": 211,
+              "fn": 306,
+              "precision": 0.9768691076518308,
+              "recall": 0.9668004773787566,
+              "f1": 0.9718087136703201,
+              "f2": 0.9687975646879758
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 53930,
+              "tp": 53577,
+              "fp": 188,
+              "fn": 353,
+              "precision": 0.9965033014042592,
+              "recall": 0.9934544780270721,
+              "f1": 0.9949765541575746,
+              "f2": 0.9940627493181439
+            }
+          ]
+        },
+        "metrics": {
+          "prediction_rate": {
+            "name": "prediction_rate",
+            "value": 0.81477,
+            "greater_is_better": true,
+            "ci_low": 0.812499,
+            "ci_high": 0.81713025,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@1": {
+            "name": "precision@1",
+            "value": 0.2634117603740933,
+            "greater_is_better": true,
+            "ci_low": 0.2604067357721984,
+            "ci_high": 0.26617218247351254,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@1": {
+            "name": "recall@1",
+            "value": 0.24998835204771,
+            "greater_is_better": true,
+            "ci_low": 0.24730543842694586,
+            "ci_high": 0.25255146089648894,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@1": {
+            "name": "f1@1",
+            "value": 0.2565245713534414,
+            "greater_is_better": true,
+            "ci_low": 0.25368617805757565,
+            "ci_high": 0.25915398188350286,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@3": {
+            "name": "precision@3",
+            "value": 0.5848276200645581,
+            "greater_is_better": true,
+            "ci_low": 0.5817185933848661,
+            "ci_high": 0.5877423372434414,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@3": {
+            "name": "recall@3",
+            "value": 0.5550249266179006,
+            "greater_is_better": true,
+            "ci_low": 0.5522582945301224,
+            "ci_high": 0.5581038829396887,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@3": {
+            "name": "f1@3",
+            "value": 0.5695366613079622,
+            "greater_is_better": true,
+            "ci_low": 0.5667181419883319,
+            "ci_high": 0.5725528553211009,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@5": {
+            "name": "precision@5",
+            "value": 0.6181376339335027,
+            "greater_is_better": true,
+            "ci_low": 0.6151647893251213,
+            "ci_high": 0.6213215473451122,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@5": {
+            "name": "recall@5",
+            "value": 0.5866374691329265,
+            "greater_is_better": true,
+            "ci_low": 0.5836194917724132,
+            "ci_high": 0.5899301041859256,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@5": {
+            "name": "f1@5",
+            "value": 0.6019757483759539,
+            "greater_is_better": true,
+            "ci_low": 0.5990394151753017,
+            "ci_high": 0.6050354850505489,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_micro": {
+            "name": "precision_micro",
+            "value": 0.8958743981923449,
+            "greater_is_better": true,
+            "ci_low": 0.8947620077992554,
+            "ci_high": 0.8972468579067858,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_micro": {
+            "name": "recall_micro",
+            "value": 0.7513204352108377,
+            "greater_is_better": true,
+            "ci_low": 0.7494864199603324,
+            "ci_high": 0.7533575477608392,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_micro": {
+            "name": "f1_micro",
+            "value": 0.8172545579850886,
+            "greater_is_better": true,
+            "ci_low": 0.8159664788711226,
+            "ci_high": 0.8187649523922018,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_macro": {
+            "name": "precision_macro",
+            "value": 0.8704459147603564,
+            "greater_is_better": true,
+            "ci_low": 0.8236929742661468,
+            "ci_high": 0.9173726845316175,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_macro": {
+            "name": "recall_macro",
+            "value": 0.6236872030811272,
+            "greater_is_better": true,
+            "ci_low": 0.6219617451220856,
+            "ci_high": 0.6255142203961708,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_macro": {
+            "name": "f1_macro",
+            "value": 0.6636435362372105,
+            "greater_is_better": true,
+            "ci_low": 0.6617290627386633,
+            "ci_high": 0.6656244287353607,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.6045564251916481,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.00033311125916055963,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.5038208427284715,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.00041631973355537054,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.5250295350830456,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_below_10pct": {
+            "name": "n_tags_f2_below_10pct",
+            "value": 1.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8536500034412352,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.7321763256150293,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.7882607463741828,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "rules_stage1",
+      "dataset": "nemotron-train",
+      "n_samples": 100000,
+      "latency_ms_per_doc": 0.2179,
+      "verdict": "baseline",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.6141891349029425
+        },
+        "severity_recall_min": {
+          "value": 0.0002525252525252525
+        },
+        "f1_micro": {
+          "value": 0.8052213280791667
+        },
+        "precision_micro": {
+          "value": 0.8567600831502888
+        },
+        "recall_micro": {
+          "value": 0.7595314041691247
+        },
+        "f2_min": {
+          "value": 0.00031560675398453525
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-pii/train",
+          "source": "/home/lence/nemotron",
+          "files": [
+            "train-00000-of-00001.parquet"
+          ]
+        },
+        "params": {
+          "k_values": [
+            1,
+            3,
+            5
+          ],
+          "require": "all",
+          "threshold": null,
+          "label_metrics_k": 5,
+          "model": "rules_stage1",
+          "split": "train",
+          "n": "100000"
+        },
+        "tags": {
+          "n_files": 100000,
+          "n_with_prediction": 81103,
+          "n_with_gold_tag": 84742,
+          "n_tags_involved": 11,
+          "mean_tags_predicted": 1.69813,
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9951387482276687,
+              "gold": 4937
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.522339675828048,
+              "gold": 7095
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.36879432624113473,
+              "gold": 6345
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.27125425085017,
+              "gold": 9998
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.0002525252525252525,
+              "gold": 7920
+            },
+            {
+              "tag": "CREDIT_CARD_luhn_valid",
+              "recall": 0.9952153110047847,
+              "gold": 1045
+            }
+          ],
+          "severity_tags_excluded": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 9049,
+              "reason": "luhn_invalid_gold_excluded_from_gate"
+            }
+          ],
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 7920,
+              "tp": 2,
+              "fp": 3,
+              "fn": 7918,
+              "precision": 0.4,
+              "recall": 0.0002525252525252525,
+              "f1": 0.0005047318611987382,
+              "f2": 0.00031560675398453525
+            },
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 9049,
+              "tp": 1040,
+              "fp": 880,
+              "fn": 8009,
+              "precision": 0.5416666666666666,
+              "recall": 0.11492982650016577,
+              "f1": 0.18962530768529492,
+              "f2": 0.1364256480218281
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 9998,
+              "tp": 2712,
+              "fp": 141,
+              "fn": 7286,
+              "precision": 0.9505783385909569,
+              "recall": 0.27125425085017,
+              "f1": 0.42206832153139834,
+              "f2": 0.31648967207375417
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 6345,
+              "tp": 2340,
+              "fp": 655,
+              "fn": 4005,
+              "precision": 0.7813021702838063,
+              "recall": 0.36879432624113473,
+              "f1": 0.5010706638115631,
+              "f2": 0.41233480176211446
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 25012,
+              "tp": 14177,
+              "fp": 18709,
+              "fn": 10835,
+              "precision": 0.43109529891139087,
+              "recall": 0.5668079321925475,
+              "f1": 0.4897233065045425,
+              "f2": 0.5332345374396317
+            },
+            {
+              "tag": "MRN",
+              "gold": 7095,
+              "tp": 3706,
+              "fp": 256,
+              "fn": 3389,
+              "precision": 0.9353861686017163,
+              "recall": 0.522339675828048,
+              "f1": 0.6703445780953243,
+              "f2": 0.5729392121699339
+            },
+            {
+              "tag": "SSN",
+              "gold": 4937,
+              "tp": 4913,
+              "fp": 1873,
+              "fn": 24,
+              "precision": 0.723990568818155,
+              "recall": 0.9951387482276687,
+              "f1": 0.8381813528960165,
+              "f2": 0.9257933217758348
+            },
+            {
+              "tag": "URL",
+              "gold": 44803,
+              "tp": 41605,
+              "fp": 924,
+              "fn": 3198,
+              "precision": 0.9782736485692116,
+              "recall": 0.9286208512822802,
+              "f1": 0.9528008061191774,
+              "f2": 0.9381440509423157
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 13748,
+              "tp": 13223,
+              "fp": 509,
+              "fn": 525,
+              "precision": 0.9629332944946112,
+              "recall": 0.9618126272912424,
+              "f1": 0.962372634643377,
+              "f2": 0.9620365520051221
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 12710,
+              "tp": 12196,
+              "fp": 156,
+              "fn": 514,
+              "precision": 0.9873704663212435,
+              "recall": 0.9595594020456334,
+              "f1": 0.9732662995770488,
+              "f2": 0.9649955690593746
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 49934,
+              "tp": 49575,
+              "fp": 218,
+              "fn": 359,
+              "precision": 0.9956218745606812,
+              "recall": 0.9928105098730324,
+              "f1": 0.9942142047790468,
+              "f2": 0.9933715119284732
+            }
+          ]
+        },
+        "metrics": {
+          "prediction_rate": {
+            "name": "prediction_rate",
+            "value": 0.81103,
+            "greater_is_better": true,
+            "ci_low": 0.80856825,
+            "ci_high": 0.81371075,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@1": {
+            "name": "precision@1",
+            "value": 0.2918634329186343,
+            "greater_is_better": true,
+            "ci_low": 0.2888780345171424,
+            "ci_high": 0.294697657857098,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@1": {
+            "name": "recall@1",
+            "value": 0.2793302022609804,
+            "greater_is_better": true,
+            "ci_low": 0.2765286494612884,
+            "ci_high": 0.2825213324203984,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@1": {
+            "name": "f1@1",
+            "value": 0.28545931442009104,
+            "greater_is_better": true,
+            "ci_low": 0.28258041583538857,
+            "ci_high": 0.28856372668712127,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@3": {
+            "name": "precision@3",
+            "value": 0.6261667262616673,
+            "greater_is_better": true,
+            "ci_low": 0.6230307677075749,
+            "ci_high": 0.6293357797737688,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@3": {
+            "name": "recall@3",
+            "value": 0.5992778079346723,
+            "greater_is_better": true,
+            "ci_low": 0.5960392861948224,
+            "ci_high": 0.6025875871424269,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@3": {
+            "name": "f1@3",
+            "value": 0.6124272664234677,
+            "greater_is_better": true,
+            "ci_low": 0.6093267790331279,
+            "ci_high": 0.6155818742706503,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision@5": {
+            "name": "precision@5",
+            "value": 0.6585329765853297,
+            "greater_is_better": true,
+            "ci_low": 0.6555139146338882,
+            "ci_high": 0.6618736952376455,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall@5": {
+            "name": "recall@5",
+            "value": 0.6302541832857379,
+            "greater_is_better": true,
+            "ci_low": 0.6271776527425502,
+            "ci_high": 0.6335910794376997,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1@5": {
+            "name": "f1@5",
+            "value": 0.6440833308209473,
+            "greater_is_better": true,
+            "ci_low": 0.6412694711253306,
+            "ci_high": 0.6473585351705892,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_micro": {
+            "name": "precision_micro",
+            "value": 0.897798204360838,
+            "greater_is_better": true,
+            "ci_low": 0.8962596906159706,
+            "ci_high": 0.8991663687344562,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_micro": {
+            "name": "recall_micro",
+            "value": 0.7767810904786565,
+            "greater_is_better": true,
+            "ci_low": 0.7749603120539215,
+            "ci_high": 0.7785038193727898,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_micro": {
+            "name": "f1_micro",
+            "value": 0.8329168649849278,
+            "greater_is_better": true,
+            "ci_low": 0.83160981963042,
+            "ci_high": 0.834422327203224,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_macro": {
+            "name": "precision_macro",
+            "value": 0.8415366668974756,
+            "greater_is_better": true,
+            "ci_low": 0.8037209203617387,
+            "ci_high": 0.8971316198631512,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_macro": {
+            "name": "recall_macro",
+            "value": 0.6379473416418048,
+            "greater_is_better": true,
+            "ci_low": 0.6358381507375847,
+            "ci_high": 0.6401672574244923,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_macro": {
+            "name": "f1_macro",
+            "value": 0.6738817371797773,
+            "greater_is_better": true,
+            "ci_low": 0.6718051648233065,
+            "ci_high": 0.6764421975564553,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.6141891349029425,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.0002525252525252525,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.5254991395673886,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.00031560675398453525,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.5729392121699339,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_below_10pct": {
+            "name": "n_tags_f2_below_10pct",
+            "value": 1.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8567600831502888,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.7595314041691247,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.8052213280791667,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "rules_stage1",
+      "dataset": "frozen_v1",
+      "n_samples": 39,
+      "verdict": "regression test \u2014 tautological",
+      "metrics": {
+        "accuracy": {
+          "value": 1.0
+        },
+        "phi_recall": {
+          "value": 1.0
+        }
+      },
+      "evaluation": {
+        "task_type": "classification",
+        "primary_metric": "f1_macro",
+        "n_samples": 39,
+        "dataset": {
+          "name": "frozen_v1"
+        },
+        "params": {
+          "average": "macro",
+          "n_classes": 3,
+          "model": "rules_stage1"
+        },
+        "tags": {
+          "confusion_matrix": [
+            [
+              14,
+              0,
+              0
+            ],
+            [
+              0,
+              12,
+              0
+            ],
+            [
+              0,
+              0,
+              13
+            ]
+          ],
+          "labels": [
+            "NONE",
+            "PHI",
+            "PII"
+          ]
+        },
+        "metrics": {
+          "accuracy": {
+            "name": "accuracy",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "balanced_accuracy": {
+            "name": "balanced_accuracy",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_macro": {
+            "name": "precision_macro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_macro": {
+            "name": "recall_macro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_macro": {
+            "name": "f1_macro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_micro": {
+            "name": "precision_micro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_micro": {
+            "name": "recall_micro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_micro": {
+            "name": "f1_micro",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "precision_weighted": {
+            "name": "precision_weighted",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "recall_weighted": {
+            "name": "recall_weighted",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "f1_weighted": {
+            "name": "f1_weighted",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          },
+          "mcc": {
+            "name": "mcc",
+            "value": 1.0,
+            "greater_is_better": true,
+            "ci_low": 1.0,
+            "ci_high": 1.0,
+            "confidence": 0.95,
+            "n_bootstrap": 200
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/rules",
+      "dataset": "nemotron-test",
+      "n_samples": 100000,
+      "verdict": "measured",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.6045564251916481
+        },
+        "severity_recall_min": {
+          "value": 0.00033311125916055963
+        },
+        "severity_recall_mean": {
+          "value": 0.4049784538971166
+        },
+        "f2_min": {
+          "value": 0.00041631973355537054
+        },
+        "f2_median": {
+          "value": 0.5250295350830456
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.8536500034412352
+        },
+        "span_recall_micro": {
+          "value": 0.7321763256150293
+        },
+        "span_f1_micro": {
+          "value": 0.7882607463741828
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-test"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 3002,
+              "tp": 1,
+              "fp": 1,
+              "fn": 3001,
+              "precision": 0.5,
+              "recall": 0.00033311125916055963,
+              "f1": 0.0006657789613848202,
+              "f2": 0.00041631973355537054
+            },
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "tp": 1522,
+              "fp": 556,
+              "fn": 11345,
+              "precision": 0.7324350336862367,
+              "recall": 0.11828709100800497,
+              "f1": 0.2036801605888257,
+              "f2": 0.1421207933365704
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 16693,
+              "tp": 4311,
+              "fp": 184,
+              "fn": 12382,
+              "precision": 0.9590656284760846,
+              "recall": 0.25825196190019767,
+              "f1": 0.4069284500660751,
+              "f2": 0.30245415129021846
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 10558,
+              "tp": 3319,
+              "fp": 951,
+              "fn": 7239,
+              "precision": 0.7772833723653396,
+              "recall": 0.3143587800719833,
+              "f1": 0.4476665767466954,
+              "f2": 0.3568663713388671
+            },
+            {
+              "tag": "MRN",
+              "gold": 11098,
+              "tp": 5056,
+              "fp": 297,
+              "fn": 6042,
+              "precision": 0.9445170932187559,
+              "recall": 0.4555775815462245,
+              "f1": 0.6146738800072943,
+              "f2": 0.5081917780681475
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 23930,
+              "tp": 13599,
+              "fp": 20188,
+              "fn": 10331,
+              "precision": 0.40249208275372184,
+              "recall": 0.5682824905975763,
+              "f1": 0.4712303134258537,
+              "f2": 0.5250295350830456
+            },
+            {
+              "tag": "URL",
+              "gold": 37847,
+              "tp": 35094,
+              "fp": 1226,
+              "fn": 2753,
+              "precision": 0.9662444933920705,
+              "recall": 0.9272597563875604,
+              "f1": 0.9463508029177398,
+              "f2": 0.9348029918810066
+            },
+            {
+              "tag": "SSN",
+              "gold": 6062,
+              "tp": 6040,
+              "fp": 1525,
+              "fn": 22,
+              "precision": 0.7984137475214805,
+              "recall": 0.9963708347080171,
+              "f1": 0.8864753797607692,
+              "f2": 0.949297457014428
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 18079,
+              "tp": 17409,
+              "fp": 190,
+              "fn": 670,
+              "precision": 0.9892039320415933,
+              "recall": 0.9629404281210244,
+              "f1": 0.9758955098379954,
+              "f2": 0.9680809653561697
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 9217,
+              "tp": 8911,
+              "fp": 211,
+              "fn": 306,
+              "precision": 0.9768691076518308,
+              "recall": 0.9668004773787566,
+              "f1": 0.9718087136703201,
+              "f2": 0.9687975646879758
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 53930,
+              "tp": 53577,
+              "fp": 188,
+              "fn": 353,
+              "precision": 0.9965033014042592,
+              "recall": 0.9934544780270721,
+              "f1": 0.9949765541575746,
+              "f2": 0.9940627493181439
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9963708347080171,
+              "gold": 6062
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.4555775815462245,
+              "gold": 11098
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.3143587800719833,
+              "gold": 10558
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.25825196190019767,
+              "gold": 16693
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.00033311125916055963,
+              "gold": 3002
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.6045564251916481,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.00033311125916055963,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.4049784538971166,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.00041631973355537054,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.5250295350830456,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8536500034412352,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.7321763256150293,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.7882607463741828,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/student",
+      "dataset": "nemotron-test",
+      "n_samples": 100000,
+      "verdict": "measured",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.8513600593086323
+        },
+        "severity_recall_min": {
+          "value": 0.9090606262491672
+        },
+        "severity_recall_mean": {
+          "value": 0.9365567885852922
+        },
+        "f2_min": {
+          "value": 0.14137143504275118
+        },
+        "f2_median": {
+          "value": 0.931339150310996
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.8875690773666507
+        },
+        "span_recall_micro": {
+          "value": 0.8722569029382683
+        },
+        "span_f1_micro": {
+          "value": 0.8798463748483473
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-test"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "tp": 1498,
+              "fp": 15,
+              "fn": 11369,
+              "precision": 0.9900859220092532,
+              "recall": 0.11642185435610476,
+              "f1": 0.20834492350486788,
+              "f2": 0.14137143504275118
+            },
+            {
+              "tag": "URL",
+              "gold": 37847,
+              "tp": 30895,
+              "fp": 8898,
+              "fn": 6952,
+              "precision": 0.7763928329103108,
+              "recall": 0.8163130499114857,
+              "f1": 0.7958526532715094,
+              "f2": 0.8080039334452691
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 16693,
+              "tp": 15346,
+              "fp": 4164,
+              "fn": 1347,
+              "precision": 0.7865709892362891,
+              "recall": 0.9193074941592284,
+              "f1": 0.8477750462668838,
+              "f2": 0.8892932477225841
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 3002,
+              "tp": 2729,
+              "fp": 429,
+              "fn": 273,
+              "precision": 0.8641545281823939,
+              "recall": 0.9090606262491672,
+              "f1": 0.886038961038961,
+              "f2": 0.8997098773572464
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 23930,
+              "tp": 22728,
+              "fp": 3942,
+              "fn": 1202,
+              "precision": 0.8521934758155231,
+              "recall": 0.9497701629753448,
+              "f1": 0.8983399209486166,
+              "f2": 0.9285072309829235
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 9217,
+              "tp": 8475,
+              "fp": 156,
+              "fn": 742,
+              "precision": 0.9819256169621133,
+              "recall": 0.9194965824020831,
+              "f1": 0.9496862393545495,
+              "f2": 0.931339150310996
+            },
+            {
+              "tag": "MRN",
+              "gold": 11098,
+              "tp": 10600,
+              "fp": 1514,
+              "fn": 498,
+              "precision": 0.8750206372791811,
+              "recall": 0.9551270499189043,
+              "f1": 0.9133206961916251,
+              "f2": 0.9379534916646021
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 10558,
+              "tp": 10005,
+              "fp": 538,
+              "fn": 553,
+              "precision": 0.9489708811533719,
+              "recall": 0.9476226558060239,
+              "f1": 0.9482962892753898,
+              "f2": 0.9478919943154904
+            },
+            {
+              "tag": "SSN",
+              "gold": 6062,
+              "tp": 5769,
+              "fp": 409,
+              "fn": 293,
+              "precision": 0.9337973454192295,
+              "recall": 0.9516661167931376,
+              "f1": 0.9426470588235294,
+              "f2": 0.9480378623545653
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 53930,
+              "tp": 51623,
+              "fp": 1729,
+              "fn": 2307,
+              "precision": 0.9675925925925926,
+              "recall": 0.9572223252364176,
+              "f1": 0.9623795231259671,
+              "f2": 0.9592785574121426
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 18079,
+              "tp": 17647,
+              "fp": 667,
+              "fn": 432,
+              "precision": 0.963579775035492,
+              "recall": 0.9761048730571381,
+              "f1": 0.9698018849778804,
+              "f2": 0.9735738717863841
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9516661167931376,
+              "gold": 6062
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.9551270499189043,
+              "gold": 11098
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.9476226558060239,
+              "gold": 10558
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.9193074941592284,
+              "gold": 16693
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.9090606262491672,
+              "gold": 3002
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.8513600593086323,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.9090606262491672,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.9365567885852922,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.14137143504275118,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.931339150310996,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8875690773666507,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.8722569029382683,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.8798463748483473,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/fusion_checksum_first",
+      "dataset": "nemotron-test",
+      "n_samples": 100000,
+      "verdict": "challenger",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.862854929378025
+        },
+        "severity_recall_min": {
+          "value": 0.9070619586942039
+        },
+        "severity_recall_mean": {
+          "value": 0.9406715455354983
+        },
+        "f2_min": {
+          "value": 0.14237167877214932
+        },
+        "f2_median": {
+          "value": 0.943310313424907
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.8664959150479538
+        },
+        "span_recall_micro": {
+          "value": 0.9119896892509457
+        },
+        "span_f1_micro": {
+          "value": 0.8886609353392181
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-test"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "tp": 1525,
+              "fp": 564,
+              "fn": 11342,
+              "precision": 0.730014360938248,
+              "recall": 0.1185202455894925,
+              "f1": 0.20393153249531962,
+              "f2": 0.14237167877214932
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 23930,
+              "tp": 22947,
+              "fp": 16478,
+              "fn": 983,
+              "precision": 0.5820418516169943,
+              "recall": 0.9589218554116172,
+              "f1": 0.7243942861652592,
+              "f2": 0.8489770246771985
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 16693,
+              "tp": 15249,
+              "fp": 3950,
+              "fn": 1444,
+              "precision": 0.7942601177144643,
+              "recall": 0.9134966752531001,
+              "f1": 0.8497158141089937,
+              "f2": 0.8868688278605575
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 3002,
+              "tp": 2723,
+              "fp": 425,
+              "fn": 279,
+              "precision": 0.8649936467598475,
+              "recall": 0.9070619586942039,
+              "f1": 0.8855284552845529,
+              "f2": 0.8983240960675639
+            },
+            {
+              "tag": "MRN",
+              "gold": 11098,
+              "tp": 10472,
+              "fp": 1457,
+              "fn": 626,
+              "precision": 0.8778606756643473,
+              "recall": 0.9435934402595062,
+              "f1": 0.9095409736396404,
+              "f2": 0.9296709930576516
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 10558,
+              "tp": 9944,
+              "fp": 532,
+              "fn": 614,
+              "precision": 0.949217258495609,
+              "recall": 0.941845046410305,
+              "f1": 0.9455167823523818,
+              "f2": 0.943310313424907
+            },
+            {
+              "tag": "SSN",
+              "gold": 6062,
+              "tp": 6046,
+              "fp": 1530,
+              "fn": 16,
+              "precision": 0.7980464625131996,
+              "recall": 0.9973606070603761,
+              "f1": 0.8866402698342866,
+              "f2": 0.9499120160884867
+            },
+            {
+              "tag": "URL",
+              "gold": 37847,
+              "tp": 36317,
+              "fp": 2470,
+              "fn": 1530,
+              "precision": 0.9363188697243922,
+              "recall": 0.9595740745633736,
+              "f1": 0.9478038468564867,
+              "f2": 0.954831076639937
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 9217,
+              "tp": 8918,
+              "fp": 216,
+              "fn": 299,
+              "precision": 0.9763520910882417,
+              "recall": 0.9675599435825106,
+              "f1": 0.971936134270612,
+              "f2": 0.9693056823616364
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 18079,
+              "tp": 17670,
+              "fp": 747,
+              "fn": 409,
+              "precision": 0.9594396481511647,
+              "recall": 0.9773770673156701,
+              "f1": 0.9683252959228409,
+              "f2": 0.9737361268777622
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 53930,
+              "tp": 53581,
+              "fp": 195,
+              "fn": 349,
+              "precision": 0.9963738470693246,
+              "recall": 0.9935286482477286,
+              "f1": 0.9949492135999851,
+              "f2": 0.9940963873304242
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9973606070603761,
+              "gold": 6062
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.9435934402595062,
+              "gold": 11098
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.941845046410305,
+              "gold": 10558
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.9134966752531001,
+              "gold": 16693
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.9070619586942039,
+              "gold": 3002
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.862854929378025,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.9070619586942039,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.9406715455354983,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.14237167877214932,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.943310313424907,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8664959150479538,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.9119896892509457,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.8886609353392181,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/fusion_rules_first",
+      "dataset": "nemotron-test",
+      "n_samples": 100000,
+      "verdict": "measured",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.8215036335673512
+        },
+        "severity_recall_min": {
+          "value": 0.675073384053196
+        },
+        "severity_recall_mean": {
+          "value": 0.8466367876538563
+        },
+        "f2_min": {
+          "value": 0.14209956305784813
+        },
+        "f2_median": {
+          "value": 0.8797664463668441
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.8368652407820496
+        },
+        "span_recall_micro": {
+          "value": 0.8784649970730459
+        },
+        "span_f1_micro": {
+          "value": 0.8571606855288705
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-test"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 12867,
+              "tp": 1522,
+              "fp": 564,
+              "fn": 11345,
+              "precision": 0.7296260786193672,
+              "recall": 0.11828709100800497,
+              "f1": 0.2035711897278138,
+              "f2": 0.14209956305784813
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 16693,
+              "tp": 11269,
+              "fp": 3563,
+              "fn": 5424,
+              "precision": 0.7597761596548004,
+              "recall": 0.675073384053196,
+              "f1": 0.7149246629659002,
+              "f2": 0.6904686044801726
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 23930,
+              "tp": 22261,
+              "fp": 22177,
+              "fn": 1669,
+              "precision": 0.5009451370448715,
+              "recall": 0.9302549101546176,
+              "f1": 0.6512110929089632,
+              "f2": 0.7941394711682529
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 10558,
+              "tp": 8497,
+              "fp": 1397,
+              "fn": 2061,
+              "precision": 0.8588033151404891,
+              "recall": 0.8047925743512029,
+              "f1": 0.8309211813025621,
+              "f2": 0.8150443156965814
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 3002,
+              "tp": 2614,
+              "fp": 404,
+              "fn": 388,
+              "precision": 0.8661365142478462,
+              "recall": 0.8707528314457028,
+              "f1": 0.8684385382059799,
+              "f2": 0.8698256355650207
+            },
+            {
+              "tag": "MRN",
+              "gold": 11098,
+              "tp": 9824,
+              "fp": 1617,
+              "fn": 1274,
+              "precision": 0.8586662005069486,
+              "recall": 0.8852045413588034,
+              "f1": 0.8717334398154309,
+              "f2": 0.8797664463668441
+            },
+            {
+              "tag": "SSN",
+              "gold": 6062,
+              "tp": 6046,
+              "fp": 1530,
+              "fn": 16,
+              "precision": 0.7980464625131996,
+              "recall": 0.9973606070603761,
+              "f1": 0.8866402698342866,
+              "f2": 0.9499120160884867
+            },
+            {
+              "tag": "URL",
+              "gold": 37847,
+              "tp": 36317,
+              "fp": 2470,
+              "fn": 1530,
+              "precision": 0.9363188697243922,
+              "recall": 0.9595740745633736,
+              "f1": 0.9478038468564867,
+              "f2": 0.954831076639937
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 9217,
+              "tp": 8918,
+              "fp": 216,
+              "fn": 299,
+              "precision": 0.9763520910882417,
+              "recall": 0.9675599435825106,
+              "f1": 0.971936134270612,
+              "f2": 0.9693056823616364
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 18079,
+              "tp": 17728,
+              "fp": 678,
+              "fn": 351,
+              "precision": 0.9631641855916548,
+              "recall": 0.9805852093589247,
+              "f1": 0.9717966287515416,
+              "f2": 0.9770507704856595
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 53930,
+              "tp": 53581,
+              "fp": 195,
+              "fn": 349,
+              "precision": 0.9963738470693246,
+              "recall": 0.9935286482477286,
+              "f1": 0.9949492135999851,
+              "f2": 0.9940963873304242
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9973606070603761,
+              "gold": 6062
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.8852045413588034,
+              "gold": 11098
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.8047925743512029,
+              "gold": 10558
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.675073384053196,
+              "gold": 16693
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.8707528314457028,
+              "gold": 3002
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.8215036335673512,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.675073384053196,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.8466367876538563,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.14209956305784813,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.8797664463668441,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8368652407820496,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.8784649970730459,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.8571606855288705,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/fusion_checksum_first",
+      "dataset": "nemotron-train",
+      "n_samples": 100000,
+      "verdict": "challenger",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.8621287649230353
+        },
+        "severity_recall_min": {
+          "value": 0.9190838167633527
+        },
+        "severity_recall_mean": {
+          "value": 0.9445794513969832
+        },
+        "f2_min": {
+          "value": 0.13705637017023845
+        },
+        "f2_median": {
+          "value": 0.9258561579324115
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.8654471623885015
+        },
+        "span_recall_micro": {
+          "value": 0.9279460822444153
+        },
+        "span_f1_micro": {
+          "value": 0.8956075931827628
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-train"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 9049,
+              "tp": 1045,
+              "fp": 882,
+              "fn": 8004,
+              "precision": 0.5422937208095485,
+              "recall": 0.11548237374295502,
+              "f1": 0.19041545189504372,
+              "f2": 0.13705637017023845
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 25012,
+              "tp": 23991,
+              "fp": 16601,
+              "fn": 1021,
+              "precision": 0.5910277887268427,
+              "recall": 0.9591795937949784,
+              "f1": 0.7313883299798791,
+              "f2": 0.8529223549488054
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 9998,
+              "tp": 9189,
+              "fp": 2864,
+              "fn": 809,
+              "precision": 0.7623828092591056,
+              "recall": 0.9190838167633527,
+              "f1": 0.8334315904040633,
+              "f2": 0.8827937361898357
+            },
+            {
+              "tag": "MRN",
+              "gold": 7095,
+              "tp": 6619,
+              "fp": 969,
+              "fn": 476,
+              "precision": 0.8722983658408012,
+              "recall": 0.9329105003523608,
+              "f1": 0.901586869168426,
+              "f2": 0.9201234430604982
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 7920,
+              "tp": 7351,
+              "fp": 848,
+              "fn": 569,
+              "precision": 0.8965727527747286,
+              "recall": 0.9281565656565657,
+              "f1": 0.9120913208015385,
+              "f2": 0.9216630306677698
+            },
+            {
+              "tag": "SSN",
+              "gold": 4937,
+              "tp": 4915,
+              "fp": 1880,
+              "fn": 22,
+              "precision": 0.7233259749816041,
+              "recall": 0.9955438525420296,
+              "f1": 0.8378793044664166,
+              "f2": 0.9258561579324115
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 6345,
+              "tp": 6010,
+              "fp": 346,
+              "fn": 335,
+              "precision": 0.9455632473253619,
+              "recall": 0.9472025216706068,
+              "f1": 0.9463821746319188,
+              "f2": 0.9468742122510714
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 13748,
+              "tp": 13244,
+              "fp": 513,
+              "fn": 504,
+              "precision": 0.9627098931453079,
+              "recall": 0.9633401221995926,
+              "f1": 0.9630249045628068,
+              "f2": 0.9632140103856055
+            },
+            {
+              "tag": "URL",
+              "gold": 44803,
+              "tp": 43378,
+              "fp": 1951,
+              "fn": 1425,
+              "precision": 0.9569591210924574,
+              "recall": 0.9681940941454813,
+              "f1": 0.9625438246127901,
+              "f2": 0.9659260446867164
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 12710,
+              "tp": 12427,
+              "fp": 555,
+              "fn": 283,
+              "precision": 0.9572484979201972,
+              "recall": 0.9777340676632573,
+              "f1": 0.9673828429082982,
+              "f2": 0.9735671085205729
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 49934,
+              "tp": 49580,
+              "fp": 226,
+              "fn": 354,
+              "precision": 0.9954623940890656,
+              "recall": 0.9929106420475027,
+              "f1": 0.9941848806897935,
+              "f2": 0.9934199453398627
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9955438525420296,
+              "gold": 4937
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.9329105003523608,
+              "gold": 7095
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.9472025216706068,
+              "gold": 6345
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.9190838167633527,
+              "gold": 9998
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.9281565656565657,
+              "gold": 7920
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.8621287649230353,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.9190838167633527,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.9445794513969832,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.13705637017023845,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.9258561579324115,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.8654471623885015,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.9279460822444153,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.8956075931827628,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    },
+    {
+      "model": "cnn_m/student",
+      "dataset": "nemotron-train",
+      "n_samples": 100000,
+      "verdict": "measured",
+      "metrics": {
+        "macro_f2": {
+          "value": 0.8603365408679458
+        },
+        "severity_recall_min": {
+          "value": 0.9257851570314063
+        },
+        "severity_recall_mean": {
+          "value": 0.938349351457348
+        },
+        "f2_min": {
+          "value": 0.13794122387578575
+        },
+        "f2_median": {
+          "value": 0.9281005926992744
+        },
+        "n_tags_f2_zero": {
+          "value": 0
+        },
+        "span_precision_micro": {
+          "value": 0.9081013937428944
+        },
+        "span_recall_micro": {
+          "value": 0.9007105157373232
+        },
+        "span_f1_micro": {
+          "value": 0.9043908550281357
+        }
+      },
+      "evaluation": {
+        "task_type": "tagging",
+        "primary_metric": "macro_f2",
+        "n_samples": 100000,
+        "dataset": {
+          "name": "nemotron-train"
+        },
+        "params": {
+          "model": "cnn_m"
+        },
+        "tags": {
+          "per_tag_f2_worst_first": [
+            {
+              "tag": "CREDIT_CARD",
+              "gold": 9049,
+              "tp": 1027,
+              "fp": 3,
+              "fn": 8022,
+              "precision": 0.9970873786407767,
+              "recall": 0.11349320366891369,
+              "f1": 0.20379005853755333,
+              "f2": 0.13794122387578575
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "gold": 9998,
+              "tp": 9256,
+              "fp": 3024,
+              "fn": 742,
+              "precision": 0.7537459283387622,
+              "recall": 0.9257851570314063,
+              "f1": 0.830954304695215,
+              "f2": 0.8853688399142944
+            },
+            {
+              "tag": "URL",
+              "gold": 44803,
+              "tp": 40287,
+              "fp": 5358,
+              "fn": 4516,
+              "precision": 0.8826158396319421,
+              "recall": 0.8992031783585921,
+              "f1": 0.8908323014328675,
+              "f2": 0.8958360202261882
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "gold": 7920,
+              "tp": 7376,
+              "fp": 855,
+              "fn": 544,
+              "precision": 0.8961244077268862,
+              "recall": 0.9313131313131313,
+              "f1": 0.913379976472045,
+              "f2": 0.9240560246548571
+            },
+            {
+              "tag": "PHONE_US",
+              "gold": 25012,
+              "tp": 23804,
+              "fp": 4393,
+              "fn": 1208,
+              "precision": 0.8442032840373089,
+              "recall": 0.9517031824724133,
+              "f1": 0.8947358529572065,
+              "f2": 0.9280673710476043
+            },
+            {
+              "tag": "MRN",
+              "gold": 7095,
+              "tp": 6702,
+              "fp": 1024,
+              "fn": 393,
+              "precision": 0.8674605229096557,
+              "recall": 0.9446088794926004,
+              "f1": 0.9043924161662505,
+              "f2": 0.9281005926992744
+            },
+            {
+              "tag": "IP_ADDRESS",
+              "gold": 13748,
+              "tp": 12704,
+              "fp": 160,
+              "fn": 1044,
+              "precision": 0.9875621890547264,
+              "recall": 0.9240616816991563,
+              "f1": 0.9547572523673531,
+              "f2": 0.9360999764206555
+            },
+            {
+              "tag": "SSN",
+              "gold": 4937,
+              "tp": 4633,
+              "fp": 346,
+              "fn": 304,
+              "precision": 0.9305081341634867,
+              "recall": 0.9384241442171359,
+              "f1": 0.9344493747478823,
+              "f2": 0.9368301856270475
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "gold": 6345,
+              "tp": 6038,
+              "fp": 348,
+              "fn": 307,
+              "precision": 0.9455057939242092,
+              "recall": 0.9516154452324666,
+              "f1": 0.9485507815568299,
+              "f2": 0.9503872064471448
+            },
+            {
+              "tag": "EMAIL",
+              "gold": 49934,
+              "tp": 48298,
+              "fp": 1441,
+              "fn": 1636,
+              "precision": 0.9710287701803414,
+              "recall": 0.9672367525133175,
+              "f1": 0.9691290520000401,
+              "f2": 0.9679927848481812
+            },
+            {
+              "tag": "DATE_DOB",
+              "gold": 12710,
+              "tp": 12407,
+              "fp": 508,
+              "fn": 303,
+              "precision": 0.9606658923732094,
+              "recall": 0.9761605035405193,
+              "f1": 0.968351219512195,
+              "f2": 0.9730217237863698
+            }
+          ],
+          "severity_tags_measured": [
+            {
+              "tag": "SSN",
+              "recall": 0.9384241442171359,
+              "gold": 4937
+            },
+            {
+              "tag": "MRN",
+              "recall": 0.9446088794926004,
+              "gold": 7095
+            },
+            {
+              "tag": "HEALTH_PLAN_ID",
+              "recall": 0.9516154452324666,
+              "gold": 6345
+            },
+            {
+              "tag": "ACCOUNT_NUMBER",
+              "recall": 0.9257851570314063,
+              "gold": 9998
+            },
+            {
+              "tag": "US_DRIVER_LICENSE",
+              "recall": 0.9313131313131313,
+              "gold": 7920
+            }
+          ]
+        },
+        "metrics": {
+          "macro_f2": {
+            "name": "macro_f2",
+            "value": 0.8603365408679458,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_min": {
+            "name": "severity_recall_min",
+            "value": 0.9257851570314063,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "severity_recall_mean": {
+            "name": "severity_recall_mean",
+            "value": 0.938349351457348,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_min": {
+            "name": "f2_min",
+            "value": 0.13794122387578575,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "f2_median": {
+            "name": "f2_median",
+            "value": 0.9281005926992744,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "n_tags_f2_zero": {
+            "name": "n_tags_f2_zero",
+            "value": 0.0,
+            "greater_is_better": false,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_precision_micro": {
+            "name": "span_precision_micro",
+            "value": 0.9081013937428944,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_recall_micro": {
+            "name": "span_recall_micro",
+            "value": 0.9007105157373232,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          },
+          "span_f1_micro": {
+            "name": "span_f1_micro",
+            "value": 0.9043908550281357,
+            "greater_is_better": true,
+            "ci_low": null,
+            "ci_high": null,
+            "confidence": null,
+            "n_bootstrap": null
+          }
+        }
+      }
+    }
+  ],
+  "data_quality": [
+    {
+      "dataset": "nvidia/Nemotron-PII@test",
+      "leakage": 0,
+      "notes": "synthetic, CC BY 4.0; 100k docs nobody here authored; sealed D_ho",
+      "real_synth_mix": "100% synthetic"
+    },
+    {
+      "dataset": "nvidia/Nemotron-PII@train",
+      "leakage": 0,
+      "notes": "D_in; proposer-visible; not the gate",
+      "real_synth_mix": "100% synthetic"
+    },
+    {
+      "dataset": "eval/corpus/frozen_v1.jsonl",
+      "leakage": 1,
+      "notes": "authored alongside detectors \u2014 tautological regression test, not a quality claim",
+      "n_docs": 39
+    }
+  ],
+  "artifacts": {
+    "mlflow_parent_run_id": "03d7725916034a53acfe2a65685f4bb6"
+  }
+}

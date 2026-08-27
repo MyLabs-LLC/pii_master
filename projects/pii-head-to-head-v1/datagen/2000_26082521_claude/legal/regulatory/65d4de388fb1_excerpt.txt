@@ -1,0 +1,64 @@
+ADMINISTRATIVE RULES OF THE DEPARTMENT OF FINANCIAL INSTITUTIONS
+RULE 4-19 — IDENTIFIER CATEGORIES AND SAFEGUARD TIERS
+(promulgated under Title 12 § 402.302; excerpt)
+
+4-19-1.  SCOPE.
+This rule classifies data elements held by a Covered Entity and prescribes the
+minimum safeguard applicable to each classification. Classification is by field
+label, not by the content of any individual entry.
+
+4-19-2.  SCHEDULE OF IDENTIFIER CATEGORIES.
+
+╒══════╤═══════════════════════╤════════════════════════════════╤══════╤════════════╕
+│ CODE │ CATEGORY              │ FIELD LABELS INCLUDED          │ TIER │ RETENTION  │
+╞══════╪═══════════════════════╪════════════════════════════════╪══════╪════════════╡
+│ A-01 │ Nominal identifiers   │ Surname; Given Name; Former    │  2   │ 6 yr post  │
+│      │                       │ Name; Suffix                   │      │ closure    │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-02 │ Government-issued     │ Taxpayer Identification No.;   │  4   │ 5 yr post  │
+│      │ numbers               │ Driver Licence No.; Passport   │      │ closure    │
+│      │                       │ No.; Alien Registration No.    │      │            │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-03 │ Financial account     │ Share Account No.; Loan No.;   │  4   │ 7 yr post  │
+│      │ numbers               │ Card No.; Routing No.; CVV;    │      │ closure    │
+│      │                       │ Expiry Date                    │      │            │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-04 │ Contact particulars   │ Residential Address; Mailing   │  2   │ 3 yr post  │
+│      │                       │ Address; Telephone No.;        │      │ closure    │
+│      │                       │ Electronic Mail Address        │      │            │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-05 │ Demographic elements  │ Date of Birth; Place of Birth; │  3   │ 6 yr post  │
+│      │                       │ Marital Status; Occupation     │      │ closure    │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-06 │ Authentication data   │ Password Hash; Security        │  5   │ Purge on   │
+│      │                       │ Question; Answer; PIN Offset;  │      │ reset      │
+│      │                       │ Token Seed                     │      │            │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-07 │ Biometric templates   │ Voiceprint Template; Facial    │  5   │ Purge on   │
+│      │                       │ Geometry Template; Fingerprint │      │ withdrawal │
+│      │                       │ Minutiae                       │      │ of consent │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-08 │ Derived indicators    │ Credit Score; Risk Grade;      │  3   │ 25 mo      │
+│      │                       │ Delinquency Flag; Overdraft    │      │            │
+│      │                       │ Count                          │      │            │
+├──────┼───────────────────────┼────────────────────────────────┼──────┼────────────┤
+│ A-09 │ Device and network    │ Device Fingerprint; Session    │  2   │ 13 mo      │
+│      │ elements              │ IP Address; Geolocation Coords │      │            │
+╘══════╧═══════════════════════╧════════════════════════════════╧══════╧════════════╛
+
+4-19-3.  MINIMUM SAFEGUARD BY TIER.
+
+    TIER 1 .... Access on business need; no encryption mandated.
+    TIER 2 .... Role-based access; encryption in transit.
+    TIER 3 .... Role-based access; encryption in transit and at rest.
+    TIER 4 .... Tier 3, plus masking in all screens, reports, and extracts;
+                dual authorisation for bulk export; access logging retained
+                24 months.
+    TIER 5 .... Tier 4, plus prohibition on export to any medium not under
+                the direct control of the Covered Entity.
+
+4-19-4.  COMBINATION RULE.
+Where two or more categories appear in the same record set, the higher tier
+governs the whole set. A field label may not be reclassified downward absent
+written approval of the Records Custodian, recorded in the classification
+exception register.

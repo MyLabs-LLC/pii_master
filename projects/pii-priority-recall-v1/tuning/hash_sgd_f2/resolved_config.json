@@ -1,0 +1,75 @@
+{
+  "best_config": {
+    "generic_target_index": 3,
+    "priority_target_index": 5,
+    "score_mode": "top6",
+    "threshold_multiplier": 1.0
+  },
+  "exact_metrics": {
+    "equal_corpus_macro_f2": 0.4623623551041596,
+    "equal_corpus_micro_f1": 0.49002074026664044,
+    "measurable_priority_gates": 54,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000693962526024
+  },
+  "family": "hash_sgd_f2",
+  "fast_metrics": {
+    "equal_corpus_macro_f2": 0.46350614567312026,
+    "equal_corpus_micro_f1": 0.49002074026664033,
+    "measurable_priority_gates": 54,
+    "per_corpus": [
+      {
+        "dataset": "16000_datax-dualjudge-trainset-5.37k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "26095_govdocs2-dualjudge-train80-14.25k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "ai4privacy_pii_masking_train_42k",
+        "macro_f2": 0.5400635501049222,
+        "micro_f1": 0.46574487493398625
+      },
+      {
+        "dataset": "betterdataai_ner_silver_train_41k",
+        "macro_f2": 0.16013067965450406,
+        "micro_f1": 0.4630541871921182
+      },
+      {
+        "dataset": "nemotron_train_22k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "openpii_pii_train_155k",
+        "macro_f2": 0.6551924608689942,
+        "micro_f1": 0.7417017340438006
+      },
+      {
+        "dataset": "pii2_train_150k",
+        "macro_f2": 0.41887493858407954,
+        "micro_f1": 0.25986045736329505
+      },
+      {
+        "dataset": "pii_trainset_100k",
+        "macro_f2": 0.5432690991531014,
+        "micro_f1": 0.5197424478000018
+      }
+    ],
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000693962526024
+  },
+  "model_dir": "models/hash_sgd_f2",
+  "selection_mlflow_run_id": "45fae99fbecc4817b799933a56249e72",
+  "source_family": "hash_sgd",
+  "source_trial": 32,
+  "source_trial_mlflow_run_id": "774c1277595f4b5eab8673f8cf5395b7",
+  "source_trials": 300
+}

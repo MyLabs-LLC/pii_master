@@ -1,0 +1,15 @@
+BUREAU OF INFORMATION SERVICES
+DATA DICTIONARY EXCERPT — CONTACT AND CORRESPONDENCE TABLE (CLNT_CNTCT_LOG)
+Sections 9 through 14, as adopted
+
+9. Purpose of the Table. The correspondence log exists to evidence the Department's discharge of its notification duties and for no other purpose. Any secondary use, including but not limited to outreach targeting, program evaluation, or grant narrative preparation, requires the prior written concurrence of the Records Custodian, and such concurrence shall specify the columns released, the period covered, and the disposition of the resulting file.
+
+10. Key and Structural Columns. CNTCT_LOG_ID, NUMBER(12), NOT NULL, system-assigned. CLNT_ID, NUMBER(10), NOT NULL, referential. CNTCT_DTM, DATE, NOT NULL, recorded in local time without offset, a limitation known to the Bureau and scheduled for correction in a subsequent release. CNTCT_MTHD_CD, VARCHAR2(2), NOT NULL, validated against reference table REF_CNTCT_MTHD. CNTCT_OTCM_CD, VARCHAR2(2), NOT NULL.
+
+11. Restricted Columns. CNTCT_PHN_NBR_USED, VARCHAR2(10), NULL permitted, records the locator actually dialed and is designated Restricted. CNTCT_ADDR_USED_TXT, VARCHAR2(80), NULL permitted, records the locator to which written correspondence was directed and is likewise designated Restricted. CNTCT_STAFF_ROLE_CD, VARCHAR2(4), NOT NULL, records the role of the staff member effecting the contact; the Bureau records the role and not the individual, and no column of this table shall be added or repurposed to record the identity of the individual staff member absent action of the Data Governance Committee.
+
+12. Free-Text Column. CNTCT_NOTE_TXT, VARCHAR2(2000), NULL permitted, is designated Highly Restricted notwithstanding that its contents are unstructured, for the reason that staff have been observed to record identity and locator particulars within it. It is excluded from every extract without exception, it is omitted from all reporting views, and its inclusion in any future extract shall require an amendment to this dictionary adopted in the ordinary course.
+
+13. Access. Read access is conferred by role CHD_CNTCT_R, which the intake and follow-up units hold, and by role CHD_AUDIT_R, which the Records Custodian holds. Write access is conferred upon the application account only. Ad hoc query access by way of the ODBC data source name CHDRPT is granted to no account holding either of the foregoing roles, the two access paths being kept separate by design.
+
+14. Retention and Extracts. Log rows shall be retained for the retention period of the parent client row and shall be purged only by the same utility and in the same cycle, so that the evidentiary record of notification is not severed from the record it evidences. The sole standing extract is the quarterly follow-up compliance file (job FUCMP_QTR), which carries CLNT_ID, CNTCT_DTM, CNTCT_MTHD_CD, and CNTCT_OTCM_CD, and which carries no column designated Restricted or Highly Restricted. Any request for a non-standing extract shall be reduced to writing and retained with this dictionary.

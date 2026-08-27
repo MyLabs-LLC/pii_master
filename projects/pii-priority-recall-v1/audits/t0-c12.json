@@ -1,0 +1,28 @@
+{
+  "candidate": "t0-c12",
+  "stage": "propose",
+  "proposal": "Run 300 EmbeddingBag-ASL arms across ranks 8/16/24/32. Learn cross-label calibration with gamma-negative=4 asymmetric loss on a deterministic 20% internal calibration slice and select thresholds on the disjoint 80% slice.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "1103e7b",
+  "commit": "0488b88",
+  "decision": "accepted_as_non_champion_component",
+  "evidence": {
+    "tests": "6 passed",
+    "torch_asl_smoke": "passed",
+    "ruff": "passed",
+    "allocated_trials": 300,
+    "ranks": [8, 16, 24, 32],
+    "gamma_positive": 0.0,
+    "gamma_negative": 4.0,
+    "negative_clip": 0.05,
+    "completed_trials": 300,
+    "best_trial": 48,
+    "best_rank": 32,
+    "internal_equal_corpus_macro_f2": 0.4391370002529773,
+    "holdout_equal_corpus_macro_f2": 0.46470780659224076,
+    "holdout_priority_point_passes": 50,
+    "holdout_measurable_priority_gates": 55,
+    "holdout_worst_priority_recall": 0.42,
+    "champion_eligible": false
+  }
+}

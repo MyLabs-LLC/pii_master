@@ -1,0 +1,48 @@
+ENROLLMENT STAGING — DATA DICTIONARY AND EXTRACT REGISTER
+Form EIM-19 | Completed 2016-10-06 | Cycle: Open Enrollment 2017
+Prepared by: Enterprise Information Management
+Reviewed by: the Records Custodian
+
+1. OBJECT UNDER DESCRIPTION
+   1.1 Schema.Table: STG_ENRL.ENRL_INBOUND_834
+   1.2 Source: Employer group EDI feeds, ANSI X12 834 transaction set
+   1.3 Persistence: Transient. Truncated and reloaded each cycle run.
+
+2. COLUMN LIST
+   2.1  BATCH_ID              NUMBER(9)      NOT NULL   Assigned per file receipt
+   2.2  SRC_FILE_NM           VARCHAR2(80)   NOT NULL   Includes group code and receipt timestamp
+   2.3  GRP_NBR               VARCHAR2(10)   NOT NULL   Employer group
+   2.4  SUBSCR_ID             VARCHAR2(12)   NOT NULL   Restricted
+   2.5  DEP_SEQ_NBR           NUMBER(2)      NOT NULL   Zero denotes subscriber
+   2.6  MBR_LAST_NM           VARCHAR2(35)   NOT NULL   Restricted
+   2.7  MBR_FIRST_NM          VARCHAR2(25)   NOT NULL   Restricted
+   2.8  MBR_SSN               VARCHAR2(9)    NULL       Highly restricted; encrypted
+   2.9  MBR_DOB               DATE           NOT NULL   Restricted
+   2.10 MBR_GENDER_CD         CHAR(1)        NOT NULL   Domain-validated
+   2.11 RESID_ADDR_LINE_1     VARCHAR2(50)   NULL       Restricted
+   2.12 RESID_ZIP_CD          VARCHAR2(9)    NULL       Restricted
+   2.13 CONTACT_PHONE_NBR     VARCHAR2(10)   NULL       Restricted
+   2.14 CONTACT_EMAIL_TXT     VARCHAR2(80)   NULL       Restricted
+   2.15 MAINT_TYPE_CD         VARCHAR2(3)    NOT NULL   Add, change, cancel
+   2.16 COVG_EFF_DT           DATE           NOT NULL   Requested effective date
+   2.17 PROC_STAT_CD          VARCHAR2(2)    NOT NULL   Set by validation step
+   2.18 ERR_RSN_TXT           VARCHAR2(200)  NULL       Populated on rejection
+
+3. ACCESS RESTRICTION
+   3.1 The staging schema is not granted to any analyst role.
+   3.2 Access is limited to the EDI operations team and named on-call staff under role STG_ENRL_OPS.
+   3.3 Highly restricted columns are unreadable to STG_ENRL_OPS; decryption occurs only within the load procedure.
+
+4. RETENTION
+   4.1 Staging rows are purged fourteen (14) days after successful posting to the member master.
+   4.2 Rejected rows are held sixty (60) days to support group reconciliation, then purged.
+   4.3 Source files are archived to the secure landing zone and deleted after ninety (90) days.
+
+5. DOWNSTREAM EXTRACTS
+   5.1 No direct extract is permitted from this object.
+   5.2 Reconciliation reporting draws counts and error reason codes only, through view V_ENRL_RECON_SUM.
+   5.3 Any request for row-level access must be logged on form DAR-04 and approved by the Privacy Office.
+
+6. OPEN ITEMS
+   6.1 Confirm masking coverage for section 2.11 in the next lower-environment refresh.
+   6.2 Reconfirm purge job schedule with Operations before the January cycle.

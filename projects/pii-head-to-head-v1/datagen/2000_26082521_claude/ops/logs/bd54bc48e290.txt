@@ -1,0 +1,88 @@
+MEMORANDUM — METROPOLITAN TRANSIT AUTHORITY
+OFFICE OF INFORMATION SYSTEMS / DATA SERVICES DIVISION
+
+TO:      Data Warehouse Operations Group; Records Custodian
+FROM:    Manager, ETL Operations
+DATE:    14 September 2004
+RE:      Nightly Rider Registry Load — Job RDRLOAD_0914, Field Mapping and Masking Directives
+FILE:    OIS-DS-2004-0914-M
+
+1. PURPOSE
+
+1.1 This memorandum records the field mapping and masking directives applied to the nightly extract of the Rider Registry into the Reporting Data Store (RDS), effective with cycle 2004-09-14.
+
+1.2 It supersedes the directives issued 02 August 2004 in respect of clauses 4 and 6 only.
+
+2. JOB SUMMARY
+
+2.1 Job identifier: RDRLOAD_0914
+2.2 Sub-job identifiers: RDR_EXT_01, RDR_XFM_02, RDR_LOD_03
+2.3 Window: 2004-09-14 01:00:00 through 2004-09-14 03:47:12
+2.4 Rows read from source: 418,662
+2.5 Rows written to target: 416,109
+2.6 Rows rejected to error queue: 2,553
+
+3. SOURCE-TO-TARGET FIELD MAPPING
+
+3.1 The following source columns are carried forward under the target names shown:
+
+    SOURCE (RIDER_MASTER)      TARGET (RDS.DIM_RIDER)      DISPOSITION
+    -----------------------    ------------------------    -----------
+    RIDER_ID                   RIDER_SK                    tokenised
+    RIDER_SURNAME              RIDER_SURNAME_TKN           tokenised
+    RIDER_GIVEN_NAME           RIDER_GIVEN_NAME_TKN        tokenised
+    DATE_OF_BIRTH              BIRTH_YEAR_ONLY             truncated
+    HOME_STREET_LINE1          (not carried)               dropped
+    HOME_STREET_LINE2          (not carried)               dropped
+    HOME_POSTAL_CODE           POSTAL_SECTOR               truncated
+    HOME_TELEPHONE             (not carried)               dropped
+    CONTACT_EMAIL              (not carried)               dropped
+    FARE_CARD_NUMBER           FARE_CARD_TKN               tokenised
+    CONCESSION_TYPE_CD         CONCESSION_TYPE_CD          carried as-is
+    CONCESSION_PROOF_REF       (not carried)               dropped
+    ENROLMENT_DATE             ENROLMENT_DATE              carried as-is
+    LAST_TAP_TIMESTAMP         LAST_TAP_TIMESTAMP          carried as-is
+
+3.2 Columns marked "dropped" shall not be materialised in any RDS table, view, or extract file without prior written authorisation of the Records Custodian.
+
+4. MASKING DIRECTIVES
+
+4.1 Tokenisation is performed at the extract stage by module TKNSVC v2.3. The clear value is not written to the staging area at any point.
+
+4.2 Masked placeholders appearing in operator logs and reject listings shall use the following forms only:
+
+    RIDER_SURNAME_TKN      ->  TKN:################
+    RIDER_GIVEN_NAME_TKN   ->  TKN:################
+    FARE_CARD_TKN          ->  TKN:################
+    BIRTH_YEAR_ONLY        ->  ####
+    POSTAL_SECTOR          ->  ***
+
+4.3 Operators are reminded that the reject listing (clause 5) prints field labels and rule codes only. No clear value is to be reproduced in any incident ticket, electronic mail, or telephone escalation.
+
+5. VALIDATION REJECTS — CYCLE 2004-09-14
+
+    RULE CODE   FIELD LABEL             COUNT
+    ---------   --------------------    -----
+    V-101       DATE_OF_BIRTH             914
+    V-104       HOME_POSTAL_CODE          661
+    V-117       FARE_CARD_NUMBER          488
+    V-122       CONCESSION_TYPE_CD        312
+    V-140       ENROLMENT_DATE            178
+                                        -----
+                TOTAL                    2,553
+
+5.1 Rule V-101 fires where the source value fails the century check. Rule V-104 fires on non-conforming postal format. Rule V-117 fires on check-digit failure. Rule V-122 fires where the concession code is not present in the reference table. Rule V-140 fires where the enrolment date precedes system inception.
+
+6. RETENTION OF REJECT QUEUE
+
+6.1 The reject queue for this cycle is retained for 30 calendar days and then purged automatically by job PURGE_RJQ_0914.
+
+6.2 Any extension of retention beyond 30 days requires a written instruction from the Records Custodian, filed with this office before the purge date.
+
+7. ACTION REQUIRED
+
+7.1 The Data Warehouse Operations Group is to confirm receipt of this memorandum and acknowledge the revised mapping in clause 3.1 by close of business 17 September 2004.
+
+7.2 Queries are to be directed to the ETL Operations duty desk, extension per the internal directory.
+
+END OF MEMORANDUM

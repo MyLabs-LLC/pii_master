@@ -1,0 +1,58 @@
+VALIDATION EXCEPTION REPORT - CANDIDATE AND TIMESHEET STREAMS
+JOB ID ETL_CND_MSTR_0412 / STEP 0050        REPORT GENERATED 2011-04-12 03:23:11
+CYCLE 003        RULE LIBRARY VAL_LIB_2011Q1        ENGINE BUILD 4.2.7
+
+RUN SUMMARY
+                                              COUNT      PCT
+  ROWS PRESENTED                             184226   100.00
+  ROWS PASSED                                182993    99.33
+  ROWS REJECTED                                1233     0.67
+  ROWS QUARANTINED FOR MANUAL REVIEW            118     0.06
+  DISTINCT RULES FIRED                           14        -
+  DISTINCT COLUMNS IMPLICATED                    11        -
+  WARNINGS (NON-FATAL)                         3401     1.85
+
+RULE DETAIL
+RULE   SEV  COLUMN                CONDITION                   ROWS   DISP
+-----  ---  --------------------  -------------------------  -----  ------
+V0101  ERR  NATL_INS_NO           MANDATORY, VALUE ABSENT       412  REJECT
+V0104  ERR  NATL_INS_NO           FORMAT MISMATCH               167  REJECT
+V0117  ERR  DATE_OF_BIRTH         NOT PARSEABLE                 118  QUAR
+V0118  ERR  DATE_OF_BIRTH         OUT OF RANGE                   22  REJECT
+V0122  ERR  BANK_SORT_CODE        LENGTH <> 6                    91  REJECT
+V0123  ERR  BANK_ACCT_NO          NON NUMERIC                    74  REJECT
+V0140  ERR  POSTAL_CODE           FAILS PATTERN CHECK           186  REJECT
+V0141  WRN  POSTAL_CODE           UNRESOLVED IN GAZETTEER       902  PASS
+V0155  ERR  EMAIL_ADDR_PERS       NO DOMAIN PART                 63  REJECT
+V0156  WRN  EMAIL_ADDR_PERS       DOMAIN NOT ROUTABLE           614  PASS
+V0161  ERR  MOBILE_PHONE_NO       LENGTH OUT OF BOUNDS          104  REJECT
+V0162  WRN  HOME_PHONE_NO         VALUE ABSENT                 1885  PASS
+V0170  ERR  RTW_EXPIRY_DT         PRIOR TO REG_DATE              14  REJECT
+V0188  ERR  EMERG_CONTACT_PH      MANDATORY, VALUE ABSENT         0  REJECT
+
+COLUMN BREAKDOWN
+COLUMN                POPULATED  ABSENT  TOKENISED  MASKED  SUPPRESSED
+--------------------  ---------  ------  ---------  ------  ----------
+CAND_FIRST_NM            184226       0     184226       0           0
+CAND_LAST_NM             184226       0     184226       0           0
+DATE_OF_BIRTH            184086     140          0  184086           0
+NATL_INS_NO              183647     579          0  183647           0
+HOME_ADDR_LN1            181004    3222          0       0      181004
+POSTAL_CODE              183338     888          0  183338           0
+MOBILE_PHONE_NO          179442    4784          0  179442           0
+EMAIL_ADDR_PERS          171209   13017          0  171209           0
+BANK_SORT_CODE           168330   15896          0  168330           0
+BANK_ACCT_NO             168330   15896          0  168330           0
+EMERG_CONTACT_NM         140558   43668          0       0      140558
+
+REJECT DISPOSITION
+  REJECT FILE      /prd/etl/rej/CND_MSTR_20110412_003.rej
+  RECORD FORMAT    SURROGATE_KEY | RULE_ID | COLUMN_NAME | SEVERITY
+  VALUE COLUMNS    NOT WRITTEN. ENGINE PARAMETER log.column.values = false.
+  QUARANTINE TBL   STG_CND_QUARANTINE, 118 ROWS, OWNER the Records Custodian
+  REPROCESS WINDOW CYCLE 004, SCHEDULED 2011-04-13 02:10
+  ESCALATION       V0101 AND V0104 COUNTS EXCEED THRESHOLD 400 FOR THIRD
+                   CONSECUTIVE CYCLE. RAISED TO BRANCH DATA CONTROL AS
+                   INCIDENT DC-2011-0219. SOURCE FORM CAPTURE SUSPECTED.
+
+END OF REPORT - 3 PAGES SUPPRESSED (ZERO COUNT RULES)

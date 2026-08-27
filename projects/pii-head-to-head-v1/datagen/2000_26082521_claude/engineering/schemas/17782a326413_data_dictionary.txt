@@ -1,0 +1,51 @@
+DATA DICTIONARY — CD_SURV.CASE_SUBJECT AND ASSOCIATED CONTACT TABLE
+Communicable Disease Surveillance Unit
+Issued under the Unit's data governance procedure, section 6. Revision 7, 2021.
+
+1. Application. Clauses 3 through 12 apply to CD_SURV.CASE_SUBJECT. Clause 13 applies to CD_SURV.CONTACT_SUBJECT, which shares the same access and retention rules except where stated.
+
+2. Definitions. "Restricted" means the column is subject to clause 14. "Derived" means the column is populated by the nightly transformation and is not keyed by staff. Nullability below reflects the physical constraint, not data quality expectations.
+
+3. CASE_SK — INTEGER, NOT NULL. Surrogate key. Referenced by seven downstream tables; values are never reused.
+
+4. CASE_NBR — VARCHAR(16), NOT NULL. Investigation number assigned by the case management application. Format is a year prefix followed by a sequence.
+
+5. SUBJECT_LAST_NAME — VARCHAR(60), NOT NULL. Restricted. Keyed by the intake investigator; hyphenated and multi-part surnames are entered as received.
+
+6. SUBJECT_FIRST_NAME — VARCHAR(40), NOT NULL. Restricted.
+
+7. SUBJECT_DOB — DATE, NULL. Restricted. Nullable because interview-only cases sometimes lack a confirmed value; the age band in AGE_BAND_CD is then keyed directly.
+
+8. SUBJECT_PHONE_PRIMARY — VARCHAR(15), NULL. Restricted. The auto-dialer reads this column through a dedicated service account.
+
+9. SUBJECT_PHONE_ALT — VARCHAR(15), NULL. Restricted.
+
+10. SUBJECT_ADDR_FULL — VARCHAR(200), NULL. Restricted. Single-line storage inherited from the prior system. The geocoder writes CENSUS_TRACT_CD and LATITUDE_NUM/LONGITUDE_NUM from this column; those three are Derived and are themselves Restricted at the address-point level of precision.
+
+11. Program and clinical columns.
+    CONDITION_CD — CHAR(6), NOT NULL. State reportable condition code.
+    ONSET_DT — DATE, NULL.
+    SPECIMEN_COLLECT_DT — DATE, NULL.
+    LAB_RESULT_CD — CHAR(2), NULL.
+    ISOLATION_START_DT, ISOLATION_END_DT — DATE, NULL.
+    INVESTIGATION_STATUS_CD — CHAR(2), NOT NULL.
+    AGE_BAND_CD — CHAR(3), NOT NULL. Derived where SUBJECT_DOB is present.
+    OCCUPATION_SETTING_CD — CHAR(3), NULL. Added March 2021 for congregate-setting analysis.
+
+12. Audit columns. CREATED_BY_ACCT, CREATED_TS, UPDATED_BY_ACCT, UPDATED_TS. All NOT NULL and system-set. The account columns record the application login of the investigator and are treated as workforce records, not subject data.
+
+13. CD_SURV.CONTACT_SUBJECT. Mirrors clauses 5 through 10 with the prefix CONTACT_ in place of SUBJECT_, and adds EXPOSURE_DT, RELATIONSHIP_CD and NOTIFICATION_STATUS_CD. Contact rows link to CASE_SK but must never be reported in a manner that allows a contact to be attributed to a named case.
+
+14. Access restriction.
+    14.1 Restricted columns are granted only to the roles CD_INVESTIGATOR, CD_SUPERVISOR and CD_STEWARD.
+    14.2 Grants are provisioned by the Records Custodian on the written approval of the Unit Manager and are revoked automatically on separation or transfer.
+    14.3 Row-level security limits investigators to cases assigned to their team.
+    14.4 Ad hoc query tools are not permitted against the base tables. Analysts use V_CASE_ANALYTIC, which drops clauses 5 through 10 and exposes tract-level geography only.
+
+15. Retention. Case and contact rows are retained for the period required by the state reporting rule for the condition, and in no event less than three years from investigation closure. On expiry the Restricted columns are nulled in place and a purge log entry is written.
+
+16. Downstream extracts.
+    16.1 The daily state surveillance extract carries clauses 5, 6, 7, 8 and 10 in encrypted transport under the standing data exchange agreement.
+    16.2 The weekly epidemiology dataset carries no Restricted column.
+    16.3 Extracts to academic partners require an executed agreement and Unit Manager sign-off per request, and are limited to the analytic view.
+    16.4 A register of all recurring extracts is maintained by the Records Custodian and reconciled each June.

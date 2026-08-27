@@ -1,0 +1,23 @@
+{
+  "candidate": "t0-c8",
+  "stage": "propose",
+  "proposal": "Correct candidate selection inside the feasible region: once every measurable priority gate passes, maximize equal-corpus macro F2, then micro F1. Preserve the recall-max artifact and materialize the corrected winner from the same completed 300 trials without new trials or hold-out tuning.",
+  "approved_plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68",
+  "proposal_commit": "9e78f94",
+  "commit": "ee2d9c4",
+  "decision": "accepted_as_non_champion_component",
+  "evidence": {
+    "tests": "5 selector tests passed; 14 related tests passed before commit",
+    "ruff": "passed",
+    "new_trials": 0,
+    "previous_recall_max_preserved_as": "models/hash_sgd",
+    "corrected_output": "models/hash_sgd_f2",
+    "internal_equal_corpus_macro_f2": 0.4623623551041596,
+    "internal_worst_priority_recall": 0.9000693962526024,
+    "holdout_equal_corpus_macro_f2": 0.48709277989559335,
+    "holdout_priority_point_passes": 49,
+    "holdout_measurable_priority_gates": 55,
+    "holdout_worst_priority_recall": 0.18,
+    "champion_eligible": false
+  }
+}

@@ -1,0 +1,23 @@
+CHANGE PROMOTION CHECKLIST — MAPPING RULE SET, REGISTRAR SUBJECT AREA
+Change record REG-CHG-2021-0512 | Artifact: person_mapping_rules.json, revision 14
+Promotion window 2021-06-14T19:00:00-05:00 through 2021-06-14T21:30:00-05:00
+
+PRE-PROMOTION
+
+- Verified that the proposed rule set introduces no new source-to-target binding for any attribute classified Restricted or Confidential without a corresponding entry in the masking policy artifact.  Status: COMPLETE
+- Verified that the following bindings, being added at this revision, are each accompanied by a terminal transformation: preferred_first_name -> ods.person.pref_first_nm (rule: PASSTHROUGH_NON_RESTRICTED); guardian_relationship_code -> ods.person.guard_rel_cd (rule: PASSTHROUGH_NON_RESTRICTED); parent_annual_income_band -> ods.finaid.income_band (rule: GENERALIZE_TO_BAND).  Status: COMPLETE
+- Verified that the deprecated bindings for ssn_last_four and home_phone_number have been removed in their entirety and not merely commented out, and that no downstream view references either target column.  Status: COMPLETE
+
+VALIDATION IN THE LOWER ENVIRONMENT
+
+- Executed job ETL_SIS_ODS_NIGHTLY in the validation environment under run identifier RUN-2021-0614-1902; rows_read=58,110; rows_loaded=58,041; rows_rejected=69.  Status: COMPLETE
+- Confirmed that the 69 rejections resolve to error class ERR-1104 against column date_of_birth and are consistent with the known defect in the legacy admissions feed, said defect being tracked separately.  Status: COMPLETE
+- Confirmed that the profiling report records zero (0) cells failing the identifier-detection scan across the columns ssn, national_id, personal_email_address, mobile_phone_number, and bank_account_number.  Status: COMPLETE
+
+APPROVALS AND PROMOTION
+
+- Obtained the written concurrence of the Data Steward for the Registrar subject area, recorded 2021-06-14T17:22:11-05:00.  Status: COMPLETE
+- Obtained the written concurrence of the FERPA Compliance Officer as to the disclosure posture of preferred_first_name, recorded 2021-06-14T18:05:40-05:00.  Status: COMPLETE
+- Promoted revision 14 to the production configuration repository and recorded the checksum in the deployment ledger.  Status: COMPLETE
+- Confirmed the first production run following promotion (RUN-2021-0615-0217) completed with exit status 0 and rows_committed=311,204.  Status: COMPLETE
+- Rollback artifact (revision 13) retained and remains restorable for thirty (30) days from the date of promotion.  Status: COMPLETE

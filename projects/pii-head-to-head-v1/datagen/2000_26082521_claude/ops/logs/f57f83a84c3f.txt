@@ -1,0 +1,14 @@
+MEMORANDUM
+
+TO:       the Manager, Data Services Group
+FROM:     the on-call Data Services Analyst
+DATE:     21 September 2021
+SUBJECT:  Overnight cycle result, first run under MASK_PROF_07
+
+The fare load ETL_FARE_NIGHTLY_20210921_0211 completed at 02:18:56 with 418,332 rows read, 417,029 rows merged, and 1,303 rows rejected (0.31 per cent, below the 2.00 per cent threshold). Rejects were concentrated in rdr_postal_prefix, which failed the three-character format rule for 1,204 rows, and in para_cert_expiry, which was null for 87 disability-category records.
+
+The paratransit load ETL_PARA_NIGHTLY_20210921_0220 failed at 02:23:02. The mask literal did not resolve on partition 4, so guardian_family_name could not be masked and 55 rows were held. No rows were committed. The job was requeued as ETL_PARA_NIGHTLY_20210921_0241 and is pending.
+
+Two items need a decision. First, twelve rows failed on rdr_natid_token because the vault timed out; the current setting fails the row rather than retrying. Second, the source is still sending medical_reviewer_note, which the mapping drops on arrival. The Paratransit Registration team should stop populating it at source.
+
+I will report on the requeued job at the morning standup.

@@ -1,0 +1,76 @@
+OFFICE OF MANAGEMENT INFORMATION SERVICES
+DATA DICTIONARY EXCERPT — FORM MIS-DD-114 (Rev. 03/2004)
+SUBJECT AREA: STUDENT MASTER / MEMBER REGISTRY
+
+SECTION A — IDENTIFICATION
+A.1  Host platform ................ Oracle 8.1.7, instance SISPROD
+A.2  Schema ....................... SIS_ADMIN
+A.3  Base table ................... STU_MASTER
+A.4  Row count band ............... 40,000 – 60,000
+A.5  Load frequency ............... Nightly, 02:15, batch job SIS_NIGHT_01
+A.6  Custodian .................... The Records Custodian, Pupil Services
+A.7  Technical owner .............. The Database Administrator, MIS
+
+SECTION B — COLUMN INVENTORY
+
+COLUMN NAME          DATA TYPE      NULL  NOTES
+-------------------  -------------  ----  -----------------------------------
+STU_ID_LOCAL         NUMBER(9)       N    Primary key. System-assigned.
+STU_ID_STATE         VARCHAR2(10)    Y    Populated after state file match.
+NM_LAST              VARCHAR2(30)    N    Restricted. See clause C.2.
+NM_FIRST             VARCHAR2(20)    N    Restricted. See clause C.2.
+NM_MIDDLE            VARCHAR2(20)    Y    Restricted. See clause C.2.
+DT_BIRTH             DATE            N    Restricted. Age derived at query.
+CD_GENDER            CHAR(1)         N    Domain table CD_GENDER_REF.
+CD_ETHNIC            CHAR(2)         Y    Federal category; reporting only.
+SSN_NBR              VARCHAR2(11)    Y    Restricted. See clauses C.3, D.4.
+ADDR_LINE_1          VARCHAR2(40)    Y    Restricted. Mailing use only.
+ADDR_LINE_2          VARCHAR2(40)    Y    Restricted.
+ADDR_CITY            VARCHAR2(25)    Y    Restricted.
+ADDR_ZIP             VARCHAR2(10)    Y    Used ungeocoded for boundary audit.
+PHONE_HOME           VARCHAR2(14)    Y    Restricted. Not extracted.
+PHONE_EMERG          VARCHAR2(14)    Y    Restricted. Not extracted.
+EMAIL_GUARDIAN       VARCHAR2(60)    Y    Restricted. Added Rev. 03/2004.
+CD_SCHOOL            CHAR(4)         N    Foreign key to SCHOOL_REF.
+NBR_GRADE            NUMBER(2)       N    Values -1 through 12.
+DT_ENROLL            DATE            N    Drives ADA accumulation.
+DT_WITHDRAW          DATE            Y    Null while actively enrolled.
+CD_MEAL_ELIG         CHAR(1)         Y    Restricted. See clause C.4.
+FL_IEP               CHAR(1)         Y    Restricted. Special Education.
+FL_504               CHAR(1)         Y    Restricted.
+FL_ELL               CHAR(1)         Y    Restricted.
+CD_HOME_LANG         VARCHAR2(3)     Y    Domain table LANG_REF.
+FL_DIRECTORY_OPT     CHAR(1)         Y    Null treated as 'N' by batch.
+DT_ROW_UPDATE        DATE            N    Set by trigger TRG_STU_AUD.
+ID_ROW_UPDATE_USER   VARCHAR2(8)     N    Network sign-on of last writer.
+
+SECTION C — ACCESS RESTRICTION
+C.1  Table-level SELECT is granted to roles SIS_REGISTRAR, SIS_COUNSEL and
+     SIS_REPORT only. Individual grants are prohibited.
+C.2  Name columns are exposed to SIS_REPORT solely through view
+     V_STU_ROSTER, which masks all columns listed under clause C.3.
+C.3  SSN_NBR, PHONE_HOME, PHONE_EMERG and all ADDR_ columns are withheld
+     from every reporting role. Ad hoc query tools have no grant.
+C.4  CD_MEAL_ELIG may not be disclosed outside Nutrition Services except in
+     aggregate counts of ten or more.
+C.5  Any grant change requires written approval of the Records Custodian
+     and is logged on Form MIS-AC-22.
+
+SECTION D — RETENTION
+D.1  Active rows are retained for the duration of enrollment.
+D.2  Withdrawn rows move to STU_MASTER_HIST at fiscal year close.
+D.3  Transcript-bearing attributes are retained permanently.
+D.4  SSN_NBR is purged from history rows three years after withdrawal.
+D.5  Contact columns are purged one year after withdrawal.
+D.6  Nightly tape cycles are held six weeks; year-end tapes, seven years.
+
+SECTION E — DOWNSTREAM EXTRACTS
+E.1  State enrollment file, fixed-width, monthly, 14 columns, no contact data.
+E.2  Nutrition Services interface, weekly, keyed on STU_ID_LOCAL.
+E.3  Transportation routing file, quarterly, ADDR_ZIP only.
+E.4  Library circulation load, term start, roster columns only.
+E.5  Each extract is registered on Form MIS-EX-07 and expires annually.
+
+SECTION F — APPROVAL
+Records Custodian ............ _______________  Date ______
+Director, MIS ................ _______________  Date ______

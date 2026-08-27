@@ -1,0 +1,76 @@
+# ---------------------------------------------------------------------------
+# File:      /opt/dpc/etc/mask.policy.conf
+# System:    DPC (Data Protection Controls) interceptor, release 3.2.1
+# Applies:   CONSIGN9 consignment master, DRVROST driver roster, PAYROLL-IF
+# Custodian: the Records Custodian, Information Governance Department
+# Revision:  1.7 — effective 2004-03-01 — supersedes revision 1.6 entirely
+# ---------------------------------------------------------------------------
+# This file constitutes the operative technical measure by which the Company,
+# acting in its capacity as data controller in respect of consignment, roster
+# and payroll interface records, gives effect to the seventh data protection
+# principle and to clause 14 (Confidentiality and Data Handling) of the master
+# carriage agreement subsisting between the Company and each contracting
+# principal. It is to be read together with, and is subordinate to, the Data
+# Handling Standard DHS-02 and the schedule of authorised disclosures held by
+# the Records Custodian. Nothing in this file shall be construed as conferring
+# any authority to extract, retain, print, transmit or otherwise process a
+# cleartext value of any field classified below as IDENTITY, CONTACT, GOVID or
+# FINANCIAL, save under a written instruction of the Records Custodian bearing
+# a change reference and countersigned by the duty Operations Manager.
+#
+# Where a directive in this file conflicts with a directive in a downstream
+# job-level override, the more restrictive of the two shall prevail, and the
+# interceptor shall record the fact of the conflict against the job identifier
+# then in force. Any field encountered at runtime which is not enumerated below
+# shall be treated as falling within policy.default, and the row shall be
+# quarantined rather than emitted. Silent passthrough is not permitted in any
+# circumstance whatsoever.
+# ---------------------------------------------------------------------------
+
+policy.default                      = DENY
+policy.default.action               = SUPPRESS_TO_NULL
+policy.unenumerated.field           = QUARANTINE_ROW
+policy.cleartext.egress             = PROHIBITED
+policy.audit.sink                   = /var/dpc/audit/mask-%JOBID%.aud
+policy.audit.record                 = FIELD_NAME, ACTION, ROW_ORDINAL
+policy.audit.record.excludes        = FIELD_VALUE, FIELD_VALUE_HASH_PREIMAGE
+
+# --- classification: IDENTITY -------------------------------------------
+field.CONSIGNEE_NAME.class          = IDENTITY
+field.CONSIGNEE_NAME.action         = MASK_FULL
+field.CONSIGNEE_NAME.render         = ************
+field.CONSIGNOR_SIGNATORY_NAME.class= IDENTITY
+field.CONSIGNOR_SIGNATORY_NAME.action = MASK_FULL
+field.DRIVER_SURNAME.class          = IDENTITY
+field.DRIVER_SURNAME.action         = TOKENISE
+field.DRIVER_SURNAME.token.format   = TKN:DS:<40-hex>
+field.DRIVER_FORENAME.action        = SUPPRESS_TO_NULL
+field.NEXT_OF_KIN_NAME.action       = SUPPRESS_TO_NULL
+
+# --- classification: CONTACT --------------------------------------------
+field.DELIVERY_ADDR_LINE_1.action   = MASK_FULL
+field.DELIVERY_ADDR_LINE_2.action   = MASK_FULL
+field.DELIVERY_POSTCODE.action      = TRUNCATE_TO_SECTOR
+field.DELIVERY_POSTCODE.render      = ****
+field.CONTACT_TEL_DAY.action        = MASK_FULL
+field.CONTACT_TEL_MOBILE.action     = MASK_FULL
+field.CONTACT_EMAIL_ADDR.action     = SUPPRESS_TO_NULL
+
+# --- classification: GOVID / FINANCIAL ----------------------------------
+field.DRIVER_LICENCE_NO.action      = TOKENISE
+field.DRIVER_LICENCE_NO.token.format= TKN:DL:<40-hex>
+field.NI_NUMBER.action              = SUPPRESS_TO_NULL
+field.DRIVER_DOB.action             = SUPPRESS_TO_NULL
+field.PAYROLL_NO.action             = TOKENISE
+field.BANK_SORT_CODE.action         = SUPPRESS_TO_NULL
+field.BANK_ACCOUNT_NO.action        = SUPPRESS_TO_NULL
+field.CARD_PAN_ON_DELIVERY.action   = MASK_FULL
+field.CARD_PAN_ON_DELIVERY.render   = ****************
+
+# --- retention of the quarantine store ----------------------------------
+quarantine.path                     = /var/dpc/qtn
+quarantine.retain.days              = 30
+quarantine.contents                 = FIELD_NAME, ERROR_CODE, ROW_ORDINAL
+quarantine.contents.prohibited      = FIELD_VALUE
+quarantine.review.by                = the Records Custodian
+# end of file

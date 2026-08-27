@@ -1,0 +1,50 @@
+IMMUNIZATION REGISTRY INTERFACE — STAGING TABLE
+DATA DICTIONARY EXCERPT
+
+Section 1 — Identification
+  Table ............. IZ_CLIENT_STAGE
+  Database .......... IZLINK (SQL Server 2005)
+  Owner ............. Immunization Program Manager
+  Rev / date ........ 1.7 / 2011-02-22
+  Load frequency .... Twice daily, 06:00 and 18:00
+
+Section 2 — Columns
+  STAGE_ROW_ID      | BIGINT       | NOT NULL | load key, not persisted [1]
+  SOURCE_SYS_CD     | CHAR(4)      | NOT NULL | originating clinic system
+  CLIENT_LAST_NAME  | VARCHAR(40)  | NOT NULL | matched on, not stored downstream [2]
+  CLIENT_FIRST_NAME | VARCHAR(30)  | NOT NULL | matched on [2]
+  CLIENT_DOB        | DATETIME     | NOT NULL | primary match element
+  MOTHER_MAIDEN_NM  | VARCHAR(35)  | NULL     | secondary match element [2]
+  CLIENT_ADDR_LINE1 | VARCHAR(50)  | NULL     | tie-break on match only
+  CLIENT_ZIP5       | CHAR(5)      | NULL     | tie-break on match only
+  CLIENT_PHONE      | CHAR(10)     | NULL     | carried for recall notices [2]
+  MEDICAID_ID       | VARCHAR(13)  | NULL     | populated by two clinics only
+  REGISTRY_ID       | VARCHAR(11)  | NULL     | returned by the state on match
+  VACCINE_CVX_CD    | CHAR(3)      | NOT NULL |
+  ADMIN_DT          | DATE         | NOT NULL |
+  LOT_NUM           | VARCHAR(20)  | NULL     |
+  LOAD_DTM          | DATETIME     | NOT NULL | server time
+  MATCH_STATUS_CD   | CHAR(1)      | NOT NULL | P pending, M matched, R rejected
+
+Section 3 — Access restriction
+  The staging table is readable by the interface service account and the
+  Application DBA only. Program staff work rejected rows through the IZLINK
+  reconciliation screen. No reporting tool is connected to this table, and no
+  linked-server access is permitted from the warehouse.
+
+Section 4 — Retention
+  Rows are deleted thirty days after MATCH_STATUS_CD reaches M or R. Rows in
+  P status beyond ninety days are escalated to the Immunization Program Manager
+  and deleted after disposition. The permanent record resides in the state
+  registry, not in staging.
+
+Section 5 — Downstream extracts
+  Matched rows generate an HL7 VXU message to the state registry. Nothing in
+  this table feeds CHD_WAREHOUSE. Monthly coverage rates supplied to the Program
+  Manager are drawn from registry return files, not from staging.
+
+Notes
+  [1] Reset at each truncate; not a stable identifier.
+  [2] Excluded from every extract and from all screen prints outside the
+      reconciliation function; requests to view are routed to the Records
+      Custodian.

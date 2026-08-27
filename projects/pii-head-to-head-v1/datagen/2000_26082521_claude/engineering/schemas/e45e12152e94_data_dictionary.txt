@@ -1,0 +1,64 @@
+SCHEDULE B TO THE DATA GOVERNANCE REGISTER
+TABLE: CHD_IMM.REGISTRY_MEMBER
+Register Entry No. 2021-041
+
+I. CUSTODY
+   Business Owner ......... the Immunization Program Manager
+   Technical Owner ........ the Database Administrator of Record
+   Governance Contact ..... the Records Custodian
+
+II. ELEMENTS
+
+   REGISTRY_MEMBER_SK
+     Type: BIGINT           Nullable: No
+     Note: Internal identifier only. Not to be transmitted externally.
+
+   MEMBER_LAST_NAME_TXT
+     Type: VARCHAR(60)      Nullable: No
+     Note: Protected. Matching key for State reconciliation; masked in test refreshes.
+
+   MEMBER_FIRST_NAME_TXT
+     Type: VARCHAR(60)      Nullable: No
+     Note: Protected. Masked in test refreshes.
+
+   MEMBER_BIRTH_DT
+     Type: DATE             Nullable: No
+     Note: Protected. Reporting layer exposes derived age band only.
+
+   MEMBER_RESIDENCE_ADDR_TXT
+     Type: VARCHAR(180)     Nullable: Yes
+     Note: Protected. Geocoded nightly; coordinates stored separately and rounded.
+
+   MEMBER_GUARDIAN_NAME_TXT
+     Type: VARCHAR(120)     Nullable: Yes
+     Note: Protected. Populated for minors. Never included in any extract.
+
+   STATE_REGISTRY_ID
+     Type: VARCHAR(16)      Nullable: Yes
+     Note: Protected. Assigned by the State system upon successful match.
+
+   IMM_SERIES_STATUS_CD
+     Type: CHAR(2)          Nullable: No
+     Note: Derived. Recomputed on each dose posting.
+
+   LAST_DOSE_DT
+     Type: DATE             Nullable: Yes
+     Note: Null where no dose is recorded.
+
+III. ACCESS RESTRICTION
+   Elements marked Protected are readable only under the role CHD_PHI_READ. Bulk
+   selection exceeding one thousand (1,000) rows requires prior written authorization
+   of the Privacy Officer and is logged irrespective of outcome.
+
+IV. RETENTION
+   Registry rows are retained for the life of the member plus three (3) years, in
+   accordance with the applicable State retention schedule. Disposition is suspended
+   during any litigation hold and resumes only upon written release.
+
+V. DOWNSTREAM EXTRACTS
+   EXT_STATE_IMM_WEEKLY — matching and status elements, transmitted under agreement.
+   EXT_SCHOOL_COMPLIANCE — status element and derived age band only.
+   EXT_EPI_QUARTERLY — de-identified; all Protected elements suppressed.
+
+VI. ENTRY CERTIFIED
+   the Records Custodian ................  Date ..............

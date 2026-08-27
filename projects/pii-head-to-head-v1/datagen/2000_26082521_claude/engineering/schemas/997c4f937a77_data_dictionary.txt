@@ -1,0 +1,56 @@
+DATA DICTIONARY EXCERPT — CUSTPF
+AS/400 PHYSICAL FILE, LIBRARY TITLPROD, JOURNALED TO JRNCUST
+CLOSING AND DISBURSEMENT SYSTEM (CDS)
+ISSUED: 22 JUNE 1999 — REPLACES ISSUE OF 04 AUGUST 1998
+
+1. General.
+
+   1.1 CUSTPF holds one record per customer of record for closing and disbursement purposes. Records are added by CDS420 at file opening and are not deleted by application function.
+
+   1.2 Field names below are as recorded in the DDS source member CUSTPF in file QDDSSRC. The DDS source governs.
+
+2. Key and control fields.
+
+   2.1 CUCUST#  — packed, 9,0 — required — customer number, assigned by CDS420.
+   2.2 CUFILE#  — character, 14 — required — escrow file number.
+   2.3 CUBRCH   — character, 4 — required — servicing branch code.
+   2.4 CUSTAT   — character, 1 — required — record status; A active, I inactive, P purge pending.
+   2.5 CUOPNDT  — packed, 8,0 — required — CCYYMMDD; expanded from 6,0 under project Y2K-14.
+
+3. Party identification fields. All fields in this clause are protected under the company's customer information policy and carry the access conditions at clause 5.
+
+   3.1 CULNAM   — character, 35 — required.
+   3.2 CUFNAM   — character, 25 — optional.
+   3.3 CUMINIT  — character, 1  — optional.
+   3.4 CUSSN    — character, 9  — optional — restricted.
+   3.5 CUDOB    — packed, 8,0   — optional — restricted.
+   3.6 CUDLIC   — character, 20 — optional — restricted — driver licence identifier captured at signing where required by the notary log.
+   3.7 CUDLST   — character, 2  — optional — issuing state for 3.6.
+
+4. Contact and property fields.
+
+   4.1 CUADR1, CUADR2 — character, 40 — 4.1 first line required.
+   4.2 CUCITY — character, 30 — required.
+   4.3 CUSTATE — character, 2 — required.
+   4.4 CUZIP — character, 9 — required.
+   4.5 CUPHN1, CUPHN2 — character, 10 — optional — digits only, no formatting characters stored.
+   4.6 CUEMAIL — character, 50 — optional — added this issue.
+   4.7 CUPARCL — character, 25 — optional — county parcel identifier of the subject property.
+
+5. Access restriction.
+
+   5.1 Object authority on CUSTPF is *EXCLUDE for *PUBLIC. Program adopted authority is the only permitted access path.
+   5.2 Fields at 3.4, 3.5 and 3.6 are displayed only through program CDS880 and only to user profiles in group profile GRPCOMP. All CDS880 accesses are journaled and reported weekly to the Records Custodian.
+   5.3 Query/400, ODBC and client file transfer against CUSTPF are disabled at the object level.
+
+6. Retention.
+
+   6.1 Active retention is the life of the escrow file. On disbursement, CUSTAT is set to I.
+   6.2 At disbursement plus eighteen months, job CDSSCR60 blanks 3.4, 3.5, 3.6 and 3.7.
+   6.3 At disbursement plus seven years, records are written to save file and removed by CDSPRG70. The Records Custodian countersigns the purge control report.
+
+7. Downstream extracts.
+
+   7.1 CDSX020 — daily to the underwriting reporting file. Fields 2.1 through 2.5, 3.1, 3.2 only.
+   7.2 CDSX310 — monthly to the marketing services file. Fields 3.1, 3.2, 4.1 through 4.4 only; suppression flag CUNOSOL is applied before selection.
+   7.3 No extract carries clause 3 restricted fields. Requests to the contrary are to be referred to the Records Custodian and to counsel.

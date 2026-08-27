@@ -1,0 +1,8 @@
+DATA DICTIONARY EXCERPT — MEMBER CONTACT PREFERENCE, TABLE MBRPREF
+Oracle 8i instance PHRM2, schema CUSTOWN. Issued by the Data Administration desk, 14 JUN 2004.
+
+MBRPREF is a dependent of CUSTMAST and inherits its restriction class. MBR_KEY_ID, NUMBER(11), NOT NULL, foreign key to the master; PREF_SEQ_NBR, NUMBER(3), NOT NULL, completes the composite key. PREF_CHNL_CD, CHAR(2), NOT NULL, identifies the contact channel and is validated against REFCHNL. OPT_OUT_IND, CHAR(1), NOT NULL, defaulted to the negative value at insert; the affirmative value suppresses the row from every outbound selection without exception and may not be reversed by store personnel. OPT_OUT_DT, DATE, NULL permitted, required whenever the indicator is affirmative. OPT_OUT_SRC_CD, CHAR(3), NULL permitted, records whether the election arrived by written request, telephone request to the service desk, or in-store form.
+
+MBR_MAIL_NAM, VARCHAR2(60), NULL permitted, holds the addressee line as printed and is not to be parsed for matching purposes. EMAIL_ADR_TXT and HOME_PHON_NBR are duplicated here for extract convenience and are refreshed nightly from the master; they are read-only to all application accounts.
+
+Retention follows the master. Suppression elections are retained indefinitely and are excluded from all purge routines by design. The sole authorized extract is XMKT01. Access is by role CUSTREAD; grants to individual accounts are not permitted.

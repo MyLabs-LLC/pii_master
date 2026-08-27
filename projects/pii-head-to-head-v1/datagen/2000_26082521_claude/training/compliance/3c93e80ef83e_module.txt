@@ -1,0 +1,50 @@
+MEMORIAL REGIONAL HEALTH SYSTEM
+PATIENT FINANCIAL SERVICES — COMPLIANCE HANDOUT PFS-114
+RESTRICTED INFORMATION CATEGORIES AND HANDLING TIERS
+REV. 04/2021 | OWNER: RECORDS CUSTODIAN | REVIEW CYCLE: ANNUAL
+
++------+-----------------------------------+---------------+----------+
+| TIER | PROTECTED FIELD LABEL             | HANDLING RULE | RETAIN   |
++------+-----------------------------------+---------------+----------+
+| R1   | Patient Name                      | ENCRYPT + LOG | 7 YR     |
+| R1   | Medical Record Number             | ENCRYPT + LOG | 7 YR     |
+| R1   | Social Security Number            | NO EXPORT     | 7 YR     |
+| R1   | Date of Birth                     | ENCRYPT + LOG | 7 YR     |
+| R2   | Guarantor Street Address          | MASK ON PRINT | 7 YR     |
+| R2   | Subscriber / Member ID            | MASK ON PRINT | 7 YR     |
+| R2   | Primary Contact Telephone         | MASK ON PRINT | 7 YR     |
+| R2   | Correspondence Email              | MASK ON PRINT | 7 YR     |
+| R3   | Card Account Number / PAN         | NEVER STORE   | N/A      |
+| R3   | Card Verification Value           | NEVER STORE   | N/A      |
+| R3   | Bank Routing / Draft Account      | NEVER STORE   | N/A      |
+| R4   | Diagnosis Code Narrative          | MIN NECESSARY | 7 YR     |
+| R4   | Behavioral / Substance Flag       | SEGREGATED    | 10 YR    |
++------+-----------------------------------+---------------+----------+
+
+CONSEQUENCE SCHEDULE
+
++----------+--------------------------------+------------------------+
+| SEVERITY | TRIGGER EVENT                  | DISPOSITION            |
++----------+--------------------------------+------------------------+
+| LEVEL 1  | Unlocked workstation           | COACHING, LOGGED       |
+| LEVEL 2  | Misdirected statement          | WRITTEN WARNING        |
+| LEVEL 3  | Access without business need   | SUSPENSION + AUDIT     |
+| LEVEL 4  | Export of R1/R3 to personal    | TERMINATION + REFERRAL |
++----------+--------------------------------+------------------------+
+
+SCENARIO CHECK — MARK THE CONTROLLING TIER AND SEVERITY
+
++-----+-----------------------------------------------+-------+-------+
+| NO. | SITUATION                                     | TIER  | LEVEL |
++-----+-----------------------------------------------+-------+-------+
+| 1   | A clerk photographs a claim screen with a     |       |       |
+|     | personal handset to finish work off site.     |       |       |
+| 2   | A caller declines identity verification and   |       |       |
+|     | requests an outstanding balance by phone.     |       |       |
+| 3   | A denial worklist is emailed to an external   |       |       |
+|     | vendor without an executed agreement.         |       |       |
+| 4   | A card number is written on a scratch pad     |       |       |
+|     | during payment posting and left at the desk.  |       |       |
++-----+-----------------------------------------------+-------+-------+
+
+RETURN COMPLETED SHEET TO THE COMPLIANCE COORDINATOR WITHIN FIVE BUSINESS DAYS.

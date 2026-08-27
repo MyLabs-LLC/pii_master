@@ -1,0 +1,43 @@
+EXTRACT DICTIONARY — MCIF MARKETING FILE (MKTEXT)
+SOURCE: MBRMAST, ACCTMAST, MBRJOIN     CYCLE: MONTHLY, THIRD BUSINESS DAY
+REV 1.2                                CUSTODIAN: RECORDS CUSTODIAN
+
+RETN = retention in months. RTE = extract routing.
+A = analysis vendor  B = branch campaign lists  C = board reporting
+
+COLUMN NAME         TYPE         NULL  RETN  RTE   NOTES
+------------------  -----------  ----  ----  ----  ---------------------
+MKT_SURR_KEY        CHAR(12)     N     36    ABC   Surrogate. MBR_NBR is
+                                                   not carried on this
+                                                   file.
+MKT_HHLD_KEY        CHAR(12)     N     36    ABC   From MBRXREF rebuild.
+MKT_LAST_NAME       CHAR(25)     N     12    B     Salutation build only.
+MKT_ADDR_LINE_1     CHAR(30)     N     12    B     Mail piece addressing.
+MKT_CITY            CHAR(20)     N     12    B
+MKT_STATE_CD        CHAR(2)      N     36    AB
+MKT_ZIP5            CHAR(5)      N     36    ABC   Geocoding input.
+MKT_AGE_BAND_CD     CHAR(1)      Y     36    ABC   Derived from
+                                                   MBR_BIRTH_DT at cut
+                                                   time. The source date
+                                                   is not written to this
+                                                   file.
+MKT_TENURE_MOS      SMALLINT     N     36    ABC
+MKT_PROD_CNT        SMALLINT     N     36    ABC
+MKT_BAL_BAND_CD     CHAR(2)      N     36    ABC
+MKT_CHANNEL_PREF    CHAR(1)      Y     12    AB
+MKT_OPT_OUT_FLG     CHAR(1)      N     84    ABC   Retained beyond file
+                                                   life; opt-out survives
+                                                   membership closure.
+
+No tax identification number, birth date, telephone number, electronic mail
+address or account identifier is written to MKTEXT under any routing code.
+The extract program applies the opt-out suppression before write, and the
+suppression list is reconciled against MBRMAST each cycle by the Records
+Custodian. Routing B columns are dropped from the copy delivered to the
+analysis vendor; that vendor receives keys, bands and counts only.
+
+Files transmitted to routing A move by dial transfer to the vendor's host and
+are confirmed by control totals returned the same day. Routing B output is
+produced to a restricted output queue for branch marketing staff and is not
+permitted to leave the building in machine-readable form. Routing C output is
+aggregated to district level before printing.

@@ -1,0 +1,61 @@
+{
+  "approved_at": "2026-08-25T08:12:00.691081+00:00",
+  "approved_by": "user",
+  "plan": {
+    "approval_text": "yes, approve this plan, and continue to push as hard as you can for 1000 runs over the arms to improve recall to 90% on priority tags",
+    "approved_at": "2026-08-25",
+    "approved_by": "user",
+    "budget": {
+      "allocation": {
+        "embeddingbag_asl": 300,
+        "hash_sgd": 300,
+        "hybrid_priority": 100,
+        "tfidf_linear": 300
+      },
+      "early_stop": "all measurable priority recalls >= 0.90 and equal-corpus macro_f2 >= 0.90",
+      "max_trials": 1000,
+      "max_wallclock_s": 43200
+    },
+    "deploy_target": "none",
+    "editable_surfaces": [
+      "training/",
+      "src/pii_master/ (only evidence-backed serving integration)",
+      "tests/",
+      "projects/pii-priority-recall-v1/",
+      "/tmp/pii-priority-recall-v1-work/"
+    ],
+    "evaluation_data": "/home/lence/workspace/data/2-eval/*",
+    "immutable_surfaces": [
+      "/home/lence/workspace/data/2-eval/",
+      "evaluation labels and split membership",
+      "metric formulas",
+      "minimum support 30",
+      "priority recall threshold 0.90"
+    ],
+    "modules": [
+      "eval",
+      "tune",
+      "classify",
+      "datagen"
+    ],
+    "objective": {
+      "hard_gate": "per-tag recall >= 0.90 on every corpus with support >= 30",
+      "latency_gate": "p95 <= 5 ms per 10KB document on one CPU core",
+      "primary": "equal-corpus mean macro_f2",
+      "target": 0.9,
+      "tie_breaker": "equal-corpus mean micro_f1"
+    },
+    "operation": "full-recall-first-model-loop",
+    "orchestration": "direct model_pipeline engine through uv/Python 3.13",
+    "project": "projects/pii-priority-recall-v1",
+    "reporting": [
+      "md",
+      "pdf",
+      "xlsx",
+      "commands.txt"
+    ],
+    "tracking": "local MLflow file store; models and approved extra artifacts enabled",
+    "training_data": "/home/lence/workspace/data/1-train/*"
+  },
+  "plan_sha256": "caac914174f3352dd124cf4bfae9be079084d8cf55da1fbc2c86731e5c5dfd68"
+}

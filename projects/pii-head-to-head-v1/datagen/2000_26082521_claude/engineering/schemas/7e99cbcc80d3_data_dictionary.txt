@@ -1,0 +1,38 @@
+DATA DICTIONARY EXCERPT — ESCROW DISBURSEMENT PARTY (AS400 LIB PRODLIB, FILE DISBPTY)
+Trust Accounting System
+
+1. FILE ORGANIZATION
+   (a) Physical file DISBPTY, keyed on DISBPTY_ID.
+   (b) Logical files DISBPTYL1 (by FILE_NBR) and DISBPTYL2 (by DISB_DT).
+   (c) Record format DISBPTYR, defined in DDS member DISBPTY.
+
+2. COLUMNS
+   (a) DISBPTY_ID — packed 11,0 — not null — assigned by RPG program DPY100.
+   (b) FILE_NBR — char 12 — not null.
+   (c) PAYEE_NAME — char 60 — not null — entered as it is to appear on the instrument.
+   (d) PAYEE_ADDR_1, PAYEE_ADDR_2 — char 40 — line 1 not null.
+   (e) PAYEE_POSTAL_CD — char 9 — not null.
+   (f) PAYEE_TIN — char 9 — null — required where the disbursement is reportable.
+   (g) DISB_METH_CD — char 1 — not null — C = check, W = wire, J = journal.
+   (h) DISB_DDA_NBR — char 17 — null — required where DISB_METH_CD = W.
+   (i) DISB_ABA_NBR — char 9 — null — required where DISB_METH_CD = W.
+   (j) CHECK_NBR — packed 9,0 — null — set by the check register at print.
+   (k) DISB_AMT — packed 13,2 — not null.
+   (l) DISB_DT — date — not null — eight-digit form since the Release 3.6 conversion.
+
+3. ACCESS RESTRICTION
+   (a) Object authority on DISBPTY is *EXCLUDE for *PUBLIC. Authorization list DISBAUTL governs.
+   (b) DISBAUTL grants *USE to the escrow accounting group and *CHANGE to the disbursement supervisor profile. Programmer profiles hold no authority in production.
+   (c) Columns 2(f), 2(h) and 2(i) are omitted from all display files available to branch profiles. Branch inquiry uses logical file DISBPTYL3, which excludes those fields.
+   (d) Query/400 use against this file is disabled. Requests for extract are routed to the Records Custodian.
+
+4. RETENTION
+   (a) Records are held on line for the current and prior accounting years.
+   (b) Prior-year records are saved to the year-end volume and removed from the on-line file by DPY900.
+   (c) Year-end volumes are held for the trust accounting retention interval and are stored off site under the media retention schedule. The Records Custodian holds the release authority.
+
+5. DOWNSTREAM EXTRACTS
+   (a) DPYX10 — information return extract — carries PAYEE_NAME, PAYEE_TIN, address columns, DISB_AMT and DISB_DT. Written to the reporting vendor volume.
+   (b) DPYX20 — bank positive pay extract — carries CHECK_NBR, DISB_AMT and DISB_DT only.
+   (c) DPYX30 — internal audit extract — carries all columns except 2(f), 2(h) and 2(i), which are replaced by a hash on the audit copy.
+   (d) Additions to this extract inventory require a change request approved by the disbursement supervisor and the Records Custodian.

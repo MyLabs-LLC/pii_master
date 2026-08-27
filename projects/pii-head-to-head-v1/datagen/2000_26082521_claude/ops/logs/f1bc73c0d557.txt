@@ -1,0 +1,31 @@
+REGIONAL TRANSIT AUTHORITY
+DATA SERVICES DIVISION — MASKING PROFILE REGISTRATION
+Profile: FARECARD_CUSTOMER_V3
+Registered: 2016-03-28 09:40 (local)
+Effective: 2016-04-01 00:00 (local)
+
+1. This profile applies to all non-production extracts drawn from the FARECARD schema, tables ACCT_HOLDER, ACCT_CONTACT and REDUCED_FARE_ENROL.
+
+2. The following columns are classified Restricted and must carry a masking rule before any extract is released to the reporting environment:
+
+   2.1  first_name, middle_initial, last_name, name_suffix
+   2.2  date_of_birth
+   2.3  ssn_last4
+   2.4  mailing_addr_line_1, mailing_addr_line_2, mailing_city, mailing_postal_code
+   2.5  home_phone, mobile_phone, email_address
+   2.6  card_pan, bank_acct_number, bank_routing_number
+   2.7  medicare_card_id, disability_cert_number, student_enrol_id
+   2.8  emergency_contact_name, emergency_contact_phone
+
+3. Default treatment is full character substitution. Substituted output is written as a fixed-width run of the replacement character; no source characters are carried through.
+
+4. Exceptions to Clause 3:
+
+   4.1  card_pan retains the last four positions only.
+   4.2  mailing_postal_code retains the first three positions only.
+   4.3  date_of_birth is generalised to birth_year.
+   4.4  account_ref is replaced by a deterministic token so that joins across tables are preserved.
+
+5. Columns not listed in Clause 2 pass through unmasked unless the Records Custodian adds them by amendment.
+
+6. This profile is reviewed each quarter. The next review falls due 2016-06-30.

@@ -1,0 +1,35 @@
+MEMORIAL DISTRICT HOSPITAL / PATIENT ACCOUNTING
+                  DATA VALIDATION EXCEPTION NOTICE (FORM V-3)
+
+  Notice No. ......... V3-2004-0311-07
+  Raised ............. 2004-03-11  06:40
+  Job Id ............. RDM_NIGHTLY_20040311_0217
+  Stage .............. TRANSFORM / LOAD
+  Severity ........... 2 — load completed, subset withheld
+
+  EXCEPTION SUMMARY
+    Code       Field          Rows      Disposition
+    VAL-021    GUAR_SSN         612     Rejected at transform
+    VAL-014    DOB_DT            88     Rejected at transform
+    VAL-033    GRP_NBR           17     Held, not loaded
+    ORA-01400  ACCT_TKN          17     Discarded at load (same set)
+
+  ROW ACCOUNTING
+    Read 418,336 / Loaded 417,602 / Withheld 734 / Net delta 717
+
+  FINDING
+    Held rows carry an unresolved token collision in the group-number domain.
+    Because ACCT_TKN is derived in the same pass, the account token was never
+    minted, producing the null-insert failure at load. No source values were
+    written to the reject file, the audit file, or this notice.
+
+  ACTION REQUIRED
+    [X] Re-tokenise held set under keyset PFS-2004Q1
+    [X] Rerun stage LOAD only
+    [ ] Rerun full stream
+    [X] Confirm control totals before month-end close
+
+  ASSIGNED ......... Senior Analyst, Decision Support
+  DUE .............. 2004-03-12  17:00
+  ACKNOWLEDGED ..... Manager, Patient Accounting
+  CC ............... Records Custodian; Duty Operator (batch desk)

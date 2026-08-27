@@ -1,0 +1,62 @@
+DATA PROTECTION SERVICES — FIELD MASKING RULESET
+RULESET ID  DPS-MASK-0042        REVISION 7
+EFFECTIVE   2011-03-14 00:00:00 CST
+CUSTODIAN   Office of the Records Custodian, Corporate Compliance
+APPLIES TO  STG_ESCROW, STG_TITLE, DM_SETTLEMENT, RPT_VENDOR_EXTRACT
+
+1. FIELD DISPOSITION TABLE
+
+CL    SOURCE FIELD LABEL            CLS   MASK RULE           RENDERED FORM    VLT
+------------------------------------------------------------------------------
+1.01  BORROWER_FIRST_NAME           DIR   TOKENIZE_FPE        TKN:AAAAAAAAAAAA Y
+1.02  BORROWER_LAST_NAME            DIR   TOKENIZE_FPE        TKN:AAAAAAAAAAAA Y
+1.03  BORROWER_MIDDLE_INIT          DIR   INITIAL_ONLY        A.               N
+1.04  BORROWER_SSN                  SEN   RETAIN_LAST_4       *****NNNN        Y
+1.05  BORROWER_DOB                  QID   GENERALIZE_YEAR     YYYY             N
+1.06  CO_BORROWER_FULL_NAME         DIR   TOKENIZE_FPE        TKN:AAAAAAAAAAAA Y
+1.07  SELLER_TIN                    SEN   FULL_SUPPRESS       <SUPPRESSED>     N
+1.08  SELLER_ENTITY_NAME            BUS   PASS_THROUGH        (as-is)          N
+1.09  PROPERTY_ADDR_LINE_1          QID   TOKENIZE_REF        TKN:BBBBBBBB     Y
+1.10  PROPERTY_ADDR_LINE_2          QID   NULLIFY             <NULL>           N
+1.11  PROPERTY_POSTAL_CODE          QID   TRUNCATE_POSTAL_3   NNN**            N
+1.12  MAILING_ADDR_LINE_1           QID   TOKENIZE_REF        TKN:BBBBBBBB     Y
+1.13  BORROWER_HOME_PHONE           DIR   FULL_SUPPRESS       <SUPPRESSED>     N
+1.14  BORROWER_EMAIL_ADDR           DIR   HASH_SHA1_SALTED    0xHHHHHHHHHHHH   N
+1.15  BORROWER_DL_NBR               SEN   FULL_SUPPRESS       <SUPPRESSED>     N
+1.16  ESCROW_ACCOUNT_NBR            SEN   RETAIN_LAST_4       *****NNNN        Y
+1.17  DISBURSEMENT_ACCT_NBR         SEN   RETAIN_LAST_4       *****NNNN        Y
+1.18  WIRE_ABA_RTN                  SEN   FULL_SUPPRESS       <SUPPRESSED>     N
+1.19  EARNEST_CHECK_NBR             SEN   FULL_SUPPRESS       <SUPPRESSED>     N
+1.20  LENDER_LOAN_NBR               NPI   TOKENIZE_FPE        TKN:AAAAAAAAAAAA Y
+1.21  TITLE_POLICY_NBR              BUS   PASS_THROUGH        (as-is)          N
+1.22  ESCROW_FILE_NBR               BUS   PASS_THROUGH        (as-is)          N
+1.23  PARCEL_APN                    QID   PASS_THROUGH        (as-is)          N
+1.24  NOTARY_COMMISSION_NBR         DIR   FULL_SUPPRESS       <SUPPRESSED>     N
+1.25  SIGNER_BIOMETRIC_IMG          SEN   SUPPRESS_BLOB       <BLOB REMOVED>   N
+------------------------------------------------------------------------------
+CLS KEY: DIR = direct identifier; SEN = sensitive nonpublic; QID = quasi-
+identifier; NPI = nonpublic personal information; BUS = business attribute.
+
+2. OPERATING CLAUSES
+
+2.01  Any field label enumerated at Clause 1 shall be resolved by the masking
+      agent before the staging commit. No unmasked column may persist beyond
+      the load buffer.
+2.02  Token issuance under TOKENIZE_FPE and TOKENIZE_REF is format-preserving
+      and deterministic within a single ruleset revision. Revision increments
+      invalidate prior token equivalence.
+2.03  Vault-backed rules (VLT = Y) require a successful handshake with the
+      token vault. On handshake failure the agent shall fail closed and the
+      dependent session shall abort.
+2.04  Fields carrying CLS of SEN or DIR shall not be written to any extract
+      destined for an outside vendor, notwithstanding a PASS_THROUGH entry
+      appearing elsewhere in the mapping.
+2.05  RETAIN_LAST_4 preserves terminal characters only. The leading segment is
+      replaced with the fill character and is not recoverable from the target.
+2.06  GENERALIZE_YEAR discards day and month components at read time. Downstream
+      age derivation shall use the generalized value.
+2.07  Requests to add, retire, or reclassify a field label are submitted to the
+      Records Custodian on form DPS-CR-11 and take effect only on publication
+      of a new revision.
+2.08  The Data Steward for each subject area attests to this table quarterly.
+      Attestation for the current quarter is recorded in DPS-ATT-2011-Q1.

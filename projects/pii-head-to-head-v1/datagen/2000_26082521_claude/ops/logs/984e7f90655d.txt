@@ -1,0 +1,45 @@
+*======================================================================*
+* DMASK.CFG   MASKING PROFILE FOR NON-PRODUCTION REFRESH               *
+* PROFILE ID : DMASK-TRAIN-06        LAST ALTERED : 03-FEB-1999 09:14  *
+* APPLIES TO : TRAINLIB REFRESH FROM SISPROD, JOB ETLMSK20             *
+*======================================================================*
+
+CLAUSE 1.  PROFILE ACTIVATION
+   1.1  PROFILE  = DMASK-TRAIN-06
+   1.2  MODE     = ENFORCE
+   1.3  ON-FAIL  = ABEND
+   1.4  A refresh shall not commence unless this profile loads clean.
+        Load failure returns RC=0012 and halts the stream at STEP010.
+
+CLAUSE 2.  DIRECTIVE TABLE
+   2.1  MASK  LEGAL_SURNAME          METHOD=SUBST   POOL=SURN.POOL
+   2.2  MASK  LEGAL_GIVEN_NAME       METHOD=SUBST   POOL=GIVN.POOL
+   2.3  MASK  MIDDLE_INITIAL         METHOD=CONST   VALUE='X'
+   2.4  MASK  DATE_OF_BIRTH          METHOD=SHIFT   RANGE=+/-90D KEEP=YYYY
+   2.5  MASK  SOC_SEC_NBR            METHOD=BLANK   RENDER='XXX-XX-XXXX'
+   2.6  MASK  MEDICAID_NBR           METHOD=BLANK   RENDER='**********'
+   2.7  MASK  RESIDENCE_STREET_1     METHOD=CONST   VALUE='<<SUPPRESSED>>'
+   2.8  MASK  RESIDENCE_CITY         METHOD=GENER   LEVEL=COUNTY
+   2.9  MASK  RESIDENCE_ZIP          METHOD=TRUNC   KEEP=3 PAD='XX'
+   2.10 MASK  HOME_PHONE             METHOD=BLANK   RENDER='(XXX) XXX-XXXX'
+   2.11 MASK  EMERG_CONTACT_PHONE    METHOD=BLANK   RENDER='(XXX) XXX-XXXX'
+   2.12 MASK  GUARDIAN_1_SURNAME     METHOD=SUBST   POOL=SURN.POOL
+   2.13 MASK  GUARDIAN_1_EMPLOYER    METHOD=CONST   VALUE='<<SUPPRESSED>>'
+   2.14 TOKEN STU_LOCAL_ID           FORMAT=TOK-999999  CONSISTENT=YES
+   2.15 TOKEN STU_STATE_ID           FORMAT=TOK-999999  CONSISTENT=YES
+   2.16 PASS  GRADE_LEVEL, BUILDING_CODE, HOMEROOM, WITHDRAW_CODE
+   2.17 PASS  ATT_DAYS_PRESENT, ATT_DAYS_ABSENT, IEP_FLAG, LEP_FLAG
+   2.18 DENY  *   /* any label not named above is dropped at read */
+
+CLAUSE 3.  TOKEN CONSISTENCY
+   3.1  VAULT = TRNVLT.TOKEN.MASTER
+   3.2  Token assignment is stable across refreshes so that joins on
+        the pupil key remain valid in the training region.
+   3.3  The vault is not copied to TRAINLIB and is readable only by
+        the Records Custodian and the batch scheduler ID.
+
+CLAUSE 4.  ATTESTATION
+   4.1  The Data Processing Supervisor confirms directive coverage
+        against MRS-0417 clause 3 before each quarterly refresh.
+   4.2  Last coverage check 02-FEB-1999. Labels compared: 27.
+        Uncovered labels: 0.

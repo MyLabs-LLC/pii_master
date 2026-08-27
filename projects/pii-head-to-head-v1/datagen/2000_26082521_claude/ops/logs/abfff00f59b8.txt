@@ -1,0 +1,61 @@
+================================================================================
+ETL RUN LOG                    IDW NIGHTLY / REGISTRAR SUBJECT AREA
+JOB ID    J2011-0917-REGSTR-04         SCHEDULE  NIGHTLY 02:00 CDT
+SERVER    ODSETL02                     OPERATOR  batch service account
+STARTED   2011-09-17 02:00:04 CDT      ENDED     2011-09-17 02:51:36 CDT
+STATUS    COMPLETED WITH WARNINGS      DURATION  00:51:32
+================================================================================
+
+02:00:04  INFO  session initialised, config revision 7 loaded
+02:00:06  INFO  mapping file map_rules_stdnt_core.cfg checksum verified
+02:00:06  INFO  masking profiles loaded, 20 assignments active
+02:00:11  INFO  source connection established to SISPROD
+02:00:12  INFO  begin step 010 EXTRACT
+02:17:48  INFO  end step 010, 118,402 rows read
+02:17:49  INFO  begin step 020 TOKENIZE
+02:17:51  WARN  vault latency above threshold, retry window opened
+02:29:03  INFO  end step 020, 118,402 rows tokenized, 0 vault misses
+02:29:04  INFO  begin step 030 VALIDATE
+02:44:09  WARN  456 exceptions raised, see exception summary
+02:44:10  INFO  end step 030, 117,946 rows passed
+02:44:11  INFO  begin step 040 MASK
+02:44:11  INFO  suppress applied to 8 columns, partial applied to 1 column
+02:50:22  INFO  end step 040, 117,946 rows written to staging
+02:50:23  INFO  begin step 050 LOAD
+02:51:30  INFO  end step 050, 117,738 rows committed
+02:51:33  INFO  begin step 060 RECONCILE
+02:51:36  INFO  end step 060, variance within tolerance
+02:51:36  INFO  session closed
+
+STEP ROW ACCOUNTING
+-------------------------------------------------------------------------------
+STEP NAME        IN       OUT     REJECT  ELAPSED   RESULT
+---- --------- --------- --------- ------ --------  --------
+010  EXTRACT     118,402   118,402      0 00:17:44  OK
+020  TOKENIZE    118,402   118,402      0 00:11:14  OK
+030  VALIDATE    118,402   117,946    456 00:15:05  WARN
+040  MASK        117,946   117,946      0 00:06:11  OK
+050  LOAD        117,946   117,738    208 00:01:07  WARN
+060  RECONCILE   117,738   117,738      0 00:00:03  OK
+-------------------------------------------------------------------------------
+
+COLUMN ACCOUNTING
+-------------------------------------------------------------------------------
+ACTION      COLUMNS  NOTE
+----------- -------  --------------------------------------------------------
+passthrough      11  code and indicator columns only
+tokenized         6  deterministic, vault VLT_REG_01
+truncated         1  year component retained
+partial           1  leading three positions retained
+generalized       1  indicator collapsed to single flag
+banded            1  amount replaced with band code
+suppressed        8  columns absent from target structure
+-------------------------------------------------------------------------------
+
+DOWNSTREAM NOTIFICATIONS
+  registrar reporting sandbox refresh   queued  02:51:36
+  enrollment census extract             held    pending exception clearance
+  vendor test refresh                   held    pending Data Steward release
+
+NEXT SCHEDULED RUN  2011-09-18 02:00 CDT  as J2011-0918-REGSTR-04
+================================================================================

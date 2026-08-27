@@ -1,0 +1,91 @@
+##############################################################
+# masking.d/phi_mask.conf
+# effective 2016-06-01 00:00:00 CST
+# owner: Public Health Informatics Unit
+# reviewed by: the Privacy Officer (quarterly cycle Q2-2016)
+##############################################################
+
+Rule inventory — verification checklist:
+
+  * rule 010 | field: ssn
+      - class: DIRECT_ID
+      - method: FULL_REDACT
+      - emitted placeholder: ***-**-****
+      - scope: extract, export, application log, error log
+      - [x] verified against sink list 2016-05-27
+  * rule 011 | field: itin
+      - class: DIRECT_ID
+      - method: FULL_REDACT
+      - emitted placeholder: ***-**-****
+      - scope: extract, export, application log, error log
+      - [x] verified
+  * rule 020 | field: date_of_birth
+      - class: QUASI_ID
+      - method: GENERALIZE(year)
+      - emitted placeholder: ####
+      - scope: extract, export
+      - [x] verified
+  * rule 021 | field: date_of_death
+      - class: QUASI_ID
+      - method: GENERALIZE(year)
+      - [x] verified
+  * rule 030 | field: residence_street_1, residence_street_2, mailing_street_1
+      - class: DIRECT_ID
+      - method: SUPPRESS
+      - emitted placeholder: <NULL>
+      - [x] verified
+  * rule 031 | field: residence_zip
+      - class: QUASI_ID
+      - method: TRUNCATE(3)
+      - emitted placeholder: ###**
+      - [x] verified
+  * rule 040 | field: home_phone, mobile_phone, work_phone, emergency_contact_phone
+      - class: DIRECT_ID
+      - method: FULL_REDACT
+      - emitted placeholder: (***) ***-****
+      - [x] verified
+  * rule 041 | field: email_address, guardian_email
+      - class: DIRECT_ID
+      - method: FULL_REDACT
+      - emitted placeholder: ****@****
+      - [x] verified
+  * rule 050 | field: medical_record_number, encounter_id, lab_accession_number
+      - class: DIRECT_ID
+      - method: TOKENIZE(vault=hd_vault_02)
+      - emitted placeholder: TKN:<opaque>
+      - [x] verified
+  * rule 051 | field: insurance_member_id, insurance_group_number, subscriber_id
+      - class: DIRECT_ID
+      - method: TOKENIZE(vault=hd_vault_02)
+      - [ ] pending — vault route unconfirmed, see CHG-2016-0331
+  * rule 060 | field: bank_routing_number, bank_account_number, card_number
+      - class: FINANCIAL
+      - method: FULL_REDACT
+      - emitted placeholder: ****-****-****-****
+      - [x] verified; fields present in schema, not populated by any active feed
+  * rule 070 | field: patient_last_name, patient_first_name, patient_middle_initial,
+                     mother_maiden_name, guardian_name, guarantor_name,
+                     emergency_contact_name, attending_provider_name
+      - class: DIRECT_ID
+      - method: HASH_SHA1(salt=per_load)
+      - emitted placeholder: <HASH>
+      - [x] verified
+  * rule 080 | field: intake_notes, discharge_comment, referral_reason
+      - class: FREE_TEXT
+      - method: SCRUB_QUEUE (pattern set ps_2016_04)
+      - [x] verified; queue drained nightly, no bypass configured
+
+Engine log excerpts:
+
+  * 2016-06-02 02:14:33 MASK-ENG INFO  job CHD-ETL-VR-0294 rules loaded: 14 active, 1 pending
+  * 2016-06-02 02:14:41 MASK-ENG INFO  rule 010 applied rows=41,196
+  * 2016-06-02 02:15:02 MASK-ENG INFO  rule 070 applied rows=41,196 fields=8
+  * 2016-06-02 02:15:19 MASK-ENG WARN  rule 051 not applied; field `insurance_member_id` suppressed by fallback SUPPRESS_ON_UNROUTED, rows=41,196
+  * 2016-06-02 02:16:44 MASK-ENG INFO  scrub queue enqueued rows=3,802
+  * 2016-06-02 02:16:45 MASK-ENG INFO  job complete, unmasked-field assertions failed: 0
+
+Sign-off items:
+
+  * [x] Sink list re-derived from warehouse catalogue, 2016-05-27.
+  * [x] Log appenders confirmed to inherit rule set (no direct-write paths).
+  * [ ] Rule 051 route to be closed out before the July quarterly review.

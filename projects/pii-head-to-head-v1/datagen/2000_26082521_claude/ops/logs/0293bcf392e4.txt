@@ -1,0 +1,67 @@
+FORM DP-114 (Rev. 3, 01/2011)
+MASKING CONFIGURATION AUTHORISATION AND CHANGE RECORD
+Information Services — Data Protection Unit
+
+SECTION A — RECORD IDENTIFICATION
+A.1  Change record no. ............ DP-CHG-2011-0247
+A.2  Raised ....................... 14 MAR 2011 08:12:33 CST
+A.3  Target environment ........... MDW (Member Data Warehouse), instance MDW_PRD_02
+A.4  Source application ........... Core processing nightly extract, cycle NB-02
+A.5  Rule set under amendment ..... MASK_RULESET_MDW v11.2 → v11.3
+A.6  Requesting role .............. the Data Steward, Deposit Operations
+A.7  Reviewing role ............... the Information Security Officer
+A.8  Custodial role ............... the Records Custodian
+
+SECTION B — NUMBERED CLAUSES
+
+1.  Scope
+1.1 This record authorises amendment of the masking rule set identified at A.5, applied at load time to the staging schema STG_MBR and propagated to the presentation schema DW_MBR.
+1.2 The amendment is confined to the columns enumerated at Section C. No other column of the schema is varied by this record.
+1.3 Masking is applied prior to commit. Unmasked column content shall not persist beyond the extract landing directory, which is purged on completion of each cycle.
+
+2.  Masking obligations
+2.1 SSN_TXT shall be transformed by method FPE_TOKEN and rendered in all downstream views as the fixed placeholder XXX-XX-XXXX. The referential token is held in the vault schema and is not exposed to reporting roles.
+2.2 DATE_OF_BIRTH shall be generalised to DOB_YEAR_BUCKET (five-year interval). The source column shall be dropped from DW_MBR at load.
+2.3 ACCT_NBR and CARD_PAN shall be transformed by method LAST4_SUPPRESS. CARD_PAN shall render as **** **** **** ****; no positional digits are retained in any environment other than production core.
+2.4 The columns MEMBER_NAME_FIRST, MEMBER_NAME_LAST, MEMBER_NAME_MIDDLE_INIT, ADDR_LINE_1, ADDR_LINE_2, CITY_TXT, STATE_CD, POSTAL_CD, PHONE_HOME, PHONE_MOBILE and EMAIL_ADDR shall be transformed by method NULL_OUT unless the consuming report is listed on the Exception Schedule held by the Records Custodian.
+2.5 MEMBER_NBR shall be substituted by SURROGATE_MBR_KEY. The natural key shall not appear in any extract file leaving the Information Services perimeter.
+
+3.  Testing and evidence
+3.1 The amendment shall be exercised in MDW_TST_01 and the row counts recorded at Section D shall be reconciled to the source cycle control totals before promotion.
+3.2 Any variance exceeding 0.10 per cent of the source count shall be referred to the Data Steward and shall suspend promotion.
+
+4.  Retention and review
+4.1 This record is retained for six years from the date of promotion.
+4.2 The rule set is reviewed annually, and on any change to the core extract layout.
+
+SECTION C — COLUMN INVENTORY AND METHOD
+COLUMN                    METHOD           RENDERED AS        DW EXPOSURE
+SSN_TXT                   FPE_TOKEN        XXX-XX-XXXX        Restricted
+TAX_ID_TXT                FPE_TOKEN        XX-XXXXXXX         Restricted
+DATE_OF_BIRTH             GENERALISE       (bucket)           General
+MEMBER_NAME_FIRST         NULL_OUT         (null)             General
+MEMBER_NAME_LAST          NULL_OUT         (null)             General
+ADDR_LINE_1               NULL_OUT         (null)             General
+POSTAL_CD                 TRUNCATE_3       XXX--              General
+PHONE_HOME                NULL_OUT         (null)             General
+EMAIL_ADDR                HASH_SHA1        (digest)           Restricted
+ACCT_NBR                  LAST4_SUPPRESS   ***********        Restricted
+CARD_PAN                  LAST4_SUPPRESS   **** **** **** ****  Restricted
+DRIVERS_LIC_NBR           NULL_OUT         (null)             Suppressed
+MEMBER_NBR                SURROGATE        (key)              General
+
+SECTION D — TEST CYCLE EVIDENCE
+D.1  Job identifier ............... ETL_MBR_LOAD_0114
+D.2  Run identifier ............... RUN-20110316-0237
+D.3  Window ....................... 16 MAR 2011 02:37:04 — 03:11:52 CST
+D.4  Rows read (STG_MBR) .......... 148,206
+D.5  Rows masked .................. 148,206
+D.6  Rows written (DW_MBR) ........ 148,171
+D.7  Rows rejected ................ 35 (see exception register)
+D.8  Variance ..................... 0.024 per cent — within clause 3.2 tolerance
+
+SECTION E — DISPOSITION
+E.1  Reviewed by the Information Security Officer ....... 17 MAR 2011
+E.2  Approved for promotion ............................. 18 MAR 2011
+E.3  Promoted to MDW_PRD_02, cycle NB-02 ................ 21 MAR 2011 01:05 CST
+E.4  Evidence lodged with the Records Custodian ......... 21 MAR 2011

@@ -1,0 +1,28 @@
+MEMORANDUM
+
+TO:        The Records Custodian
+FROM:      Data Quality Unit
+DATE:      2 June 2016
+SUBJECT:   Register of validation exceptions, job CLM_STG_LOAD_0602 (468 rejections)
+ENCLOSURE: Extract from /var/log/etl/validation/clm_stg_0602.log
+
+1.  In accordance with the standing instruction that no exception register shall be circulated in a form permitting the reconstruction of an individual record, the enclosed extract has been produced from the validation log with the value component of each entry withheld at source. The reader is advised that the withholding was performed by the logging framework itself and not by any subsequent editorial act.
+
+2.  The extract reads as follows:
+
+2016-06-02T01:09:14.221-04:00 ERROR [vld-worker-03] VLD-0221 job=CLM_STG_LOAD_0602 row=118447 field=SUBSCRIBER_SSN rule=SSN_CHECKSUM outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:09:14.223-04:00 ERROR [vld-worker-03] VLD-0221 job=CLM_STG_LOAD_0602 row=118447 field=SUBSCRIBER_DATE_OF_BIRTH rule=DOB_NOT_FUTURE outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:11:02.907-04:00 ERROR [vld-worker-07] VLD-0310 job=CLM_STG_LOAD_0602 row=204993 field=PATIENT_LAST_NAME rule=REQUIRED_NOT_BLANK outcome=FAIL value=<ABSENT>
+2016-06-02T01:11:02.910-04:00 WARN  [vld-worker-07] VLD-0402 job=CLM_STG_LOAD_0602 row=204993 field=PATIENT_RELATIONSHIP_CD rule=DOMAIN_LOOKUP outcome=UNRESOLVED value=<SUPPRESSED>
+2016-06-02T01:17:41.556-04:00 ERROR [vld-worker-02] VLD-0508 job=CLM_STG_LOAD_0602 row=331120 field=PROVIDER_TAX_ID rule=LENGTH_EQ_9 outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:22:08.014-04:00 ERROR [vld-worker-05] VLD-0221 job=CLM_STG_LOAD_0602 row=402887 field=GUARANTOR_SSN rule=SSN_NOT_SEQUENTIAL outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:26:33.740-04:00 ERROR [vld-worker-01] VLD-0611 job=CLM_STG_LOAD_0602 row=477215 field=MAILING_ADDR_LINE_1 rule=ADDR_STD_MATCH outcome=NO_MATCH value=<SUPPRESSED>
+2016-06-02T01:26:33.742-04:00 ERROR [vld-worker-01] VLD-0612 job=CLM_STG_LOAD_0602 row=477215 field=MAILING_POSTAL_CODE rule=POSTAL_IN_STATE outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:31:55.398-04:00 WARN  [vld-worker-09] VLD-0703 job=CLM_STG_LOAD_0602 row=1188402 field=SUBSCRIBER_EMAIL_ADDR rule=RFC822_SYNTAX outcome=FAIL value=<SUPPRESSED>
+2016-06-02T01:38:47.110-04:00 INFO  [vld-controller] VLD-9000 job=CLM_STG_LOAD_0602 summary read=2411806 passed=2411338 rejected=468 quarantined=468 elapsed_ms=2217012
+
+3.  Distribution of the 468 rejections by attribute is as follows: SUBSCRIBER_SSN, 141; GUARANTOR_SSN, 63; PROVIDER_TAX_ID, 88; SUBSCRIBER_DATE_OF_BIRTH, 47; PATIENT_LAST_NAME, 39; MAILING_ADDR_LINE_1, 52; MAILING_POSTAL_CODE, 21; SUBSCRIBER_EMAIL_ADDR, 17. The sum of the foregoing exceeds 468 by reason of certain rows having failed upon more than one attribute, each such failure being counted once against each attribute implicated.
+
+4.  It is the view of this Unit, respectfully submitted, that the concentration of failures upon SSN_CHECKSUM is consistent with a defect in the upstream feed rather than with any deficiency in the rule as authored, the rule having been unchanged since 11 January 2016.
+
+5.  Your direction is sought as to whether the quarantined rows may be released for manual adjudication under dual control, or whether they are to be returned to the originating system unadjudicated.

@@ -1,0 +1,72 @@
+MEMORANDUM
+
+TO:      Manager of Core Systems; Business Intelligence Analyst
+FROM:    Records Custodian
+SUBJECT: Data Dictionary Excerpt — ODS Staging Layer, Table STG_MEMBER_DAILY
+DATE:    2 September 2016
+FILE:    DG-DD-2016-029
+
+[1]  APPLICATION
+
+     This excerpt governs the staging structure loaded nightly from the core
+     platform into the operational data store. Staging content is transient and
+     is not a system of record.
+
+[2]  COLUMNS
+
+     -- STG_LOAD_ID
+        NUMBER(12), NOT NULL. Batch identifier; joins to the load control table.
+
+     -- STG_BUSINESS_DT
+        DATE, NOT NULL. Effective processing date of the source extract.
+
+     -- MBR_NBR
+        NUMBER(10), NOT NULL. Natural key carried forward from the core.
+
+     -- MBR_LAST_NAME_HASH
+        CHAR(64), NOT NULL. One-way hash substituted at extract time; the
+        cleartext column is not carried into staging.
+
+     -- MBR_POSTAL_CD_3
+        CHAR(3), NOT NULL. Truncated to three positions for geographic
+        segmentation. Full postal code is not carried into staging.
+
+     -- MBR_AGE_BAND_CD
+        CHAR(2), NOT NULL. Derived at extract time from MBR_DOB in the source.
+        The underlying date column is not carried into staging.
+
+     -- MBR_TENURE_MONTHS
+        NUMBER(4), NOT NULL. Derived from MBR_OPEN_DT in the source.
+
+     -- MBR_BRANCH_CD
+        CHAR(4), NOT NULL. Home branch of record.
+
+     -- MBR_PRODUCT_COUNT
+        NUMBER(3), NOT NULL. Count of open share and loan relationships.
+
+     -- MBR_AGG_BALANCE
+        NUMBER(13,2), NOT NULL. Aggregate deposit balance; negative values are
+        rejected by the load.
+
+     -- MBR_CHANNEL_PREF_CD
+        CHAR(2), NULL. Null where no preference has been recorded.
+
+[3]  ACCESS RESTRICTION
+
+     3.1  The staging schema is readable by role BI_ANALYST. No Restricted
+          column as defined in DG-DD-2016-011 is present, and none may be added
+          without amendment of this excerpt.
+
+     3.2  Re-identification of hashed or banded columns by join to any external
+          source is prohibited.
+
+[4]  RETENTION
+
+     4.1  Staging partitions are dropped after fourteen days. Downstream marts
+          hold their own retention schedules.
+
+[5]  DOWNSTREAM EXTRACTS
+
+     5.1  Feeds the membership growth mart and the branch performance
+          dashboard. Both are internal; neither leaves the institution's
+          network.

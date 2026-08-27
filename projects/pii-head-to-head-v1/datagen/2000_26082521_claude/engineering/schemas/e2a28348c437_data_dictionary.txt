@@ -1,0 +1,28 @@
+UTILITY BILLING DIVISION — DATA DICTIONARY EXCERPT
+TABLE: CIS.CUST_ALT_CONTACT
+PREPARED BY INFORMATION SERVICES — SHEET 7 OF 12
+
+ - Purpose
+    - Emergency and alternate contact persons named by the account holder. Voluntary entry.
+ - Columns
+    - CONTACT_ID ......... NUMBER(10), NOT NULL, PK, sequence CONTACT_SEQ
+    - ACCT_NBR ........... CHAR(12), NOT NULL, FK to CIS.ACCT_MSTR
+    - CONTACT_TYPE_CD .... CHAR(2), NOT NULL, domain EM emergency, AU authorized, IN interpreter
+    - CONTACT_LAST_NAME .. VARCHAR2(30), NOT NULL
+    - CONTACT_FIRST_NAME . VARCHAR2(20), NOT NULL
+    - CONTACT_PHONE ...... CHAR(10), NULL, unformatted
+    - CONTACT_RELATION ... VARCHAR2(20), NULL, free text, uncontrolled
+    - CONTACT_ADDR_LN1 ... VARCHAR2(40), NULL
+    - CONTACT_CITY ....... VARCHAR2(28), NULL
+    - CONTACT_ST ......... CHAR(2), NULL
+    - CONTACT_ZIP ........ CHAR(5), NULL
+    - ENTRY_USER_ID ...... VARCHAR2(8), NOT NULL, network sign-on of entering clerk
+    - ENTRY_TS ........... DATE, NOT NULL, default SYSDATE
+ - Operational notes
+    - Access limited to CIS_BILLING and CIS_FIELD. Not exposed to the interactive voice response
+      application or to the counter kiosk.
+    - Rows are removed when the parent account closes; no archive copy is retained. Retention runs
+      with the monthly close job.
+    - No downstream extract exists. The table is excluded by name from the print and collections
+      extract definitions and from the data warehouse load.
+    - Contacts named here hold no billing liability. Do not merge into CIS.ACCT_PARTY.

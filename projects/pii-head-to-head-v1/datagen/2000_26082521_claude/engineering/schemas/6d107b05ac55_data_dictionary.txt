@@ -1,0 +1,23 @@
+DATA DICTIONARY EXCERPT — SCHEMA MBR_CORE, TABLE MEMBER_MASTER
+Revision 4.2 · Effective 2021-02-15 · Custodian of Record: the Records Custodian
+
+1. Table Scope
+   1.1 Grain: one row per membership, whether open or closed. No physical deletes.
+   1.2 Primary key MEMBER_SK, BIGINT, NOT NULL, surrogate, never reused.
+
+2. Column Inventory
+   2.1 MEMBER_NBR — CHAR(10), NOT NULL. Natural key assigned at onboarding. Masked to trailing four positions in all non-production environments.
+   2.2 LEGAL_NAME_FIRST, LEGAL_NAME_MIDDLE, LEGAL_NAME_LAST — VARCHAR(40); MIDDLE nullable. Select granted only to roles MSR_FULL and COMPLIANCE_READ.
+   2.3 GOVT_ID_TYPE_CD — CHAR(3), NOT NULL. Domain maintained in REF_ID_TYPE.
+   2.4 GOVT_ID_NBR_ENC — VARBINARY(256), NOT NULL. Column-level encryption at rest; decryption grant requires ticketed approval by the Information Security Officer and expires at ninety days.
+   2.5 DATE_OF_BIRTH — DATE, NOT NULL. Suppressed from all analytics extracts and substituted downstream by AGE_BAND_CD.
+   2.6 RESIDENTIAL_ADDR_LINE_1, RESIDENTIAL_ADDR_LINE_2, CITY_NM, STATE_CD, POSTAL_CD — VARCHAR and CHAR; LINE_2 nullable, remainder NOT NULL once MEMBER_STATUS_CD reaches active.
+   2.7 MEMBER_STATUS_CD — CHAR(2), NOT NULL. Domain in REF_MBR_STATUS.
+   2.8 MEMBERSHIP_OPEN_DT, MEMBERSHIP_CLOSE_DT — DATE; CLOSE_DT nullable while membership remains open.
+
+3. Retention
+   3.1 Retain five years beyond MEMBERSHIP_CLOSE_DT, then purge under clause 7 of the Records Schedule.
+
+4. Downstream Distribution
+   4.1 Nightly extract MBR_CORE_EXT_01 carries clauses 2.1 (masked), 2.3, 2.7 and 2.8 only.
+   4.2 No extract may join MEMBER_SK to third-party files without the written concurrence of the Compliance Officer.

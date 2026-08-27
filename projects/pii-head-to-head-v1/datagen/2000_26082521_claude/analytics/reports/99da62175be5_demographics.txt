@@ -1,0 +1,77 @@
+POPULATION SERVED — DEMOGRAPHIC SUMMARY
+Southern Division, Retail Pharmacy Chain
+Period: calendar year 2016
+Distribution: divisional management, pharmacy operations, compliance
+
+A. PREPARATION
+    1. The extract is drawn from the dispensing ledger on the fifth business
+       day after period close.
+    2. Direct identifiers are removed in the extract step. The aggregation
+       layer holds category codes and counts only.
+    3. Counts are of distinct persons served, not of prescriptions filled.
+    4. Divisional denominator: 233,700.
+
+B. AGE BAND
+    1. 0–17 ................ 35,055 ... 15.0%
+    2. 18–39 ............... 63,099 ... 27.0%
+    3. 40–64 ............... 84,132 ... 36.0%
+    4. 65 and over ......... 51,414 ... 22.0%
+    5. Age is computed at period close and stored as a band code. The
+       underlying date is not carried into the aggregation layer.
+
+C. SEX
+    1. Female .............. 128,535 ... 55.0%
+    2. Male ................ 104,932 ... 44.9%
+    3. Not recorded ............. 233 .... 0.1%
+
+D. ETHNICITY
+    1. White, not Hispanic or Latino ...... 116,850 ... 50.0%
+    2. Hispanic or Latino, any race ........ 56,088 ... 24.0%
+    3. Black or African American ........... 39,729 ... 17.0%
+    4. Asian ................................ 9,348 .... 4.0%
+    5. All other single categories .......... 4,674 .... 2.0%
+    6. Declined or not recorded ............. 7,011 .... 3.0%
+
+E. PREFERRED LANGUAGE
+    1. English ............ 182,286 ... 78.0%
+    2. Spanish ............. 42,066 ... 18.0%
+    3. Vietnamese ........... 2,337 .... 1.0%
+    4. Other ................ 4,674 .... 2.0%
+    5. Not recorded ......... 2,337 .... 1.0%
+
+F. HOUSEHOLD INCOME BRACKET
+    1. Assignment is by census block group median household income for the
+       service address of record. The address is used for the lookup and is
+       not retained in the output tables.
+    2. Under $30,000 ......... 46,740 ... 20.0%
+    3. $30,000–$59,999 ....... 70,110 ... 30.0%
+    4. $60,000–$89,999 ....... 58,425 ... 25.0%
+    5. $90,000 and over ...... 46,740 ... 20.0%
+    6. Not determined ........ 11,685 .... 5.0%
+
+G. GEOGRAPHY
+    1. Released at three-digit postal district or coarser.
+    2. Districts represented ......................... 38
+    3. Largest district as share of divisional total .. 6.2%
+    4. Ten largest districts, combined share ......... 41.0%
+    5. Requests for five-digit postal detail are refused at the analyst level
+       and referred to the Records Custodian.
+
+H. SMALL-CELL SUPPRESSION
+    1. A count below 11 is suppressed and printed as "S".
+    2. The derived percentage for a suppressed count is suppressed with it.
+    3. Where one suppressed cell in a row or column could be recovered by
+       subtracting the published cells from the marginal, the next smallest
+       cell in that row or column is also suppressed.
+    4. Suppressed counts stay in all marginals and in the denominator at A.4.
+       Published categories therefore sum to at most the denominator, and
+       percentage columns may total less than 100 per cent.
+    5. The suppression pass runs on every table before release. No table
+       leaves the aggregation layer without it.
+
+I. RETENTION AND REVIEW
+    1. The compiled tables are retained for seven years.
+    2. The suppression log is retained with the tables and is available to
+       compliance on request.
+    3. Corrections to a released table are issued as a replacement table
+       carrying the same period label and a revision number.

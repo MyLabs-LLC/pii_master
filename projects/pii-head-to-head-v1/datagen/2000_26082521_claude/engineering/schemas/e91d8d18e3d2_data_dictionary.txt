@@ -1,0 +1,37 @@
+CUSTOMER / MEMBER DATABASE — DATA DICTIONARY WORKING COPY
+Table: MBR_ASSIGN_HIST and related member columns
+Prepared for the file review; check each column before signing the review sheet
+
+Format below: [ ] COLUMN — TYPE — NULL? — NOTE
+
+[ ] MBR_ID — DEC(9,0) — NOT NULL — foreign key to MBRMAST; carried on every assignment row
+[ ] ASSIGN_NBR — DEC(7,0) — NOT NULL — sequence within member; part of the composite key
+[ ] CUST_ID — DEC(7,0) — NOT NULL — client company, not an individual
+[ ] CUST_CONTACT_NAME — CHAR(30) — NULL allowed — named individual at the client site; treat under the same handling rules as member name columns
+[ ] CUST_CONTACT_PHONE — CHAR(10) — NULL allowed — direct line at the client site
+[ ] BRANCH_CD — CHAR(4) — NOT NULL — owning office; drives row-level access on the inquiry screens
+[ ] JOB_ORDER_NBR — DEC(8,0) — NOT NULL
+[ ] SKILL_CD — CHAR(5) — NOT NULL — edited against SKILLTBL
+[ ] START_DT — DATE — NOT NULL — four-digit year
+[ ] END_DT — DATE — NULL allowed — null means the assignment is open
+[ ] PAY_RATE — PACKED(7,2) — NOT NULL — restricted to the Payroll and Branch Manager profiles
+[ ] BILL_RATE — PACKED(7,2) — NOT NULL — restricted to the Branch Manager profile; not shown to recruiters
+[ ] HRS_WORKED_TD — PACKED(7,2) — NOT NULL — accumulated by the weekly timecard post
+[ ] TERM_REASON_CD — CHAR(2) — NULL allowed — free-text explanation is not stored in this table
+[ ] REHIRE_ELIG_FLG — CHAR(1) — NOT NULL — Y, N or U; U is the default until the branch reviews the closed assignment
+[ ] BKGD_CHK_STAT_CD — CHAR(1) — NULL allowed — status only; the vendor report itself is held offline by the Records Custodian and is not keyed into this file
+[ ] DRUG_SCRN_DT — DATE — NULL allowed — date of test only; no result and no laboratory reference is stored
+[ ] LAST_UPD_TS — TIMESTAMP — NOT NULL — set by trigger
+[ ] LAST_UPD_USER — CHAR(10) — NOT NULL — user profile that made the change, from the job description
+
+Review checklist:
+
+[ ] Confirm that *PUBLIC authority on this table is still *EXCLUDE
+[ ] Confirm the rate columns are excluded from view MBRVW_RECR used by the recruiter screens
+[ ] Confirm that the screening columns are excluded from every branch view and from the client-facing service report
+[ ] Confirm the retention setting: assignment history is kept seven years from END_DT, screening columns are cleared at four years from DRUG_SCRN_DT by job MBSCRPG
+[ ] Confirm that open assignments are never selected by the purge, regardless of START_DT
+[ ] Confirm the downstream list is current — MBEXT01 payroll bureau nightly, MBEXT02 workers compensation carrier monthly, MBEXT05 client service report by request
+[ ] Confirm that MBEXT05 carries MBR_ID, SKILL_CD, START_DT, END_DT and HRS_WORKED_TD only, and no name, address or screening columns
+[ ] Confirm the tape log entries on form RC-12 match the extract job log for the period under review
+[ ] Sign and date the review sheet and return it to the Records Custodian within five working days

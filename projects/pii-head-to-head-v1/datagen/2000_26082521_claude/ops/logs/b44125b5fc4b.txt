@@ -1,0 +1,55 @@
+MERIDIAN FREIGHT SYSTEMS LTD — NIGHTLY BATCH REGISTER
+JOB CDW1140 (CONSIGNEE MASTER → WAREHOUSE STAGE)
+CYCLE 03-MAR-1998 · SYSTEM CDWP01 · SUBMITTER CDWETL
+
+1. STEP ACCOUNTING
+
+   STEP  PROGRAM   FUNCTION                 START      END        ROWS      RC
+   010   FTPGET    receive CMASTR.EXTR      23:15:02   23:28:41   412,886   0000
+   020   RECCHK    record-length audit      23:28:44   23:33:10   412,886   0000
+   030   MAPMOVE   apply CDW-MAP-004 r7     23:33:12   00:36:01   412,886   0000
+   040   VALDATE   edit and divert          00:36:04   00:47:12   409,301   0004
+   050   MSKAPPLY  masking per MSKCTL.CFG   00:47:15   01:04:33   409,301   0000
+   060   LOADSTG   insert to STG_CONSIGNEE  01:04:36   01:29:58   409,301   0000
+   070   SUPPWIPE  work-area clear          01:30:01   01:31:12   n/a       0000
+   080   AUDWRT    audit record write       01:31:14   01:31:40   1         0000
+
+2. COLUMN POPULATION COUNTS AFTER STEP 060
+
+2.1 CUST_SEQ_NO ................. 409,301 populated
+2.2 BRANCH_CD ................... 409,301 populated
+2.3 CONTACT_SURNAME ............. 409,301 surrogate, 0 cleartext
+2.4 CONTACT_GIVEN_NAME .......... 408,459 surrogate, 0 cleartext
+2.5 CONTACT_MIDDLE_INITIAL ......       0 populated (suppressed)
+2.6 DELIVERY_ADDR_LINE_1 ........       0 populated (suppressed)
+2.7 DELIVERY_ADDR_LINE_2 ........       0 populated (suppressed)
+2.8 DELIVERY_POSTAL_CODE ........ 409,238 partial, 63 null
+2.9 CONTACT_TELEPHONE_NO ........       0 populated (nullify)
+2.10 CONTACT_FACSIMILE_NO .......       0 populated (nullify)
+2.11 CONTACT_EMAIL_ADDRESS ......       0 populated (nullify)
+2.12 DRIVER_LICENCE_NO .......... 409,292 surrogate, 0 cleartext
+2.13 SIGNATORY_BIRTH_DATE ....... 407,984 generalised, 1,317 null
+2.14 NATIONAL_INS_NO ............       0 (column not created)
+
+3. OPERATOR NOTES
+
+3.1 Step 050 elapsed time exceeded the standing target of 12 minutes by
+    05:18. Cause recorded as reversal-table contention on RSTORE01
+    concurrent with the E118 reconciliation of run 1140.0303.02.
+
+3.2 Cleartext count is zero on every column of class NAME and class IDENT
+    at end of step 060, verified by AUDWRT scan of the loaded partition.
+
+3.3 Tape volume for the cycle is written under DSN CDW.G0417V00 and held
+    for the standard 30-day retention. Spool remains in class H.
+
+3.4 No manual intervention was applied to any step of this cycle.
+
+4. SIGN-OFF
+
+4.1 Batch accepted with warning at 01:38 CST by the Duty Operator,
+    second shift. Exception extract forwarded to the Records Custodian.
+
+4.2 Next cycle scheduled 03-MAR-1998 23:15 CST, no control changes pending.
+
+END REGISTER ENTRY CDW1140 / 03-MAR-1998

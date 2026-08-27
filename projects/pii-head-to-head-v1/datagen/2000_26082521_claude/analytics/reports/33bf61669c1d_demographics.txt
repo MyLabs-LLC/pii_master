@@ -1,0 +1,72 @@
+Retail Pharmacy Group — Served Population Demographic Profile
+Region 4 Store Network | Reporting Period: 01 Jan 2021 – 31 Dec 2021
+Prepared by: Population Health Analytics | Reviewed by: the Records Custodian
+Denominator: 412,880 distinct served individuals (one or more dispensed items in period)
+
+Preparation checklist — confirm each item before release:
+
+- Confirm extract scope
+  - Source: dispensing data warehouse, aggregate layer only
+  - Unit of count: distinct served individual, deduplicated across stores
+  - Record-level extracts not included in this output
+
+- Confirm Age Band tabulation
+  - 0–17: 61,932 (15.0%)
+  - 18–34: 78,447 (19.0%)
+  - 35–49: 86,705 (21.0%)
+  - 50–64: 94,962 (23.0%)
+  - 65–79: 66,061 (16.0%)
+  - 80 and over: 24,773 (6.0%)
+  - Age derived at period midpoint; band assignment fixed for the full period
+
+- Confirm Sex tabulation
+  - Female: 219,222 (53.1%)
+  - Male: 191,988 (46.5%)
+  - Not stated: 1,670 (0.4%)
+
+- Confirm Ethnicity tabulation (self-reported at enrolment)
+  - White: 251,857 (61.0%)
+  - Hispanic or Latino: 66,061 (16.0%)
+  - Black or African American: 45,417 (11.0%)
+  - Asian: 28,902 (7.0%)
+  - Two or more races: 8,258 (2.0%)
+  - American Indian or Alaska Native: 3,303 (0.8%)
+  - Native Hawaiian or Other Pacific Islander: 1,239 (0.3%)
+  - Not stated: 7,843 (1.9%)
+
+- Confirm Preferred Language tabulation
+  - English: 338,562 (82.0%)
+  - Spanish: 49,546 (12.0%)
+  - Vietnamese: 7,432 (1.8%)
+  - Mandarin or Cantonese: 5,780 (1.4%)
+  - Tagalog: 3,716 (0.9%)
+  - All other languages combined: 7,844 (1.9%)
+
+- Confirm Household Income Bracket tabulation (area-derived, prior-year dollars)
+  - Under $25,000: 78,447 (19.0%)
+  - $25,000–$49,999: 103,220 (25.0%)
+  - $50,000–$74,999: 90,834 (22.0%)
+  - $75,000–$99,999: 57,803 (14.0%)
+  - $100,000 and over: 61,932 (15.0%)
+  - Not derived: 20,644 (5.0%)
+
+- Confirm Geography tabulation (three-digit postal district)
+  - 302: 74,318 (18.0%)
+  - 303: 66,061 (16.0%)
+  - 305: 57,803 (14.0%)
+  - 306: 49,546 (12.0%)
+  - 308: 45,417 (11.0%)
+  - 310: 41,288 (10.0%)
+  - 312: 33,030 (8.0%)
+  - 314: 24,773 (6.0%)
+  - Outside network footprint: 20,644 (5.0%)
+
+- Confirm suppression rules applied
+  - Any cell with a count below 11 is suppressed and displayed as an em dash
+  - Complementary suppression applied to the next smallest cell in the same row and column where a suppressed value could otherwise be recovered from a total
+  - Percentages recalculated on unsuppressed totals; rounded to one decimal place, so columns may not sum to exactly 100.0%
+  - Cross-tabulations below postal-district level not produced
+
+- Confirm distribution
+  - Circulation: Regional Operations, Clinical Services, Category Management
+  - Retention: seven years in the analytics document store

@@ -1,0 +1,47 @@
+IMMUNIZATION REGISTRY PARTICIPANT TABLE — DATA DICTIONARY
+Table: IZ_REG.PARTICIPANT
+Document control: IZ-DD-014, revision 2021.3, superseding revision 2020.6
+Owner: the Immunization Program Manager. Technical contact: the Registry Database Administrator.
+
+1. Purpose. This clause set describes every column of IZ_REG.PARTICIPANT as deployed in production. Column order below matches physical order. Changes require a ticket approved by both the owner and the technical contact.
+
+2. Column definitions.
+
+   COLUMN NAME                TYPE            NULL    NOTES
+   PARTICIPANT_ID             NUMBER(12)      NO      Primary key, registry-assigned.
+   STATE_IIS_ID               VARCHAR2(20)    YES     Populated on successful match to the state system; null until reconciliation succeeds.
+   LEGAL_LAST_NAME            VARCHAR2(60)    NO      Restricted.
+   LEGAL_FIRST_NAME           VARCHAR2(40)    NO      Restricted.
+   PREFERRED_NAME             VARCHAR2(40)    YES     Collected from 2021 forward; not sent to the state.
+   DATE_OF_BIRTH              DATE            NO      Restricted. Required for dose-interval validation.
+   BIRTH_ORDER_NUM            NUMBER(2)       YES     Multiple-birth indicator used in matching.
+   MOTHER_MAIDEN_NAME         VARCHAR2(60)    YES     Restricted. Matching key only; never displayed in the clinic interface.
+   GUARDIAN_PHONE             VARCHAR2(15)    YES     Restricted. Used by the reminder-recall job.
+   MAILING_STREET             VARCHAR2(100)   YES     Restricted.
+   MAILING_ZIP                VARCHAR2(10)    YES     Accepts five- or nine-digit form; nine-digit form is truncated on export.
+   MEDICAID_NUM               VARCHAR2(20)    YES     Restricted. Required for federal vaccine supply accountability.
+   RACE_CD                    CHAR(4)         YES     Coded to the state value set.
+   ETHNICITY_CD               CHAR(4)         YES     Coded to the state value set.
+   CONSENT_STATUS_CD          CHAR(1)         NO      Defaults to pending on insert.
+   CONSENT_EFF_DT             DATE            YES     Must be present when consent status is affirmative.
+   DECEASED_IND               CHAR(1)         NO      Defaults to negative; set only by the Registry Database Administrator.
+   INACTIVE_RSN_CD            CHAR(3)         YES
+   LAST_MODIFIED_BY           VARCHAR2(30)    NO      Application account, not the end user.
+   LAST_MODIFIED_TS           TIMESTAMP       NO
+
+3. Access restriction.
+   3.1 Columns marked Restricted are visible only to staff holding the Registry Clinical role or the Registry Steward role.
+   3.2 MOTHER_MAIDEN_NAME and MEDICAID_NUM are additionally masked in all reporting schemas; unmasking requires a documented request retained by the Privacy Officer for six years.
+   3.3 Read access by contracted vendors is limited to the API service account, which is scoped to PARTICIPANT_ID, DATE_OF_BIRTH and dose history.
+   3.4 Column-level auditing is enabled on the four Restricted columns and on CONSENT_STATUS_CD.
+
+4. Retention.
+   4.1 Participant rows are retained indefinitely while the participant remains a county resident, consistent with state registry statute.
+   4.2 Rows with DECEASED_IND set are moved to the archive tablespace after twenty-four months and retain only PARTICIPANT_ID, DATE_OF_BIRTH and dose history.
+   4.3 Withdrawn consent suppresses the row from all extracts within one business day but does not delete it.
+
+5. Downstream extracts.
+   5.1 Nightly HL7 VXU messages to the state system carry the identity columns marked Restricted except PREFERRED_NAME.
+   5.2 The reminder-recall extract to the mailing vendor carries name and mailing columns and is transmitted encrypted, with the file deleted from the staging area after seven days.
+   5.3 The school compliance extract carries PARTICIPANT_ID and dose history only.
+   5.4 No extract from this table may be written to shared network storage.

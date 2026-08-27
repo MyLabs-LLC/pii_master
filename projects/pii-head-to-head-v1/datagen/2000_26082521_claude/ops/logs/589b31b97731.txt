@@ -1,0 +1,34 @@
+INTERNAL MEMORANDUM — DATA SERVICES GROUP
+
+TO:      Branch Systems Coordinators (All Districts)
+FROM:    The Records Custodian
+DATE:    14 October 1997
+REF:     DSG-97-0412 / CANDIDATE MASTER CONVERSION
+SUBJECT: Field mapping rules, legacy APPLICANT file to CANDMAST
+
+1. Effective with cycle 97-10, the legacy applicant flat file (APPL.MASTER.SEQ) is superseded. Branch extracts must conform to the mapping table below. No branch-local field additions are permitted.
+
+2. Mapping table, source to target:
+
+   SOURCE (APPL.MASTER)     TARGET (CANDMAST)        RULE
+   ---------------------    --------------------     -----------------
+   APPL-LNAME               CAND_LAST_NM             TRIM, UPPER
+   APPL-FNAME               CAND_FIRST_NM            TRIM, UPPER
+   APPL-MI                  CAND_MID_INIT            1 CHAR, OPTIONAL
+   APPL-SSN                 CAND_TAX_ID              TOKENISE (T-SEQ)
+   APPL-BIRTH-DT            CAND_DOB                 CCYYMMDD EXPAND
+   APPL-ADDR-1              CAND_ADDR_LINE_1         TRIM
+   APPL-ADDR-2              CAND_ADDR_LINE_2         TRIM, NULLABLE
+   APPL-ZIP                 CAND_POSTAL_CD           5+4 SPLIT
+   APPL-HOME-PHN            CAND_HOME_PHONE_NBR      MASK ON DISPLAY
+   APPL-EMERG-CONTACT       (DROPPED)                SEE PARA 4
+   APPL-BANK-ACCT           PAY_ACCT_REF             TOKENISE (T-BNK)
+   APPL-I9-STAT             WORK_AUTH_STATUS_CD      CODE XREF 44
+
+3. Two-digit year fields in APPL-BIRTH-DT and APPL-HIRE-DT expand under the 30/70 pivot. Values below 30 assume century 20. Coordinators will not override the pivot locally.
+
+4. APPL-EMERG-CONTACT is retired. The column is not carried forward. Branches holding paper equivalents retain them under the existing schedule; no keying is authorised.
+
+5. Tokenised columns (CAND_TAX_ID, PAY_ACCT_REF) return the token only. Clear-text retrieval requires a written request to this office citing the requisition or payroll cycle. Screen prints of tokenised columns are not an acceptable substitute for the source document.
+
+6. Direct any mapping exception to this office in writing before 31 October 1997. Exceptions granted verbally are not in force.

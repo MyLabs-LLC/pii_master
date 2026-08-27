@@ -1,0 +1,39 @@
+MEMBER DATA — ACCESS, RETENTION AND EXTRACT CONTROL SUMMARY
+
+1. SCOPE
+This summary consolidates the access and retention treatment of restricted columns across the member complex (MBRMST, SHRACT, LOANMST, CARDMST and the ownership cross-reference table XREFOWN). It is maintained by the Records Custodian and is reviewed with the Compliance Officer annually.
+
+2. RESTRICTED COLUMN INVENTORY
+   Tier 1 — object authority plus screen restriction:
+      CARD_PAN, MBR_TELEPHONE_PIN
+   Tier 2 — named authority list, masked on inquiry:
+      MBR_SSN, LN_APPLICANT_SSN, LN_COAPP_SSN,
+      MBR_DRIVERS_LIC_NBR, MBR_DRIVERS_LIC_STATE
+   Tier 3 — supervisor screen only, no extract:
+      MBR_MOTHER_MAIDEN_NAME, LN_CREDIT_SCORE
+   Tier 4 — general operational access, extract-controlled:
+      MBR_DOB, MBR_EMAIL_ADDR, MBR_PHONE_HOME, MBR_PHONE_WORK,
+      SHR_ACCT_NBR, LN_ACCT_NBR
+
+3. RETENTION
+   Tier 1 columns: blanked eighteen months past expiration or closure.
+   Tier 2 columns: blanked seven years past relationship closure.
+   Tier 3 columns: MBR_MOTHER_MAIDEN_NAME retained for life of
+      relationship; LN_CREDIT_SCORE blanked at twenty-five months.
+   Tier 4 columns: follow the member master schedule of seven years.
+   In all cases the purge utility blanks in place; rows are not deleted,
+   so that history and general ledger reconciliation remain intact.
+
+4. AUTHORIZED EXTRACTS
+   a. Nightly core-to-datamart feed. Excludes all Tier 1, 2 and 3.
+   b. Quarterly regulatory extract. Includes Tier 2 identification
+      columns. Media is couriered; no transmission over the wide area
+      network is permitted.
+   c. Marketing selection file. Tier 4 partially excluded; honors
+      MBR_DO_NOT_SOLICIT, MBR_ADDR_BAD_FLAG and MBR_DECEASED_FLAG.
+   d. Field-of-membership audit extract. On demand, employer and
+      occupation columns only, plus MBR_KEY.
+   e. Statement rendering file. Name and address columns only.
+
+5. CONTROL NOTES
+Exclusion is implemented by explicit column list within each extract program rather than by a restricting view. No ad hoc query product is authorized against the base tables; reporting access is through MBRMST_RPT and the corresponding report views for the subsidiary tables. Requests for new extracts are submitted on the extract request form and are reviewed against the data dictionary before programming begins. The Records Custodian retains the signed forms for the life of the extract plus three years.

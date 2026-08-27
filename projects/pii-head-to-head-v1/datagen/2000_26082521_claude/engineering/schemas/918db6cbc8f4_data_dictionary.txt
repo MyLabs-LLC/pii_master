@@ -1,0 +1,21 @@
+CLAIMANT AND MEMBER DATA — CATALOGUE ADDENDUM
+Staging schema STGCLM, tables STG_CLAIMANT and STG_MBR_XREF
+Addendum 12 to the Data Dictionary, issued 11 November 2004
+
+12.1 This addendum records the columns held in the staging area that supports the claims data mart, and is issued because the staging tables persist between load cycles and are therefore within the scope of the information classification standard notwithstanding their transient designation in earlier documentation. The tables reside in schema STGCLM on instance PRD3 and are loaded by Informatica PowerCenter workflows wf_stg_claimant and wf_stg_mbr_xref, which are scheduled at 22:15 nightly and complete before the mart load commences at 01:30.
+
+12.2 STG_CLAIMANT carries CLMT_SEQ_NBR, NUMBER(10), NOT NULL, the load-assigned sequence; CLM_NBR, VARCHAR2(12), NOT NULL; and the demography columns CLMT_LAST_NM, VARCHAR2(35), NOT NULL; CLMT_FIRST_NM, VARCHAR2(25), NOT NULL; CLMT_MI, CHAR(1), nullable; CLMT_SSN, VARCHAR2(9), nullable; CLMT_DOB, DATE, nullable; CLMT_ADDR_1, VARCHAR2(50), nullable; CLMT_CITY, VARCHAR2(35), nullable; CLMT_ST, CHAR(2), nullable; CLMT_ZIP, VARCHAR2(9), nullable; and CLMT_PHONE, VARCHAR2(10), nullable. Nullability throughout reflects the tolerance of the staging load, which rejects no record for missing demography; the mart load applies its own edits and writes exceptions to STG_CLAIMANT_REJ.
+
+12.3 STG_MBR_XREF carries MBR_ID_NBR, VARCHAR2(15), NOT NULL; SUBSCR_ID_NBR, VARCHAR2(15), NOT NULL; GRP_NBR, VARCHAR2(10), NOT NULL; MBR_SSN, VARCHAR2(9), nullable; MBR_DOB, DATE, nullable; and REL_TO_SUBSCR_CD, CHAR(2), NOT NULL. This table exists solely to resolve the member identifier presented on inbound 837 transactions to the internal member key, and it is truncated and rebuilt on each cycle.
+
+12.4 The columns CLMT_SSN, CLMT_DOB, MBR_SSN, MBR_DOB, MBR_ID_NBR, and SUBSCR_ID_NBR are classified Restricted. Together with the diagnosis and procedure columns documented at clause 12.7 they constitute protected health information for the purposes of the privacy and security rules, and the safeguards recorded at clauses 12.5 and 12.6 are entered here as evidence for the compliance file maintained by the Privacy Officer.
+
+12.5 No individual user account holds SELECT on either table. Access is by the schema owner account, used exclusively by the workflow server, and by the role STGCLM_SUPPORT_R, which is granted for the duration of a named incident only, expires automatically after seventy-two hours, and is logged to the security event repository. Extracts of these tables to a workstation or to removable media are prohibited without the prior written approval of the Privacy Officer.
+
+12.6 Staging content is deleted at the successful completion of the mart load; where the load fails, the content persists until the failure is cleared and in no case beyond seven calendar days, the deletion being enforced by job stgclm_purge scheduled daily at 06:00 irrespective of load status. Retention of the corresponding data in the mart itself is governed by Book II, clause 9.4, and is not affected by this addendum.
+
+12.7 Diagnosis, procedure, and revenue code columns are catalogued separately at Addendum 13 and carry the same classification and access controls as the columns named at clause 12.4.
+
+12.8 Two downstream processes read the staging tables directly. The reconciliation report rpt_stg_recon reads counts and control totals only and selects no demography column. The eligibility exception listing produced for the group administration unit selects the member identifier and name columns; it is spooled to a controlled print queue, is not transmitted electronically outside the Company, and is destroyed by the receiving unit within ten business days.
+
+12.9 Amendments to this addendum are made by Data Administration on notice to the Privacy Officer and are effective on publication. Where an amendment alters the classification of a column, the affected workflows are held pending confirmation that the controls at clause 12.5 remain adequate.

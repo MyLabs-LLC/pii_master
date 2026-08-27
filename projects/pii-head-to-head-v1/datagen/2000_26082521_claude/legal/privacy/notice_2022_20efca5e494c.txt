@@ -1,0 +1,43 @@
+MEMORANDUM
+
+TO:      Branch Managers
+FROM:    Records Custodian
+DATE:    September 2011
+RE:      Standard RM-11 — Access Matrix for Customer Information Categories
+
+A. Purpose
+
+   1. This standard fixes the access population for each category of customer personal information held in the escrow production system and in the physical file room. It supplements, and does not displace, Standard RM-07.
+
+B. Categories
+
+   1. Identity Data. Fields: Full Legal Name; Former or Maiden Name; Date of Birth; Marital Status.
+   2. Government Identifiers. Fields: Social Security Number; Taxpayer Identification Number; Driver's License or State Identification Number.
+   3. Financial Data. Fields: Deposit Account Number; ABA Routing Number; Wire Instruction Detail; Loan Number.
+   4. Transaction Data. Fields: Property Address; Parcel Number; Order Number; Vesting Instruction.
+
+C. Matrix
+
+   Role                     | Identity | Gov. ID | Financial | Transaction
+   -------------------------|----------|---------|-----------|------------
+   Escrow Officer (assigned)|    X     |  masked |     X     |      X
+   Title Examiner (assigned)|    X     |    —    |     —     |      X
+   Branch Manager           |    X     |  masked |     X     |      X
+   Funding Desk             |    —     |    —    |     X     |      X
+   Tax Reporting Clerk      |    X     |    X    |     —     |      —
+   Records Custodian        |    X     |  masked |     X     |      X
+   Information Systems      |  admin   |  admin  |   admin   |    admin
+
+   1. "Masked" means the field label is displayed and the value is suppressed except for the trailing four characters.
+   2. "Admin" means access for system maintenance only, logged and reviewed monthly by the Chief Compliance Officer.
+   3. A dash denotes no access. Requests for exception are made in writing to the branch manager and expire with the order.
+
+D. Retention and Disposal
+
+   1. Access logs are retained three years from the date of the logged event.
+   2. Category retention periods are as published in Standard RM-07, Section 4.0, and are not varied by this standard.
+   3. Disposal of access logs is by system purge; disposal of the underlying files is by the procedure at Standard RM-07, Section 5.0, with entry in the Destruction Register.
+
+E. Compliance
+
+   1. Branch managers certify quarterly that the roles provisioned at their branch match this matrix. Certifications are filed with the Records Custodian.

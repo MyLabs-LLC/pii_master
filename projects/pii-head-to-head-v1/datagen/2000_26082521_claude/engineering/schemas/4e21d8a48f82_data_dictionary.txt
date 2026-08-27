@@ -1,0 +1,60 @@
+DATA DICTIONARY EXCERPT — FORM IS-31
+COUNTY HEALTH DEPARTMENT, INFORMATION SYSTEMS
+SUBJECT: PATIENT/MEMBER DEMOGRAPHIC TABLE (PT_DEMO)
+PREPARED FOR: Records Access Review Committee, meeting of 14 October 1999
+
+SECTION I — GENERAL
+  System .............. Clinic Management System, release 5.2
+  Table ............... PT_DEMO
+  Rows per registrant . One current, history in PT_DEMO_H
+  Character set ....... EBCDIC, code page 037
+
+SECTION II — COLUMNS AND DISPOSITION
+
+  NAME              TYPE          NULL   CLASS   DISPOSITION
+  PT_KEY            DEC(9,0)      NO     C       retained indefinitely
+  MRN               CHAR(8)       NO     A       not extracted
+  PT_LAST_NM        CHAR(25)      NO     A       not extracted
+  PT_FIRST_NM       CHAR(20)      NO     A       not extracted
+  PT_DOB            DATE          NO     A       banded on extract
+  PT_SSN            CHAR(9)       YES    A       not extracted, not displayed
+  PT_ADDR_1         CHAR(30)      YES    A       not extracted
+  PT_ZIP            CHAR(5)       YES    B       extracted, aggregate use only
+  PT_PHONE          CHAR(10)      YES    A       not extracted
+  RESP_PARTY_NM     CHAR(35)      YES    A       not extracted
+  EMER_CNTCT_NM     CHAR(35)      YES    A       not extracted
+  EMER_CNTCT_PH     CHAR(10)      YES    A       not extracted
+  PT_STATUS_CD      CHAR(1)       NO     C       —
+  PT_REG_DT         DATE          NO     C       —
+  PT_LAST_SEEN_DT   DATE          YES    C       —
+  RESTRICT_CD       CHAR(2)       NO     C       governs Section IV
+
+  Class A — identifying. Class B — quasi-identifying. Class C — non-identifying.
+
+SECTION III — OPERATIONAL NOTES
+  1. PT_SSN is populated for approximately half of active registrants. It is
+     not a reliable join key and shall not be used as one.
+  2. PT_ZIP is truncated at load. The nine-digit form is not carried in this
+     table.
+  3. Updates are applied on-line only. There is no batch demographic update.
+  4. History rows are written by trigger on any change to a Class A column.
+
+SECTION IV — RESTRICTION AND RETENTION
+  1. RESTRICT_CD values 'CD', 'FP' and 'BH' invoke suppression. Suppressed rows
+     do not appear in any view, report or extract, and are not counted in
+     denominators supplied to outside agencies.
+  2. Access to Class A columns is limited to clinical staff sign-ons and to the
+     Records Custodian. The Information Systems staff hold no standing access.
+  3. Demographic rows are retained ten years past PT_LAST_SEEN_DT, then
+     archived. Archive tapes are held in the departmental vault.
+
+SECTION V — EXTRACTS IN EFFECT
+  E-1  Reportable disease transmittal to the state, daily, Class A columns
+       permitted under the state health code only.
+  E-2  Clinic utilization file to the Bureau of Planning, monthly, Class C
+       columns plus PT_ZIP and banded age.
+  E-3  Outside laboratory interface, real time, Class A columns limited to
+       those required for specimen identification.
+
+  Requests for additional extracts are made on Form IS-33 and are acted upon by
+  the Committee. No extract is created on verbal authorization.

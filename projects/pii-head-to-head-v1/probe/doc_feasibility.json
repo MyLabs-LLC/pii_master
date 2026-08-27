@@ -1,0 +1,39 @@
+{
+ "bars": {
+  "precision": 0.9,
+  "specificity": 0.85,
+  "recall": 0.85
+ },
+ "probes": [
+  {
+   "name": "arm B gate (as shipped)",
+   "auc": 0.8453459342204147,
+   "reachable": false,
+   "best_recall_at_precision_and_specificity_bars": 0.5369649805447471,
+   "best_precision_at_recall_bar": 0.7007789827401864,
+   "best_specificity_at_recall_bar": 0.6197593167701864,
+   "n_pos": 5397,
+   "n_neg": 5152
+  },
+  {
+   "name": "balanced + regularised gate",
+   "auc": 0.8804384150039648,
+   "reachable": false,
+   "best_recall_at_precision_and_specificity_bars": 0.623123957754308,
+   "best_precision_at_recall_bar": 0.7663660654642619,
+   "best_specificity_at_recall_bar": 0.7284549689440993,
+   "n_pos": 5397,
+   "n_neg": 5152
+  },
+  {
+   "name": "ORACLE \u2014 fitted on the sealed set itself (upper bound)",
+   "auc": 0.9998443464680746,
+   "reachable": true,
+   "best_recall_at_precision_and_specificity_bars": 0.9998147118769687,
+   "best_precision_at_recall_bar": 0.9996287358455541,
+   "best_specificity_at_recall_bar": 0.999611801242236,
+   "n_pos": 5397,
+   "n_neg": 5152
+  }
+ ]
+}

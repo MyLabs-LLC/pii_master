@@ -1,0 +1,50 @@
+CUSTOMER & LOYALTY DATA DICTIONARY — SECTION 4: TABLE RTL_CUST.MBR_MASTER
+Enterprise Data Management / Data Governance Office
+Issue 3.2 — effective 01 MAR 2016. Supersedes Issue 3.1 (14 SEP 2015).
+
+1. Scope. This section governs RTL_CUST.MBR_MASTER on EDW-PRD-01 (Oracle 11.2.0.4), tablespace CUST_DAT01. Grain: one row per enrolled loyalty member per banner. Row count at issue: approx. 41.6M.
+
+2. Column inventory. Restriction class per clause 5.
+
+   COLUMN               DATATYPE       NULL  NOTES
+   MBR_SK               NUMBER(12)     N     Surrogate PK. Sequence MBR_SK_SEQ. No business meaning.
+   MBR_NBR              VARCHAR2(16)   N     Natural key from POS enrolment. Unique index UX_MBR_NBR.
+   CARD_TOKEN           VARCHAR2(24)   N     Vault token. Class R2.
+   LAST_NM              VARCHAR2(40)   N     Class R2.
+   FIRST_NM             VARCHAR2(40)   N     Class R2.
+   MID_INIT             CHAR(1)        Y     Class R2.
+   SUFFIX_CD            VARCHAR2(6)    Y     Domain REF_NM_SUFFIX.
+   ADDR_LINE_1          VARCHAR2(60)   Y     Class R2. CASS-standardised nightly.
+   ADDR_LINE_2          VARCHAR2(60)   Y     Class R2.
+   CITY_NM              VARCHAR2(40)   Y     Class R2.
+   STATE_CD             CHAR(2)        Y     Domain REF_STATE.
+   POSTAL_CD            VARCHAR2(10)   Y     Class R2. 5+4 where supplied.
+   PHONE_NBR_PRIM       VARCHAR2(15)   Y     Class R2. Digits only; extension not retained.
+   EMAIL_ADDR           VARCHAR2(80)   Y     Class R2. Validated at capture, not verified.
+   DOB_DT               DATE           Y     Class R3. Time component always 00:00:00.
+   GENDER_CD            CHAR(1)        Y     Domain REF_GENDER.
+   LANG_PREF_CD         CHAR(3)        Y     Domain REF_LANG.
+   HIPAA_AUTH_FLG       CHAR(1)        N     Default N. Set only by Pharmacy Systems.
+   HIPAA_AUTH_DT        DATE           Y     Mandatory where HIPAA_AUTH_FLG = Y.
+   ENROLL_DT            DATE           N     
+   ENROLL_STORE_NBR     NUMBER(5)      N     FK to STORE_DIM.
+   MBR_STATUS_CD        CHAR(1)        N     Domain REF_MBR_STATUS.
+   OPT_OUT_EMAIL_FLG    CHAR(1)        N     Default N. Sourced from preference centre.
+   OPT_OUT_MAIL_FLG     CHAR(1)        N     Default N.
+   OPT_OUT_SHARE_FLG    CHAR(1)        N     Default N. Suppresses all third-party extracts.
+   LAST_TXN_DT          DATE           Y     Refreshed by nightly sales batch.
+   LOYALTY_PTS_BAL      NUMBER(9)      N     Default 0.
+   PURGE_ELIG_DT        DATE           Y     Derived per clause 6.
+   SRC_SYS_CD           VARCHAR2(8)    N     Domain REF_SRC_SYS.
+   ETL_LOAD_TS          TIMESTAMP(6)   N     
+   ETL_UPDT_TS          TIMESTAMP(6)   N     
+
+3. Nullability. Columns marked N are enforced at DDL. Columns marked Y are not defaulted; downstream consumers must handle NULL explicitly. Empty string is not a permitted substitute for NULL and is rejected by CHK_MBR_NOEMPTY.
+
+4. Load. Source: POS enrolment feed (hourly), preference centre feed (daily 02:15), address hygiene return file (weekly, Sun 04:00). Informatica workflow wf_mbr_master_ld. Late-arriving rows are held in MBR_MASTER_STG for a maximum of 72 hours before rejection to MBR_MASTER_ERR.
+
+5. Access restriction. R1 (unrestricted internal) applies to all columns not otherwise marked. R2 requires role RL_CUST_PII, granted only on approved AR-form and reviewed quarterly by the Records Custodian. R3 requires role RL_CUST_PII_SENS and additional written approval from the Privacy Officer; grants are time-boxed to 90 days and expire without renewal. Direct SELECT by named individual accounts is prohibited; all access is by role. R2/R3 access is logged to AUD_CUST_ACCESS and retained 24 months.
+
+6. Retention. PURGE_ELIG_DT is set to LAST_TXN_DT + 84 months, or ENROLL_DT + 84 months where LAST_TXN_DT is NULL. The purge job pg_mbr_master runs monthly and nullifies all R2/R3 columns in place, retaining MBR_SK, MBR_NBR and aggregate counters for continuity of historical reporting. Rows are not deleted. Where HIPAA_AUTH_FLG = Y, purge is deferred to the pharmacy record retention schedule and must not be executed from this job.
+
+7. Downstream extracts. Six standing extracts consume this table: EXT-104 (marketing campaign selection, R1 plus hashed contact keys only), EXT-107 (statement print vendor, R2, SFTP, PGP-encrypted, 30-day vendor retention), EXT-112 (clinical outreach, R2/R3, restricted to HIPAA_AUTH_FLG = Y), EXT-118 (Teradata analytic mart, R1 only), EXT-121 (fraud analytics, tokens only), EXT-133 (state reporting). All extracts apply the OPT_OUT_SHARE_FLG filter at source. New extracts require Data Governance Office registration prior to scheduling; unregistered extracts are disabled on detection.

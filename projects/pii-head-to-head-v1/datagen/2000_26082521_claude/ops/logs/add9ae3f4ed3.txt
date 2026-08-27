@@ -1,0 +1,16 @@
+PHARMACY SYSTEMS — DATA PROTECTION SERVICES
+MASKING PROFILE MSKPRF03 — PRE-RUN VERIFICATION CHECKLIST
+Node: PHMAS400.02   Library: PHMPARM/MASKCFG   Member last written 1998-11-04.02.14.07
+
+[X] Profile MSKPRF03 loaded from PHMPARM/MASKCFG; checksum matches control record 1998-11-04.02.14.07.
+[X] Masking class FULL applied to: PAT_LAST_NM, PAT_FIRST_NM, PAT_MID_INIT, PAT_ADDR_LINE_1, PAT_ADDR_LINE_2, PAT_HOME_PHN, PAT_WORK_PHN.
+[X] Masking class PARTIAL-RIGHT applied to: PAT_SSN (retain 0 of 9), CARDHOLDER_ID (retain 0 of 12), MBR_ID (retain 0 of 11).
+[X] Masking class GENERALISE applied to: PAT_DOB (output CCYY only), PAT_ZIP5 (output first 3 positions), PAT_ZIP4 (suppressed).
+[X] Masking class TOKENISE applied to: PAT_ID_INTERNAL, MBR_ID, PERSON_CD — token vault PHMTKN/VLT01, algorithm FPE-1, key generation 04.
+[X] Pass-through (no masking) confirmed for non-identifying columns: NDC_CD, QTY_DSPNSD, DAYS_SUPPLY, FILL_DT, STORE_NBR, PLAN_CD, BIN_NBR, PCN_CD, DAW_CD.
+[X] Placeholder fill character set to asterisk; fixed-width padding preserved so downstream COBOL copybook PHMCPY01 record length 512 is unchanged.
+[ ] Prescriber block review outstanding — PRESCRIBER_LAST_NM, PRESCRIBER_FIRST_NM, PRESCRIBER_DEA_NBR, PRESCRIBER_UPIN currently class FULL; Records Custodian to confirm whether DEA suffix is required for DUR reporting.
+[X] Null-vs-blank convention verified: absent values written as low-values, not spaces.
+[X] Century expansion routine Y2KEXP4 active on all date columns; two-digit source years windowed at 30.
+[X] Override table MSKOVR empty; no per-store exceptions in force.
+[X] Sample output inspected by the Records Custodian on 1998-11-04; no unmasked positions observed in the protected column set.

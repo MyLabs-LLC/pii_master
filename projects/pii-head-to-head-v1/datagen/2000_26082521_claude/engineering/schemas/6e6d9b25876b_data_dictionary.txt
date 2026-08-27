@@ -1,0 +1,73 @@
+COMMUNICABLE DISEASE CASE REGISTRY
+DATA DICTIONARY EXCERPT — TABLE CD_CASE_SUBJECT
+Oracle 10g, instance CDRPRD, schema CDR_OWNER
+Revision 2.0, issued 2011-09-06, prepared by the Data Steward, Epidemiology Unit
+
+1. PURPOSE
+   Documents the subject-level columns of the case registry for the use of
+   investigators, the Application DBA, and the Records Custodian. Codes and
+   domains are defined in the companion reference dictionary.
+
+2. COLUMN DEFINITIONS
+
+   2.1 CASE_SK
+       Type ......... NUMBER(10)
+       Nullable ..... NO
+       Note ......... Sequence-generated primary key. Cited in all internal
+                      correspondence in place of subject columns.
+
+   2.2 SUBJECT_LAST_NAME
+       Type ......... VARCHAR2(40)
+       Nullable ..... NO
+       Note ......... Captured at report intake. Indexed for duplicate search.
+
+   2.3 SUBJECT_FIRST_NAME
+       Type ......... VARCHAR2(30)
+       Nullable ..... NO
+       Note ......... Captured at report intake.
+
+   2.4 SUBJECT_DOB
+       Type ......... DATE
+       Nullable ..... YES
+       Note ......... Null permitted for provider reports pending completion.
+                      Age at onset is derived, not stored.
+
+   2.5 SUBJECT_ADDR_LINE_1 / SUBJECT_CITY / SUBJECT_ZIP5
+       Type ......... VARCHAR2(50) / VARCHAR2(30) / CHAR(5)
+       Nullable ..... YES / YES / NO
+       Note ......... ZIP5 required for jurisdiction routing. Address lines are
+                      used for field investigation assignment only.
+
+   2.6 SUBJECT_PHONE_PRIMARY
+       Type ......... VARCHAR2(10)
+       Nullable ..... YES
+       Note ......... Digits only. Not carried into any extract.
+
+   2.7 MEDICAL_RECORD_NUM
+       Type ......... VARCHAR2(20)
+       Nullable ..... YES
+       Note ......... As supplied by the reporting facility. Facility-scoped;
+                      not unique across the registry.
+
+   2.8 CONDITION_CD, ONSET_DT, REPORT_DT, INVESTIGATION_STATUS_CD
+       Note ......... Non-identifying case columns; see Section 4 of the
+                      companion dictionary.
+
+3. ACCESS RESTRICTION
+   SELECT on CD_CASE_SUBJECT is granted to roles CDR_INVEST and CDR_SUPV.
+   All other users are directed to view V_CD_CASE_ANON, which exposes CASE_SK,
+   ZIP5, condition, and dates only. Grants are reviewed semiannually by the
+   Application DBA with the Records Custodian.
+
+4. RETENTION
+   Case rows are retained permanently for reportable conditions on the state
+   list. Investigation notes attached to the case are retained ten years from
+   case closure and then purged under the approved disposition schedule.
+
+5. DOWNSTREAM EXTRACTS
+   Weekly transmission to the state surveillance system over the established
+   secure channel, carrying the full subject columns as required by state
+   reporting rule. Monthly de-identified frequency table to the Epidemiology
+   Unit, keyed on condition, week, and ZIP5. Requests from academic partners
+   are handled under a data use agreement approved by the Health Officer and
+   are limited to the de-identified table.

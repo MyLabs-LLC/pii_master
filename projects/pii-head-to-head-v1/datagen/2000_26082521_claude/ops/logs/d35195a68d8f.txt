@@ -1,0 +1,28 @@
+MEMORANDUM — METROPOLITAN TRANSIT AUTHORITY
+OFFICE OF INFORMATION SYSTEMS / DATA SERVICES DIVISION
+
+TO:      Manager, ETL Operations
+FROM:    Records Custodian
+DATE:    16 September 2004
+RE:      Manifest Exception, Job RDRLOAD_0914 — Emergency Contact Columns
+FILE:    OIS-DS-2004-0916-M
+
+1. The log for job RDRLOAD_0914, sub-job RDR_XFM_02, records two warnings at 2004-09-14 02:03:46 in respect of the columns EMERGENCY_CONTACT_NAME and EMERGENCY_CONTACT_PHONE. Both were present in the source column set and neither was matched against the drop manifest hash held in rdrload.cfg revision 11.
+
+2. The default mask was applied and no clear value entered the staging area or the target structure RDS.DIM_RIDER. The target column set recorded at 03:09:44 confirms neither column was materialised. This office accepts that no exposure arose from the cycle of 14 September 2004.
+
+3. The defect is nonetheless a control failure. The two columns were added to the [drop] section of rdrload.cfg at revision 11 but the manifest hash was not regenerated, so the drop list and the hash disagreed. Reliance on the default mask as a fallback is not an acceptable control.
+
+4. The following is directed:
+
+   4.1 The manifest hash is to be regenerated and rdrload.cfg advanced to revision 12 before the cycle of 20 September 2004.
+
+   4.2 The change control record is to note both column labels explicitly.
+
+   4.3 A verification run against the September cycle is to confirm that neither EMERGENCY_CONTACT_NAME nor EMERGENCY_CONTACT_PHONE appears in the source column set enumerated at extract, and the result is to be reported to this office.
+
+   4.4 Reject queue RJQ.RDRLOAD for cycle 2004-09-14, holding 2,553 rows, is to be retained on its ordinary 30-day schedule. No extension is granted.
+
+5. Confirmation of clauses 4.1 through 4.3 is required in writing by 22 September 2004.
+
+END OF MEMORANDUM

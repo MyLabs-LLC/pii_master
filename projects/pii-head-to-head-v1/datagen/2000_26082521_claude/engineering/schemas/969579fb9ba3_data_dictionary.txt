@@ -1,0 +1,35 @@
+MEMORANDUM
+
+TO:      Escrow Systems Steering Group
+FROM:    Office of the Records Custodian
+DATE:    6 April 1999
+RE:      ESCROW PARTY CROSS-REFERENCE (ESCPXRF) — Excerpt
+
+The cross-reference table associates parties carried on the customer master with the several escrow files in which they appear. Because a single party may appear in numerous files across several branches, the table is the principal vehicle by which restricted attributes migrate outside the branch of origin, and it is accordingly to be treated with corresponding care.
+
+COLUMN                  | TYPE          | NULL | NOTE
+------------------------+---------------+------+---------------------------
+XREF_ID                 | DECIMAL(11,0) | N    | Sequence-assigned.
+CUST_ID                 | DECIMAL(11,0) | N    | FK to CUSTMAST.
+ESCROW_FILE_NBR         | CHAR(12)      | N    | FK to ESCFILE.
+BRANCH_CD               | CHAR(4)       | N    | Branch of file origin.
+PARTY_ROLE_CD           | CHAR(2)       | N    | As defined in DA-DD-1998-041.
+DISPLAY_NAME_TEXT       | VARCHAR(60)   | Y    | Denormalized. Restricted.
+NOTICE_ADDR_LINE_1      | VARCHAR(35)   | Y    | Denormalized. Restricted.
+NOTICE_ADDR_CITY        | VARCHAR(28)   | Y    | Denormalized. Restricted.
+NOTICE_ADDR_STATE_CD    | CHAR(2)       | Y    | Denormalized.
+NOTICE_ADDR_POSTAL_CD   | CHAR(9)       | Y    | Denormalized. Restricted.
+CONTACT_PHONE_NBR       | CHAR(10)      | Y    | Denormalized. Restricted.
+SIGNATORY_IND           | CHAR(1)       | N    | Default 'N'.
+DISBURSEMENT_ACCT_NBR   | CHAR(17)      | Y    | Restricted. Journaled.
+EFFECTIVE_DT            | DATE          | N    |
+EXPIRATION_DT           | DATE          | Y    | Null denotes open association.
+SOURCE_SYS_CD           | CHAR(3)       | N    | Origin of the association.
+LAST_MAINT_USER_ID      | CHAR(8)       | N    | Trigger-populated.
+LAST_MAINT_TS           | TIMESTAMP     | N    | Trigger-populated.
+
+Access. The denormalized columns are refreshed nightly from the customer master and are not to be keyed directly under any circumstance. A user profile authorized to view a restricted column on the master does not thereby acquire authority to view the same column here; authorization is by table and not by attribute.
+
+Retention. Rows follow the retention of the escrow file identified by ESCROW_FILE_NBR and are purged in the same run. An orphaned row surviving the purge of its parent is an exception condition and is to be reported to this office on the morning of its detection.
+
+Downstream extracts. The branch workload extract (job EX0120P) carries the keys, BRANCH_CD, PARTY_ROLE_CD, and the two effectivity dates, and nothing further. Requests to add DISPLAY_NAME_TEXT to that extract have been received on three occasions and are again declined.

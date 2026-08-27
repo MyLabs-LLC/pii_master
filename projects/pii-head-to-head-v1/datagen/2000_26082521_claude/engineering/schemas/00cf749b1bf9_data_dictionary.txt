@@ -1,0 +1,52 @@
+DATA DICTIONARY EXCERPT — PROD_ESCROW.TBL_PARTY_DISB_INSTR
+Disbursement and payee instruction subject area. Revision 1.9. Distribution: escrow operations management, information security, internal audit.
+
+1. Scope and authority
+1.1 This excerpt covers the disbursement instruction table only. Trust ledger structures are documented separately at DD-ESC-031.
+1.2 The table is classified Restricted under the information classification standard. No clause of this document authorises deviation from that classification.
+
+2. Column specification
+Format: NAME | TYPE | NULL | NOTE
+
+  DISB_INSTR_ID       | NUMBER(12)    | NO  | Surrogate key.
+  FILE_NBR            | VARCHAR2(18)  | NO  | Escrow file reference.
+  PARTY_ID            | NUMBER(12)    | NO  | FK to TBL_PARTY_MASTER.
+  PAYEE_NAME          | VARCHAR2(120) | NO  | As stated on the instruction.
+  PAYEE_TYPE_CD       | CHAR(3)       | NO  | IND, ENT, LDR, GOV, VND.
+  DISB_METHOD_CD      | CHAR(3)       | NO  | WIR, ACH, CHK.
+  BENE_ABA_ENC        | RAW(64)       | YES | Required where method WIR or ACH.
+  BENE_ACCT_ENC       | RAW(128)      | YES | Required where method WIR or ACH.
+  BENE_ACCT_LAST4     | CHAR(4)       | YES | Clear text. Confirmation display only.
+  BENE_BANK_NAME      | VARCHAR2(80)  | YES |
+  MAIL_TO_ADDR_BLOCK  | VARCHAR2(240) | YES | Required where method CHK.
+  INSTR_RECV_TS       | TIMESTAMP(6)  | NO  |
+  INSTR_SOURCE_CD     | CHAR(3)       | NO  | ORG originator, EML, FAX, PRT portal.
+  CALLBACK_PERF_IND   | CHAR(1)       | NO  | Y/N. Default N.
+  CALLBACK_BY_USER_ID | VARCHAR2(20)  | YES | Network identifier of caller.
+  CALLBACK_TS         | TIMESTAMP(6)  | YES |
+  APPROVED_BY_USER_ID | VARCHAR2(20)  | YES |
+  INSTR_STATUS_CD     | CHAR(1)       | NO  | P pending, V verified, R rejected, X void.
+  PURGE_ELIG_DT       | DATE          | YES | Computed. See clause 5.
+
+3. Operational notes
+3.1 No row may advance to status V while CALLBACK_PERF_IND is N. The constraint is enforced in the database, not in the application layer.
+3.2 Where INSTR_SOURCE_CD is EML or FAX, callback must be placed to a number obtained from a source other than the instruction itself. The number used is not recorded in this table.
+3.3 Amendment of BENE_ABA_ENC or BENE_ACCT_ENC voids the row. A superseding row is inserted and the callback sequence is repeated in full. In-place update of either column is blocked by trigger.
+3.4 BENE_ACCT_LAST4 is the only account element permitted on printed confirmations, closing statements and screen displays.
+
+4. Access restriction
+4.1 Select privilege on the base table is limited to the escrow accounting role and the information security review role.
+4.2 Escrow officers and assistants resolve the table through VW_DISB_INSTR_OPS, which returns BENE_ACCT_LAST4 and suppresses the encrypted columns.
+4.3 Decryption is performed only by the disbursement service account through PKG_DISB_UNWRAP. Every invocation writes a row to the decryption audit log. The log is reviewed weekly by the Records Custodian and monthly by internal audit.
+4.4 Developer access to production is prohibited. Defect reproduction uses the scrubbed lower environment, in which the encrypted columns are populated with generated values.
+
+5. Retention
+5.1 Rows are retained seven years from file close or for the state-mandated escrow record period, whichever is longer.
+5.2 On expiry, BENE_ABA_ENC and BENE_ACCT_ENC are overwritten and the remaining columns are retained for audit reconstruction. The row is not deleted.
+5.3 Litigation hold suspends clause 5.2 in its entirety.
+
+6. Downstream extracts
+6.1 The daily positive pay file carries FILE_NBR, PAYEE_NAME, DISB_METHOD_CD and amount from the ledger. No column from this table's encrypted set is included.
+6.2 The escrow reconciliation feed to the accounting system carries surrogate keys and status codes only.
+6.3 Extracts to underwriters, auditors and outsourced print vendors are enumerated in the extract register. Any addition requires vendor due diligence on file, an executed confidentiality undertaking, and approval by the Records Custodian.
+6.4 Extract files written to the secure transfer directory are removed after seven days by the housekeeping job. Manual copies to workstations, removable media or personal storage are prohibited.

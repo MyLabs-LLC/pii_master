@@ -1,0 +1,46 @@
+MEMORANDUM — COMPLIANCE SERIES No. 4 of 2004
+
+FROM:  Office of the Records Custodian
+TO:    Data Stewards; Systems Analysts, Policy Administration; Supervisor, Claims Quality Review
+RE:    Regulation 33, Part IV — Classification of Data Elements
+DATE:  June 18, 2004
+
+Part IV is reproduced below in relevant part. Every data dictionary maintained by this company shall carry the tier designation prescribed by § 4.2 for each field enumerated, and the designation shall be reflected in screen masking rules at the next scheduled release.
+
+§ 4.1  Construction.
+(a) A data element is classified by the sensitivity of the element itself and not by the sensitivity of the record in which it appears.
+(b) Where a single field is capable of holding elements of more than one tier, the field takes the higher tier.
+(c) A derived value, index key, or hash computed from a Tier I element takes the tier of the element from which it is derived, unless the Commissioner determines the derivation to be irreversible.
+
+§ 4.2  Schedule of elements.
+
+  DATA FIELD LABEL                 CATEGORY               TIER   DISPLAY
+  ---------------------------------------------------------------------------
+  Social Security Number           Government identifier    I    Masked
+  Taxpayer Identification Number   Government identifier    I    Masked
+  Driver's License Number          Government identifier    I    Masked
+  Date of Birth                    Demographic              I    Masked
+  Financial Account Number         Financial                I    Masked
+  Credit or Debit Card Number      Financial                I    Suppressed
+  Medical Record Number            Health                   I    Masked
+  Diagnosis Code                   Health                   I    Restricted
+  Procedure Code                   Health                   I    Restricted
+  Member Identification Number     Contract                II    Partial
+  Policy Number                    Contract                II    Full
+  Certificate Number               Contract                II    Full
+  Claim Number                     Contract                II    Full
+  Surname / Given Name             Demographic             II    Full
+  Residence Address                Demographic             II    Full
+  Telephone Number                 Demographic             II    Partial
+  Electronic Mail Address          Demographic             II    Partial
+  Occupation Code                  Underwriting           III    Full
+  Territory Code                   Underwriting           III    Full
+
+§ 4.3  Obligations attaching to tier.
+(a) A Tier I element shall not appear in full on any printed report, screen display, item of correspondence, or extract file, except where the recipient's business function requires the full element and that requirement is documented in the access authorization.
+(b) A Tier I element shall not be used as a primary or secondary index key in any system placed in service after the effective date of this Part.
+(c) A Tier II element may be displayed in full to authorized personnel but shall not be transmitted outside the holder's network except in conformity with § 7-103(d) of the Act.
+(d) Tier III elements are not personal identifiers for purposes of the Act but remain subject to the general confidentiality obligations of the holder.
+
+§ 4.4  Data dictionary.
+The holder shall maintain a current data dictionary listing, for each field: field label, source system, tier, retention period, and the position title of the responsible data steward. The dictionary shall be produced to the Department on request.

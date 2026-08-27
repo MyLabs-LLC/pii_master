@@ -1,0 +1,61 @@
+RXPHARM CORPORATE DATA SERVICES
+ENTERPRISE DATA WAREHOUSE - FIELD MAPPING RULE SET
+================================================================================
+ RULESET ID......: MAP_RXMBR_V7           STATUS.......: ACTIVE
+ SOURCE SYSTEM...: RXPRD/POSRX (AS/400)   TARGET SCHEMA: EDW_STG
+ TARGET TABLE....: EDW_STG.RX_MEMBER_STG
+ GENERATED.......: 2004-03-08 04:12:47 CST
+ SUPERSEDES......: MAP_RXMBR_V6 (RETIRED 2004-02-29 23:59:59 CST)
+ OWNER...........: PHARMACY SYSTEMS / DATA SERVICES
+ REVIEWED BY.....: THE RECORDS CUSTODIAN, PRIVACY OFFICE
+ CLASSIFICATION..: RESTRICTED - PHI BEARING
+================================================================================
+
+RULE  SOURCE_FIELD          SRC_TYPE   TARGET_FIELD             XFORM_CODE   CLS  NUL
+----  --------------------  ---------  -----------------------  -----------  ---  ---
+0010  PTNT_LAST_NM          CHAR(30)   MEMBER_LAST_NAME         TOKEN_SHA1   PHI  N
+0020  PTNT_FRST_NM          CHAR(20)   MEMBER_FIRST_NAME        TOKEN_SHA1   PHI  N
+0030  PTNT_MID_INIT         CHAR(01)   MEMBER_MIDDLE_INITIAL    SUPPRESS     PHI  Y
+0040  PTNT_BRTH_DT          DATE       MEMBER_BIRTH_YEAR        GEN_YEAR     PHI  N
+0050  PTNT_SEX_CD           CHAR(01)   MEMBER_GENDER_CODE       PASSTHRU     ---  N
+0060  PTNT_TAX_ID           CHAR(09)   MEMBER_TAX_ID            DROP_COLUMN  PHI  Y
+0070  PTNT_ADDR_LINE_1      CHAR(40)   MEMBER_STREET_1          SUPPRESS     PHI  Y
+0080  PTNT_ADDR_LINE_2      CHAR(40)   MEMBER_STREET_2          SUPPRESS     PHI  Y
+0090  PTNT_CITY_NM          CHAR(25)   MEMBER_CITY_NAME         PASSTHRU     ---  Y
+0100  PTNT_ST_CD            CHAR(02)   MEMBER_STATE_CODE        PASSTHRU     ---  Y
+0110  PTNT_POSTL_CD         CHAR(09)   MEMBER_POSTAL_TRUNC      TRUNC_3      PHI  Y
+0120  PTNT_HOME_PHN         CHAR(10)   MEMBER_HOME_PHONE        DROP_COLUMN  PHI  Y
+0130  PTNT_EMAIL_TXT        CHAR(60)   MEMBER_EMAIL_ADDRESS     DROP_COLUMN  PHI  Y
+0140  RX_MBR_NBR            CHAR(12)   MEMBER_PLAN_ID           TOKEN_SHA1   PHI  N
+0150  CARDHLDR_ID           CHAR(18)   SUBSCRIBER_ID            TOKEN_SHA1   PHI  N
+0160  GRP_NBR               CHAR(10)   PLAN_GROUP_NUMBER        PASSTHRU     ---  N
+0170  RX_NBR                CHAR(09)   SCRIPT_NUMBER            TOKEN_HMAC   PHI  N
+0180  NDC_CD                CHAR(11)   PRODUCT_NDC_CODE         PASSTHRU     ---  N
+0190  FILL_DT               DATE       DISPENSE_DATE            PASSTHRU     ---  N
+0200  PRSCRBR_LAST_NM       CHAR(30)   PRESCRIBER_LAST_NAME     SUPPRESS     PHI  Y
+0210  PRSCRBR_DEA_NBR       CHAR(09)   PRESCRIBER_DEA_ID        TOKEN_SHA1   PHI  N
+0220  STORE_NBR             DEC(05,0)  SITE_NUMBER              PASSTHRU     ---  N
+0230  PHARMCST_EMP_NBR      CHAR(08)   DISPENSER_STAFF_ID       TOKEN_SHA1   PHI  N
+
+XFORM CODE LEGEND
+-----------------
+ PASSTHRU     Value copied without alteration. Permitted for non-PHI only.
+ TOKEN_SHA1   Value replaced by digest token from TOKEN_VAULT.RXMBR. Source
+              value is never written to staging, spool, or session log.
+ TOKEN_HMAC   Keyed token, key ref RXKEY_2004Q1. Rotation due 2004-07-01.
+ GEN_YEAR     Retains 4-digit year component only. Day and month discarded.
+ TRUNC_3      Retains leading 3 positions. Remaining positions space filled.
+ SUPPRESS     Column created in target, populated with masked placeholder
+              constant '****'. Column is not indexed.
+ DROP_COLUMN  Column excluded from target DDL. Any inbound occurrence is
+              counted in REJ_DROP and discarded before the staging write.
+
+NOTES
+-----
+ 1. Rules 0060, 0120 and 0130 were reclassified DROP_COLUMN under change
+    request CR-2004-0117. Downstream extracts referencing MEMBER_TAX_ID,
+    MEMBER_HOME_PHONE or MEMBER_EMAIL_ADDRESS will fail column resolution
+    and must be amended before the 2004-04-05 release window.
+ 2. No rule in this set may be assigned PASSTHRU where CLS = PHI. The rule
+    compiler enforces this at parse time and aborts with RC=0016.
+ 3. Sample rows are not retained in this file. Field labels only.

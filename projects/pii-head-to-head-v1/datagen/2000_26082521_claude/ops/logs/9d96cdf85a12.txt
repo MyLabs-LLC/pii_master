@@ -1,0 +1,30 @@
+SOURCE-TO-TARGET MAPPING RULES — RXDW SUBJECT AREA "RX_FILL"
+Document control: MAP-RXFILL-07 | Approved 2004-03-29 | Supersedes MAP-RXFILL-06
+Governing copybook: RXFILCPY (VSAM, store-forward feed) | Target: RXDW.F_RX_FILL
+
+It is a condition of this mapping, binding upon every developer and every scheduled process that draws upon it, that the transform column of the table below is not advisory but obligatory, and that the presence of a column name in the source column of that table shall not be construed as an authorization to persist the content of that column, the authority to persist being conferred only by the notation PASSTHRU and by nothing else. Where a source column is enumerated for completeness but bears the notation SUPPRESS, the developer shall neither stage it, nor spool it, nor render it in any diagnostic listing, and shall not preserve it in any intermediate flat file howsoever named. The order of precedence, in the event of apparent conflict between this document and the masking policy of record, is that the masking policy governs absolutely, and this document is to be read down accordingly.
+
+SOURCE COLUMN        | COPYBOOK POS | TARGET COLUMN            | TRANSFORM
+---------------------+--------------+--------------------------+-----------------
+STORE-NBR            | 001-005      | STORE_NBR                | PASSTHRU
+FILL-DT              | 006-013      | FILL_DT                  | PASSTHRU
+RX-NBR               | 014-024      | RX_NBR_TKN               | TOKENIZE
+RX-FILL-NBR          | 025-026      | RX_FILL_NBR              | PASSTHRU
+PAT-LAST-NM          | 027-051      | PAT_LAST_NM              | LITERAL
+PAT-FIRST-NM         | 052-071      | PAT_FIRST_NM             | LITERAL
+PAT-DOB              | 072-079      | PAT_DOB_DT               | LITERAL
+PAT-SSN              | 080-088      | (not carried)            | SUPPRESS
+PAT-ADDR-1           | 089-118      | (not carried)            | SUPPRESS
+PAT-ZIP              | 119-127      | PAT_ZIP3_CD              | TRUNCATE keep=3
+PAT-HOME-PHN         | 128-137      | PAT_HOME_PHN_NBR         | LITERAL
+CARDHOLDER-ID        | 138-155      | CARDHOLDER_ID_TKN        | TOKENIZE
+GRP-NBR              | 156-170      | GRP_NBR                  | PASSTHRU
+PLAN-BIN             | 171-176      | PLAN_BIN_NBR             | PASSTHRU
+PRSCBR-DEA           | 177-185      | PRSCBR_DEA_TKN           | TOKENIZE
+PRSCBR-LAST-NM       | 186-210      | PRSCBR_LAST_NM           | LITERAL
+NDC-CD               | 211-221      | NDC_CD                   | PASSTHRU
+QTY-DISP             | 222-231      | QTY_DISPENSED            | PASSTHRU
+DAYS-SUPPLY          | 232-234      | DAYS_SUPPLY_QTY          | PASSTHRU
+SIG-TXT              | 235-334      | (not carried)            | SUPPRESS
+
+Reconciliation obligation: for each execution, the count of rows read shall equal the sum of rows applied, rows rejected to the exception register, and rows discarded by filter, and the operator shall record that equality in the run log before the job is certified complete.

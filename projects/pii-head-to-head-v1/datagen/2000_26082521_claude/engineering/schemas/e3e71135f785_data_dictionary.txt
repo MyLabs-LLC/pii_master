@@ -1,0 +1,52 @@
+DATA DICTIONARY EXCERPT — LENDING SCHEMA
+LND_ORIG.LOAN_APPLICATION
+Revision 3.4 | Effective 2021-11-08 | Supersedes Revision 3.3
+Business Owner: the Chief Lending Officer
+Data Steward: the Loan Servicing Supervisor
+
+1. Purpose and Grain
+   a. One row per credit application, whether booked, declined, withdrawn or expired.
+   b. Applications spawning multiple credit decisions are versioned by DECISION_SEQ_NBR; the row is not overwritten.
+   c. This table is the system of record for adverse action reporting and for the fair-lending analysis file.
+
+2. Key Columns
+   a. LOAN_APP_SK — BIGINT, NOT NULL. Surrogate primary key.
+   b. LOAN_APP_NBR — VARCHAR(14), NOT NULL, unique. Restricted; masked below production.
+   c. APPLICANT_MEMBER_SK — BIGINT, nullable. Null where the applicant is not yet a member at the time of application.
+   d. CO_APPLICANT_MEMBER_SK — BIGINT, nullable.
+   e. BOOKED_LOAN_ACCT_NBR — VARCHAR(17), nullable. Populated at funding only. Classified Confidential — Member Financial.
+
+3. Applicant Attributes Held on This Table
+   a. APPLICANT_LEGAL_NAME_FIRST, APPLICANT_LEGAL_NAME_LAST — VARCHAR(40), NOT NULL.
+   b. APPLICANT_TAX_ID_ENC — VARBINARY(256), NOT NULL. Encrypted at column level; the decryption grant is held by the underwriting role and by no reporting role.
+   c. APPLICANT_DATE_OF_BIRTH — DATE, NOT NULL. Used solely for identity verification and age-of-majority checks.
+   d. APPLICANT_MAILING_POSTAL_CD — CHAR(10), NOT NULL. Retained for geographic distribution analysis; the remaining address lines are held on the origination platform and are not replicated here.
+   e. GROSS_MONTHLY_INCOME_AMT — DECIMAL(13,2), nullable.
+   f. EMPLOYMENT_STATUS_CD — CHAR(2), nullable.
+
+4. Decision Attributes
+   a. PRODUCT_CD — CHAR(6), NOT NULL.
+   b. REQUESTED_AMT, APPROVED_AMT — DECIMAL(15,2); APPROVED_AMT nullable until decision.
+   c. CREDIT_SCORE_VAL — SMALLINT, nullable. Sourced from the bureau interface.
+   d. CREDIT_BUREAU_CD — CHAR(3), nullable.
+   e. DTI_RATIO_PCT — DECIMAL(6,3), nullable.
+   f. DECISION_CD — CHAR(2), NOT NULL after the underwriting queue releases the application.
+   g. DECISION_TS — TIMESTAMP, nullable.
+   h. ADVERSE_ACTION_REASON_CD_1 through _4 — CHAR(3), nullable. Domain maintained in REF_AA_REASON and reviewed annually by the Compliance Officer.
+   i. UNDERWRITER_ROLE_CD — CHAR(4), NOT NULL. Records the deciding role, not the individual; individual attribution is carried in the platform audit log.
+
+5. Access Restriction
+   a. Clauses 3.b and 3.c are readable only through the stored procedure interface. Ad hoc select against these columns is revoked at the schema level.
+   b. Clause 4.c and clause 4.h together constitute the regulated decision record. Any query touching both is logged with the requesting role and the stated purpose.
+   c. Development and test environments receive this table with clauses 3.a through 3.d generated synthetically by the masking utility; production values are never propagated below the production boundary.
+
+6. Retention
+   a. Declined and withdrawn applications: twenty-five months from DECISION_TS, per the adverse action retention requirement, then purged.
+   b. Booked applications: retained for the life of the loan plus seven years, then archived with clauses 2.b, 2.e and 3.b tokenised.
+   c. Purge jobs run monthly and produce a certificate of destruction filed with the Records Custodian.
+
+7. Downstream Extracts
+   a. LND_EXT_03 — nightly to the warehouse. Excludes all of section 3 except clauses 3.d, 3.e and 3.f.
+   b. LND_EXT_08 — annual fair-lending file. Includes clause 3.d and section 4 in full; delivered to counsel under privilege.
+   c. LND_EXT_12 — servicing handoff at funding. Includes clause 2.e; transmitted by managed file transfer with per-file keys.
+   d. Requests for any extract beyond clauses 7.a through 7.c are submitted to the data governance committee and are approved for a single named run.

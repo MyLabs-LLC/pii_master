@@ -1,0 +1,21 @@
+CHANGE RECORD CR-2004-0139 — MAPPING RULE AMENDMENT
+LOGGED 2004-03-16 09:12 CST / TARGET RELEASE RGDW 2.4 / PRIORITY 3
+
+o Requesting office
+   + Office of the Registrar, via the Records Custodian.
+
+o Rules amended in map_reg_stu.xml
+   + PERM_POSTAL_CD: TRUNCATE KEEP=3 changed to KEEP=5 for state-residency reporting only; downstream column renamed PERM_POSTAL_RPT.
+   + STU_BIRTH_DT: generalization grain held at YYYY. Request for YYYYMM denied by data stewardship.
+   + PARENT_GUARD_NAME: rule moved from SUSPENDED to NULLIFY.
+   + PARENT_GUARD_PHONE: rule added, NULLIFY.
+   + PRIOR_INSTITUTION_CD: rule added, PASSTHRU.
+
+o Verification steps
+   + Unit map executed against 500-row control set. Rows read 500 / written 500 / rejected 0.
+   + Column-presence audit confirms suppressed columns absent from target DDL: STU_SSN, PERM_ADDR_LINE_1, PERM_ADDR_LINE_2, HOME_PHONE_NBR, CELL_PHONE_NBR, VISA_DOC_NBR, DRIVER_LIC_NBR, BURSAR_ACCT_NBR.
+   + Masking profile checksum re-issued as DMSK-0417r1.
+
+o Outstanding
+   + DDL migration script pending DBA sign-off.
+   + Backfill of PERM_POSTAL_RPT deferred to next quarterly reload, JOB-RG-0503.

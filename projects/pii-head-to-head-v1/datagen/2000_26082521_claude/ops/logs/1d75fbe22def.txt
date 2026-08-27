@@ -1,0 +1,32 @@
+INTEROFFICE MEMORANDUM
+
+TO:     Distribution
+FROM:   Data Integration Group
+DATE:   19 April 2004
+RE:     Mapping rule change, crosswalk RGSTR_XW_07, effective cycle 0441
+
+The following column bindings change with the 26 April cycle. Consumers holding
+their own extract views must amend before that date.
+
+  SOURCE COLUMN          PRIOR TARGET        NEW TARGET        TREATMENT
+  SSN                    SSN                 SSN_TKN           tokenize
+  SSN                    SSN_LAST4           (dropped)         suppress
+  DOB                    DOB                 DOB_YEAR          derive
+  PERM_ADDR_ZIP          PERM_ADDR_ZIP       PERM_ADDR_ZIP3    truncate
+  EMAIL_ADDR             EMAIL_ADDR          (dropped)         suppress
+  ETHNIC_CD              ETHNIC_CD           ETHNIC_CD         passthrough
+
+Notes.
+
+- ETHNIC_CD is bound as passthrough per the steward determination of 14 April
+  and is limited to the Institutional Research census feed. It is excluded from
+  all RGSTR_NGT_* targets.
+- VISA_TYPE and I20_EXPIRE_DT remain unbound. Sessions referencing either will
+  continue to halt under VR-060.
+- SSN_LAST4 and EMAIL_ADDR are withdrawn from RGSTR_STG entirely. Reports built
+  on those columns will return no column rather than a masked column.
+
+Reconciliation counts from the parallel run of 17 April: 41,908 rows read,
+41,908 written, 0 rejected, 0 unbound. Job RGSTR_PAR_0439, rc=0000.
+
+Questions to Data Integration Group, extension on file.

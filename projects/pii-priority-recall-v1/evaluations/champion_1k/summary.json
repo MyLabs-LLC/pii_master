@@ -1,0 +1,130 @@
+{
+  "aggregate": {
+    "equal_corpus_macro_f2": 0.48345749382010117,
+    "equal_corpus_micro_f1": 0.38118396080534256,
+    "measurable_priority_gates": 55,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 55,
+    "worst_priority_recall": 0.9887766554433222
+  },
+  "arms": [
+    {
+      "artifact": "evaluations/champion_1k/4000_datax-dualjudge-evalset-1.32k.json",
+      "dataset": "4000_datax-dualjudge-evalset-1.32k",
+      "metrics": {
+        "docs_per_s": 4009.7901995145485,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 1,
+        "priority_point_passes": 1,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "f2230b76608d4d67bcbb34bf2c2eb16a",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/6589_govdocs2-dualjudge-eval20-3.53k.json",
+      "dataset": "6589_govdocs2-dualjudge-eval20-3.53k",
+      "metrics": {
+        "docs_per_s": 7928.694923016162,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 2,
+        "priority_point_passes": 2,
+        "worst_priority_recall": 0.9887766554433222
+      },
+      "mlflow_run_id": "1185cdcda71c45f1a94539c869e097d9",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/ai4privacy_pii_masking_eval_10k.json",
+      "dataset": "ai4privacy_pii_masking_eval_10k",
+      "metrics": {
+        "docs_per_s": 28498.950004605882,
+        "macro_f2": 0.49954980848358416,
+        "micro_f1": 0.3529093683011143,
+        "priority_measurable": 10,
+        "priority_point_passes": 10,
+        "worst_priority_recall": 0.9990925589836661
+      },
+      "mlflow_run_id": "0d6693a08b364ac5a99fa8773f436788",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/betterdataai_ner_silver_eval_10k.json",
+      "dataset": "betterdataai_ner_silver_eval_10k",
+      "metrics": {
+        "docs_per_s": 21218.529304032567,
+        "macro_f2": 0.23125036127913337,
+        "micro_f1": 0.202152525351274,
+        "priority_measurable": 4,
+        "priority_point_passes": 4,
+        "worst_priority_recall": 1.0
+      },
+      "mlflow_run_id": "2c091b433e654a6eb50eafbe5e84d4c7",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/nemotron_eval_6k.json",
+      "dataset": "nemotron_eval_6k",
+      "metrics": {
+        "docs_per_s": 12225.670839584463,
+        "macro_f2": null,
+        "micro_f1": null,
+        "priority_measurable": 0,
+        "priority_point_passes": 0,
+        "worst_priority_recall": null
+      },
+      "mlflow_run_id": "937db3e9d62a460eaaa1e7bb819c0bdb",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/openpii_pii_eval_38k.json",
+      "dataset": "openpii_pii_eval_38k",
+      "metrics": {
+        "docs_per_s": 18686.09814960974,
+        "macro_f2": 0.6297104771777984,
+        "micro_f1": 0.6613028187086194,
+        "priority_measurable": 9,
+        "priority_point_passes": 9,
+        "worst_priority_recall": 0.9997093656906197
+      },
+      "mlflow_run_id": "53225d63b61b448ca612f9ab619bd441",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/pii2_eval_30k.json",
+      "dataset": "pii2_eval_30k",
+      "metrics": {
+        "docs_per_s": 8913.173496912608,
+        "macro_f2": 0.49297973002649026,
+        "micro_f1": 0.20824377453219167,
+        "priority_measurable": 15,
+        "priority_point_passes": 15,
+        "worst_priority_recall": 0.9957805907172996
+      },
+      "mlflow_run_id": "3035d00a02e849b59e4490b35fdec934",
+      "model": "champion_1k"
+    },
+    {
+      "artifact": "evaluations/champion_1k/pii_holdout_20k.json",
+      "dataset": "pii_holdout_20k",
+      "metrics": {
+        "docs_per_s": 9371.514623933856,
+        "macro_f2": 0.5637970921334997,
+        "micro_f1": 0.4813113171335136,
+        "priority_measurable": 14,
+        "priority_point_passes": 14,
+        "worst_priority_recall": 0.9943502824858758
+      },
+      "mlflow_run_id": "08fcaf3d6cde4960b7f5464fc4eea548",
+      "model": "champion_1k"
+    }
+  ],
+  "model": "champion_1k",
+  "read_window_chars": 1000,
+  "workers": 32
+}

@@ -1,0 +1,28 @@
+DATA DICTIONARY — RTL_CUST.MBR_CONSENT_HIST (SECTION 11)
+Issue 1.1 | 03 NOV 2016 | Owner: Data Governance Office | Steward: the Records Custodian
+
+1. Grain: one row per member per consent type per state change. Rows are insert-only. UPDATE and DELETE are revoked from all application roles.
+
+2. Columns:
+
+   CONSENT_HIST_SK | NUMBER(12)   | NOT NULL | PK, sequence-assigned
+   MBR_SK          | NUMBER(12)   | NOT NULL | FK to MBR_MASTER
+   CONSENT_TYPE_CD | VARCHAR2(8)  | NOT NULL | Domain REF_CONSENT_TYPE, closed
+   CONSENT_STATE   | CHAR(1)      | NOT NULL | Granted / withdrawn / expired
+   EFF_TS          | TIMESTAMP(6) | NOT NULL | Instant of member action
+   CAPTURE_CHNL_CD | CHAR(4)      | NOT NULL | Domain REF_CAPTURE_CHANNEL
+   CAPTURE_STORE_NBR | NUMBER(5)  | NULL     | Populated for in-store capture only
+   CAPTURE_OPER_ID | VARCHAR2(10) | NULL     | Employee operator code, class R2
+   EVIDENCE_REF    | VARCHAR2(40) | NULL     | Pointer to imaged form or web session record
+   SUPERSEDED_FLG  | CHAR(1)      | NOT NULL | Set by trigger on insert of a later row
+   ETL_LOAD_TS     | TIMESTAMP(6) | NOT NULL |
+
+3. Current state is obtained from view V_MBR_CONSENT_CURR, which selects the maximum EFF_TS per member and consent type. Direct querying of the base table for current state is a known cause of misstatement and is not supported.
+
+4. CAPTURE_OPER_ID is restricted to roles RL_CUST_PII and RL_HR_AUDIT. It is excluded from every extract without exception.
+
+5. Retention: seven years from EFF_TS, or seven years from closure of the member record, whichever is later. Consent history is not purged by the loyalty purge job and is not subject to clause 6 of Section 4. Legal hold suspends purge entirely; holds are recorded in HOLD_REGISTER and released only by the Legal department.
+
+6. Downstream extracts: EXT-104 and EXT-107 consume V_MBR_CONSENT_CURR, not this table. Any consumer reading the base table must be registered and must implement its own supersession logic; two such consumers are registered at issue.
+
+7. Change control: additions to REF_CONSENT_TYPE require Privacy Officer approval and a corresponding update to this section within one business day of deployment.

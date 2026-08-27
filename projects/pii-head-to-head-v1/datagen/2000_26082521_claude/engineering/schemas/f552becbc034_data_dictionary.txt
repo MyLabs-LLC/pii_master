@@ -1,0 +1,69 @@
+DATA DICTIONARY EXCERPT — FORM DD-114 (REV 4.2)
+OFFICE OF THE UNIVERSITY REGISTRAR / RECORDS MANAGEMENT UNIT
+
+SECTION A — OBJECT IDENTIFICATION
+  Schema / table ........... SATURN.SPRIDEN_EXT
+  Platform ................. Oracle 12c, SIS production instance
+  Owning unit .............. Office of the University Registrar
+  Data steward ............. Associate Registrar for Records
+  Technical custodian ...... the Records Custodian, Enterprise Application Services
+  Effective term ........... 201640
+  Last reviewed ............ 2016-07-11
+
+SECTION B — COLUMN INVENTORY
+
+COLUMN NAME             TYPE           NULL  OPERATIONAL NOTE
+----------------------  -------------  ----  ---------------------------------
+PIDM                    NUMBER(8)      NO    Surrogate key. Never exposed
+                                             outside the SIS boundary.
+STUDENT_ID              VARCHAR2(9)    NO    Institution-assigned. Unique index.
+LAST_NAME               VARCHAR2(60)   NO    Tier 2. Masked in non-production.
+FIRST_NAME              VARCHAR2(60)   YES   Tier 2.
+MIDDLE_NAME             VARCHAR2(60)   YES   Tier 2.
+PREFERRED_FIRST_NAME    VARCHAR2(60)   YES   Display only; not used on
+                                             transcripts or diplomas.
+NATIONAL_ID_NUM         VARCHAR2(11)   YES   Tier 1. Column-level encryption.
+                                             Access by ticket only.
+BIRTH_DATE              DATE           YES   Tier 1. Used for match resolution.
+GENDER_CODE             CHAR(1)        YES   Validated against STVSEX.
+HOME_STREET_LINE1       VARCHAR2(75)   YES   Tier 2. Sourced from SPRADDR.
+HOME_CITY               VARCHAR2(50)   YES   Tier 2.
+HOME_STATE_CODE         CHAR(2)        YES   Tier 2.
+HOME_POSTAL_CODE        VARCHAR2(10)   YES   Tier 2. Drives residency audit.
+MOBILE_PHONE_NUM        VARCHAR2(20)   YES   Tier 2. Emergency notification feed.
+CAMPUS_EMAIL_ADDR       VARCHAR2(128)  NO    Provisioned at admit; not editable
+                                             by the student.
+DIRECTORY_SUPPRESS_IND  CHAR(1)        NO    Default 'N'. Governs release.
+RECORD_ACTIVITY_DATE    DATE           NO    Row-level audit stamp.
+
+SECTION C — ACCESS RESTRICTION
+  C.1  Tier 1 columns are excluded from all standard reporting roles. Grants are
+       issued to named service accounts only, with quarterly recertification by
+       the Associate Registrar for Records.
+  C.2  Tier 2 columns are released under the directory-information rules in the
+       annual FERPA notice. Rows carrying DIRECTORY_SUPPRESS_IND = 'Y' are
+       filtered at the view layer, not by the consuming application.
+  C.3  Ad hoc query access is provisioned through the registrar's data request
+       form and expires at the close of the requesting term.
+
+SECTION D — RETENTION
+  D.1  Active rows are retained for the life of the academic record.
+  D.2  NATIONAL_ID_NUM is purged seven years after final enrollment or degree
+       conferral, whichever is later; the column is set to NULL and the purge is
+       logged in the retention audit table.
+  D.3  Address and telephone columns are archived, not deleted, on separation.
+  D.4  Non-production refreshes carry masked values for all Tier 1 and Tier 2
+       columns; the mask job runs before the environment is released.
+
+SECTION E — DOWNSTREAM EXTRACTS
+  E.1  Nightly ODS load — all columns except NATIONAL_ID_NUM.
+  E.2  National Student Clearinghouse submission — STUDENT_ID, name columns,
+       BIRTH_DATE. Transmitted over SFTP.
+  E.3  IPEDS aggregation — counts only; no identifying columns leave the schema.
+  E.4  Emergency notification vendor — CAMPUS_EMAIL_ADDR, MOBILE_PHONE_NUM.
+       Refreshed weekly. Contract review due at renewal.
+
+SECTION F — APPROVALS
+  Prepared by ........ Data Analyst, Registrar Systems      Date __________
+  Reviewed by ........ the Records Custodian                Date __________
+  Approved by ........ University Registrar                 Date __________

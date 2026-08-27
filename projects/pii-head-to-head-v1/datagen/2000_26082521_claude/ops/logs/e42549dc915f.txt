@@ -1,0 +1,40 @@
+masking.conf — Customer Information System extract layer
+Environment: PRD
+Config revision: 2021-03-14T09:02:11Z
+Owner role: Data Steward, Revenue Systems
+
+1. SCOPE
+1.1 This file governs field-level masking applied by job group CIS-EXTRACT before delivery to the reporting warehouse.
+1.2 Any field not enumerated below is dropped at the extract boundary. Dropping is the default; masking is the exception.
+
+2. MASK CLASSES
+2.1 class.FULL = replace entire value with the literal string [MASKED]
+2.2 class.TOKEN = replace value with deterministic surrogate, prefix TKN_, scope = tenant
+2.3 class.LAST4 = retain trailing four characters, replace remainder with X
+2.4 class.NULLOUT = emit empty string, retain column position
+
+3. FIELD BINDINGS
+3.1 customer_full_name = class.FULL
+3.2 customer_first_name = class.FULL
+3.3 customer_last_name = class.FULL
+3.4 date_of_birth = class.NULLOUT
+3.5 national_id_number = class.TOKEN
+3.6 taxpayer_reference = class.TOKEN
+3.7 service_address_line_1 = class.FULL
+3.8 service_address_line_2 = class.FULL
+3.9 service_address_postcode = class.FULL
+3.10 mailing_address_line_1 = class.FULL
+3.11 primary_phone = class.LAST4
+3.12 alternate_phone = class.LAST4
+3.13 email_address = class.FULL
+3.14 bank_account_number = class.LAST4
+3.15 card_number_on_file = class.LAST4
+3.16 account_number = class.TOKEN
+3.17 meter_serial = passthrough
+3.18 tariff_code = passthrough
+3.19 premises_geo_zone = passthrough
+
+4. ENFORCEMENT
+4.1 Masking is applied in-stream. Unmasked values are not written to any intermediate file, staging table, or log target.
+4.2 A binding referencing an unknown field aborts the run with exit code 12.
+4.3 Changes to clauses 3.1 through 3.16 require sign-off from the Records Custodian and are effective at the next scheduled run only.

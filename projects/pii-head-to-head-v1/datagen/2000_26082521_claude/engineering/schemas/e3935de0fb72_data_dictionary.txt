@@ -1,0 +1,71 @@
+DATA DICTIONARY EXCERPT — FORM DD-114 (Rev. 03/2021)
+DIVISION OF PUBLIC HEALTH INFORMATICS / RECORDS MANAGEMENT UNIT
+COUNTY HEALTH DEPARTMENT
+
+SECTION I — INSTRUMENT IDENTIFICATION
+  1.1  Source System .............. CLIENT_REGISTRY (production instance)
+  1.2  Database Schema ........... CHD_CORE
+  1.3  Table of Record ........... MEMBER_MASTER
+  1.4  Excerpt Prepared By ....... the Data Steward, Health Informatics Unit
+  1.5  Reviewed and Certified By . the Records Custodian
+  1.6  Effective Date ............ 01 April 2021
+  1.7  Supersedes ................ Form DD-114 (Rev. 08/2019), in its entirety
+
+SECTION II — SCOPE AND CONSTRUCTION
+  2.1  This excerpt enumerates only those columns of the table of record which have been
+       designated Tier II (Restricted) or Tier III (Protected) under the Department's Data
+       Classification Directive. Columns designated Tier I (Internal) are omitted and shall
+       be obtained from the full dictionary maintained by the Informatics Unit.
+  2.2  Nothing in this excerpt shall be construed to authorize access to, or disclosure of,
+       any data element enumerated herein. Authorization is governed exclusively by Section IV.
+  2.3  Where a conflict arises between this excerpt and the physical schema as deployed, the
+       physical schema shall govern and the discrepancy shall be reported to the Data Steward
+       within five (5) business days of discovery.
+
+SECTION III — COLUMN INVENTORY
+
+  COLUMN NAME              DATA TYPE       NULL?     TIER   OPERATIONAL NOTE
+  -----------------------  --------------  --------  -----  ------------------------------------
+  MBR_SK                   BIGINT          NOT NULL  I      Surrogate key; system-generated
+  MBR_LAST_NAME            VARCHAR(60)     NOT NULL  III    Masked in all non-production copies
+  MBR_FIRST_NAME           VARCHAR(60)     NOT NULL  III    Masked in all non-production copies
+  MBR_MIDDLE_INIT          CHAR(1)         NULL      III    Optional at intake
+  MBR_DOB_DT               DATE            NOT NULL  III    Age band only in reporting layer
+  SSN_LAST4_TXT            CHAR(4)         NULL      III    Column-level encryption at rest
+  RES_ADDR_LINE_1_TXT      VARCHAR(120)    NULL      III    Standardized nightly; audit retained
+  RES_ADDR_LINE_2_TXT      VARCHAR(120)    NULL      III    Suppressed in geocoded extracts
+  RES_POSTAL_CD            VARCHAR(10)     NULL      II     Truncated to 3 digits downstream
+  PRIMARY_PHONE_NBR        VARCHAR(20)     NULL      III    Outreach use only; opt-out honored
+  EMAIL_ADDR_TXT           VARCHAR(254)    NULL      III    Notification channel; consent-gated
+  MEDICAID_CASE_NBR        VARCHAR(20)     NULL      III    Reconciled monthly against State file
+  CLINIC_MRN               VARCHAR(15)     NULL      III    Cross-reference to clinical system
+  ELIG_START_DT            DATE            NOT NULL  I      Drives program enrollment logic
+  ELIG_END_DT              DATE            NULL      I      Null denotes active enrollment
+  CONSENT_FLG              CHAR(1)         NOT NULL  II     Default 'N'; governs Section VI
+  REC_CREATE_TS            TIMESTAMP       NOT NULL  I      Immutable
+  REC_UPDATE_TS            TIMESTAMP       NOT NULL  I      Maintained by trigger
+
+SECTION IV — ACCESS RESTRICTION
+  4.1  Tier III columns are readable solely through the role CHD_PHI_READ, membership in which
+       requires a completed Confidentiality Undertaking on file with the Records Custodian and
+       annual re-attestation thereafter.
+  4.2  Direct query access to the table of record is prohibited for all analytic personnel;
+       such personnel shall be provisioned against the governed view V_MEMBER_ANALYTIC.
+  4.3  All access, whether successful or denied, is logged and reviewed quarterly.
+
+SECTION V — RETENTION AND DISPOSITION
+  5.1  Records are retained seven (7) years following the value of ELIG_END_DT, or, where that
+       column is null, seven (7) years following the last date of service.
+  5.2  Upon expiry, Tier III columns are overwritten in place; the surrogate key and enrollment
+       dates are retained indefinitely for statistical continuity.
+  5.3  Litigation holds suspend all disposition until released in writing.
+
+SECTION VI — DOWNSTREAM EXTRACTS
+  6.1  EXT_STATE_IMM_WEEKLY — transmits name, date-of-birth and postal columns under the
+       standing data-sharing agreement; requires CONSENT_FLG = 'Y'.
+  6.2  EXT_OUTREACH_MONTHLY — transmits contact columns only; opt-outs excluded at source.
+  6.3  EXT_EPI_QUARTERLY — de-identified; all Tier III columns suppressed or generalized.
+
+SECTION VII — CERTIFICATION
+  Signature, the Data Steward .............................  Date ..............
+  Signature, the Records Custodian ........................  Date ..............

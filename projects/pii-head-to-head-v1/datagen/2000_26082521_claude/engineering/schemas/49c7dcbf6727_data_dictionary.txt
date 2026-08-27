@@ -1,0 +1,26 @@
+DATA DICTIONARY — SECTION 3: DEMOGRAPHIC AND IDENTITY DOMAINS
+Student Records System, Release 4.2
+
+3.1 Scope and conventions
+
+This section documents the columns in which identity and demographic attributes are recorded, together with their datatypes, nullability, and the operational rules that govern their use. Datatypes are stated as declared in the production instance; where a column has been widened since the prior release the change is noted in the operational text rather than in a separate change column. Nullability is stated as enforced by the database, not as enforced by the entry forms, and the two differ in several places by design: the forms require values that the database permits to be absent so that conversion and batch loads can complete without violating constraints.
+
+3.2 Identity columns
+
+STDNT_PIDM, NUMBER(8), NOT NULL, is the internal key throughout the system and appears in this section only for completeness. STDNT_ID_NBR, VARCHAR2(9), NOT NULL, unique, is the external identifier; it is generated at record creation and is changed only by the identity remediation procedure, which writes the prior value to SRS_ID_CHG_LOG and cascades through eleven dependent tables. SSN_NBR, VARCHAR2(9), NULL, is stored unformatted and is subject to the restrictions described in 3.5. NAME_PREFIX_CDE and NAME_SUFFIX_CDE, VARCHAR2(4), NULL, are validated but are omitted from all extracts other than the diploma file. LEGAL_LAST_NM and LEGAL_FIRST_NM, VARCHAR2(30), NOT NULL, hold the name of record; LEGAL_MIDL_NM, VARCHAR2(30), NULL, may hold an initial without a period. PREF_FIRST_NM, VARCHAR2(30), NULL, is student-maintained and is used for class rosters and correspondence only. PRIOR_LAST_NM, VARCHAR2(30), NULL, is populated by the name change procedure and is required for the degree verification response.
+
+3.3 Demographic columns
+
+BIRTH_DT, DATE, NULL, is used for identity matching and for federal age reporting. GNDR_CDE, CHAR(1), NULL, permits M, F, and N. ETHN_CDE, VARCHAR2(2), NULL, is student-declared and may not be inferred, derived, or defaulted by any process; the load programs that formerly defaulted it were withdrawn in the prior release. CTZN_CDE, VARCHAR2(2), NULL, and VISA_TYPE_CDE, VARCHAR2(2), NULL, are maintained by the international office and are read-only to the registrar. MRTL_STAT_CDE, VARCHAR2(1), NULL, is retained for financial aid packaging and is not otherwise referenced.
+
+3.4 Retention
+
+Identity and demographic columns are components of the permanent academic record and are retained without term under the state general records retention schedule. Two exceptions apply. SSN_NBR is purged sixty months after the last aid or tax reporting event, by a quarterly job whose log is reviewed by the Records Custodian. Rows for applicants who never enrolled are purged in their entirety after five years of inactivity.
+
+3.5 Access restriction
+
+SSN_NBR and BIRTH_DT are the only columns in this section classified as restricted. SELECT on either is available solely through role SRS_RESTRICTED_R, which is granted to named accounts on written approval, reviewed each September, and logged at the statement level. No reporting view, extract definition, or departmental snapshot may reference either column; requests for identity matching are satisfied by the match service, which accepts a candidate value and returns only a confidence code.
+
+3.6 Downstream extracts
+
+Four scheduled extracts read this section. The enrollment reporting file carries identity, birth date, and enrollment status under a data exchange agreement and is transmitted by secure file transfer. The directory file carries name columns only, and only for rows not suppressed. The card office load carries identity columns and the preferred first name. The institutional research load carries demographic codes with the birth date reduced to a year value at the point of extraction.

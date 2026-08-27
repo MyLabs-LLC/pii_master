@@ -1,0 +1,7 @@
+VALIDATION EXCEPTION DIGEST — CYCLE 1998-11-14 — JOB ESC0410P — SEQ 03
+
+The digest covers the 1,304 rows held from the escrow warehouse feed and is circulated to the branch supervisors and to the Records Custodian. It is a listing of column names and counts; the exception dataset itself carries surrogate keys and rule identifiers only, and the underlying values are neither printed here nor displayed on the correction screen, which presents restricted columns as <MASK> pending release by the vault.
+
+The largest category, 1,204 rows, arises on BORROWER_DOB under rule V-002, century indeterminate. These are branch-entered records still held in a six-digit picture clause, and the pivot at 30 assigns them to a century the edit routine will not accept without confirmation. The correction path is the same as in the two preceding cycles: the branch confirms the century from the file jacket and re-keys through the maintenance transaction, which writes a full eight-digit value to the master.
+
+Rule V-017, modulus failure on WIRE_ABA, accounts for 86 rows. Rule V-023, length failure on ESCROW_TRUST_ACCT, accounts for 14 rows, all originating from the same conversion batch loaded on 1998-10-27. No rows failed on GRANTOR_NAME, GRANTEE_NAME or APN in this cycle. Held rows do not enter the target table and are re-presented automatically on the next run once maintenance has been applied; rows held for more than five cycles are reported separately at month end.

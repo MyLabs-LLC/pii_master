@@ -1,0 +1,20 @@
+MEMORANDUM
+
+TO:      Billing Office Supervisor
+FROM:    Data Governance Analyst
+DATE:    3 May 2021
+SUBJECT: Dictionary addendum — GUARANTOR_CONTACT
+
+1. The following columns are added to the dictionary with effect from the May maintenance window: GTR_CONTACT_SK, GTR_ACCT_NO, GTR_LAST_NAME, GTR_FIRST_NAME, GTR_RELATIONSHIP_CD, GTR_PHONE_NO, GTR_ALT_PHONE_NO, GTR_EMAIL_ADDR, GTR_MAIL_ADDR_LINE_1, GTR_MAIL_POSTAL_CD, CONTACT_PREF_CD, DO_NOT_CALL_FLG, EFFECTIVE_FROM_DT, EFFECTIVE_TO_DT.
+
+2. All columns are VARCHAR2 except GTR_CONTACT_SK (NUMBER(18)), the two date columns (DATE), and the two flag columns (CHAR(1)).
+
+3. GTR_CONTACT_SK, GTR_ACCT_NO and EFFECTIVE_FROM_DT are NOT NULL. GTR_RELATIONSHIP_CD is NOT NULL and reference-coded. All remaining columns are nullable.
+
+4. Access to the name, telephone, electronic mail and mailing address columns is restricted to the billing office role group. Read access is not extended to the reporting analyst role group under any circumstance.
+
+5. DO_NOT_CALL_FLG must be evaluated by the outbound dialer feed before any row is released. Rows carrying the flag are suppressed at source rather than filtered downstream.
+
+6. Retention follows the parent account. Contact rows are closed by populating EFFECTIVE_TO_DT and are purged with the account record.
+
+7. No extract currently reads this table. Requests are directed to the Records Custodian.

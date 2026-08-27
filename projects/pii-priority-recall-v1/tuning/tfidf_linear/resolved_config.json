@@ -1,0 +1,76 @@
+{
+  "best_config": {
+    "generic_target_index": 4,
+    "priority_target_index": 5,
+    "score_mode": "top6",
+    "threshold_multiplier": 1.0
+  },
+  "best_mlflow_run_id": "3ffd7b790240497eb964c4f203cf0bc4",
+  "best_trial": 133,
+  "exact_metrics": {
+    "equal_corpus_macro_f2": 0.4595891721617253,
+    "equal_corpus_micro_f1": 0.470511059232187,
+    "measurable_priority_gates": 54,
+    "n_arms": 8,
+    "n_complete_arms": 5,
+    "priority_conclusive_passes": 0,
+    "priority_failures": 0,
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000693962526024
+  },
+  "family": "tfidf_linear",
+  "fast_metrics": {
+    "equal_corpus_macro_f2": 0.4607636897265285,
+    "equal_corpus_micro_f1": 0.470511059232187,
+    "measurable_priority_gates": 54,
+    "per_corpus": [
+      {
+        "dataset": "16000_datax-dualjudge-trainset-5.37k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "26095_govdocs2-dualjudge-train80-14.25k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "ai4privacy_pii_masking_train_42k",
+        "macro_f2": 0.5502226064562514,
+        "micro_f1": 0.4588227117937313
+      },
+      {
+        "dataset": "betterdataai_ner_silver_train_41k",
+        "macro_f2": 0.16443245907244713,
+        "micro_f1": 0.41632101861676474
+      },
+      {
+        "dataset": "nemotron_train_22k",
+        "macro_f2": null,
+        "micro_f1": null
+      },
+      {
+        "dataset": "openpii_pii_train_155k",
+        "macro_f2": 0.6672355629346559,
+        "micro_f1": 0.7395307886993973
+      },
+      {
+        "dataset": "pii2_train_150k",
+        "macro_f2": 0.382480822911047,
+        "micro_f1": 0.23883575993496753
+      },
+      {
+        "dataset": "pii_trainset_100k",
+        "macro_f2": 0.5394469972582409,
+        "micro_f1": 0.4990450171160744
+      }
+    ],
+    "priority_point_passes": 54,
+    "worst_priority_recall": 0.9000693962526024
+  },
+  "idf_power": 0.65,
+  "model_dir": "models/tfidf_linear",
+  "n_trials": 300,
+  "validation_read_errors": 0,
+  "validation_rows": 53110
+}

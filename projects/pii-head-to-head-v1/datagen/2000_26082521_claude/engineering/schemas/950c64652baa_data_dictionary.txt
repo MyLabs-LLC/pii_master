@@ -1,0 +1,55 @@
+SHARE AND LOAN SUBSIDIARY TABLES — DATA DICTIONARY EXCERPT
+Supplement to the Member Master documentation
+
+SHARE ACCOUNT TABLE (SHRACT)
+--------------------------------------------------------------
+SHR_KEY              DEC(9)      NOT NULL   Primary key, system assigned
+MBR_KEY              DEC(9)      NOT NULL   Foreign key to MBRMST
+SHR_SUFFIX_CD        CHAR(2)     NOT NULL   Share type suffix
+SHR_ACCT_NBR         CHAR(13)    NOT NULL   Restricted; see note 1
+SHR_OPEN_DATE        DATE        NOT NULL
+SHR_CLOSE_DATE       DATE        NULL
+SHR_CURR_BAL         DEC(11,2)   NOT NULL   Default 0.00
+SHR_AVAIL_BAL        DEC(11,2)   NOT NULL
+SHR_DIV_RATE_CD      CHAR(3)     NOT NULL
+SHR_HOLD_AMT         DEC(11,2)   NULL
+SHR_LAST_ACT_DATE    DATE        NULL       Drives dormancy processing
+SHR_DORMANT_FLAG     CHAR(1)     NOT NULL   Default 'N'
+SHR_ESCHEAT_DATE     DATE        NULL       Set by the abandoned property job
+
+LOAN ACCOUNT TABLE (LOANMST)
+--------------------------------------------------------------
+LN_KEY               DEC(9)      NOT NULL   Primary key
+MBR_KEY              DEC(9)      NOT NULL   Foreign key to MBRMST
+LN_ACCT_NBR          CHAR(13)    NOT NULL   Restricted; see note 1
+LN_TYPE_CD           CHAR(3)     NOT NULL
+LN_ORIG_AMT          DEC(11,2)   NOT NULL
+LN_CURR_BAL          DEC(11,2)   NOT NULL
+LN_RATE              DEC(6,4)    NOT NULL
+LN_TERM_MONTHS       DEC(3)      NOT NULL
+LN_FIRST_PMT_DATE    DATE        NOT NULL
+LN_MATURITY_DATE     DATE        NOT NULL
+LN_DELINQ_DAYS       DEC(3)      NOT NULL   Default 0
+LN_CHARGEOFF_DATE    DATE        NULL
+LN_COLLATERAL_DESC   VARCHAR(50) NULL
+LN_APPLICANT_SSN     CHAR(9)     NOT NULL   Restricted; see note 2
+LN_COAPP_SSN         CHAR(9)     NULL       Restricted; see note 2
+LN_CREDIT_SCORE      DEC(3)      NULL       Restricted; see note 3
+
+CARD TABLE (CARDMST)
+--------------------------------------------------------------
+CARD_KEY             DEC(9)      NOT NULL   Primary key
+MBR_KEY              DEC(9)      NOT NULL   Foreign key to MBRMST
+CARD_PAN             CHAR(16)    NOT NULL   Restricted; see note 4
+CARD_EXP_DATE        CHAR(4)     NOT NULL   YYMM
+CARD_STATUS_CD       CHAR(1)     NOT NULL
+CARD_ISSUE_DATE      DATE        NOT NULL
+CARD_EMBOSS_NAME     CHAR(26)    NOT NULL
+
+NOTES
+1. Account number columns are displayed in full only on teller and member service inquiry screens. All printed reports outside the branch network truncate to the trailing four positions.
+2. Applicant identification columns are readable by the Lending Officer, the Compliance Officer and the credit bureau interface batch identity. They are omitted from the loan performance extract sent to the data processing cooperative.
+3. Credit score is retained twenty-five months from LN_FIRST_PMT_DATE, then blanked in place by the monthly housekeeping job. It is never included in any extract.
+4. The card number column is held in a separate physical library with its own object authority list. Only the card production interface and the fraud analyst group hold read authority. Retention is limited to eighteen months past CARD_EXP_DATE.
+
+Retention for SHRACT and LOANMST rows follows the member master schedule: seven years past closure or charge-off, whichever is later, after which rows are written to the archive tape series and the restricted columns are blanked in any retained summary.

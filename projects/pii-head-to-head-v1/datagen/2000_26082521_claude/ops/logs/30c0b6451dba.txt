@@ -1,0 +1,41 @@
+MEMORANDUM
+
+TO:      Controller; Manager, Payroll Systems; Manager, Branch Operations
+FROM:    Records Custodian, Data Services Group
+DATE:    11 January 1999
+REF:     DSG-99-0021
+SUBJECT: ETL run summary, cycle 98-52 through 99-01
+
+Consolidated output for the four production loads is set out below. All runs completed. Two carry qualifying notes.
+
+  JOB     STEP     START             END               STATUS   READ      INSERT    UPDATE   REJECT
+  ------  -------  ----------------  ----------------  -------  --------  --------  -------  ------
+  CM4470  STEP030  99-01-04 23:40    99-01-05 00:31    OK        18,806    1,102    17,573     131
+  PL2210  STEP010  99-01-05 01:02    99-01-05 01:44    OK        44,915    3,880    40,902     133
+  TC8801  STEP020  99-01-05 02:00    99-01-05 03:57    OK-W     127,340   12,006   115,201     133
+  PY6600  STEP040  99-01-05 04:10    99-01-05 04:52    OK-W      31,447      904    30,410     133
+
+Columns loaded per job:
+
+  CM4470  CANDMAST     CAND_LAST_NM, CAND_FIRST_NM, CAND_MID_INIT, CAND_TAX_ID,
+                       CAND_DOB, CAND_ADDR_LINE_1, CAND_ADDR_LINE_2, CAND_CITY_NM,
+                       CAND_STATE_CD, CAND_POSTAL_CD, CAND_HOME_PHONE_NBR,
+                       CAND_EMAIL_ADDR, WORK_AUTH_STATUS_CD
+  PL2210  PLACEMENT    PLCMT_ID, CLIENT_ACCT_NBR, CAND_TAX_ID, BILL_RATE_AMT,
+                       PAY_RATE_AMT, ASSIGN_START_DT, ASSIGN_END_DT
+  TC8801  TIMECARD     TC_WEEK_END_DT, CAND_TAX_ID, HOURS_REG_QTY, HOURS_OT_QTY,
+                       APPROVER_ROLE_CD
+  PY6600  PAYDIST      CAND_TAX_ID, PAY_ACCT_REF, PAY_ROUTING_NBR, W4_ALLOW_CNT,
+                       GARNISH_ORDER_REF, NET_PAY_AMT
+
+Qualifying notes.
+
+TC8801 ran two hours fifty-seven minutes against a standard window of ninety minutes. Cause is the December catch-up volume, not a defect. The job wrote 127,340 rows, the highest single-run count recorded on this table. No tuning action is proposed before the February window.
+
+PY6600 posted 133 rejects, identical in count to PL2210 and TC8801. The rejects are the same population, propagated forward: candidates whose CAND_TAX_ID token failed issuance at CM4470 on 04 January carry no valid key into the downstream tables. Clearing the CM4470 suspense clears all three. Payroll Systems is not to key these rows manually into PAYDIST.
+
+Masking. MASKCFG.DAT revision 6 was in force for all four runs. PAY_ACCT_REF, PAY_ROUTING_NBR and GARNISH_ORDER_REF rendered masked in all operator listings and in the archived job output. Operators reported that reconciliation of PY6600 against the bank return file could not be performed at the console. That is the intended behaviour. Reconciliation is performed by Payroll Systems against the token register.
+
+Year change. No CCYY defects were recorded in the 98-52 to 99-01 transition on CAND_DOB, ASSIGN_END_DT or TC_WEEK_END_DT. The pivot logic issued 47 rule-13 warnings, all on historical rows loaded from the 1996 archive and none on current-cycle input.
+
+Archive retention for these four runs is set at seven years per the schedule. Job output listings are held on tape volume set 99-A.

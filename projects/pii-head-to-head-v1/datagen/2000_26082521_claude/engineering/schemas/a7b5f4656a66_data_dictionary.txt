@@ -1,0 +1,101 @@
+DATA DICTIONARY — STUDENT MEMBER MASTER
+SUPPLEMENT 2 OF 5: PERSON-LEVEL COLUMNS
+Issued by the Office of the University Registrar, Records Management Unit
+Document control no. RMU-DD-2016-02 | Supersedes RMU-DD-2015-07
+
+1. SCOPE
+
+This supplement documents the person-level columns of STUDENT.MEMBER_MASTER.
+Enrollment, term, and academic-history columns are documented in Supplements 3
+and 4. Entries are ordered as they appear in the physical table.
+
+2. FIELD ENTRIES
+
+2.1  MEMBER_KEY
+     Type: NUMBER(10)   Null: NO
+     Primary key, populated from sequence MEMBER_SEQ. Stable across name and
+     status changes. Cited in all defect tickets in place of any identifying
+     column.
+
+2.2  UNIVERSITY_ID
+     Type: VARCHAR2(9)  Null: NO
+     Printed on the campus card and used for in-person service desk lookup.
+     Unique. Not reissued after separation.
+
+2.3  LEGAL_LAST_NAME / LEGAL_FIRST_NAME / LEGAL_MIDDLE_NAME
+     Type: VARCHAR2(60) Null: NO / YES / YES
+     Source of record for transcripts, diplomas, and enrollment certification.
+     Updated only on receipt of documentation at the service counter; the
+     web self-service channel cannot write to these columns.
+
+2.4  CHOSEN_FIRST_NAME
+     Type: VARCHAR2(60) Null: YES
+     Added for term 201620 under the chosen-name policy. Populated by student
+     self-service. Propagates to the learning management system and the class
+     roster view; does not propagate to the Clearinghouse extract.
+
+2.5  SSN_ENCRYPTED
+     Type: RAW(64)      Null: YES
+     Restricted Tier 1. Stored under transparent data encryption. Decryption is
+     available to two service accounts, both used by scheduled jobs; no
+     interactive session holds the decrypt grant. Every access writes to
+     AUDIT_TIER1_ACCESS.
+
+2.6  DATE_OF_BIRTH
+     Type: DATE         Null: YES
+     Restricted Tier 1. Required for the Clearinghouse and veteran benefits
+     files. Excluded from all self-service reporting subject areas.
+
+2.7  PERM_ADDR_LINE1 / PERM_ADDR_LINE2 / PERM_CITY / PERM_STATE / PERM_ZIP
+     Types: VARCHAR2(75), VARCHAR2(75), VARCHAR2(50), CHAR(2), VARCHAR2(10)
+     Null: YES on all five.
+     Denormalized copy of the current active row in MEMBER_ADDRESS. Refreshed by
+     the nightly address-sync job. Downstream consumers are directed to the
+     normalized table; the denormalized copy exists for counter-service response
+     time and is not authoritative.
+
+2.8  MAIL_ADDR_LINE1 / MAIL_CITY / MAIL_STATE / MAIL_ZIP
+     Same types as 2.7. Null: YES.
+     Falls back to the permanent address when no active mailing row exists.
+
+2.9  PRIMARY_PHONE / ALT_PHONE
+     Type: VARCHAR2(20) Null: YES
+     Format is not enforced at the column level; the cleansing routine runs
+     monthly and writes exceptions to a review queue worked by the Records
+     Custodian.
+
+2.10 CAMPUS_EMAIL / PERSONAL_EMAIL
+     Type: VARCHAR2(128) Null: NO / YES
+     PERSONAL_EMAIL is collected at application and retained for admitted
+     applicants who do not enroll. It is not used for official notice.
+
+2.11 FERPA_BLOCK_IND
+     Type: CHAR(1)      Null: NO   Default: 'N'
+     Set 'Y' on written request. Once set, the row is withheld from directory
+     inquiries, degree verification, and the printed commencement program.
+
+2.12 LAST_ENROLLED_TERM / RECORD_STATUS / UPDATE_TIMESTAMP
+     Types: VARCHAR2(6), CHAR(1), TIMESTAMP. Null: YES / NO / NO.
+     RECORD_STATUS drives the retention clock described in Section 4.
+
+3. ACCESS
+
+Tier 1 columns (2.5, 2.6) are excluded from the reporting views and from the
+data warehouse load. Tier 2 columns (2.3, 2.7 through 2.10) are available to the
+registrar staff role and to advising staff for assigned students only.
+Recertification is performed each September.
+
+4. RETENTION
+
+Records with RECORD_STATUS = 'S' (separated, no degree) are purged of Tier 1
+columns after five years. Degree-conferred records retain the academic core
+permanently; Tier 1 and contact columns are purged seven years after
+conferral. Purges are executed by the quarterly retention job and countersigned
+by the University Registrar.
+
+5. EXTRACTS
+
+Nightly to the operational data store; weekly to the Clearinghouse; term-based
+to the state higher education coordinating board (aggregate only); monthly to
+the alumni system on degree conferral. The alumni extract carries name, mailing
+address, and personal email; it does not carry SSN_ENCRYPTED or DATE_OF_BIRTH.

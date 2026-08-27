@@ -1,0 +1,54 @@
+METROPOLITAN TRANSIT AUTHORITY
+OFFICE OF INFORMATION SYSTEMS — DATA ADMINISTRATION UNIT
+
+DATA DICTIONARY EXCERPT
+SUBJECT AREA ......... Regional Farecard Program — Registered Rider Master
+PHYSICAL TABLE ....... RFCP.RIDER_MASTER
+DBMS ................. Oracle 9i Release 2, production instance RFCP1P
+DOCUMENT CONTROL NO .. DD-RFCP-011, Revision 6
+EFFECTIVE ............ 12 July 2004
+CUSTODIAN OF RECORD .. the Records Custodian, Data Administration Unit
+CLASSIFICATION ....... Restricted — Category II (Personally Identifiable)
+
+COLUMN NAME              DATA TYPE       NULL?    OPERATIONAL AND CUSTODIAL NOTES
+------------------------ --------------- -------- -------------------------------------------------------------
+RIDER_SK                 NUMBER(12)      NOT NULL Surrogate key. Never printed on card stock or correspondence.
+RIDER_PUBLIC_REF         VARCHAR2(16)    NOT NULL Quoted to the registrant only after verification per SOP 14-3.
+SURNAME_TXT              VARCHAR2(40)    NOT NULL Restricted. Role RFCP_SVC_REP and above. Access is logged.
+GIVEN_NAME_TXT           VARCHAR2(40)    NOT NULL Restricted as above. Keyed from the signed registration form.
+MIDDLE_INIT_CHAR         CHAR(1)         NULL     Optional. Ignored by the nightly duplicate-detection job.
+BIRTH_DT                 DATE            NOT NULL Restricted. Held solely to adjudicate reduced-fare status.
+TAXPAYER_ID_ENC          RAW(32)         NULL     Encrypted. Populated only where statute compels collection.
+RESIDENCE_ADDR_1_TXT     VARCHAR2(60)    NOT NULL Restricted. Lawful use is card mailing and statutory notice.
+RESIDENCE_ADDR_2_TXT     VARCHAR2(60)    NULL     Continuation line. Restriction as for the preceding column.
+POSTAL_CD                VARCHAR2(10)    NOT NULL Released to Planning in aggregated bands only.
+HOME_PHONE_TXT           VARCHAR2(14)    NULL     Restricted. Outbound dialling for service disruption only.
+EMAIL_ADDR_TXT           VARCHAR2(80)    NULL     Restricted. No transfer to any promotional list.
+FARECARD_SERIAL_ENC      RAW(32)         NOT NULL Encrypted. Cleartext on request to Fare Systems Engineering.
+BANK_TOKEN_TXT           VARCHAR2(24)    NULL     Vendor token only. No instrument data is held by this office.
+ELIG_CATEGORY_CD         CHAR(2)         NOT NULL Domain held in RFCP.ELIG_CODE. Drives gate fare selection.
+ELIG_EXPIRY_DT           DATE            NULL     Null where the category does not lapse. Re-rated nightly.
+ACCT_STATUS_CD           CHAR(1)         NOT NULL Domain A, S, C, L. Closure starts the retention clock.
+ACCT_CLOSE_DT            DATE            NULL     Null while open. Anchors disposition for the entire row.
+LAST_MAINT_USER_ID       VARCHAR2(8)     NOT NULL Operator sign-on. An audit attribute, not a rider attribute.
+LAST_MAINT_TS            DATE            NOT NULL Set by trigger TR_RIDER_MASTER_AUD. Not application-writable.
+
+NOTE 1 — ACCESS. Columns designated Restricted above are readable only by personnel
+holding a current need-to-know determination issued by the Records Custodian, and
+only through the roles enumerated in the access matrix appended to this document at
+Schedule A. Direct query privileges against the base table are withheld from all
+personnel other than the assigned database administrator; all other access shall be
+effected through the secured views prefixed VW_RIDER_.
+
+NOTE 2 — RETENTION. The row and all columns comprising it shall be retained for seven
+(7) years measured from the value carried in ACCT_CLOSE_DT, after which the row shall
+be purged by scheduled job PURGE_RIDER_MASTER in accordance with the Authority
+Records Retention Schedule, item GS-4.2. Where ACCT_CLOSE_DT remains null the
+retention period shall not be deemed to have commenced.
+
+NOTE 3 — DOWNSTREAM EXTRACTS. Restricted columns are suppressed from the monthly
+ridership extract EXT-RIDERSHIP-MTHLY and from all extracts furnished to the
+Planning Department. They are released, in the narrowest form sufficient for the
+purpose, to the card personalisation extract EXT-CARDFUL-WKLY, which is transmitted
+to the fulfilment contractor under the confidentiality provisions of the governing
+contract. No further onward disclosure is authorised.

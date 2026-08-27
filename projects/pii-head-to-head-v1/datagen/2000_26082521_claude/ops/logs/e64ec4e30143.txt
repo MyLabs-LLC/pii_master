@@ -1,0 +1,43 @@
+* MERIDIAN FREIGHT SYSTEMS LTD
+* MASKING CONTROL FILE — MSKCTL.CFG
+* NODE: CDWP01     LAST WRITE: 27-FEB-1998 17:42:09
+* READ BY: TOKGEN v2.1, MSKAPPLY v1.4
+* -------------------------------------------------------------
+
+[GLOBAL]
+1  DEFAULT_ACTION      = SUPPRESS
+2  FILL_CHARACTER      = *
+3  TOKEN_PREFIX        = TKN
+4  AUDIT_LOG           = /prod/cdw/log/mskctl.aud
+5  FAIL_ON_UNKNOWN_FLD = Y
+
+[COLUMN_ACTIONS]
+6  CONTACT_SURNAME         : TOKENISE  LEN=30 CLASS=NAME
+7  CONTACT_GIVEN_NAME      : TOKENISE  LEN=20 CLASS=NAME
+8  CONTACT_MIDDLE_INITIAL  : SUPPRESS
+9  DELIVERY_ADDR_LINE_1    : SUPPRESS
+10 DELIVERY_ADDR_LINE_2    : SUPPRESS
+11 DELIVERY_POSTAL_CODE    : PARTIAL   KEEP=3 SIDE=LEFT
+12 CONTACT_TELEPHONE_NO    : NULLIFY
+13 CONTACT_FACSIMILE_NO    : NULLIFY
+14 CONTACT_EMAIL_ADDRESS   : NULLIFY
+15 DRIVER_LICENCE_NO       : TOKENISE  LEN=15 CLASS=IDENT
+16 SIGNATORY_BIRTH_DATE    : GENERALISE KEEP=CCYY
+17 NATIONAL_INS_NO         : DENY
+18 BANK_SORT_CODE          : DENY
+19 BANK_ACCOUNT_NO         : DENY
+
+[CLASS_DEFS]
+20 NAME  : reversal permitted, custodian approval, log every call
+21 IDENT : reversal permitted, custodian approval, log every call
+22 DENY  : extract aborts at step level; no surrogate is minted
+
+[EXCEPTIONS]
+23 No exception entries are registered at this revision.
+
+* -------------------------------------------------------------
+* CHANGE HISTORY
+* 27-FEB-1998  clause 19 added (BANK_ACCOUNT_NO), action DENY
+* 11-FEB-1998  clause 16 changed GENERALISE from KEEP=CCYYMM
+* 06-JAN-1998  file created at rev 1
+* END MSKCTL.CFG

@@ -1,0 +1,23 @@
+VALIDATION ERROR DIGEST — QUEUE ERRQ_0442
+GENERATED 2004-10-14 03:02:11 CDT | TOTAL ROWS IN QUEUE: 729 | DISPOSITION DUE: 2004-10-18
+
+SEVERITY 1 — LOAD BLOCKING — 41 ROWS
+[x] ERR-1004 — Column SSN present but token generation failed. Rows: 12. Cause: vault timeout at 02:19:44. Action: rerun TOK_A for affected PIDM set. Owner: ETL operations.
+[x] ERR-1011 — Column BIRTH_DATE failed derivation to AGE_BAND; source value out of accepted range. Rows: 9. Values suppressed in this digest per masking configuration revision 7. Action: refer to source correction queue.
+[ ] ERR-1027 — Column PIDM null at target. Rows: 20. Cause: orphaned SPRADDR rows with no matching SPRIDEN parent. Action: the Records Custodian to confirm deletion or hold.
+
+SEVERITY 2 — LOADED WITH FLAG — 388 ROWS
+[x] ERR-2003 — Column STATE_CODE not in reference table REF_STATE. Rows: 47. Action: expand reference table for territory codes.
+[x] ERR-2009 — Column ZIP fails format rule five-digit or nine-digit. Rows: 168. Action: return to source; do not correct in warehouse.
+[ ] ERR-2014 — Column ETHNIC_CODE null where CITIZEN_IND populated. Rows: 121. Action: IPEDS reporting impact. Notify the Institutional Research liaison.
+[ ] ERR-2021 — Column EMERGENCY_CONTACT_NAME populated without EMERGENCY_CONTACT_PHONE. Rows: 52. Action: informational only; no correction required this cycle.
+
+SEVERITY 3 — INFORMATIONAL — 300 ROWS
+[x] ERR-3001 — Column MIDDLE_INITIAL null. Rows: 244. No action.
+[x] ERR-3006 — Column PRIOR_LAST_NAME populated; no target column in this release. Rows: 56. Action: log for mapping rule set MAP_REG_V8.
+
+CLOSING CHECKLIST
+[x] Confirm digest contains no source values in any column position. Verified by the Data Steward at 03:14 CDT.
+[ ] Confirm severity 1 count reduced to 0 before run 0443 at 02:00:00 CDT on 2004-10-15.
+[ ] Confirm queue purge job PRG_ERRQ retains this queue through 2004-11-13.
+[ ] File digest with checklist for job REG_ETL_NIGHTLY_0442.

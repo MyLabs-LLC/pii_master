@@ -1,0 +1,47 @@
+VALIDATION EXCEPTION DIGEST — WEEK 28, 2021
+Period 2021-07-12 through 2021-07-18
+Prepared by the Data Quality Analyst for the Records Custodian
+Reference: quarantine store achd-etl-qtn, retention 90 days
+
+  1. VOLUME
+     1.1  Rows processed ........................ 358,940
+     1.2  Rows loaded ........................... 344,712
+     1.3  Rows quarantined ...................... 13,489
+     1.4  Rows rejected ......................... 739
+     1.5  Quarantine rate ....................... 3.76 pct (prior week 3.41 pct)
+
+  2. TOP EXCEPTIONS BY FIELD
+     2.1  primary_phone .............. 4,918 .... format, VAL-117
+     2.2  street_address_1 ........... 3,004 .... required-not-null, VAL-109
+     2.3  patient_last_name .......... 1,877 .... required-not-null, VAL-101
+     2.4  date_of_birth .............. 1,140 .... required-not-null, VAL-103
+     2.5  email_address ................. 902 .... format, VAL-121
+     2.6  race_code ..................... 811 .... domain, VAL-133
+     2.7  ethnicity_code ................ 496 .... domain, VAL-134
+     2.8  reporting_lab_code ............ 341 .... referential, VAL-142
+
+  3. CONCENTRATION
+     3.1  Four submitters account for 71 pct of all quarantine.
+     3.2  Submitters identified by reporting_lab_code only. No entity named herein.
+     3.3  Remediation letters drafted by the Provider Liaison. Sent 2021-07-19.
+
+  4. QUARANTINE HANDLING
+     4.1  Quarantined rows are masked on write per policy rev 14.
+     4.2  Analyst view exposes tkn_patient_mrn, never patient_mrn.
+     4.3  Field values render as placeholder in all quarantine tooling.
+     4.4  Manual repair queue depth at close of period: 402 rows.
+     4.5  Rows aged past 90 days and purged this period: 6,118.
+
+  5. JOB FAILURES
+     5.1  JOB-VR-20210714-0035 — token vault timeout. Reran 05:30, status SUCCESS,
+          rows loaded 1,142, quarantined 2.
+     5.2  JOB-WIC-20210716-0051 — schema drift, column household_id widened at
+          source. Job held 41 minutes. Mapping patched. Rows loaded 8,806.
+     5.3  No other unplanned outages.
+
+  6. ACTIONS CARRIED FORWARD
+     6.1  Add guardian_email to masking policy. Owner: the Data Steward. Due 2021-09-30.
+     6.2  Second token vault endpoint to be load-tested. Owner: the Systems
+          Administrator. Due 2021-08-06.
+     6.3  Refresh race_code and ethnicity_code domain tables to the 2021 value set.
+          Owner: the Data Quality Analyst. Due 2021-08-13.

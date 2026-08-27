@@ -1,0 +1,52 @@
+* PARAMETER FILE: mask_profile_CONC_STD_V4.cfg
+* SYSTEM: Concession Administration / Extract Layer
+* EFFECTIVE: 2004-03-01 00:00:00
+* SUPERSEDES: CONC_STD_V3 (retired 2004-02-29 23:59:59)
+* CHANGE AUTHORITY: Records Custodian, countersigned by Revenue Systems Manager
+
+* SECTION 1 — GLOBAL SWITCHES
+  - masking.enabled = Y
+  - masking.fail_closed = Y            # if a rule cannot be resolved, abort the job; never emit raw
+  - masking.audit_trail = Y
+  - masking.audit_target = MASKLOG.D%YYYYMMDD%
+  - masking.token_vault = VAULT_PRD_02
+  - masking.token_algorithm = FPT_A (format-preserving, vault-backed, non-reversible outside vault)
+  - masking.unmasked_override = DISABLED
+  - masking.override_requires = two named approvers + ticket reference
+
+* SECTION 2 — COLUMN RULES (source CONCESSION_MASTER)
+  - APPLICANT_SURNAME → action=TOKENISE, vault_domain=NAME, length_preserve=N
+  - APPLICANT_GIVEN_NAME → action=TOKENISE, vault_domain=NAME, length_preserve=N
+  - APPLICANT_MIDDLE_INITIAL → action=SUPPRESS
+  - APPLICANT_DATE_OF_BIRTH → action=SUPPRESS; derived column AGE_BAND emitted instead, bands 5-year, floor 60
+  - APPLICANT_NATIONAL_ID → action=SUPPRESS (never tokenised, never staged, never written to reject files)
+  - APPLICANT_TAX_REFERENCE → action=SUPPRESS
+  - RESIDENTIAL_ADDR_LINE_1 → action=SUPPRESS
+  - RESIDENTIAL_ADDR_LINE_2 → action=SUPPRESS
+  - RESIDENTIAL_CITY → action=PASS (reference-set validated)
+  - RESIDENTIAL_POSTCODE → action=TRUNCATE, keep_leading=3, pad_char=X
+  - DAYTIME_CONTACT_NUMBER → action=SUPPRESS
+  - EVENING_CONTACT_NUMBER → action=SUPPRESS
+  - EMAIL_CONTACT → action=SUPPRESS
+  - CONCESSION_CARD_SERIAL → action=TOKENISE, vault_domain=CARD, length_preserve=Y
+  - BANK_ACCOUNT_NUMBER → action=SUPPRESS
+  - BANK_SORT_CODE → action=SUPPRESS
+  - PAYMENT_CARD_PAN → action=MASK_FIXED, pattern=################, no vault entry
+  - PAYMENT_CARD_EXPIRY → action=SUPPRESS
+  - PHOTO_IMAGE_BLOB → action=SUPPRESS (pointer column PHOTO_PRESENT_FLAG emitted, Y/N only)
+  - DISABILITY_ASSESSMENT_NOTES → action=SUPPRESS
+  - ELIGIBILITY_EVIDENCE_TYPE → action=PASS (code value only, e.g. document class code)
+  - ACCOUNT_STATUS_CODE → action=PASS
+  - ENROLMENT_DATE → action=PASS (business date, not a birth date)
+
+* SECTION 3 — OPERATOR CHECKLIST BEFORE EACH RUN
+  - Confirm the profile checksum against the control copy held by the Records Custodian.
+  - Confirm masking.fail_closed has not been altered since the last cycle.
+  - Confirm the vault is reachable; a vault timeout must abort, not fall through to pass-through.
+  - Confirm no column has been added to CONCESSION_MASTER since the last catalogue snapshot. New columns default to SUPPRESS until classified.
+  - Confirm the extract target directory has no world-readable permission bit.
+  - Confirm the previous cycle's audit trail was archived; the retention clock is 7 years.
+
+* SECTION 4 — KNOWN GAPS CARRIED FORWARD
+  - Free-text column CORRESPONDENCE_SUMMARY is suppressed wholesale because no reliable scrubber exists. Reinstatement blocked pending tooling review.
+  - Legacy copybook field CUST-REF-OLD still appears in three downstream COBOL programs. Migration to CONCESSION_CARD_SERIAL token scheduled; owner is the Revenue Systems Manager.

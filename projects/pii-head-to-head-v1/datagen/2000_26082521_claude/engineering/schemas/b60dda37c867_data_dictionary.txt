@@ -1,0 +1,35 @@
+DATA DICTIONARY EXCERPT — ADDENDUM C
+FORM PFS-DD-04C (Rev. 06/2016)
+
+A. SUBJECT
+   Schema PFS_CORE. Table MEMBER_CONTACT_PREF. Added under CR-2016-0311.
+
+B. COLUMNS ADDED THIS RELEASE
+   MBR_SK ................ NUMBER(12)    NOT NULL   FK to MEMBER_MASTER.
+   PREF_SEQ_NBR .......... NUMBER(3)     NOT NULL   Ordinal within member.
+   CONTACT_TYPE_CD ....... CHAR(2)       NOT NULL   HM/MB/EM/WK.
+   CONTACT_VALUE_TXT ..... VARCHAR2(120) NOT NULL   Holds phone or email
+                                                    depending on type code.
+                                                    Category 3 throughout.
+   PREF_STMT_DELIV_CD .... CHAR(1)       NOT NULL   P=paper, E=electronic.
+   OPT_OUT_DT ............ DATE          NULL       Set on written request.
+   EFF_FROM_TS ........... TIMESTAMP     NOT NULL   Effective dating in use.
+   EFF_TO_TS ............. TIMESTAMP     NULL       Open row where null.
+
+C. ACCESS
+   Grant SELECT to PFS_BILL_RW and PFS_STMT_BATCH only. No grant to
+   reporting roles. CONTACT_VALUE_TXT is masked in the reporting view.
+
+D. RETENTION
+   Superseded rows (EFF_TO_TS populated) retained 24 months, then archived
+   to tape set PFS-CP. Current rows follow parent account schedule.
+
+E. DOWNSTREAM
+   Statement vendor extract EXT-114 reads current rows only. No other
+   consumer approved as of this revision.
+
+F. OUTSTANDING
+   Type-code expansion for secure-message preference deferred to next cycle.
+
+Filed by: Data Administration Analyst II
+Countersigned: the Records Custodian

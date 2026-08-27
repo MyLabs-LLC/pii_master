@@ -1,0 +1,42 @@
+DATA DICTIONARY EXCERPT
+File:    CUSTPERS (VSAM KSDS) — personal detail segment
+Program: Copybook CUSTPRS0 as at Release 4.2 fixpack 3
+Issued:  Database Administration Group
+
+05  CUSTPRS-REC.
+    10  CP-CUST-ID              PIC X(09).          Key. Required.
+    10  CP-CTC-LAST-NM          PIC X(30).          Required. Restricted.
+    10  CP-CTC-FRST-NM          PIC X(20).          Required. Restricted.
+    10  CP-CTC-MID-INIT         PIC X(01).          Optional. Restricted.
+    10  CP-CTC-DOB.                                 Optional. Restricted.
+        15  CP-DOB-CCYY         PIC 9(04).          Expanded 1997.
+        15  CP-DOB-MM           PIC 9(02).
+        15  CP-DOB-DD           PIC 9(02).
+    10  CP-CTC-TAX-ID           PIC X(09).          Optional. Restricted.
+    10  CP-CTC-LIC-NBR          PIC X(20).          Optional. Restricted.
+                                                    Drivers under contract only.
+    10  CP-CTC-LIC-ST           PIC X(02).          Optional.
+    10  CP-CTC-LIC-EXP.                             Optional.
+        15  CP-LIC-EXP-CCYY     PIC 9(04).
+        15  CP-LIC-EXP-MM       PIC 9(02).
+    10  CP-ADR-LN1              PIC X(40).          Required. Restricted.
+    10  CP-ADR-LN2              PIC X(40).          Optional. Restricted.
+    10  CP-CITY-NM              PIC X(28).          Required.
+    10  CP-ST-CD                PIC X(02).          Required.
+    10  CP-POST-CD              PIC X(09).          Required.
+    10  CP-PHON-NBR             PIC X(10).          Optional. Restricted.
+    10  CP-ADD-STAMP            PIC 9(14).          Required. CCYYMMDDHHMMSS.
+    10  CP-UPDT-STAMP           PIC 9(14).          Required.
+    10  CP-PURGE-DT             PIC 9(08).          Derived nightly.
+    10  CP-EXTR-SUPR-SW         PIC X(01).          Y or N. Required.
+    10  CP-FILLER               PIC X(24).          Reserved.
+
+Operating instructions:
+
+Read access to CUSTPRS is granted through the RACF profile PROD.CUSTPERS.READ. Fields annotated Restricted are additionally masked by the display routine CUSTPRS9 on all inquiry panels; the routine returns asterisks in place of stored characters and cannot be bypassed from CICS. Batch programs requiring unmasked values must be listed on the exception schedule maintained by the Records Custodian and reviewed each half year.
+
+CP-CTC-LIC-NBR and CP-CTC-LIC-EXP are populated only for owner-operators holding a direct haulage contract. The fields were added at Release 3.8 for insurance certification and are not to be used for any other purpose.
+
+CP-PURGE-DT is set by the nightly derivation step to the later of CP-UPDT-STAMP plus seven years and the close date of the associated account plus seven years. The quarterly purge overlays all Restricted fields with spaces, sets CP-EXTR-SUPR-SW, and leaves the remainder of the record intact for tonnage and lane statistics.
+
+Extracts taken from this file: insurance certification file (quarterly, CP-CTC-LIC-NBR through CP-CTC-LIC-EXP plus CP-CUST-ID), and the billing address feed (nightly, CP-ADR-LN1 through CP-POST-CD). No other extract is authorised. Requests for new extracts are to be raised on the standard change form and will not be scheduled without the Records Custodian's signature.

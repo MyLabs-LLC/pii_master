@@ -1,0 +1,53 @@
+DATA DICTIONARY EXCERPT — FORM DD-114 (rev. 3)
+
+SECTION A — IDENTIFICATION
+  System of Record ...... Meridian Staffing Group / PLACEMENT (Oracle 11g)
+  Schema.Table .......... PLC.CANDIDATE_MASTER
+  Dictionary Version .... 3.2, effective 01-FEB-2016
+  Maintained By ......... the Records Custodian
+  Approved By ........... the Director of Compliance
+  Classification ........ Internal — Restricted (Tier 2)
+
+SECTION B — COLUMN INVENTORY
+
+  COLUMN NAME             TYPE            NULL   NOTES
+  ----------------------  --------------  -----  ------------------------------
+  CANDIDATE_ID            NUMBER(10)      N      Surrogate PK, sequence-assigned
+  BRANCH_CODE             CHAR(4)         N      FK to REF.BRANCH
+  LEGAL_LAST_NAME         VARCHAR2(40)    N      Tier 2; masked in reporting
+  LEGAL_FIRST_NAME        VARCHAR2(30)    N      Tier 2; masked in reporting
+  MIDDLE_INITIAL          CHAR(1)         Y      Tier 2
+  PREFERRED_NAME          VARCHAR2(30)    Y      Free text; not used for payroll
+  DATE_OF_BIRTH           DATE            N      Tier 3; DOB_VERIFIED_FLAG must
+                                                 be set before assignment
+  SSN                     VARCHAR2(11)    Y      Tier 3; column-level encryption
+                                                 (TDE). Read via role RL_PAYSEC
+                                                 only. Never joined to extracts.
+  HOME_ADDR_LINE_1        VARCHAR2(60)    Y      Tier 2
+  HOME_ADDR_LINE_2        VARCHAR2(60)    Y      Tier 2
+  HOME_CITY               VARCHAR2(40)    Y      Tier 2
+  HOME_STATE              CHAR(2)         Y      Tier 1 when isolated
+  HOME_POSTAL             VARCHAR2(10)    Y      Tier 1 when isolated
+  MOBILE_PHONE            VARCHAR2(20)    Y      Tier 2; SMS consent required
+  PERSONAL_EMAIL          VARCHAR2(80)    Y      Tier 2; unique index enforced
+  WORK_AUTH_DOC_TYPE      VARCHAR2(20)    Y      Coded list; see REF.I9_DOCTYPE
+  STATUS_CODE             CHAR(2)         N      A/IN/TR/AR
+  CREATED_TS              TIMESTAMP       N      System-assigned
+  LAST_UPDATED_BY         VARCHAR2(30)    N      Application user id, not person
+
+SECTION C — ACCESS RESTRICTION
+  Tier 3 columns are excluded from all ad-hoc query roles. Grants to RL_PAYSEC
+  are issued for a named position, not an individual, and are re-certified each
+  quarter by the Director of Compliance. Branch recruiters hold RL_RECRUIT,
+  which resolves CANDIDATE_MASTER through the view V_CANDIDATE_SAFE.
+
+SECTION D — RETENTION
+  Active rows retained for the duration of the placement relationship. On
+  STATUS_CODE = AR (archived), Tier 3 columns are nulled after 7 years from the
+  last assignment end date. Full row purge at 10 years, subject to a legal hold
+  register check by the Records Custodian.
+
+SECTION E — DOWNSTREAM EXTRACTS
+  EXT_PAYROLL_WEEKLY .... CANDIDATE_ID, BRANCH_CODE, STATUS_CODE only
+  EXT_BENEFITS_ELIG ..... CANDIDATE_ID, DATE_OF_BIRTH (age band derived)
+  EXT_MARKETING_LIST .... blocked; no Tier 2 or Tier 3 columns permitted

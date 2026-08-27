@@ -1,0 +1,32 @@
+BAYFIELD DRUG STORES, INC.
+MEMORANDUM OF DISPOSITION AND RESTART AUTHORISATION
+File: PSD/OPS/98-312-A
+From: the Shift Operations Lead, Data Centre B
+To: the Records Custodian; the Manager, Pharmacy Systems
+Dated 08-NOV-1998, 07.40.18 CST
+
+1. Whereas job PHRXETL2 (jobid JOB08106) completed with condition code 0004 in step LOAD070 and produced 814 rejected rows as recorded in Register XR-98-311-02, the undersigned sets out the disposition of each class of exception and requests authorisation to restart.
+
+2. The relevant portion of the job log is reproduced verbatim:
+
+   22.15.03 JOB08106  PHRXETL2  STEP EXTR040 STARTED
+   23.02.51 JOB08106  VLD220I   VALIDATION PASS 1 COMPLETE  READ=4118930
+   23.02.51 JOB08106  VLD220W   REJECT COUNT=814  THRESHOLD=1000  WITHIN TOLERANCE
+   23.03.02 JOB08106  TKV110E   TOKEN VAULT TKV1 NOT RESPONDING - RETRY 1 OF 3
+   23.03.32 JOB08106  TKV110E   TOKEN VAULT TKV1 NOT RESPONDING - RETRY 2 OF 3
+   23.04.05 JOB08106  TKV111I   TOKEN VAULT TKV1 RESPONDING - RESUMING
+   23.41.44 JOB08106  MSK080I   FIELD PAT_ADDR_LINE_1 RESIDUAL CONTENT - ROWS=3
+   23.41.44 JOB08106  MSK081I   FIELD OVERWRITTEN LOW-VALUES PRIOR TO LISTING
+   01.58.27 JOB08106  STEP LOAD070 ENDED   RC=0004  WRITTEN=4118116
+
+3. Disposition is as follows:
+
+   (i) The 206 rows bearing error V-0312 are attributable solely to the vault outage recorded at 23.03.02 and are eligible for reprocessing without amendment.
+
+   (ii) The 118 rows bearing error V-0311 arise from a token domain code not present in the domain table and shall be held until the table is amended; they shall not be reprocessed in the interim.
+
+   (iii) The 341 rows bearing error V-0207 arise from a mask length of five where three is prescribed by Schedule B, Clause 2.1, and shall be reprocessed after the parameter member is corrected.
+
+   (iv) The three rows bearing error V-0208 are referred to the Records Custodian for review under Clause 3.2 of PSD-STD-0417 and are excluded from any restart until that review concludes.
+
+4. Authorisation is accordingly requested to restart at step EXTR040 with the excluded rows withheld, expected volume 4,118,663 rows.

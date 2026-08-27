@@ -1,0 +1,9 @@
+DATA DICTIONARY MAINTENANCE NOTE — CONSOLIDATED BILLING FILE (CONS_BILL), FIELDS INHERITED FROM CUSTOMER MASTER
+
+SCOPE. CONS_BILL is a flat sequential file rebuilt nightly from the customer master, the premise table and the rate tables. It carries no update path of its own and is the source for every printed notice, every summary report circulated outside Data Processing, and the two vendor transmissions.
+
+INHERITED IDENTIFICATION FIELDS. The following are copied verbatim from the master at build time and share its types and nullability: ACCT_KEY, PIC 9(10) COMP-3, non-null; CUST_LAST_NM, PIC X(30), non-null; CUST_FRST_NM, PIC X(20), non-null; CUST_MID_INIT, PIC X(01), nullable; SVC_ADDR_LN1 and SVC_ADDR_LN2, PIC X(35), the second nullable; MAIL_CITY, PIC X(25); MAIL_ST, PIC X(02); MAIL_ZIP5, PIC 9(05); MAIL_ZIP4, PIC 9(04), nullable. PREM_ID and METER_NO are carried as the operational join keys and are non-null in all cases; a null METER_NO indicates a build failure and should be escalated rather than worked around.
+
+FIELDS DELIBERATELY NOT INHERITED. SSN_TIN, BIRTH_DT, DRV_LIC_NO, HOME_PHN, WORK_PHN, EFT_ROUT_NO, EFT_ACCT_NO, MED_CERT_IND and MED_CERT_EXP_DT do not appear in the CONS_BILL layout and never have. This is the principal control on the file: because CONS_BILL is the widest-circulated dataset in the shop and its generations sit on standard scratch pools rather than restricted volumes, the restricted elements are excluded at the source rather than filtered later. Requests to add any of them, including requests framed as one-time or as diagnostic, are declined at the analyst level and referred to the Records Custodian in writing.
+
+RETENTION. Five generations are kept on disk and thirty on tape under the standard GDG catalog entry. The tape generations expire automatically and are not subject to the six-year account schedule, which applies to the master rather than to derived files.

@@ -1,0 +1,81 @@
+# /etc/pta/etl/masking.conf
+# Passenger Systems ETL — column treatment configuration
+# Applies to: PTA_ETL_FARECARD_REG_LOAD, PTA_ETL_CONCESS_MERGE,
+#             PTA_ETL_PARATRAN_ELIG
+# Last amended 2011-05-23 by the Data Stewardship Analyst
+# Change ref CR-2011-0288
+
+[global]
+policy_ref              = MSK-REG-2011-017
+enforce                 = strict
+fail_on_unmapped_column = true
+null_char               = \N
+mask_char               = *
+audit_log               = /var/log/pta/etl/mask-audit.log
+audit_log_values        = false
+
+[vault]
+host_alias              = tkv-prd-02
+format                  = alnum
+length                  = 16
+deterministic           = true
+cache_rows              = 50000
+
+[rules.farecard_registration]
+PATRON_SURNAME          = suppress
+PATRON_GIVEN_NAME       = suppress
+PATRON_MIDDLE_INITIAL   = suppress
+PATRON_REF              = tokenise
+DATE_OF_BIRTH           = generalise:year
+RESIDENTIAL_ADDR_LINE_1 = suppress
+RESIDENTIAL_ADDR_LINE_2 = suppress
+POSTAL_CODE             = partial:keep_left=2
+CONTACT_TELEPHONE       = suppress
+CONTACT_EMAIL           = digest:sha1
+CARD_PAN                = partial:keep_none
+AUTOLOAD_BANK_ACCT_REF  = suppress
+REGISTRATION_DATE       = passthrough
+CARD_STATUS_CODE        = passthrough
+HOME_DEPOT_ZONE         = passthrough
+
+[rules.concession_register]
+CONCESSION_CARD_NO      = tokenise
+NATIONAL_ID_REF         = suppress
+PENSION_AUTHORITY_REF   = suppress
+ELIGIBILITY_CATEGORY    = passthrough
+ELIGIBILITY_EXPIRY      = passthrough
+
+[rules.paratransit_eligibility]
+PARATRANSIT_MEMBER_ID   = tokenise
+GUARDIAN_CONTACT_NAME   = suppress
+GUARDIAN_CONTACT_PHONE  = suppress
+MOBILITY_AID_INDICATOR  = passthrough
+ASSESSED_TRIP_BAND      = passthrough
+TRIP_REQUEST_NOTES      = drop_column
+
+[thresholds]
+# job aborts if exceeded
+reject_rows_absolute    = 25000
+reject_rows_percent     = 0.5
+unmapped_columns        = 0
+vault_timeout_seconds   = 90
+
+[expected_volumes]
+# refreshed quarterly from cycle averages
+farecard_registration   = 1280000
+concession_register     = 214500
+paratransit_eligibility = 38900
+
+[schedule]
+window_open             = 02:00
+window_close            = 04:30
+calendar                = PTA-NIGHTLY
+
+[notify]
+on_warn                 = duty-analyst-pager
+on_abort                = duty-analyst-pager, shift-supervisor-pager
+on_policy_mismatch      = records-custodian-queue
+
+# NOTE: any column added to a source table without a rule entry above will
+# abort the load at initialisation. Raise a change request; do not add
+# passthrough entries in the running configuration.

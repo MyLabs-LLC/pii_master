@@ -1,0 +1,168 @@
+# pii-scorecard-60 -- the DECLARED HEADLINE policy.
+#
+# Derived from `$SKILL_DIR/profiles/sensitive-data.yaml` with its shape intact:
+# the `ci_lower` basis, `min_support: 30`, per-tag recall as a hard *constraint*
+# rather than something to optimise, and -- since 2026-08-26 -- macro F0.5 as
+# the ranker.
+#
+# RECALL GATES, PRECISION RANKS.
+# The two are held in different places on purpose. Recall is constraint 1: hard,
+# judged on the bootstrap lower bound, and nothing ships under it, because a
+# missed identifier is a reportable incident. Precision is the ranker: among
+# candidates that have all cleared the recall bar, take the one that cries wolf
+# least, because a scanner whose alarms are mostly noise gets switched off and a
+# switched-off scanner has recall 0 in production.
+#
+# This file previously ranked on macro F2, which put recall in both places. See
+# the note above `macro_f05` in `preferences` for what that cost and how it was
+# measured.
+#
+# The document-level precision view is NOT folded in here -- it stays declared
+# separately in `policy_precision_view.yaml`, and both decisions are reported.
+# This one is the headline; that one is the contra-view. Naming which is which
+# up front is the whole point.
+#
+# Scope note: this policy is applied to a 61-label catalogue (the GAIA
+# scorecard's 60 tags, less `routing_number`, plus `swift_code`). The 16-tag
+# priority set gated by constraint 1 is unchanged from the 58-label lineage, so
+# the taxonomy change is not confounded with a change of gate.
+name: pii-content-v5-precision-led
+
+constraints:
+  # ------------------------------------------------------------------ 1
+  # THE SHIP GATE. Per-tag recall on the priority tags, judged on the bootstrap
+  # lower bound rather than the point estimate. `across: each` means every
+  # measurable tag x corpus pair must pass, which is what produces a count like
+  # "55/55 measurable gates" instead of an average a strong common tag carries.
+  - name: priority tag recall >= 0.90 (conclusive)
+    metric: recall
+    op: ">="
+    threshold: 0.90
+    scope: "*@*"
+    across: each
+    basis: ci_lower
+    # A corpus holding fewer than ~30 instances of a tag cannot tell you that
+    # tag's recall clears 0.90. Those pairs are NOT_MEASURABLE and are named in
+    # the report as excluded: "could not measure" and "passed" are different
+    # claims.
+    min_support: 30
+    severity: hard
+
+  # ------------------------------------------------------------------ 2
+  # THE SERVING CONSTRAINT, checked at selection rather than after the fact.
+  # Every published latency in this run is measured on exactly one core with
+  # nothing else running; training uses all 32.
+  # RAISED 2026-08-26, on instruction: the deployment's budget is 8 ms on one
+  # core (revised from 5, then from 10). The 5 ms figure came from the repo README's original design point
+  # and it is not what this deployment requires.
+  #
+  # It is still a HARD constraint and still checked at selection: a model too slow
+  # for its SLA has failed regardless of its score. What changed is the number, and
+  # it was changed BEFORE the arm it gates was measured, not after seeing a result.
+  - name: one-core p95 <= 8 ms
+    metric: p95_latency_ms
+    op: "<="
+    threshold: 8.0
+    severity: hard
+
+  # ------------------------------------------------------------------ advisory
+  # Measured and reported on every arm, never deciding the winner. The three
+  # document-level properties are the customer-facing guarantee the
+  # precision-first lineage was built around; carrying them as advisory means
+  # they appear on both arms' rows without one contender's bar picking the
+  # winner. They are measurable only on the three corpora holding genuine
+  # document-level negatives; the other five are NOT_MEASURABLE, not a pass.
+  - name: document-level precision
+    metric: doc_precision
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: document-level specificity
+    metric: doc_specificity
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  - name: document-level recall
+    metric: doc_recall
+    op: ">="
+    threshold: 0.0
+    scope: "doc@*"
+    across: each
+    basis: ci_lower
+    min_support: 30
+    severity: advisory
+
+  # A tag at precision 0.93 / recall 0.12 is *silent* -- usually an interface
+  # cap, a cheap fix. A tag predicted zero times across 30,000 documents is
+  # *unlearned*. Same F2, opposite remedies; the prediction rate tells them
+  # apart.
+  - name: prediction rate
+    metric: prediction_rate
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+  - name: worst measurable priority recall
+    metric: severity_recall_min
+    op: ">="
+    threshold: 0.0
+    severity: advisory
+
+preferences:
+  # 1. THE RANKER. Micro F1 over the 61-label scorecard catalogue: every
+  #    document-tag decision counted once, so the number moves with the volume of
+  #    work the scanner creates and the volume it catches. It ranks; it does not
+  #    gate.
+  #
+  #    CHANGED 2026-08-26, on instruction: this run leads with precision.
+  #    Recall has not been demoted -- it is constraint 1 above, hard, on the
+  #    `ci_lower` basis, and nothing ships under it. What changed is that recall
+  #    is no longer *also* the ranker. Holding it in both places pushes every
+  #    threshold toward the bottom of its curve, because F2 keeps paying for
+  #    recall long after precision has collapsed; two tags in this lineage sat
+  #    at precision 0.2150 and 0.0051 while passing their recall floors, and the
+  #    macro-F2 ranking saw nothing wrong with either.
+  #
+  #    This mirrors `$SKILL_DIR/profiles/sensitive-data.yaml`, which was updated
+  #    the same day for the same reason.
+  - metric: micro_f1
+    min_relative_change: 0.0
+
+  # 2. Then precision outright. Micro F1 can be held up by recall on the head
+  #    tags, so the second key is the one that says how much of what the scanner
+  #    emits is real -- the number a triage team feels directly.
+  #
+  #    Named `precision_micro`, not `precision`: this run's evaluator
+  #    (`training/h2h_eval.py`) emits `precision_micro`,
+  #    `precision_macro_catalogue` and `precision_macro_support30`, and there is
+  #    no bare `precision` for a preference to match. Named wrongly it reports
+  #    N/A and silently stops breaking ties -- which is what it did on the first
+  #    attempt at this policy. Micro pairs with the micro F1 above: both count
+  #    every document-tag decision once.
+  - metric: precision_micro
+
+  # 3. Macro F0.5 -- the same precision-first weighting, macro-averaged, so a
+  #    model that wins on precision only by being good at its two commonest tags
+  #    does not beat one that is good across the tail.
+  - metric: macro_f05
+
+  # 4. Then the recall-weighted view, so two models indistinguishable on
+  #    precision are separated by the one that misses less. Carried rather than
+  #    dropped: the macro-F0.5 / macro-F2 gap is how much recall the
+  #    precision-led ranking cost, and a report that omits it is asserting the
+  #    cost was zero.
+  - metric: macro_f2
+
+  # 5. Last tie-break: when quality is indistinguishable, take the faster model.
+  - metric: p95_latency_ms
+    greater_is_better: false

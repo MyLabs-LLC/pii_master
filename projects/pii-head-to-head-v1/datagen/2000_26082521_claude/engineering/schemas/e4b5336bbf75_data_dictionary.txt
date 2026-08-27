@@ -1,0 +1,51 @@
+RIVERBEND COUNTY HOSPITAL AUTHORITY
+BILLING OFFICE -- DATA DICTIONARY MAINTENANCE SHEET
+TABLE: BLMEMB (MEMBER CONTACT SEGMENT)     RELEASE 4.2     JULY 1999
+
+COLUMN NAME        TYPE           NUL  NOTE CD
+-----------------  -------------  ---  -------
+MEMB_NBR           CHAR(10)       N    01
+MEMB_ALT_NBR       CHAR(10)       Y    01 07
+MEMB_SURNAME       CHAR(30)       N    02 04
+MEMB_GIVEN_NAME    CHAR(20)       N    02 04
+MEMB_TAX_ID_NBR    CHAR(9)        Y    03 05 06
+MEMB_BIRTH_DATE    CHAR(8)        N    04 08
+MEMB_STREET_1      CHAR(35)       N    02 04
+MEMB_STREET_2      CHAR(35)       Y    02
+MEMB_CITY          CHAR(25)       N    02
+MEMB_STATE         CHAR(2)        N    02
+MEMB_POSTCODE      CHAR(9)        N    02
+MEMB_DAY_PHONE     CHAR(10)       Y    03 05
+MEMB_EVE_PHONE     CHAR(10)       Y    03 05
+MEMB_EMPLOYER      CHAR(40)       Y    07
+MEMB_CARRIER_CD    CHAR(4)        Y    01
+MEMB_POLICY_ID     CHAR(20)       Y    01 06
+MEMB_STMT_HOLD     CHAR(1)        N    01
+MEMB_CHG_OPER      CHAR(8)        N    01
+MEMB_CHG_DATE      CHAR(8)        N    08
+
+NOTE CODES
+01  Maintained through the CICS billing screens. No batch update path exists.
+02  Overwritten weekly by the address hygiene job BLJ0440. Manual keying is lost.
+03  Restricted. Display authority is granted individually, not by department, and is
+    logged. The log is reviewed monthly by the Records Custodian.
+04  Participates in the duplicate member match. Do not blank to correct an error;
+    use the merge transaction so the audit trail is preserved.
+05  Dropped at unload time from every extract that leaves the building.
+06  Carried on the claim submission extract only, and only for carriers whose
+    trading partner agreement is on file in the Business Office.
+07  Free text. No edit applied. Not suitable for reporting or selection criteria.
+08  Eight position date, century expanded in release 4.0. Any program reading this
+    column with a six position work field must be recompiled before conversion.
+
+RETENTION
+Active rows remain on line until the member has carried a zero balance for seven
+years. The quarterly purge job BLJ0900 writes the selected rows to the archive
+series BLARC, verifies the tape, and then deletes. Archive tapes are held for a
+further three years in the offsite vault and are destroyed on the schedule kept by
+the Records Custodian.
+
+CHANGE CONTROL
+Additions and length changes to this segment are logged on the maintenance sheet and
+approved by the Business Office Manager before the copybook is promoted. Programs
+listed on the cross reference report must be recompiled in the same promotion.

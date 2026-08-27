@@ -1,0 +1,90 @@
+; ---------------------------------------------------------------------------
+; pfs_mask_prod.cfg
+; Patient Financial Services / de-identification profile
+; rev 7   2004-02-26   applies to RDM_NIGHTLY, RDM_WEEKLY, PAYER_837_OUT
+; ---------------------------------------------------------------------------
+
+[GLOBAL]
+profile_rev      = 7
+keyset           = PFS-2004Q1
+vault_dsn        = TKNVAULT01
+fail_mode        = REJECT_ROW
+log_values       = NO
+log_ordinals     = YES
+default_disp     = SUPPRESS
+commit_interval  = 5000
+
+[TOKENIZE]
+; field = domain, width, on_miss
+PT_SSN           = SSN,   16, MINT
+GUAR_SSN         = SSN,   16, MINT
+MRN              = MRN,   16, MINT
+ACCT_NBR         = ACCT,  16, MINT
+SUBSCR_ID        = SUBSC, 16, MINT
+GRP_NBR          = GRP,   16, FAIL
+CERT_NBR         = SUBSC, 16, MINT
+GUAR_ACCT_NBR    = ACCT,  16, MINT
+
+[MASK]
+; field = method, retain
+DOB_DT           = DATE_TO_YEAR,     4
+ADM_DT           = DATE_TO_YRMONTH,  7
+DSCH_DT          = DATE_TO_YRMONTH,  7
+DOD_DT           = DATE_TO_YEAR,     4
+ZIP_CD           = LEFT,             3
+CC_NBR           = LAST_N,           0
+DL_NBR           = NONE,             0
+
+[SUPPRESS]
+PT_LAST_NM
+PT_FIRST_NM
+PT_MID_INIT
+PT_SUFFIX
+MOTHER_MAIDEN_NM
+GUAR_LAST_NM
+GUAR_FIRST_NM
+ADDR_LINE_1
+ADDR_LINE_2
+CITY_NM
+HOME_PHONE
+WORK_PHONE
+EMAIL_ADDR
+EMPLOYER_NM
+NEXT_OF_KIN_NM
+NEXT_OF_KIN_PHONE
+
+[PASSTHRU]
+PAYER_CD
+FIN_CLASS_CD
+STATE_CD
+DRG_CD
+ICD9_PRIN
+ICD9_SEC_1 .. ICD9_SEC_8
+CPT4_1 .. CPT4_6
+REV_CD
+BILL_TYPE_CD
+TOT_CHRG_AMT
+PAY_AMT
+ADJ_AMT
+BAL_AMT
+
+[THRESHOLD]
+zip_min_population = 20000
+rollup_value       = 000
+apply_to           = ZIP_CD
+
+[VALIDATION]
+VAL-014 = date field fails mask parse
+VAL-021 = required tokenise input empty after trim
+VAL-033 = token collision unresolved after 3 retries
+VAL-045 = passthru field exceeds declared width
+VAL-047 = source column present, no rule assigned
+on_VAL-047 = APPLY_DEFAULT_DISP
+
+[OUTPUT]
+reject_path   = D:\ETL\REJECT
+reject_layout = ROW_ORDINAL,RULE_ID,CODE
+audit_path    = D:\ETL\AUDIT
+audit_layout  = JOBID,STAGE,ROWS_IN,ROWS_OUT,ROWS_REJ,CTRL_TOTAL
+
+; end of file — changes require Records Custodian countersignature

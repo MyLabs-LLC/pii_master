@@ -1,0 +1,33 @@
+INTEROFFICE MEMORANDUM
+OFFICE OF THE UNIVERSITY REGISTRAR — ADMINISTRATIVE COMPUTING SERVICES
+
+TO:     Data Steward, Student Records
+FROM:   Extract Operations, Administrative Computing
+DATE:   15 March 2004
+RE:     Nightly extract RGSTR_NGT_0417 — cycle summary 2004-03-15
+CC:     Assistant Registrar for Systems; Records Custodian
+
+1. Job RGSTR_NGT_0417 initiated 2004-03-15 02:14:07 CST, terminated 02:51:33 CST. Elapsed 00:37:26. Return code 0004 (completed with warnings). Operator console log retained under LOGVOL/RGSTR/0417.
+
+2. Source SIS production tables SPRIDEN, SPBPERS, SPRADDR, SPRTELE, SGBSTDN. Target schema RGSTR_STG on the operational data store. Session RGSTR_NGT_0417.s02 rebuilt in full; no incremental capture this cycle.
+
+3. Volumes:
+
+   SOURCE TABLE     READ      WRITTEN   REJECTED   SUPPRESSED
+   SPRIDEN         41,882     41,779        103            0
+   SPBPERS         41,882     41,779        103       41,779
+   SPRADDR         57,640     57,318        322       57,318
+   SPRTELE         39,204     38,996        208       38,996
+   SGBSTDN         44,117     44,117          0            0
+   ---------------------------------------------------------
+   TOTAL          224,725    223,989        736      138,093
+
+4. Masking profile MASK_PROF_STU_03 applied at read, prior to landing. Columns bound to the profile: SSN, SSN_LAST4, DOB, PERM_ADDR_LINE1, PERM_ADDR_LINE2, PERM_ADDR_CITY, PERM_ADDR_ZIP, MAIL_ADDR_LINE1, HOME_PHONE, CELL_PHONE, EMAIL_ADDR, EMERG_CONTACT_NAME, EMERG_CONTACT_PHONE, PARENT_GUARDIAN_NAME. Bound columns emit placeholder strings only; no source value is written to RGSTR_STG.
+
+5. Columns SSN and DOB additionally routed through the tokenizer. Downstream joins must reference SSN_TKN and DOB_TKN. Direct reference to the base columns will resolve to constant fill and will not join.
+
+6. Warnings this cycle: 736 rows written to reject file RGSTR_NGT_0417.rej.20040315. Predominant conditions were VR-014 (ETHNIC_CD outside published domain, 411 rows) and VR-033 (PERM_ADDR_ZIP length, 194 rows). Detail listing distributed separately to the Records Custodian.
+
+7. Requested actions. (a) Data Steward to confirm whether GENDER_CD and CITIZENSHIP_CD remain out of scope for MASK_PROF_STU_03; both are presently passed in clear to RGSTR_STG. (b) Records Custodian to rule on retention of the reject file beyond the standard fourteen-day window, as the file carries unmasked source values for the failing columns.
+
+8. Next scheduled run 2004-03-16 02:14 CST. No configuration change is queued.

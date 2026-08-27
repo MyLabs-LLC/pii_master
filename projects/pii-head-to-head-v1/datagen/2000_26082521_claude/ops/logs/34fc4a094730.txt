@@ -1,0 +1,14 @@
+2016-11-14 03:00:02 INFO  [etl-orchestrator] JOB SIS-ETL-5290 start — term-end enrolment extract, profile REG-MAP-2016.3, masking policy REG-MASK-07.
+
+Clause 1. Scope of this execution. This job extracts the enrolment subject area for the closing fall term and joins it against the student master dimension established by the nightly reconciliation. The joined result set is written to ODS_REG.FACT_ENROLMENT and to the downstream state reporting staging area STATE_RPT.STG_ENROL. All columns drawn from the identity and contact subject areas are carried in masked form only, and the orchestrator refuses at bind time any projection that would place national_id_token, date_of_birth, contact_home_phone, contact_mobile_phone, contact_campus_email or any contact_perm_* column into the staging area in clear form.
+
+Clause 2. Derivations permitted. Only two derivations may consult underlying values. The first is age_band_at_term, derived from date_of_birth and the term census date and written as a band label. The second is residency_determination, derived from demo_residency_code, contact_perm_state and the duration attributes, and written as a code. Underlying values consulted by these derivations are held in memory for the duration of the row computation and are not written to any log, spool file or intermediate table.
+
+2016-11-14 03:21:44 WARN  [validator] JOB SIS-ETL-5290 batch 04 of 12: rule V-118 date_of_birth format constraint failed, 87 rows deferred. Values suppressed.
+2016-11-14 03:22:09 WARN  [validator] JOB SIS-ETL-5290 batch 04 of 12: rule V-231 contact_perm_postal length constraint failed, 34 rows deferred. Values suppressed.
+2016-11-14 03:29:51 ERROR [validator] JOB SIS-ETL-5290 batch 06 of 12: rule V-311 disclosure_restriction_flag outside domain {Y,N}, 6 rows rejected. Row keys written to ODS_REG.QUARANTINE_STUDENT.
+2016-11-14 03:41:18 WARN  [masking-engine] JOB SIS-ETL-5290 batch 09 of 12: 1,204 rows carry disclosure_restriction_flag set; legal_surname, legal_given_name, preferred_given_name, contact_campus_email and all contact_perm_* columns suppressed in full for these rows in every downstream extract.
+
+Clause 3. Reporting release. No extract shall leave the staging area until the Records Custodian has certified that the suppression counts in Clause 2 of the run report reconcile against the disclosure_restriction_flag population held in the student master dimension. Certification is recorded against the job identifier and retained for the statutory period.
+
+2016-11-14 03:58:40 INFO  [etl-orchestrator] JOB SIS-ETL-5290 complete. Rows read 74,310; rows loaded 74,183; rows deferred 121; rows rejected 6; rows suppressed under disclosure rule 1,204. Elapsed 00:58:38.

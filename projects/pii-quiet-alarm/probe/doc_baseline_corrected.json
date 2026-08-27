@@ -1,0 +1,55 @@
+{
+ "task": "document-level: does this document contain sensitive PII",
+ "gold_correction": "pii_entities/pii_classes/pii_sensitivity, not manifest 'label'",
+ "arm": "champion_1k (pii-priority-fusion-1k-v1)",
+ "per_corpus": {
+  "4000_datax-dualjudge-evalset-1.32k": {
+   "n_scored": 4000,
+   "prevalence": 0.47825,
+   "tp": 1913,
+   "fp": 2087,
+   "fn": 0,
+   "tn": 0,
+   "recall": 1.0,
+   "precision": 0.47825,
+   "specificity": 0.0,
+   "specificity_ci_low": 0.0,
+   "specificity_ci_high": 0.0,
+   "false_positive_rate": 1.0
+  },
+  "6589_govdocs2-dualjudge-eval20-3.53k": {
+   "n_scored": 6549,
+   "prevalence": 0.5319896167353795,
+   "tp": 3478,
+   "fp": 3060,
+   "fn": 6,
+   "tn": 5,
+   "recall": 0.9982778415614236,
+   "precision": 0.5319669623738146,
+   "specificity": 0.0016313213703099511,
+   "specificity_ci_low": 0.0003262642740619902,
+   "specificity_ci_high": 0.0032626427406199023,
+   "false_positive_rate": 0.99836867862969
+  },
+  "pii2_eval_30k": {
+   "n_scored": 30000,
+   "prevalence": 0.8383,
+   "tp": 25149,
+   "fp": 4851,
+   "fn": 0,
+   "tn": 0,
+   "recall": 1.0,
+   "precision": 0.8383,
+   "specificity": 0.0,
+   "specificity_ci_low": 0.0,
+   "specificity_ci_high": 0.0,
+   "false_positive_rate": 1.0
+  }
+ },
+ "aggregate": {
+  "equal_corpus_specificity": 0.0005437737901033171,
+  "equal_corpus_precision": 0.6161723207912716,
+  "equal_corpus_recall": 0.9994259471871412,
+  "total_negatives_available": 10003
+ }
+}

@@ -1,0 +1,46 @@
+{
+  "operation": "full-recall-first-model-loop",
+  "project": "projects/pii-priority-recall-v1",
+  "modules": ["eval", "tune", "classify", "datagen"],
+  "budget": {
+    "max_trials": 1000,
+    "max_wallclock_s": 43200,
+    "allocation": {
+      "hash_sgd": 300,
+      "tfidf_linear": 300,
+      "embeddingbag_asl": 300,
+      "hybrid_priority": 100
+    },
+    "early_stop": "all measurable priority recalls >= 0.90 and equal-corpus macro_f2 >= 0.90"
+  },
+  "objective": {
+    "hard_gate": "per-tag recall >= 0.90 on every corpus with support >= 30",
+    "primary": "equal-corpus mean macro_f2",
+    "target": 0.9,
+    "tie_breaker": "equal-corpus mean micro_f1",
+    "latency_gate": "p95 <= 5 ms per 10KB document on one CPU core"
+  },
+  "training_data": "/home/lence/workspace/data/1-train/*",
+  "evaluation_data": "/home/lence/workspace/data/2-eval/*",
+  "editable_surfaces": [
+    "training/",
+    "src/pii_master/ (only evidence-backed serving integration)",
+    "tests/",
+    "projects/pii-priority-recall-v1/",
+    "/tmp/pii-priority-recall-v1-work/"
+  ],
+  "immutable_surfaces": [
+    "/home/lence/workspace/data/2-eval/",
+    "evaluation labels and split membership",
+    "metric formulas",
+    "minimum support 30",
+    "priority recall threshold 0.90"
+  ],
+  "orchestration": "direct model_pipeline engine through uv/Python 3.13",
+  "tracking": "local MLflow file store; models and approved extra artifacts enabled",
+  "deploy_target": "none",
+  "reporting": ["md", "pdf", "xlsx", "commands.txt"],
+  "approved_by": "user",
+  "approved_at": "2026-08-25",
+  "approval_text": "yes, approve this plan, and continue to push as hard as you can for 1000 runs over the arms to improve recall to 90% on priority tags"
+}

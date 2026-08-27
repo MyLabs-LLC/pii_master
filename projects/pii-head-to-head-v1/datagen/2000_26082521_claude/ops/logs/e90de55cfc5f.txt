@@ -1,0 +1,57 @@
+SOURCE-TO-TARGET MAPPING RULES
+LEGACY COPYBOOK CDRMAST01 -> EPI_ANALYSIS_MART
+MAP DOCUMENT MAP-CDR-07  ISSUE 3  DATED 09-DEC-1998
+MAINTAINED BY THE DATA STEWARDSHIP GROUP
+APPLIES TO JOB IDS JOB03117, JOB03204, JOB03390
+
+  I. SCOPE
+     A. Governs column-level derivation for all nightly consolidations.
+     B. Subordinate to [PROD.CTLLIB]MASKCFG.DAT revision 04; where this
+        document and the masking control file differ, the control file
+        prevails and the row is aborted pending reconciliation.
+     C. Does not govern the state quarterly rollup, which draws Class D only.
+
+  II. DIRECT MOVES (NO TRANSFORMATION)
+     A. CDR-JURIS-CD .............. -> REPORTING_JURISDICTION_CD
+     B. CDR-TRACT-CD .............. -> CENSUS_TRACT_CD
+     C. CDR-PROGRAM-CD ............ -> PROGRAM_ENROLLMENT_CD
+     D. CDR-SPECIMEN-TYP .......... -> SPECIMEN_TYPE_CD
+     E. CDR-RPT-DT ................ -> REPORT_DATE (CCYYMMDD)
+
+  III. TOKENISED MOVES
+     A. CDR-MED-REC-NBR ........... -> MEDICAL_RECORD_NBR
+        1. Vault class B, stable surrogate, format preserved.
+        2. Vault miss raises E-443; row held, not defaulted.
+     B. CDR-CASE-ID ............... -> CASE_REGISTRY_ID
+        1. Surrogate is the sole join key downstream.
+        2. Natural key is not carried to any target column.
+     C. CDR-WIC-NBR ............... -> WIC_PARTICIPANT_NBR
+        1. Populated only where PROGRAM_ENROLLMENT_CD indicates WIC.
+        2. Otherwise target written as <NULL>; absence is not an error.
+
+  IV. DERIVED AND GENERALISED COLUMNS
+     A. AGE_AT_REPORT_YRS
+        1. Derived from DATE_OF_BIRTH and REPORT_DATE at extract time.
+        2. Source DATE_OF_BIRTH is generalised to CCYY0000 before write.
+        3. Values above 89 collapse to a single top band.
+     B. RESIDENCE_ZIP3
+        1. First three positions of RESIDENCE_ZIP retained.
+        2. Remaining positions written as fill character.
+     C. GEOG_UNIT_CD
+        1. Assigned from CENSUS_TRACT_CD via domain table DOM-GEO-14.
+        2. Unmatched tract yields E-302 and a held row.
+
+  V. SUPPRESSED SOURCE FIELDS (NO TARGET COLUMN EXISTS)
+     A. CDR-LAST-NAME, CDR-FIRST-NAME, CDR-MID-INIT
+     B. CDR-ADDR-LINE-1, CDR-ADDR-LINE-2
+     C. CDR-HOME-PHONE, CDR-WORK-PHONE, CDR-GUARDIAN-PHONE
+     D. CDR-EMAIL-ADDR (present in copybook issue 3; unused by source system)
+     E. CDR-SSN
+
+  VI. OPEN ITEMS
+     A. CDR-GUARDIAN-PHONE remains unclassified in the control file and is
+        the standing cause of the ABORT_ROW warnings on JOB03117.
+     B. Copybook issue 4 adds two positions to CDR-CASE-ID; token length
+        edit E-441 must be widened before that issue is promoted.
+     C. Reconciliation of DOM-GEO-14 against the 1990 tract file is pending
+        with the Epidemiology Unit.

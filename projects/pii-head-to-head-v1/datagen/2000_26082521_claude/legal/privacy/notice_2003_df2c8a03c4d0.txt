@@ -1,0 +1,95 @@
+*******************************************************************************
+*  PATIENT ACCOUNTING / BILLING OFFICE                                        *
+*  INFORMATION HANDLING STANDARD IHS-16                                       *
+*  Subject: Categories of Personal Information; Custodianship; Retention      *
+*           Schedules; Authorized Methods of Disposal                         *
+*  Status: In force. Reviewed and re-issued this calendar year 2016.          *
+*  Enquiries: the Records Custodian (billing office) or the Privacy Officer.  *
+*******************************************************************************
+
+1.0   DEFINITIONS
+      1.1   "Personal information" means any information, in any medium, that
+            identifies or reasonably may be used to identify a natural person,
+            together with any information appended to or derived from it.
+      1.2   "Category" means a grouping of field labels administered as a
+            single unit for purposes of access control, retention, and
+            disposal, irrespective of the systems in which the constituent
+            fields physically reside.
+      1.3   "Custodial unit" means the organisational unit charged with the
+            day-to-day integrity of a category; custodianship is a function of
+            office and does not attach to any individual personally.
+      1.4   "Trigger event" means the occurrence from which a retention period
+            is computed, and not the date on which a record was created,
+            unless the schedule expressly so provides.
+
+2.0   CATEGORIES ADMINISTERED BY THE BILLING OFFICE
+      2.1   Identity and contact category
+            2.1.1   Field labels: Patient Full Name; Alias or Former Name;
+                    Date of Birth; Sex; Mailing Address; Alternate Address;
+                    Telephone Number; Alternate Telephone Number; Electronic
+                    Mail Address; Preferred Method of Contact.
+      2.2   Sensitive identifier category
+            2.2.1   Field labels: Social Security Number; Medicare Beneficiary
+                    Identifier; Medicaid Case Number; Immigration or Visa
+                    Status Indicator; Military Service Indicator.
+            2.2.2   This category is subject to encryption at rest and in
+                    transit and to the masking rule at paragraph 3.4.
+      2.3   Payment instrument category
+            2.3.1   Field labels: Payment Card Brand; Payment Card Number
+                    (truncated to the permissible digits only); Expiration
+                    Month and Year; Cardholder Name; Bank Routing Number;
+                    Bank Account Number; Authorisation Response Code.
+            2.3.2   Sensitive authentication data shall not be stored
+                    subsequent to authorisation in any circumstance.
+      2.4   Account and adjudication category
+            2.4.1   Field labels: Account Number; Encounter Number; Date of
+                    Service; Amount Billed; Amount Paid; Balance Due; Claim
+                    Number; Denial Reason Code; Appeal Status.
+      2.5   Hardship and legal status category
+            2.5.1   Field labels: Household Size; Household Gross Income;
+                    Income Verification Document Type; Charity Determination
+                    Outcome; Bankruptcy Petition Number; Estate Claim Status;
+                    Power of Attorney Designation; Deceased Indicator.
+
+3.0   AUTHORISED ACCESS
+      3.1   Access is granted by role and is reviewed not less than quarterly.
+      3.2   Schedule of authorisations:
+            3.2.1   Billing Representative I — categories 2.1 and 2.4.
+            3.2.2   Billing Representative II and Revenue Cycle Supervisor —
+                    categories 2.1, 2.3 (truncated), and 2.4.
+            3.2.3   Financial Counsellor — categories 2.1, 2.2, and 2.5.
+            3.2.4   Collections Representative — categories 2.1, 2.4, and so
+                    much of 2.5 as concerns legal status.
+            3.2.5   Privacy Officer, Information Security Officer, Internal
+                    Audit, and the Office of General Counsel — all categories,
+                    for oversight, investigative, or defensive purposes.
+      3.3   External auditors and contracted collection agencies obtain access
+            only under an executed business associate agreement and only to
+            the categories enumerated in the schedule appended thereto.
+      3.4   Category 2.2 is displayed in masked form by default; unmasking is
+            logged with the fields User Role; Account Number; Timestamp;
+            Business Justification Code.
+
+4.0   RETENTION SCHEDULE
+      4.1   Categories 2.1, 2.3, and 2.4 — seven (7) years from the trigger
+            event "account closed and balance extinguished".
+      4.2   Category 2.2 — coterminous with the account record to which it is
+            appended, and purged from all secondary extracts at ninety (90)
+            days.
+      4.3   Category 2.5 — seven (7) years from determination or from release
+            of the estate claim, whichever is later.
+      4.4   Records of a minor patient — until majority plus the period at 4.1.
+      4.5   Records under legal hold — retained until written release.
+
+5.0   DISPOSAL
+      5.1   Disposal is authorised only by the Records Custodian, upon written
+            confirmation from the Office of General Counsel that no hold
+            subsists.
+      5.2   Paper is destroyed by cross-cut shredding; electronic media are
+            cryptographically erased, purged, or physically destroyed.
+      5.3   The Certificate of Destruction shall record, under these headings
+            and no others, Record Series; Category Reference; Media Type;
+            Container Count; Method Applied; Date of Destruction; Vendor Name;
+            Witnessing Role; Custodian Approval.
+      5.4   Certificates are retained permanently and are produced on demand to
+            the Privacy Officer.

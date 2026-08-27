@@ -1,0 +1,32 @@
+DATA DICTIONARY EXCERPT
+Table ......... PLC.MEMBER_BENEFIT_ELIG
+Ref ........... DD-311 v1.4
+Effective ..... 05-SEP-2016
+Custodian ..... the Benefits Administration Lead
+
+COLUMNS
+  ELIG_ID              NUMBER(10)    NOT NULL   PK
+  MEMBER_ID            NUMBER(10)    NOT NULL   FK to CANDIDATE_MASTER
+  MEMBER_LAST_NAME     VARCHAR2(40)  NOT NULL   Restricted
+  MEMBER_FIRST_NAME    VARCHAR2(30)  NOT NULL   Restricted
+  DATE_OF_BIRTH        DATE          NOT NULL   Restricted; age band source
+  SUBSCRIBER_ID        VARCHAR2(20)      NULL   Carrier-assigned; encrypted
+  DEPENDENT_COUNT      NUMBER(2)         NULL
+  PLAN_CODE            CHAR(6)       NOT NULL
+  MEASUREMENT_HOURS    NUMBER(6,2)   NOT NULL   Rolling 12-month lookback
+  ELIG_START_DT        DATE              NULL
+  ELIG_END_DT          DATE              NULL
+  WAIVER_FLAG          CHAR(1)       NOT NULL   Y/N
+  LAST_REFRESH_TS      TIMESTAMP     NOT NULL
+
+ACCESS
+  Read access limited to role RL_BENEFITS. Branch staff receive eligibility
+  status through the service desk only. No ad-hoc query access is granted.
+
+RETENTION
+  Rows held 6 years after ELIG_END_DT. Name and DOB columns nulled at 3 years
+  where no claim history exists.
+
+EXTRACTS
+  Carrier enrolment file (monthly) carries MEMBER_ID, names, DOB, PLAN_CODE.
+  Internal utilisation reporting receives counts by PLAN_CODE only.

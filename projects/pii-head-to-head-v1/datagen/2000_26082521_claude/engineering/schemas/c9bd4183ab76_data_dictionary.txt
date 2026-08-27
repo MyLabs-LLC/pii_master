@@ -1,0 +1,60 @@
+FORM RM-22 — DATA ELEMENT SCHEDULE
+DEPARTMENT OF HEALTH, OFFICE OF RECORDS AND INFORMATION GOVERNANCE
+Subject Table: CHD_CORE.MEMBER_CONTACT_HIST
+Schedule Date: 15 September 2021
+
+ARTICLE 1. PURPOSE
+  1.1. This Schedule describes, for governance and audit purposes, each column of the
+       subject table, together with its declared type, its nullability as deployed, and
+       the operational conditions attaching thereto.
+  1.2. This Schedule is incorporated by reference into the Departmental Data Inventory
+       and shall be reviewed not less than annually.
+
+ARTICLE 2. COLUMN SCHEDULE
+
+  2.1. CONTACT_HIST_SK — BIGINT — NOT NULL
+       Surrogate key. Populated by sequence. Never reissued following deletion.
+
+  2.2. MBR_SK — BIGINT — NOT NULL
+       Foreign key to MEMBER_MASTER. Enforced; cascading deletion is disabled by design.
+
+  2.3. CONTACT_TYPE_CD — CHAR(3) — NOT NULL
+       Constrained to the domain maintained in CHD_REF.CONTACT_TYPE_CD.
+
+  2.4. CONTACT_NAME_TXT — VARCHAR(120) — NULLABLE
+       Restricted element. Populated where the member designates an alternate contact.
+       Not exposed in any analytic view.
+
+  2.5. CONTACT_PHONE_NBR — VARCHAR(20) — NULLABLE
+       Restricted element. Subject to the Department's outreach opt-out register; the
+       register shall be consulted prior to each campaign without exception.
+
+  2.6. CONTACT_EMAIL_ADDR_TXT — VARCHAR(254) — NULLABLE
+       Restricted element. Written only where affirmative consent is recorded upstream.
+
+  2.7. CONTACT_ADDR_TXT — VARCHAR(180) — NULLABLE
+       Restricted element. Standardization is performed in place; the pre-standardization
+       value is retained in the audit schema for ninety (90) days and then purged.
+
+  2.8. RELATIONSHIP_CD — CHAR(2) — NULLABLE
+       Domain-constrained. Null permitted for legacy rows migrated in 2019.
+
+  2.9. EFF_START_TS / EFF_END_TS — TIMESTAMP — NOT NULL / NULLABLE
+       Bitemporal pair. A null end timestamp denotes the currently effective row.
+
+ARTICLE 3. ACCESS
+  3.1. Columns designated Restricted in Article 2 are accessible only to holders of the
+       role CHD_PHI_READ and to the Records Custodian in the discharge of official duties.
+  3.2. No credential shall be shared, and no service account shall be granted the role
+       absent written approval of the Privacy Officer.
+
+ARTICLE 4. RETENTION
+  4.1. Rows are retained six (6) years from EFF_END_TS. Currently effective rows are not
+       eligible for disposition.
+  4.2. Disposition is executed by the quarterly purge job and evidenced in the purge log.
+
+ARTICLE 5. DOWNSTREAM EXTRACTS
+  5.1. EXT_OUTREACH_MONTHLY consumes CONTACT_TYPE_CD, CONTACT_PHONE_NBR and
+       CONTACT_EMAIL_ADDR_TXT for currently effective rows only.
+  5.2. No other extract, report, or interface is authorized to read the Restricted columns
+       of this table. Any proposed addition requires a completed Form RM-30.

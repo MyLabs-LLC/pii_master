@@ -1,0 +1,52 @@
+REGIONAL TRANSIT AUTHORITY
+DATA QUALITY REGISTER AND CORRECTION PROCEDURE
+Reference: DQ-FARE-2016-07
+Period covered: 2016-07-01 to 2016-07-31
+Prepared by: Data Services Division
+Distribution: Records Custodian; Warehouse Lead; Reduced Fare Programme Office
+
+1. PURPOSE AND STANDING
+
+   1.1  This register records validation failures raised by the fare warehouse load jobs during the period at Clause head, and sets out the steps by which those failures are cleared.
+   1.2  It is maintained clause by clause and is not superseded by individual run logs. Where a run log and this register differ on counts, the register governs after month-end close.
+
+2. VALIDATION CODES IN FORCE
+
+   2.1  VAL-102 — rider_birth_year outside permitted range.
+   2.2  VAL-118 — fare_category_code absent from the reference table.
+   2.3  VAL-140 — card_last4 non-numeric following application of MSK-011.
+   2.4  VAL-155 — rider_sk token collision across runs.
+   2.5  VAL-171 — rider_postal_prefix not of length three.
+   2.6  VAL-183 — rider_given_name and rider_family_name both null after masking.
+   2.7  VAL-190 — mandatory column suppressed by rule MSK-002 but declared NOT NULL in the target.
+
+3. PERIOD TOTALS BY JOB
+
+   3.1  JOB-ETL-FARE-0431 through JOB-ETL-FARE-0461, thirty-one runs, all completed.
+   3.2  Rows read across the period: 39,701,884.
+   3.3  Rows loaded: 39,624,117.
+   3.4  Rows rejected: 77,767, being 0.20 per cent.
+   3.5  Highest single-run reject count: 4,118 on run R160726-02, attributable to VAL-118 following an unannounced change to the fare category list.
+
+4. HANDLING OF REJECTED ROWS
+
+   4.1  Rejected rows are written to WH_REJECT.DIM_RIDER_REJ together with the run identifier, the validation code, the source column name and the timestamp of the failure.
+   4.2  The reject table inherits masking profile FARECARD_CUSTOMER_V3. Columns suppressed under MSK-002 do not appear in the reject table and are not reinstated for investigation.
+   4.3  Where investigation requires reference to a suppressed column, the analyst raises a request to the Records Custodian, who performs the check in the source system and returns a written finding. The column itself is not extracted.
+
+5. CORRECTION CYCLE
+
+   5.1  Rejects are reprocessed in the next calendar day's correction cycle, job family JOB-ETL-FARE-CORR-*.
+   5.2  A row failing the correction cycle twice is escalated to the owning business area. For VAL-118 this is the Reduced Fare Programme Office; for VAL-102, VAL-140, VAL-171 and VAL-183 this is the fare system support team.
+   5.3  Rows unresolved after thirty days are marked status code X in WH_REJECT.DIM_RIDER_REJ and excluded from the correction cycle. Twelve rows carried status code X at period end, all under VAL-155.
+
+6. OPEN ITEMS AT PERIOD END
+
+   6.1  DS-2291 — classification of alt_email_address. Column continues to be suppressed by default. Awaiting decision by the Records Custodian.
+   6.2  DS-2304 — VAL-190 raised twice during the period where emergency_contact_name was declared NOT NULL in a downstream extract specification. The specification is being amended to drop the column rather than to relax the masking rule.
+   6.3  DS-2312 — review of the token seed used by MSK-001, prompted by the VAL-155 collisions at Clause 5.3.
+
+7. SIGN-OFF
+
+   7.1  Period closed 2016-08-03 11:20 (local).
+   7.2  Next register opens for the period commencing 2016-08-01 and is due for close on 2016-09-03.

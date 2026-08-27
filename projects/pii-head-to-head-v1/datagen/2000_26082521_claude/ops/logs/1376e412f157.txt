@@ -1,0 +1,71 @@
+# /opt/hls/etl/conf/masking_policy.cfg
+# Ref: DP-STD-014 rev 6. Owner: Records Custodian, Data Services.
+# Applied by MASK_APPLY_PII (step 030) prior to any non-PROD propagation.
+
+[global]
+policy_version      = 6.2
+effective_from      = 2016-02-01
+deterministic_seed  = KMS://hls-prd/mask/seed-04   (rotates 12 months)
+fail_mode           = ABORT_JOB
+audit_target        = AUD.MASK_EVENT
+log_values          = FALSE
+log_field_labels    = TRUE
+
+[rules]
+# RULE_ID    FIELD_LABEL                 METHOD        OUTPUT_FORM        REVERSIBLE  RETAIN
+# ---------  --------------------------  ------------  -----------------  ----------  ------
+  MR-001     CONSIGNEE_FULL_NAME         HASH_SALT     TKN[32]            N           7Y
+  MR-002     CONSIGNEE_GIVEN_NAME        SUPPRESS      NULL               N           7Y
+  MR-003     CONSIGNEE_FAMILY_NAME       SUPPRESS      NULL               N           7Y
+  MR-004     CONSIGNEE_ADDR_LINE_1       TRUNC_POST    <SUPPRESSED>       N           7Y
+  MR-005     CONSIGNEE_ADDR_LINE_2       TRUNC_POST    <SUPPRESSED>       N           7Y
+  MR-006     CONSIGNEE_TOWN              PASSTHRU      -                  -           7Y
+  MR-007     CONSIGNEE_POSTCODE          OUTCODE_ONLY  AA00 ***           N           7Y
+  MR-008     CONSIGNEE_TEL_LANDLINE      STAR_ALL      ***** ******       N           3Y
+  MR-009     CONSIGNEE_TEL_MOBILE        STAR_ALL      ***** ******       N           3Y
+  MR-010     CONSIGNEE_EMAIL             STAR_LOCAL    ****@****.***      N           3Y
+  MR-011     CONSIGNEE_DATE_OF_BIRTH     YEAR_ONLY     ####               N           7Y
+  MR-012     ACCOUNT_HOLDER_NAME         HASH_SALT     TKN[32]            N           7Y
+  MR-013     BANK_ACCOUNT_NUMBER         SUPPRESS      NULL               N           6Y
+  MR-014     BANK_SORT_CODE              SUPPRESS      NULL               N           6Y
+  MR-015     CARD_PAN_ON_DELIVERY        SUPPRESS      NULL               N           0
+  MR-016     DRIVER_LICENCE_NO           TOKENISE      TKN[16]            Y (VAULT)   5Y
+  MR-017     DRIVER_NI_NUMBER            SUPPRESS      NULL               N           5Y
+  MR-018     DRIVER_DATE_OF_BIRTH        YEAR_ONLY     ####               N           5Y
+  MR-019     DRIVER_HOME_ADDR_FULL       SUPPRESS      NULL               N           5Y
+  MR-020     DRIVER_NOK_CONTACT_NAME     SUPPRESS      NULL               N           5Y
+  MR-021     DRIVER_NOK_CONTACT_TEL      STAR_ALL      ***** ******       N           5Y
+  MR-022     SIGNATORY_NAME_POD          HASH_SALT     TKN[32]            N           2Y
+  MR-023     SIGNATORY_IMAGE_POD         SUPPRESS      BINARY_NULL        N           2Y
+  MR-024     RECIPIENT_ID_DOC_REF        SUPPRESS      NULL               N           0
+  MR-025     CUSTOMER_LOYALTY_REF        TOKENISE      TKN[16]            Y (VAULT)   3Y
+
+[scope]
+include_schema  = STG_CONSIGNMENT, STG_DRIVER, STG_POD
+exclude_schema  = AUD, CTL
+include_env     = UAT, DEV, TRAIN, ANALYTICS_SANDBOX
+bypass_env      = (none)
+
+[vault]
+endpoint        = tkn-vault.hls.internal:8443
+detokenise_role = ROLE_DPO_BREAK_GLASS
+detokenise_log  = MANDATORY, 10Y
+max_batch       = 500
+
+[exceptions]
+# EXC_ID   FIELD_LABEL            GRANTED_TO            EXPIRES     TICKET
+# -------  ---------------------  --------------------  ----------  ---------
+  EX-0041  DRIVER_LICENCE_NO      COMPLIANCE_READ_ONLY  2016-06-30  CHG-21188
+  EX-0043  CONSIGNEE_POSTCODE     ROUTE_PLANNING_TEAM   2016-09-30  CHG-21402
+# Exceptions grant read of masked surrogate only. No clear-text release.
+
+[unmapped_alert]
+# Any inbound column matching the classifier list below without an active rule
+# raises MASK-ERR-900 and aborts the stream.
+classifier_terms = NAME, ADDR, POSTCODE, TEL, PHONE, MOBILE, EMAIL, DOB,
+                   BIRTH, NI_NO, LICENCE, PASSPORT, ACCOUNT, SORT_CODE, PAN,
+                   SIGNATURE, NOK
+last_alert       = 2016-03-04 01:57:22  MASK-ERR-900  COL: CONSIGNEE_ALT_EMAIL
+                   RESOLUTION: MR-010 SCOPE WIDENED, CHG-21455, CLOSED 08-MAR
+
+# EOF

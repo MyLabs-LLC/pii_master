@@ -1,0 +1,16 @@
+RTL_CUST.MBR_CONTACT_XREF — DATA DICTIONARY ADDENDUM 4A
+ISSUE 1.4, 22 APR 2016
+
+1. Purpose. Multi-valued contact points held outside MBR_MASTER. Grain: one row per member per contact channel per sequence.
+
+2. Columns. MBR_SK NUMBER(12) NOT NULL; CONTACT_SEQ NUMBER(3) NOT NULL; CHANNEL_CD CHAR(4) NOT NULL; CONTACT_VAL VARCHAR2(120) NOT NULL; CONTACT_HASH RAW(32) NOT NULL; PREF_RANK NUMBER(2) NULL; VERIFIED_FLG CHAR(1) NOT NULL; VERIFIED_TS TIMESTAMP(6) NULL; BOUNCE_CNT NUMBER(4) NOT NULL; SUPPRESS_FLG CHAR(1) NOT NULL; ETL_LOAD_TS TIMESTAMP(6) NOT NULL.
+
+3. PK is (MBR_SK, CONTACT_SEQ). CHANNEL_CD domain is REF_CONTACT_CHANNEL and is closed; additions require change control.
+
+4. CONTACT_VAL is class R2 and is masked in all non-production environments by the subsetting utility. CONTACT_HASH is class R1 and is the only permitted join key for analytics.
+
+5. VERIFIED_TS may be NULL where VERIFIED_FLG = N. The reverse is a defect and is reported by DQ rule DQ-4A-03.
+
+6. Rows are purged 24 months after SUPPRESS_FLG is set, or on purge of the parent member row, whichever is earlier.
+
+7. Extracts EXT-104 and EXT-121 consume CONTACT_HASH only. No extract is authorised to carry CONTACT_VAL off platform without Privacy Officer sign-off recorded against this clause.

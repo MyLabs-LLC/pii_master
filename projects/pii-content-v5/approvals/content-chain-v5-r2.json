@@ -1,0 +1,63 @@
+{
+  "approved_at": "2026-08-27T03:51:27.521470+00:00",
+  "approved_by": "user",
+  "plan": {
+    "budget": {
+      "max_trials": 1,
+      "note": "staged; each stage reports before the next is funded; no hyperparameter search"
+    },
+    "checkpoints": {
+      "v5a": "per-tag F1 on held-in, both models scored on the SAME calibration rows. The span stage already measured: MRN 0.3857 -> 0.8966, health_plan 0.4696 -> 0.6667, but CVV 0.8780 -> 0.0581 and religion 0.8302 -> 0.1290 (single-corpus forgetting). The document stage over all 8 must restore that breadth or the span stage is net harmful and gets dropped.",
+      "v5b": "vocabulary, dims, PCA variance retained, on-disk MB",
+      "v5c": "micro F1 on held-in AND one-core p95 <= 10 ms fused \u2014 a hard stop",
+      "v5d": "sealed measurement under both declared policies"
+    },
+    "editable_surfaces": [
+      "training/v5_finetune.py",
+      "training/v5_distill.py",
+      "training/v5_tagger.py",
+      "training/v5_fuse.py",
+      "projects/pii-content-v5/"
+    ],
+    "feasibility": {
+      "metric": "micro_f1",
+      "note": "no ceiling available for the fused metric. CORRECTED: the first probe read 0.0000 on the five gated identifiers, but that was low support (2-12 gold docs), not absence of capability - re-measured on 85593_pii_trainset the as-shipped model scores SSN 0.5730, ITIN 0.8698, CVV 0.8780. Contextual signal is real (email 0.9464, zip 0.8946, names 0.74-0.76). What remains unevidenced is how much survives model2vec compression to a static token table.",
+      "target": 0.7299,
+      "verdict": "unknown"
+    },
+    "forbidden_surfaces": [
+      "training/h2h_eval.py",
+      "training/quiet_select.py",
+      "projects/pii-scorecard-60/models/cascade_scorecard61",
+      "projects/pii-scorecard-60/cache/catalogue.json",
+      "projects/pii-scorecard-60/suite.yaml",
+      "projects/pii-scorecard-60/policy.yaml",
+      "projects/pii-scorecard-60/policy_precision_view.yaml",
+      "/home/lence/workspace/data/2-eval"
+    ],
+    "hardware": "NVIDIA RTX 4080 Laptop 12 GB for v5a/v5b; 1 CPU core for every published latency",
+    "modules": [
+      "classify",
+      "tune",
+      "eval"
+    ],
+    "operation": "content-model-chain-v5",
+    "project": "projects/pii-content-v5",
+    "promotion": "only if a declared gate is cleared",
+    "revision": "2026-08-26 r2: latency budget raised 5 -> 10 ms on instruction; content read window set to 6,000 chars (same 1,024 tokens as 12,000, 2.7x cheaper)",
+    "serving": {
+      "budget_ms": 10.0,
+      "cascade_p95_ms": 4.029,
+      "content_read_chars": 6000,
+      "measured_fused_p95_ms": 6.562
+    },
+    "stages": {
+      "v5a": "fine-tune kalyan-ks/ettin-68m-nemotron-pii: token head on the 85,593-doc span corpus, then a 61-way document head on all 8 corpora",
+      "v5b": "model2vec token distillation of the fine-tuned encoder",
+      "v5c": "document tagger over the static token embeddings, same 8 corpora",
+      "v5d": "fuse with projects/pii-scorecard-60/models/cascade_scorecard61, score on the 8 sealed corpora"
+    },
+    "target": "beat cascade_scorecard61 on micro_f1 (0.7299) without losing priority recall gates (25/55) or the one-core 10 ms fused budget"
+  },
+  "plan_sha256": "9604af0f2475de413f6541b5699d73513d8b6f698bc006448cb5d7593a364b5a"
+}
